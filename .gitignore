@@ -83,3 +83,6 @@ temp/
 
 # UnoCSS
 .uno
+
+# claude
+.mcp.json
