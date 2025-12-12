@@ -6,9 +6,14 @@
       "Bash(tasklist:*)",
       "Bash(findstr:*)",
       "Bash(taskkill:*)",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "Bash(openspec validate:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint:*)"
     ]
   },
-  "enabledMcpjsonServers": ["chrome-devtools"],
-  "enableAllProjectMcpServers": true
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "chrome-devtools"
+  ]
 }

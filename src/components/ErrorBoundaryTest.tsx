@@ -1,6 +1,6 @@
 import { Button } from "antd"
 
-export function TestErrorBoundary() {
+export function ErrorBoundaryTest() {
   const handleThrowError = () => {
     throw new Error("这是一个测试错误，用于验证错误边界功能")
   }

@@ -1,96 +1,8 @@
 import { FrownOutlined, ReloadOutlined } from "@ant-design/icons"
 import { Button, Result } from "antd"
 import { useEffect, useState } from "react"
-import styled, { keyframes } from "styled-components"
+import { logger } from "@/utils/logger"
 
-// 错误图标动画
-const floatAnimation = keyframes`
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-`
-
-// 背景动画
-const bgAnimation = keyframes`
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-`
-
-// 样式化容器
-const ErrorContainer = styled.div`
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background-size: 400% 400%;
-  animation: ${bgAnimation} 15s ease infinite;
-  padding: 20px;
-`
-
-// 错误卡片容器
-const ErrorCard = styled.div`
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
-  width: 100%;
-  text-align: center;
-  transform: translateY(0);
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15);
-  }
-`
-
-// 错误图标样式
-const ErrorIcon = styled.div`
-  font-size: 80px;
-  color: #ff4d4f;
-  margin-bottom: 20px;
-  animation: ${floatAnimation} 3s ease-in-out infinite;
-`
-
-// 错误详情样式
-const ErrorDetails = styled.div`
-  background: #f5f5f5;
-  border-radius: 8px;
-  padding: 16px;
-  margin: 20px 0;
-  text-align: left;
-
-  pre {
-    margin: 0;
-    font-size: 12px;
-    color: #666;
-    white-space: pre-wrap;
-    word-break: break-word;
-    max-height: 200px;
-    overflow-y: auto;
-  }
-`
-
-// 按钮组样式
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 24px;
-`
 
 interface ErrorFallbackProps {
   error: Error
@@ -101,23 +13,50 @@ export function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
   const [showDetails, setShowDetails] = useState(false)
 
   useEffect(() => {
-    // 在开发环境打印错误到控制台
-    console.error("应用程序错误:", error)
+    // 记录错误日志
+    logger.error("应用程序错误:", error)
   }, [error])
 
   return (
-    <ErrorContainer>
-      <ErrorCard>
-        <ErrorIcon>
+    <div
+      className="min-h-screen flex items-center justify-center p-5 relative overflow-hidden animate-gradient"
+      style={{
+        background: 'linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)',
+        backgroundSize: '400% 400%',
+        animation: 'gradientShift 15s ease infinite'
+      }}
+    >
+      <style>{`
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-20px); }
+        }
+      `}</style>
+
+      <div
+        className="max-w-2xl w-full bg-white/95 backdrop-blur-lg rounded-[20px] p-10 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+      >
+        <div
+          className="text-5xl text-red-500 mb-5"
+          style={{ animation: 'float 3s ease-in-out infinite' }}
+        >
           <FrownOutlined />
-        </ErrorIcon>
+        </div>
 
         <Result
           status="error"
           title="哎呀，出现了一些问题"
           subTitle="应用程序遇到了意外错误，请尝试刷新页面或联系技术支持。"
           extra={[
-            <ButtonGroup key="buttons">
+            <div
+              key="buttons"
+              className="flex gap-3 justify-center mt-6"
+            >
               <Button
                 type="primary"
                 icon={<ReloadOutlined />}
@@ -132,23 +71,27 @@ export function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
               <Button type="link" onClick={() => setShowDetails(!showDetails)}>
                 {showDetails ? "隐藏详情" : "显示详情"}
               </Button>
-            </ButtonGroup>,
+            </div>,
           ]}
         />
 
         {showDetails && (
-          <ErrorDetails>
-            <h4>错误信息:</h4>
-            <pre>{error.message}</pre>
+          <div className="bg-gray-100 rounded-lg p-4 m-5 text-left">
+            <h4 className="mb-2">错误信息:</h4>
+            <pre className="text-xs text-gray-600 whitespace-pre-wrap break-words max-h-50 overflow-y-auto">
+              {error.message}
+            </pre>
             {error.stack && (
               <>
-                <h4 style={{ marginTop: 16 }}>堆栈跟踪:</h4>
-                <pre>{error.stack}</pre>
+                <h4 className="mt-4 mb-2">堆栈跟踪:</h4>
+                <pre className="text-xs text-gray-600 whitespace-pre-wrap break-words max-h-50 overflow-y-auto">
+                  {error.stack}
+                </pre>
               </>
             )}
-          </ErrorDetails>
+          </div>
         )}
-      </ErrorCard>
-    </ErrorContainer>
+      </div>
+    </div>
   )
 }
