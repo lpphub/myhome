@@ -1,12 +1,13 @@
 import { Layout } from "antd"
-import { Outlet } from "react-router"
+import { Outlet, RouterProvider } from "react-router"
 import { AppHeader } from "@/components/layout/AppHeader"
 import { AppSider } from "@/components/layout/AppSider"
+import { router } from "@/router"
 import "./styles/global.css"
 
 const { Content } = Layout
 
-export function App() {
+export function AppLayout() {
   return (
     <Layout className="appLayout">
       <AppHeader />
@@ -20,4 +21,8 @@ export function App() {
       </Layout>
     </Layout>
   )
+}
+
+export function App() {
+  return <RouterProvider router={router} />
 }

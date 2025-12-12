@@ -1,11 +1,11 @@
 import { createBrowserRouter } from "react-router"
-import { App } from "@/App"
+import { AppLayout } from "@/App"
 import { DashboardPage } from "@/pages/dashboard/DashboardPage"
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <AppLayout />,
     children: [
       {
         index: true,

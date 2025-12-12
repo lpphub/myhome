@@ -1,27 +1,11 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { QueryClientProvider } from "@tanstack/react-query"
 import { ConfigProvider, theme } from "antd"
 import zhCN from "antd/locale/zh_CN"
 import React from "react"
 import ReactDOM from "react-dom/client"
-import { RouterProvider } from "react-router"
-import { router } from "./router"
-import "@unocss/reset/normalize.css"
-import "uno.css"
-import "./styles/global.css"
-
-// 创建 QueryClient 实例
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000, // 5 minutes
-    },
-    mutations: {
-      retry: 1,
-    },
-  },
-})
+import { queryClient } from "@/api/query-client"
+import { ErrorBoundary } from "@/components/ErrorBoundary"
+import { App } from "./App"
 
 // Ant Design 主题配置
 const antdTheme = {
@@ -39,12 +23,20 @@ const antdTheme = {
   },
 }
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+const rootElement = document.getElementById("root")
+
+if (!rootElement) {
+  throw new Error("Failed to find the root element")
+}
+
+ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <ConfigProvider theme={antdTheme} locale={zhCN}>
-        <RouterProvider router={router} />
-      </ConfigProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <ConfigProvider theme={antdTheme} locale={zhCN}>
+          <App />
+        </ConfigProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 )
