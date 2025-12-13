@@ -1,10 +1,9 @@
 // 导出所有类型
-export * from './common'
-export * from './errors'
+export * from "./common"
+export * from "./errors"
 
 // API 响应类型
 export interface ApiResponse<T = unknown> {
-  success: boolean
   data?: T
   message?: string
   code?: string
@@ -15,7 +14,7 @@ export interface Device {
   id: string
   name: string
   type: string
-  status: 'online' | 'offline' | 'error'
+  status: "online" | "offline" | "error"
   room?: string
   lastSeen?: Date
   properties?: Record<string, unknown>
@@ -36,7 +35,7 @@ export interface User {
   name: string
   email: string
   avatar?: string
-  role: 'admin' | 'user'
+  role: "admin" | "user"
   createdAt: Date
   lastLoginAt?: Date
 }

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { ReactNode } from "react"
 
 // 通用 Props 类型
 export interface BaseProps {
@@ -7,7 +7,7 @@ export interface BaseProps {
 }
 
 // 异步状态类型
-export type AsyncStatus = 'idle' | 'loading' | 'success' | 'error'
+export type AsyncStatus = "idle" | "loading" | "success" | "error"
 
 export interface AsyncState<T = unknown> {
   data?: T
@@ -49,13 +49,13 @@ export interface MenuItem {
 }
 
 // 主题类型
-export type Theme = 'light' | 'dark' | 'auto'
+export type Theme = "light" | "dark" | "auto"
 
 // 语言类型
-export type Locale = 'zh-CN' | 'en-US' | 'ja-JP'
+export type Locale = "zh-CN" | "en-US" | "ja-JP"
 
 // 设备状态类型
-export type DeviceStatus = 'online' | 'offline' | 'error'
+export type DeviceStatus = "online" | "offline" | "error"
 
 // 设备类型
-export type DeviceType = 'light' | 'switch' | 'sensor' | 'camera' | 'thermostat' | 'lock'
+export type DeviceType = "light" | "switch" | "sensor" | "camera" | "thermostat" | "lock"

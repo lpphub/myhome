@@ -10,16 +10,18 @@ import type { SignUpForm } from "./types"
 
 // Type guard to validate form values
 function isSignUpForm(values: Record<string, unknown>): values is SignUpForm {
-  return typeof values === 'object' &&
-         values !== null &&
-         'name' in values &&
-         'email' in values &&
-         'password' in values &&
-         'confirmPassword' in values &&
-         typeof values.name === 'string' &&
-         typeof values.email === 'string' &&
-         typeof values.password === 'string' &&
-         typeof values.confirmPassword === 'string'
+  return (
+    typeof values === "object" &&
+    values !== null &&
+    "name" in values &&
+    "email" in values &&
+    "password" in values &&
+    "confirmPassword" in values &&
+    typeof values.name === "string" &&
+    typeof values.email === "string" &&
+    typeof values.password === "string" &&
+    typeof values.confirmPassword === "string"
+  )
 }
 
 export function SignUp() {

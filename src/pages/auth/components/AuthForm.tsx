@@ -42,11 +42,7 @@ export function AuthForm({
              [&_.ant-input]:hover:[&:focus]:[&:focus-within]:shadow-[0_0_0_2px_rgba(102_126_234_0.1)]"
     >
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-        <h2
-          className="text-center mb-8 text-2xl font-semibold text-[#2c3e50]"
-        >
-          {title}
-        </h2>
+        <h2 className="text-center mb-8 text-2xl font-semibold text-[#2c3e50]">{title}</h2>
       </motion.div>
 
       <Form

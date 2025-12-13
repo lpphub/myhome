@@ -3,8 +3,8 @@ import { Checkbox, Form, Input } from "antd"
 import { motion } from "motion/react"
 import { useState } from "react"
 import { Link, useNavigate } from "react-router"
-import { animations, createDelayedAnimation } from "@/constants/animations"
 import { STORAGE_KEYS } from "@/constants"
+import { animations, createDelayedAnimation } from "@/constants/animations"
 import { logger } from "@/utils/logger"
 import { AuthForm } from "./components/AuthForm"
 import { AuthLayout } from "./components/AuthLayout"
@@ -12,12 +12,14 @@ import type { SignInForm } from "./types"
 
 // Type guard to validate form values
 function isSignInForm(values: Record<string, unknown>): values is SignInForm {
-  return typeof values === 'object' &&
-         values !== null &&
-         'email' in values &&
-         'password' in values &&
-         typeof values.email === 'string' &&
-         typeof values.password === 'string'
+  return (
+    typeof values === "object" &&
+    values !== null &&
+    "email" in values &&
+    "password" in values &&
+    typeof values.email === "string" &&
+    typeof values.password === "string"
+  )
 }
 
 export function SignIn() {

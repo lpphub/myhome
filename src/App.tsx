@@ -9,12 +9,12 @@ const { Content } = Layout
 
 export function AppLayout() {
   return (
-    <Layout className="appLayout">
+    <Layout>
       <AppHeader />
       <Layout>
         <AppSider />
-        <Layout className="mainLayout">
-          <Content className="content">
+        <Layout>
+          <Content>
             <Outlet />
           </Content>
         </Layout>

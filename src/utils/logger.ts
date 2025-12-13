@@ -1,4 +1,4 @@
-type LogLevel = 'debug' | 'info' | 'warn' | 'error'
+type LogLevel = "debug" | "info" | "warn" | "error"
 
 interface LogEntry {
   level: LogLevel
@@ -13,12 +13,12 @@ class Logger {
   private formatMessage(entry: LogEntry): string {
     const { level, message, data, timestamp } = entry
     const time = timestamp.toISOString()
-    const dataStr = data ? ` | Data: ${JSON.stringify(data)}` : ''
+    const dataStr = data ? ` | Data: ${JSON.stringify(data)}` : ""
     return `[${time}] ${level.toUpperCase()}: ${message}${dataStr}`
   }
 
   private log(level: LogLevel, message: string, data?: unknown): void {
-    if (this.isProduction && level === 'debug') {
+    if (this.isProduction && level === "debug") {
       return // 不在生产环境输出 debug 日志
     }
 
@@ -26,39 +26,39 @@ class Logger {
       level,
       message,
       data,
-      timestamp: new Date()
+      timestamp: new Date(),
     }
 
     const formattedMessage = this.formatMessage(entry)
 
     switch (level) {
-      case 'debug':
-      case 'info':
+      case "debug":
+      case "info":
         console.log(formattedMessage)
         break
-      case 'warn':
+      case "warn":
         console.warn(formattedMessage)
         break
-      case 'error':
+      case "error":
         console.error(formattedMessage)
         break
     }
   }
 
   debug(message: string, data?: unknown): void {
-    this.log('debug', message, data)
+    this.log("debug", message, data)
   }
 
   info(message: string, data?: unknown): void {
-    this.log('info', message, data)
+    this.log("info", message, data)
   }
 
   warn(message: string, data?: unknown): void {
-    this.log('warn', message, data)
+    this.log("warn", message, data)
   }
 
   error(message: string, error?: unknown): void {
-    this.log('error', message, error)
+    this.log("error", message, error)
   }
 }
 
@@ -66,6 +66,6 @@ class Logger {
 export const logger = new Logger()
 
 // 开发环境下暴露到全局，方便调试
-if (!import.meta.env.PROD && typeof window !== 'undefined') {
-  (window as Record<string, unknown>).logger = logger
+if (!import.meta.env.PROD && typeof window !== "undefined") {
+  ;(window as unknown as Record<string, unknown>).logger = logger
 }
