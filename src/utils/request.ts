@@ -5,6 +5,7 @@ import axios, {
   type AxiosResponse,
   type InternalAxiosRequestConfig,
 } from "axios"
+import { useUserStore } from "@/stores/userStore"
 
 export interface ApiResponse<T = unknown> {
   code: number
@@ -31,8 +32,18 @@ export class ApiError extends Error {
   }
 }
 
-export interface RequestConfig extends AxiosRequestConfig {
-  timeout?: number
+export interface RetriableConfig extends AxiosRequestConfig {
+  _retry?: boolean
+}
+
+/**
+ * 统一请求参数类型
+ */
+export interface RequestOptions<_T = unknown, D = unknown> extends AxiosRequestConfig {
+  url: string
+  method?: RequestMethod | string
+  data?: D
+  params?: Record<string, unknown>
   retryCount?: number
   retryDelay?: number
   mock?: boolean
@@ -119,81 +130,79 @@ class HttpClient {
     }
   }
 
-  private handleError(error: unknown): Promise<never> {
-    if (axios.isAxiosError(error)) {
-      const { response, message } = error
-
-      if (response) {
-        const { status, data } = response
-
-        // 处理业务错误
-        if (data?.code && data?.message) {
-          throw new ApiError(data.code, data.message, data)
-        }
-
-        // 处理HTTP错误
-        const errorMessage = this.getHttpErrorMessage(status)
-        throw new ApiError(status, errorMessage, data)
-      }
-
-      // 处理网络错误
-      if (error.code === "ECONNABORTED") {
-        throw new ApiError(408, "Request timeout")
-      }
-
-      throw new ApiError(0, message || "Network error")
+  private async handleError(error: unknown): Promise<never> {
+    if (!axios.isAxiosError(error)) {
+      return Promise.reject(error)
     }
 
-    return Promise.reject(error)
-  }
+    const { response, config } = error
 
-  private getHttpErrorMessage(status: number): string {
-    const errorMap: Record<number, string> = {
-      400: "Bad Request",
-      401: "Unauthorized",
-      403: "Forbidden",
-      404: "Not Found",
-      408: "Request Timeout",
-      500: "Internal Server Error",
-      502: "Bad Gateway",
-      503: "Service Unavailable",
-      504: "Gateway Timeout",
+    // 不是 401 或没有 config，直接抛
+    if (response?.status !== 401 || !config) {
+      return Promise.reject(error)
     }
 
-    return errorMap[status] || "Unknown Error"
-  }
-
-  private getToken(): string | null {
-    // 从 localStorage 或其他地方获取 token
-    return localStorage.getItem("access_token")
+    return this.refreshTokenAndRetry(config)
   }
 
   private unwrapResponse<T>(response: AxiosResponse<ApiResponse<T>>): T {
     const { data } = response
 
-    if (data.code !== 0 && data.code !== 200) {
-      throw new ApiError(data.code, data.message, data)
+    if (data.code === 0 || data.code === 200) {
+      return data.data as T
     }
 
-    return data.data as T
+    // 业务处理 可跳登录，弹窗提示等
+    throw new ApiError(data.code, data.message, data)
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
+
+  private getToken(): string | null {
+    return useUserStore.getState().accessToken
+  }
+
+  /**
+   * 刷新token并重试
+   */
+  private async refreshTokenAndRetry(originalConfig: RetriableConfig): Promise<never> {
+    try {
+      // 防止死循环
+      if (originalConfig._retry) {
+        useUserStore.getState().clearTokens()
+        throw new Error("Token refresh failed")
+      }
+
+      originalConfig._retry = true
+
+      const newToken = await useUserStore.getState().doRefreshToken()
+
+      originalConfig.headers = {
+        ...(originalConfig.headers ?? {}),
+        Authorization: `Bearer ${newToken}`,
+      }
+
+      return this.instance.request(originalConfig)
+    } catch (e) {
+      useUserStore.getState().clearTokens()
+      return Promise.reject(e)
+    }
   }
 
   /**
    * 发起请求
    */
-  async request<T = unknown>(url: string, config?: RequestConfig): Promise<T> {
-    const { retryCount = 0, retryDelay = 1000, ...axiosConfig } = config || {}
-
+  async request<T = unknown, D = unknown>(options: RequestOptions<T, D>): Promise<T> {
+    const { retryCount = 0, retryDelay = 1000, ...axiosOptions } = options
     try {
-      const response = await this.instance.request<ApiResponse<T>>({ url, ...axiosConfig })
+      const response = await this.instance.request<ApiResponse<T>>(axiosOptions)
       return this.unwrapResponse(response)
     } catch (error) {
       if (retryCount > 0) {
         await this.delay(retryDelay)
-        return this.request<T>(url, {
-          ...config,
-          retryCount: retryCount - 1,
-        })
+        return this.request<T, D>({ ...options, retryCount: retryCount - 1 })
       }
       throw error
     }
@@ -202,36 +211,36 @@ class HttpClient {
   /**
    * GET 请求
    */
-  get<T = unknown>(url: string, config?: RequestConfig): Promise<T> {
-    return this.request<T>(url, { ...config, method: RequestMethod.GET })
+  get<T = unknown>(options: Omit<RequestOptions<T, void>, "method">): Promise<T> {
+    return this.request<T>({ ...options, method: RequestMethod.GET })
   }
 
   /**
    * POST 请求
    */
-  post<T = unknown, D = unknown>(url: string, data?: D, config?: RequestConfig): Promise<T> {
-    return this.request<T>(url, { ...config, method: RequestMethod.POST, data })
+  post<T = unknown, D = unknown>(options: Omit<RequestOptions<T, D>, "method">): Promise<T> {
+    return this.request<T, D>({ ...options, method: RequestMethod.POST })
   }
 
   /**
    * PUT 请求
    */
-  put<T = unknown, D = unknown>(url: string, data?: D, config?: RequestConfig): Promise<T> {
-    return this.request<T>(url, { ...config, method: RequestMethod.PUT, data })
+  put<T = unknown, D = unknown>(options: Omit<RequestOptions<T, D>, "method">): Promise<T> {
+    return this.request<T, D>({ ...options, method: RequestMethod.PUT })
   }
 
   /**
    * PATCH 请求
    */
-  patch<T = unknown, D = unknown>(url: string, data?: D, config?: RequestConfig): Promise<T> {
-    return this.request<T>(url, { ...config, method: RequestMethod.PATCH, data })
+  patch<T = unknown, D = unknown>(options: Omit<RequestOptions<T, D>, "method">): Promise<T> {
+    return this.request<T, D>({ ...options, method: RequestMethod.PATCH })
   }
 
   /**
    * DELETE 请求
    */
-  delete<T = unknown>(url: string, config?: RequestConfig): Promise<T> {
-    return this.request<T>(url, { ...config, method: RequestMethod.DELETE })
+  delete<T = unknown>(options: Omit<RequestOptions<T, void>, "method">): Promise<T> {
+    return this.request<T>({ ...options, method: RequestMethod.DELETE })
   }
 
   /**
@@ -251,8 +260,9 @@ class HttpClient {
       })
     }
 
-    return this.request<T>(url, {
-      method: "POST",
+    return this.request<T>({
+      url,
+      method: RequestMethod.POST,
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     })
@@ -276,10 +286,6 @@ class HttpClient {
    */
   all<T extends readonly unknown[]>(promises: T): Promise<{ [K in keyof T]: Awaited<T[K]> }> {
     return Promise.all(promises)
-  }
-
-  private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms))
   }
 
   /**

@@ -1,8 +1,8 @@
+import { createBrowserRouter, Navigate, type RouteObject } from "react-router"
 import { AppLayout } from "@/App"
 import { STORAGE_KEYS } from "@/constants"
 import { Dashboard } from "@/pages/dashboard/Dashboard"
 import { NotFound } from "@/pages/NotFound"
-import { createBrowserRouter, Navigate, type RouteObject } from "react-router"
 import type { RouteConfig } from "./types"
 
 // Check if user is authenticated (mock implementation)
