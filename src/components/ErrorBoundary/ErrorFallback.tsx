@@ -1,7 +1,6 @@
 import { FrownOutlined, ReloadOutlined } from "@ant-design/icons"
 import { Button, Result } from "antd"
 import { useEffect, useState } from "react"
-import { logger } from "@/utils/logger"
 
 interface ErrorFallbackProps {
   error: Error
@@ -13,7 +12,7 @@ export function ErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps)
 
   useEffect(() => {
     // 记录错误日志
-    logger.error("应用程序错误:", error)
+    console.error("应用程序错误:", error)
   }, [error])
 
   return (

@@ -1,10 +1,8 @@
-import { createBrowserRouter, Navigate, type RouteObject } from "react-router"
 import { AppLayout } from "@/App"
 import { STORAGE_KEYS } from "@/constants"
-import { SignIn } from "@/pages/auth/SignIn"
-import { SignUp } from "@/pages/auth/SignUp"
 import { Dashboard } from "@/pages/dashboard/Dashboard"
 import { NotFound } from "@/pages/NotFound"
+import { createBrowserRouter, Navigate, type RouteObject } from "react-router"
 import type { RouteConfig } from "./types"
 
 // Check if user is authenticated (mock implementation)
@@ -33,35 +31,6 @@ const routes: RouteConfig[] = [
   {
     path: "/",
     element: <Navigate to={isAuthenticated() ? "/dashboard" : "/signin"} replace />,
-  },
-  {
-    path: "/auth",
-    children: [
-      {
-        index: true,
-        element: <Navigate to="/signin" replace />,
-      },
-      {
-        path: "signin",
-        element: (
-          <PublicRoute>
-            <SignIn />
-          </PublicRoute>
-        ),
-        title: "登录 - 我的家",
-        description: "登录您的智能家居管理中心",
-      },
-      {
-        path: "signup",
-        element: (
-          <PublicRoute>
-            <SignUp />
-          </PublicRoute>
-        ),
-        title: "注册 - 我的家",
-        description: "创建您的智能家居管理账号",
-      },
-    ],
   },
   {
     path: "/",
