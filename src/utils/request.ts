@@ -6,6 +6,7 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from "axios"
 import { useUserStore } from "@/stores/userStore"
+import { env } from "./env"
 
 export interface ApiResponse<T = unknown> {
   code: number
@@ -57,7 +58,7 @@ class HttpClient {
   private baseURL: string
   private timeout: number
 
-  constructor(baseURL: string = import.meta.env.VITE_API_BASE_URL, timeout: number = 60000) {
+  constructor(baseURL: string = env.API_BASE_URL, timeout: number = 60000) {
     this.baseURL = baseURL
     this.timeout = timeout
     this.instance = this.createInstance()
@@ -110,7 +111,7 @@ class HttpClient {
   }
 
   private logRequest(config: InternalAxiosRequestConfig): void {
-    if (process.env.NODE_ENV === "development") {
+    if (env.IS_DEV) {
       console.group(`🚀 ${config.method?.toUpperCase()} ${config.url}`)
       console.log("Headers:", config.headers)
       console.log("Params:", config.params)
@@ -120,7 +121,7 @@ class HttpClient {
   }
 
   private logResponse(response: AxiosResponse): void {
-    if (process.env.NODE_ENV === "development") {
+    if (env.IS_DEV) {
       console.group(`✅ ${response.status} ${response.config.url}`)
       console.log("Response:", response.data)
       console.groupEnd()
@@ -128,7 +129,7 @@ class HttpClient {
   }
 
   private logError(label: string, error: unknown): void {
-    if (process.env.NODE_ENV === "development") {
+    if (env.IS_DEV) {
       console.error(label, error)
     }
   }
@@ -148,7 +149,7 @@ class HttpClient {
     return this.refreshTokenAndRetry(config)
   }
 
-    /**
+  /**
    * 刷新token并重试
    */
   private async refreshTokenAndRetry(originalConfig: RetriableConfig): Promise<never> {

@@ -8,17 +8,17 @@ let userIdCounter = 1
 // 初始化预置用户
 function initMockUsers() {
   // 测试用户1
-  users.set('user1@example.com', {
-    id: '1',
-    email: 'user1@example.com',
-    password: '123456'
+  users.set("user1", {
+    id: "1",
+    email: "user1@example.com",
+    password: "123456",
   })
 
   // 测试用户2
-  users.set('user2@example.com', {
-    id: '2',
-    email: 'user2@example.com',
-    password: '123456'
+  users.set("user2", {
+    id: "2",
+    email: "user2@example.com",
+    password: "123456",
   })
 
   userIdCounter = 3
@@ -32,7 +32,6 @@ function generateTokens(): Token {
   return {
     accessToken: `mock_access_token_${Date.now()}`,
     refreshToken: `mock_refresh_token_${Date.now()}`,
-    expiresIn: 3600,
   }
 }
 

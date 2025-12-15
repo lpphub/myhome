@@ -1,12 +1,12 @@
+import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, MailOutlined } from "@ant-design/icons"
+import { Button, Checkbox, Form, Input, message, Typography } from "antd"
+import { motion } from "motion/react"
 import { useState } from "react"
 import { Link, useNavigate } from "react-router"
-import { Button, Checkbox, Form, Input, Typography, message as antMessage } from "antd"
-import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined, MailOutlined } from "@ant-design/icons"
-import { motion } from "motion/react"
 import { toast } from "sonner"
-import { useUserStore } from "@/stores/userStore"
 import { signIn } from "@/api/auth"
 import type { SignInForm } from "@/api/auth/types"
+import { useUserStore } from "@/stores/userStore"
 import { warmTheme } from "@/styles/theme"
 
 const { Title, Text } = Typography
@@ -14,7 +14,7 @@ const { Title, Text } = Typography
 export function SigninPage() {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const setUser = useUserStore((state) => state.setUser)
+  const setUser = useUserStore(state => state.setUser)
 
   const onFinish = async (values: SignInForm) => {
     setLoading(true)
@@ -27,14 +27,14 @@ export function SigninPage() {
         refreshToken: response.data.refreshToken,
       })
 
-      toast.success('登录成功，欢迎回家！')
+      toast.success("登录成功，欢迎回家！")
 
       // 延迟跳转，让用户看到成功提示
       setTimeout(() => {
-        navigate('/dashboard')
+        navigate("/dashboard")
       }, 1000)
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || '登录失败，请检查邮箱和密码'
+      const errorMessage = error.response?.data?.message || "登录失败，请检查邮箱和密码"
       toast.error(errorMessage)
     } finally {
       setLoading(false)
@@ -56,7 +56,7 @@ export function SigninPage() {
           className="rounded-xl p-8 space-y-6"
           style={{
             backgroundColor: warmTheme.colors.bgSecondary,
-            boxShadow: warmTheme.shadows.large
+            boxShadow: warmTheme.shadows.large,
           }}
         >
           {/* Logo 和标题 */}
@@ -73,9 +73,7 @@ export function SigninPage() {
             <Title level={2} style={{ color: warmTheme.colors.textPrimary, marginBottom: 8 }}>
               欢迎回来
             </Title>
-            <Text style={{ color: warmTheme.colors.textSecondary }}>
-              请登录您的智能家居账户
-            </Text>
+            <Text style={{ color: warmTheme.colors.textSecondary }}>请登录您的智能家居账户</Text>
           </div>
 
           {/* 登录表单 */}
@@ -89,8 +87,8 @@ export function SigninPage() {
             <Form.Item
               name="email"
               rules={[
-                { required: true, message: '请输入邮箱地址' },
-                { type: 'email', message: '请输入有效的邮箱地址' }
+                { required: true, message: "请输入邮箱地址" },
+                { type: "email", message: "请输入有效的邮箱地址" },
               ]}
             >
               <Input
@@ -99,50 +97,39 @@ export function SigninPage() {
                 style={{
                   borderRadius: warmTheme.borderRadius.small,
                   border: `1px solid ${warmTheme.colors.border}`,
-                  padding: '12px 16px',
+                  padding: "12px 16px",
                 }}
               />
             </Form.Item>
 
-            <Form.Item
-              name="password"
-              rules={[{ required: true, message: '请输入密码' }]}
-            >
+            <Form.Item name="password" rules={[{ required: true, message: "请输入密码" }]}>
               <Input.Password
                 prefix={<LockOutlined style={{ color: warmTheme.colors.textTertiary }} />}
                 placeholder="密码"
-                iconRender={(visible) =>
-                  visible ?
-                    <EyeTwoTone style={{ color: warmTheme.colors.primary }} /> :
+                iconRender={visible =>
+                  visible ? (
+                    <EyeTwoTone style={{ color: warmTheme.colors.primary }} />
+                  ) : (
                     <EyeInvisibleOutlined style={{ color: warmTheme.colors.textTertiary }} />
+                  )
                 }
                 style={{
                   borderRadius: warmTheme.borderRadius.small,
                   border: `1px solid ${warmTheme.colors.border}`,
-                  padding: '12px 16px',
+                  padding: "12px 16px",
                 }}
               />
             </Form.Item>
 
             <div className="flex items-center justify-between">
-              <Checkbox
-                style={{ color: warmTheme.colors.textSecondary }}
-              >
-                记住我
-              </Checkbox>
-              <Link
-                to="/forgot-password"
-                style={{ color: warmTheme.colors.primary }}
-              >
+              <Checkbox style={{ color: warmTheme.colors.textSecondary }}>记住我</Checkbox>
+              <Link to="/forgot-password" style={{ color: warmTheme.colors.primary }}>
                 忘记密码？
               </Link>
             </div>
 
             <Form.Item>
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Button
                   type="primary"
                   htmlType="submit"
@@ -157,7 +144,7 @@ export function SigninPage() {
                     fontSize: warmTheme.typography.fontSize.base,
                   }}
                 >
-                  {loading ? '登录中...' : '登录'}
+                  {loading ? "登录中..." : "登录"}
                 </Button>
               </motion.div>
             </Form.Item>
@@ -166,12 +153,12 @@ export function SigninPage() {
           {/* 注册链接 */}
           <div className="text-center">
             <Text style={{ color: warmTheme.colors.textSecondary }}>
-              还没有账户？{' '}
+              还没有账户？{" "}
               <Link
                 to="/signup"
                 style={{
                   color: warmTheme.colors.primary,
-                  fontWeight: warmTheme.typography.fontWeight.medium
+                  fontWeight: warmTheme.typography.fontWeight.medium,
                 }}
               >
                 立即注册

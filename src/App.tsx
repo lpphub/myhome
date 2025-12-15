@@ -1,10 +1,10 @@
 import { Layout } from "antd"
 import { Outlet, RouterProvider } from "react-router"
 import { Toaster } from "sonner"
+import { AuthLayout } from "@/components/AuthLayout"
 import { AppHeader } from "@/components/layout/AppHeader"
 import { AppSider } from "@/components/layout/AppSider"
 import { PageTransition } from "@/components/page-transition"
-import { AuthLayout } from "@/components/AuthLayout"
 import { router } from "@/router"
 import { warmTheme } from "@/styles/theme"
 import "./styles/global.css"
@@ -31,11 +31,7 @@ export function AppLayout() {
 
 // 认证页面的布局（没有 header 和 sidebar）
 export function AuthPageLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <AuthLayout>
-      {children}
-    </AuthLayout>
-  )
+  return <AuthLayout>{children}</AuthLayout>
 }
 
 export function App() {

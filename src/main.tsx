@@ -5,9 +5,9 @@ import React from "react"
 import ReactDOM from "react-dom/client"
 import { queryClient } from "@/api/query-client"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
+import { startMockService } from "@/mocks/browser"
+import { antdWarmTheme } from "@/styles/theme"
 import { App } from "./App"
-import { startMockService } from "./mocks/browser"
-import { antdWarmTheme } from "./styles/theme"
 
 // 启动 Mock 服务（仅在开发环境）
 startMockService()
