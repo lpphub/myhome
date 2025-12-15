@@ -3,11 +3,78 @@ html,
 body {
   margin: 0;
   padding: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif;
+  background-color: #faf9f7;
+  color: #3d3d3d;
+  line-height: 1.6;
 }
 
-/* 响应式隐藏 */
-@media (max-width: 768px) {
-  .hide-on-mobile {
-    display: none;
+/* Muji风格的滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f5f4f2;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c9a87c;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b89668;
+}
+
+/* Ant Design 组件的Muji风格覆盖 */
+.ant-btn-primary {
+  background-color: #c9a87c !important;
+  border-color: #c9a87c !important;
+}
+
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  background-color: #b89668 !important;
+  border-color: #b89668 !important;
+}
+
+.ant-input,
+.ant-input-password {
+  border-color: #e8e6e3 !important;
+}
+
+.ant-input:hover,
+.ant-input-password:hover {
+  border-color: #c9a87c !important;
+}
+
+.ant-input:focus,
+.ant-input-focused,
+.ant-input-password:focus,
+.ant-input-password-focused {
+  border-color: #c9a87c !important;
+  box-shadow: 0 0 0 2px rgba(201, 168, 124, 0.1) !important;
+}
+
+.ant-card {
+  border-color: #e8e6e3 !important;
+  box-shadow: 0 1px 3px 0 rgba(151, 145, 137, 0.1) !important;
+}
+
+.ant-dropdown {
+  box-shadow:
+    0 10px 15px -3px rgba(151, 145, 137, 0.1),
+    0 4px 6px -2px rgba(151, 145, 137, 0.05) !important;
+}
+
+/* PC优先的最小宽度 */
+@media (max-width: 1280px) {
+  body {
+    min-width: 1280px;
   }
 }

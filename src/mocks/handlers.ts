@@ -53,48 +53,7 @@ export const handlers = [
     return HttpResponse.json({
       code: 200,
       message: "登录成功",
-      data: {
-        user: {
-          id: user.id,
-          email: user.email,
-        },
-        ...tokens,
-      },
-    })
-  }),
-
-  // 注册接口
-  http.post("/api/auth/signup", async ({ request }) => {
-    const body = (await request.json()) as SignUpForm
-
-    // 检查邮箱是否已存在
-    const existingUser = Array.from(users.values()).find(u => u.email === body.email)
-
-    if (existingUser) {
-      return HttpResponse.json({ code: 400, message: "邮箱已被注册" }, { status: 400 })
-    }
-
-    // 创建新用户
-    const newUser = {
-      id: String(userIdCounter++),
-      email: body.email,
-      password: body.password,
-    }
-
-    users.set(newUser.email, newUser)
-
-    const tokens = generateTokens()
-
-    return HttpResponse.json({
-      code: 200,
-      message: "注册成功",
-      data: {
-        user: {
-          id: newUser.id,
-          email: newUser.email,
-        },
-        ...tokens,
-      },
+      data: tokens,
     })
   }),
 
