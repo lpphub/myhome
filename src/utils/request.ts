@@ -32,6 +32,9 @@ export class ApiError extends Error {
   }
 }
 
+/**
+ * 重放请求配置
+ */
 export interface RetriableConfig extends AxiosRequestConfig {
   _retry?: boolean
 }
@@ -145,6 +148,35 @@ class HttpClient {
     return this.refreshTokenAndRetry(config)
   }
 
+    /**
+   * 刷新token并重试
+   */
+  private async refreshTokenAndRetry(originalConfig: RetriableConfig): Promise<never> {
+    try {
+      // 防止死循环
+      if (originalConfig._retry) {
+        throw new Error("Token refresh loop detected")
+      }
+
+      originalConfig._retry = true
+
+      const newToken = await useUserStore.getState().doRefreshToken()
+      if (!newToken) {
+        throw new Error("Token refresh failed")
+      }
+
+      originalConfig.headers = {
+        ...(originalConfig.headers ?? {}),
+        Authorization: `Bearer ${newToken}`,
+      }
+
+      return this.instance.request(originalConfig)
+    } catch (e) {
+      useUserStore.getState().clearTokens()
+      return Promise.reject(e)
+    }
+  }
+
   private unwrapResponse<T>(response: AxiosResponse<ApiResponse<T>>): T {
     const { data } = response
 
@@ -162,33 +194,6 @@ class HttpClient {
 
   private getToken(): string | null {
     return useUserStore.getState().accessToken
-  }
-
-  /**
-   * 刷新token并重试
-   */
-  private async refreshTokenAndRetry(originalConfig: RetriableConfig): Promise<never> {
-    try {
-      // 防止死循环
-      if (originalConfig._retry) {
-        useUserStore.getState().clearTokens()
-        throw new Error("Token refresh failed")
-      }
-
-      originalConfig._retry = true
-
-      const newToken = await useUserStore.getState().doRefreshToken()
-
-      originalConfig.headers = {
-        ...(originalConfig.headers ?? {}),
-        Authorization: `Bearer ${newToken}`,
-      }
-
-      return this.instance.request(originalConfig)
-    } catch (e) {
-      useUserStore.getState().clearTokens()
-      return Promise.reject(e)
-    }
   }
 
   /**

@@ -1,6 +1,6 @@
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
-import { refreshToken } from "@/api/auth"
+import { refreshToken as apiRefreshToken } from "@/api/auth"
 
 export interface UserInfo {
   id: number
@@ -14,14 +14,14 @@ interface UserState {
   refreshToken: string | null
   userInfo: UserInfo | null
 
-  setTokens: (tokens: { accessToken?: string | null; refreshToken?: string | null }) => void
+  setTokens: (tokens: Partial<{ accessToken: string | null; refreshToken: string | null }>) => void
   clearTokens: () => void
 
   setUserInfo: (info: UserInfo | null) => void
   clearUserInfo: () => void
 
   isAuthed: () => boolean
-  doRefreshToken: () => Promise<string>
+  doRefreshToken: () => Promise<string | null>
 }
 
 export const useUserStore = create<UserState>()(
@@ -33,7 +33,12 @@ export const useUserStore = create<UserState>()(
 
       isAuthed: () => !!get().accessToken,
 
-      setTokens: data => set({ accessToken: data.accessToken, refreshToken: data.refreshToken }),
+      setTokens: tokens =>
+        set(state => ({
+          accessToken: tokens.accessToken ?? state.accessToken,
+          refreshToken: tokens.refreshToken ?? state.refreshToken,
+        })),
+
       clearTokens: () => set({ accessToken: null, refreshToken: null }),
 
       setUserInfo: userInfo => set({ userInfo }),
@@ -42,18 +47,28 @@ export const useUserStore = create<UserState>()(
       doRefreshToken: async () => {
         const rt = get().refreshToken
         if (!rt) {
-          throw new Error("No refresh token")
+          console.warn("No refresh token available")
+          return null
         }
 
-        const data = await refreshToken(rt)
-        set({ ...data })
-        return data.accessToken
+        try {
+          const data = await apiRefreshToken(rt)
+          set({
+            accessToken: data.accessToken,
+            refreshToken: data.refreshToken ?? rt,
+          })
+          return data.accessToken
+        } catch (error) {
+          console.error("Failed to refresh token:", error)
+          // token 刷新失败，可以选择清空 token
+          set({ accessToken: null, refreshToken: null })
+          return null
+        }
       },
     }),
     {
       name: "user-store",
       storage: createJSONStorage(() => localStorage),
-      // 只持久化必要字段
       partialize: state => ({
         accessToken: state.accessToken,
         refreshToken: state.refreshToken,
@@ -63,4 +78,5 @@ export const useUserStore = create<UserState>()(
     }
   )
 )
+
 export default useUserStore
