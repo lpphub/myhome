@@ -1,12 +1,21 @@
 import { createBrowserRouter, Navigate, type RouteObject } from "react-router"
-import { AppLayout } from "@/App"
+import { AppLayout, AuthPageLayout } from "@/App"
 import { STORAGE_KEYS } from "@/constants"
-import { Dashboard } from "@/pages/dashboard/Dashboard"
-import { NotFound } from "@/pages/NotFound"
+import { useUserStore } from "@/stores/userStore"
+import { Dashboard } from "@/pages"
+import { NotFound } from "@/pages"
+import { SigninPage } from "@/pages"
+import { SignupPage } from "@/pages"
 import type { RouteConfig } from "./types"
 
-// Check if user is authenticated (mock implementation)
+// Check if user is authenticated
 const isAuthenticated = () => {
+  // 优先检查 userStore 中的 token
+  const tokens = useUserStore.getState().tokens
+  if (tokens?.accessToken) {
+    return true
+  }
+  // 兼容旧的 localStorage 方式
   return localStorage.getItem(STORAGE_KEYS.IS_AUTHENTICATED) === "true"
 }
 
@@ -31,6 +40,30 @@ const routes: RouteConfig[] = [
   {
     path: "/",
     element: <Navigate to={isAuthenticated() ? "/dashboard" : "/signin"} replace />,
+  },
+  {
+    path: "/signin",
+    element: (
+      <AuthPageLayout>
+        <PublicRoute>
+          <SigninPage />
+        </PublicRoute>
+      </AuthPageLayout>
+    ),
+    title: "登录 - 我的家",
+    description: "登录到智能家居管理系统",
+  },
+  {
+    path: "/signup",
+    element: (
+      <AuthPageLayout>
+        <PublicRoute>
+          <SignupPage />
+        </PublicRoute>
+      </AuthPageLayout>
+    ),
+    title: "注册 - 我的家",
+    description: "创建智能家居账户",
   },
   {
     path: "/",

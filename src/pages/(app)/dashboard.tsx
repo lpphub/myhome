@@ -1,7 +1,7 @@
 import { DatabaseOutlined, HomeOutlined, SettingOutlined, UserOutlined } from "@ant-design/icons"
 import { Avatar, Card, Col, List, Row, Statistic, Typography } from "antd"
 import { motion } from "motion/react"
-import { StateManagementExample } from "@/pages/examples/StateManagementExample"
+import { QuickActions } from "@/components/QuickActions"
 
 const { Title, Paragraph } = Typography
 
@@ -124,7 +124,7 @@ export function Dashboard() {
             transition={{ delay: 0.6 }}
           >
             <Card title="快速操作" className="h-96">
-              <StateManagementExample />
+              <QuickActions />
             </Card>
           </motion.div>
         </Col>

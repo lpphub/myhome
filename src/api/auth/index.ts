@@ -1,24 +1,11 @@
 import httpClient from "@/utils/request"
+import type { SignInForm, SignUpForm, Token } from "./types"
 
 enum AuthApi {
   SignIn = "/auth/signin",
   SignUp = "/auth/signup",
   Logout = "/auth/logout",
   Refresh = "/auth/refresh",
-}
-
-export interface SignInForm {
-  username: string
-  password: string
-}
-
-export interface SignUpForm extends SignInForm {
-  phone: string
-}
-
-export interface Token {
-  accessToken: string
-  refreshToken: string
 }
 
 /**

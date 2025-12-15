@@ -6,21 +6,16 @@ import ReactDOM from "react-dom/client"
 import { queryClient } from "@/api/query-client"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
 import { App } from "./App"
+import { startMockService } from "./mocks/browser"
+import { antdWarmTheme } from "./styles/theme"
 
-// Ant Design 主题配置
-const antdTheme = {
+// 启动 Mock 服务（仅在开发环境）
+startMockService()
+
+// 使用暖调主题
+const antdThemeConfig = {
+  ...antdWarmTheme,
   algorithm: theme.defaultAlgorithm,
-  token: {
-    colorPrimary: "#3b82f6",
-    borderRadius: 8,
-    fontSize: 14,
-  },
-  components: {
-    Layout: {
-      headerBg: "#ffffff",
-      siderBg: "#ffffff",
-    },
-  },
 }
 
 const rootElement = document.getElementById("root")
@@ -33,7 +28,7 @@ ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <ConfigProvider theme={antdTheme} locale={zhCN}>
+        <ConfigProvider theme={antdThemeConfig} locale={zhCN}>
           <App />
         </ConfigProvider>
       </QueryClientProvider>
