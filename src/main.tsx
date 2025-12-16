@@ -1,27 +1,14 @@
 import { QueryClientProvider } from "@tanstack/react-query"
-import { ConfigProvider, theme } from "antd"
-import zhCN from "antd/locale/zh_CN"
 import React from "react"
 import ReactDOM from "react-dom/client"
 import { queryClient } from "@/api/query-client"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
-import { App } from "./App"
+import { startMockService } from "@/mocks/browser"
+import App from "./App"
+import 'virtual:uno.css'
 
-// Ant Design 主题配置
-const antdTheme = {
-  algorithm: theme.defaultAlgorithm,
-  token: {
-    colorPrimary: "#3b82f6",
-    borderRadius: 8,
-    fontSize: 14,
-  },
-  components: {
-    Layout: {
-      headerBg: "#ffffff",
-      siderBg: "#ffffff",
-    },
-  },
-}
+// 启动 Mock 服务（仅在开发环境）
+startMockService()
 
 const rootElement = document.getElementById("root")
 
@@ -33,9 +20,7 @@ ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <ConfigProvider theme={antdTheme} locale={zhCN}>
-          <App />
-        </ConfigProvider>
+        <App />
       </QueryClientProvider>
     </ErrorBoundary>
   </React.StrictMode>
