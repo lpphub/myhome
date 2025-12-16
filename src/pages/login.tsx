@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import { signIn } from "@/api/auth"
 import { useAuth } from "@/hooks/useAuth"
 
-interface SignInFormData {
+interface LoginFormData {
   email: string
   password: string
   rememberMe: boolean
@@ -16,12 +16,11 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false)
   const { login } = useAuth()
 
-
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignInFormData>({
+  } = useForm<LoginFormData>({
     defaultValues: {
       email: "test@example.com",
       password: "123456",
@@ -29,7 +28,7 @@ export default function Login() {
     },
   })
 
-  const onSubmit = async (data: SignInFormData) => {
+  const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true)
     try {
       const response = await signIn({

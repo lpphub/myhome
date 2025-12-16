@@ -1,5 +1,23 @@
 import httpClient from "@/utils/request"
-import type { SignInForm, SignUpForm, Token } from "./types"
+
+export interface AuthForm {
+  email: string
+  password: string
+}
+
+export interface User {
+  id: number
+  name: string
+  email?: string
+  avatar?: string
+  role?: string
+}
+
+export interface AuthResp {
+  user: User
+  accessToken: string
+  refreshToken: string
+}
 
 enum AuthApi {
   SignIn = "/auth/signin",
@@ -13,8 +31,8 @@ enum AuthApi {
  *
  * @param data SignIn parameters
  */
-export function signIn(data: SignInForm) {
-  return httpClient.post<Token, SignInForm>({
+export function signIn(data: AuthForm) {
+  return httpClient.post<AuthResp, AuthForm>({
     url: AuthApi.SignIn,
     data: data,
   })
@@ -24,8 +42,8 @@ export function signIn(data: SignInForm) {
  * signUp
  * @param data SignUp parameters
  */
-export function signUp(data: SignUpForm) {
-  return httpClient.post<Token, SignUpForm>({
+export function signUp(data: AuthForm) {
+  return httpClient.post<AuthResp, AuthForm>({
     url: AuthApi.SignUp,
     data: data,
   })
@@ -37,7 +55,7 @@ export function signUp(data: SignUpForm) {
  * @param refreshToken Refresh token
  */
 export function refreshToken(refreshToken: string) {
-  return httpClient.put<Token, { refresh_token: string }>({
+  return httpClient.put<AuthResp, { refresh_token: string }>({
     url: AuthApi.Refresh,
     data: { refresh_token: refreshToken },
   })

@@ -15,11 +15,7 @@ interface AuthState {
   refreshToken: string | null
   isAuthenticated: boolean
 
-  login: (data: {
-    user: User
-    accessToken: string
-    refreshToken: string
-  }) => void
+  login: (data: { user: User; accessToken: string; refreshToken: string }) => void
 
   logout: () => void
 
@@ -35,15 +31,17 @@ export const useAuthStore = create<AuthState>()(
         refreshToken: null,
         isAuthenticated: false,
 
-        login: ({ user, accessToken, refreshToken }) => set({ user, accessToken, refreshToken, isAuthenticated: true }),
-        logout: () => set({ user: null, accessToken: null, refreshToken: null,  isAuthenticated: false }),
+        login: ({ user, accessToken, refreshToken }) =>
+          set({ user, accessToken, refreshToken, isAuthenticated: true }),
+        logout: () =>
+          set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false }),
 
         refreshAccessToken: async () => {
-          const refreshToken  = get().refreshToken
+          const refreshToken = get().refreshToken
           if (!refreshToken) return null
 
           try {
-            const res = await apiRefreshToken(refreshToken )
+            const res = await apiRefreshToken(refreshToken)
 
             set({
               accessToken: res.accessToken,

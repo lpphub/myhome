@@ -1,25 +1,24 @@
 import { HttpResponse, http } from "msw"
-import type { SignInForm, Token } from "@/api/auth/types"
+import type { AuthForm } from "@/api/auth"
 
 // 模拟用户数据存储
-const users = new Map<string, { email: string; password: string; id: string }>()
+const users = new Map<string, { email: string; password: string; id: number }>()
 
 // 初始化预置用户
 function initMockUsers() {
   // 测试用户
   users.set("test", {
-    id: "1",
+    id: 1,
     email: "test@example.com",
     password: "123456",
   })
-
 }
 
 // 初始化用户数据
 initMockUsers()
 
 // 模拟 token 生成
-function generateTokens(): Token {
+function generateTokens(): { accessToken: string; refreshToken: string } {
   return {
     accessToken: `mock_access_token_${Date.now()}`,
     refreshToken: `mock_refresh_token_${Date.now()}`,
@@ -29,7 +28,7 @@ function generateTokens(): Token {
 export const handlers = [
   // 登录接口
   http.post("/api/auth/signin", async ({ request }) => {
-    const body = (await request.json()) as SignInForm
+    const body = (await request.json()) as AuthForm
 
     const user = Array.from(users.values()).find(
       u => u.email === body.email && u.password === body.password
@@ -48,7 +47,7 @@ export const handlers = [
         ...tokens,
         user: {
           id: user.id,
-          email: user.email,
+          name: user.email,
         },
       },
     })

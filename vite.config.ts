@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
-      port: 3000,
+      port: 5173,
       open: true,
       // 仅在非 mock 模式下使用代理
       proxy:
