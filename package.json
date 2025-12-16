@@ -19,14 +19,15 @@
     "test:coverage": "vitest --coverage"
   },
   "dependencies": {
-    "@ant-design/icons": "^6.1.0",
+    "@headlessui/react": "^2.2.9",
     "@tanstack/react-query": "^5.90.12",
-    "antd": "^6.1.0",
     "axios": "^1.13.2",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.561.0",
     "motion": "^12.23.26",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-error-boundary": "^6.0.0",
+    "react-hook-form": "^7.68.0",
     "react-router": "^7.10.1",
     "sonner": "^2.0.0",
     "zustand": "^5.0.9"

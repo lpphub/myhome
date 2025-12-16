@@ -5,7 +5,7 @@ import axios, {
   type AxiosResponse,
   type InternalAxiosRequestConfig,
 } from "axios"
-import { useUserStore } from "@/stores/userStore"
+import { useAuthStore } from "@/stores/useAuthStore"
 import { env } from "./env"
 
 export interface ApiResponse<T = unknown> {
@@ -161,8 +161,9 @@ class HttpClient {
 
       originalConfig._retry = true
 
-      const newToken = await useUserStore.getState().doRefreshToken()
+      const newToken = await useAuthStore.getState().refreshAccessToken()
       if (!newToken) {
+        useAuthStore.getState().logout()
         throw new Error("Token refresh failed")
       }
 
@@ -173,7 +174,7 @@ class HttpClient {
 
       return this.instance.request(originalConfig)
     } catch (e) {
-      useUserStore.getState().clearTokens()
+      useAuthStore.getState().logout()
       return Promise.reject(e)
     }
   }
@@ -194,7 +195,7 @@ class HttpClient {
   }
 
   private getToken(): string | null {
-    return useUserStore.getState().accessToken
+    return useAuthStore.getState().accessToken
   }
 
   /**

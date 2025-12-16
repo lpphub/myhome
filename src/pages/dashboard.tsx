@@ -1,275 +1,189 @@
-import { DatabaseOutlined, HomeOutlined, SettingOutlined, UserOutlined } from "@ant-design/icons"
-import { Avatar, Card, Col, List, Row, Statistic, Typography } from "antd"
+import { FileText, Home, LogOut, Settings } from "lucide-react"
 import { motion } from "motion/react"
-import { QuickActions } from "@/components/QuickActions"
-import { warmTheme } from "@/styles/theme"
+import { useNavigate } from "react-router"
+import { toast } from "sonner"
+import { useAuth } from "@/hooks/useAuth"
 
-const { Title, Paragraph } = Typography
+export default function Dashboard() {
+  const navigate = useNavigate()
+  const { user, logout } = useAuth()
 
-export function Dashboard() {
+  const handleLogout = () => {
+    logout()
+    toast.success("已退出登录")
+    navigate("/login")
+  }
+
+  const getUserInitial = (username: string) => {
+    return username.charAt(0).toUpperCase()
+  }
+
+  const menuItems = [
+    { icon: Home, label: "首页", active: true },
+    { icon: FileText, label: "空间", active: false },
+    { icon: Settings, label: "收纳", active: false },
+    { icon: Settings, label: "标签", active: false },
+  ]
+
   return (
-    <div className="max-w-[1200px] mx-auto px-8 py-8">
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="mb-8"
-      >
-        <Title
-          level={2}
-          className="mb-3"
-          style={{
-            color: warmTheme.colors.textPrimary,
-            fontWeight: warmTheme.typography.fontWeight.medium,
-            fontSize: "32px",
-          }}
-        >
-          欢迎回家！👋
-        </Title>
+    <div className="min-h-screen bg-[#faf9f7]">
+      {/* Header */}
+      <header className="bg-white shadow-sm sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <h1 className="text-xl font-light text-[#3d3d3d]">我的主页</h1>
+            </div>
 
-        <Paragraph
-          style={{
-            color: warmTheme.colors.textSecondary,
-            fontSize: warmTheme.typography.fontSize.lg,
-            marginBottom: 0,
-          }}
-        >
-          这是您的智能家居管理中心，您可以在这里管理您的设备和家庭信息。
-        </Paragraph>
-      </motion.div>
-
-      {/* 统计卡片区域 */}
-      <Row gutter={[24, 24]} className="mb-8">
-        <Col xs={24} sm={12} lg={6}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.3 }}
-          >
-            <Card
-              style={{
-                borderRadius: warmTheme.borderRadius.medium,
-                border: `1px solid ${warmTheme.colors.border}`,
-                boxShadow: warmTheme.shadows.small,
-              }}
-              bodyStyle={{ padding: "24px" }}
-            >
-              <Statistic
-                title="设备总数"
-                value={12}
-                prefix={<HomeOutlined />}
-                valueStyle={{
-                  color: warmTheme.colors.success,
-                  fontSize: "32px",
-                  fontWeight: warmTheme.typography.fontWeight.medium,
-                }}
-              />
-            </Card>
-          </motion.div>
-        </Col>
-
-        <Col xs={24} sm={12} lg={6}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.3 }}
-          >
-            <Card
-              style={{
-                borderRadius: warmTheme.borderRadius.medium,
-                border: `1px solid ${warmTheme.colors.border}`,
-                boxShadow: warmTheme.shadows.small,
-              }}
-              bodyStyle={{ padding: "24px" }}
-            >
-              <Statistic
-                title="在线设备"
-                value={8}
-                prefix={<DatabaseOutlined />}
-                valueStyle={{
-                  color: warmTheme.colors.info,
-                  fontSize: "32px",
-                  fontWeight: warmTheme.typography.fontWeight.medium,
-                }}
-              />
-            </Card>
-          </motion.div>
-        </Col>
-
-        <Col xs={24} sm={12} lg={6}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.3 }}
-          >
-            <Card
-              style={{
-                borderRadius: warmTheme.borderRadius.medium,
-                border: `1px solid ${warmTheme.colors.border}`,
-                boxShadow: warmTheme.shadows.small,
-              }}
-              bodyStyle={{ padding: "24px" }}
-            >
-              <Statistic
-                title="家庭成员"
-                value={4}
-                prefix={<UserOutlined />}
-                valueStyle={{
-                  color: warmTheme.colors.warning,
-                  fontSize: "32px",
-                  fontWeight: warmTheme.typography.fontWeight.medium,
-                }}
-              />
-            </Card>
-          </motion.div>
-        </Col>
-
-        <Col xs={24} sm={12} lg={6}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, duration: 0.3 }}
-          >
-            <Card
-              style={{
-                borderRadius: warmTheme.borderRadius.medium,
-                border: `1px solid ${warmTheme.colors.border}`,
-                boxShadow: warmTheme.shadows.small,
-              }}
-              bodyStyle={{ padding: "24px" }}
-            >
-              <Statistic
-                title="自动化场景"
-                value={6}
-                prefix={<SettingOutlined />}
-                valueStyle={{
-                  color: warmTheme.colors.error,
-                  fontSize: "32px",
-                  fontWeight: warmTheme.typography.fontWeight.medium,
-                }}
-              />
-            </Card>
-          </motion.div>
-        </Col>
-      </Row>
-
-      {/* 主要内容区域 */}
-      <Row gutter={[24, 24]}>
-        <Col xs={24} lg={12}>
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3, duration: 0.3 }}
-          >
-            <Card
-              title={
-                <span
-                  style={{
-                    fontSize: "18px",
-                    fontWeight: warmTheme.typography.fontWeight.medium,
-                    color: warmTheme.colors.textPrimary,
-                  }}
-                >
-                  最近活动
-                </span>
-              }
-              style={{
-                borderRadius: warmTheme.borderRadius.medium,
-                border: `1px solid ${warmTheme.colors.border}`,
-                boxShadow: warmTheme.shadows.small,
-                height: "400px",
-              }}
-              bodyStyle={{ padding: "20px" }}
-            >
-              <List
-                itemLayout="horizontal"
-                dataSource={[
-                  { title: "客厅灯已开启", time: "2分钟前", icon: "💡" },
-                  { title: "温度调至 24°C", time: "15分钟前", icon: "🌡️" },
-                  { title: "安防系统已启动", time: "1小时前", icon: "🔒" },
-                  { title: "洗衣机已完成", time: "2小时前", icon: "🧺" },
-                  { title: "门锁已上锁", time: "3小时前", icon: "🚪" },
-                ]}
-                renderItem={(item, index) => (
-                  <motion.div
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.4 + index * 0.05, duration: 0.2 }}
-                  >
-                    <List.Item>
-                      <List.Item.Meta
-                        avatar={
-                          <Avatar
-                            size="large"
-                            style={{
-                              backgroundColor: warmTheme.colors.bgTertiary,
-                              color: warmTheme.colors.textPrimary,
-                              border: `1px solid ${warmTheme.colors.border}`,
-                            }}
-                          >
-                            {item.icon}
-                          </Avatar>
-                        }
-                        title={
-                          <span
-                            style={{
-                              color: warmTheme.colors.textPrimary,
-                              fontSize: warmTheme.typography.fontSize.base,
-                            }}
-                          >
-                            {item.title}
-                          </span>
-                        }
-                        description={
-                          <span
-                            style={{
-                              color: warmTheme.colors.textTertiary,
-                              fontSize: warmTheme.typography.fontSize.sm,
-                            }}
-                          >
-                            {item.time}
-                          </span>
-                        }
+            <div className="flex items-center space-x-4">
+              {user && (
+                <>
+                  <div className="flex items-center space-x-3">
+                    {user.avatar ? (
+                      <img
+                        src={user.avatar}
+                        alt={user.name}
+                        className="w-10 h-10 rounded-full object-cover"
                       />
-                    </List.Item>
-                  </motion.div>
-                )}
-              />
-            </Card>
-          </motion.div>
-        </Col>
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-[#c9a87c] text-white flex items-center justify-center font-medium">
+                        {getUserInitial(user.name)}
+                      </div>
+                    )}
+                    <div className="hidden sm:block">
+                      <p className="text-sm font-medium text-[#3d3d3d]">{user.name}</p>
+                      {user.role && <p className="text-xs text-gray-500">{user.role}</p>}
+                    </div>
+                  </div>
 
-        <Col xs={24} lg={12}>
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.35, duration: 0.3 }}
-          >
-            <Card
-              title={
-                <span
-                  style={{
-                    fontSize: "18px",
-                    fontWeight: warmTheme.typography.fontWeight.medium,
-                    color: warmTheme.colors.textPrimary,
-                  }}
-                >
-                  快速操作
-                </span>
-              }
-              style={{
-                borderRadius: warmTheme.borderRadius.medium,
-                border: `1px solid ${warmTheme.colors.border}`,
-                boxShadow: warmTheme.shadows.small,
-                height: "400px",
-              }}
-              bodyStyle={{ padding: "20px" }}
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center space-x-2 text-red-600 hover:text-red-700 transition-colors"
+                    title="退出登录"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    <span className="hidden sm:inline">退出</span>
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-8"
+        >
+          <h2 className="text-2xl font-light text-[#3d3d3d] mb-2">
+            欢迎回来，{user?.name}！
+          </h2>
+          <p className="text-gray-600">今天是个美好的一天，让我们开始工作吧。</p>
+        </motion.div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {[
+            { label: "项目数量", value: "12", change: "+2" },
+            { label: "任务完成", value: "89%", change: "+5%" },
+            { label: "团队成员", value: "6", change: "0" },
+            { label: "本月活跃", value: "24天", change: "+2天" },
+          ].map((stat, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="bg-white rounded-lg shadow-sm p-6"
             >
-              <QuickActions />
-            </Card>
-          </motion.div>
-        </Col>
-      </Row>
+              <p className="text-sm font-medium text-gray-600">{stat.label}</p>
+              <p className="text-2xl font-light text-[#3d3d3d] mt-2">{stat.value}</p>
+              <p className="text-sm text-green-600 mt-2">{stat.change}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Main Content Area */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="bg-white rounded-lg shadow-sm p-6"
+            >
+              <h3 className="text-lg font-medium text-[#3d3d3d] mb-4">最近项目</h3>
+              <div className="space-y-4">
+                {[1, 2, 3].map(item => (
+                  <div
+                    key={item}
+                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    <div>
+                      <h4 className="font-medium text-[#3d3d3d]">项目 {item}</h4>
+                      <p className="text-sm text-gray-600">项目描述信息...</p>
+                    </div>
+                    <span className="text-sm text-[#c9a87c]">查看详情 →</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Right Column - Sidebar */}
+          <div className="space-y-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              className="bg-white rounded-lg shadow-sm p-6"
+            >
+              <h3 className="text-lg font-medium text-[#3d3d3d] mb-4">快捷操作</h3>
+              <div className="space-y-2">
+                {menuItems.map((item, index) => (
+                  <button
+                    key={index}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                      item.active ? "bg-[#c9a87c] text-white" : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    <item.icon className="w-5 h-5" />
+                    <span>{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              className="bg-white rounded-lg shadow-sm p-6"
+            >
+              <h3 className="text-lg font-medium text-[#3d3d3d] mb-4">用户信息</h3>
+              <div className="space-y-3 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">用户ID</span>
+                  <span className="text-[#3d3d3d]">#{user?.id}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">用户名</span>
+                  <span className="text-[#3d3d3d]">{user?.username}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">角色</span>
+                  <span className="text-[#3d3d3d]">{user?.role || "用户"}</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
