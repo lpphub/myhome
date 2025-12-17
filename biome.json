@@ -26,6 +26,11 @@
       }
     }
   },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
   "javascript": {
     "formatter": {
       "quoteStyle": "double",
@@ -36,23 +41,6 @@
       "arrowParentheses": "asNeeded",
       "bracketSpacing": true,
       "bracketSameLine": false
-    },
-    "globals": [
-      "console",
-      "document",
-      "window",
-      "process",
-      "Buffer",
-      "__dirname",
-      "__filename",
-      "module",
-      "require",
-      "exports",
-      "global",
-      "setTimeout",
-      "clearTimeout",
-      "setInterval",
-      "clearInterval"
-    ]
+    }
   }
 }
