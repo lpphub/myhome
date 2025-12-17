@@ -1,51 +1,85 @@
 /* globals.css */
 @import "tailwindcss";
+@import "tw-animate-css";
 
 @theme {
-  --color-honey-50: #fdf8f1;
-  --color-honey-100: #fbeedc;
-  --color-honey-200: #f9e7c8;
-  --color-honey-300: #f7e4b5;
-  --color-honey-400: #f5e2a2;
-  --color-honey-500: #f3df80;
-  --color-honey-600: #eccb5e;
-  --color-honey-700: #eaa83c;
-  --color-honey-800: #e8851a;
-  --color-honey-900: #e66208;
+  /* Cream 色系 - 奶白色系 */
+  --color-cream-50: #fffefa;
+  --color-cream-100: #fffbf5;
+  --color-cream-200: #fff8e7;
+  --color-cream-300: #fff2d9;
+  --color-cream-400: #ffe9c4;
+  --color-cream-500: #ffdda8;
+  --color-cream-600: #ffcc8c;
+  --color-cream-700: #ffb870;
+  --color-cream-800: #ffa354;
+  --color-cream-900: #ff8e38;
 
-  --color-cream-50: #fdfcfb;
-  --color-cream-100: #faf8f5;
-  --color-cream-200: #f5f0e8;
-  --color-cream-300: #f0e5d5;
+  /* Honey 色系 - 奶茶色系 */
+  --color-honey-50: #fefdf8;
+  --color-honey-100: #fdfaeb;
+  --color-honey-200: #fbf3d7;
+  --color-honey-300: #f7e9c3;
+  --color-honey-400: #f1d8a0;
+  --color-honey-500: #e8c178;
+  --color-honey-600: #dfaa50;
+  --color-honey-700: #d69235;
+  --color-honey-800: #cc7a1a;
+  --color-honey-900: #c26814;
 
+  /* Coral 色系 - 珊瑚粉系 */
+  --color-coral-50: #fef7f6;
+  --color-coral-100: #fde2ed;
+  --color-coral-200: #fbdcdc;
+  --color-coral-300: #f7c5c1;
+  --color-coral-400: #f0a99a;
+  --color-coral-500: #e89074;
+  --color-coral-600: #df7750;
+  --color-coral-700: #cc5e3d;
+  --color-coral-800: #b84e34;
+  --color-coral-900: #a4452d;
+
+  /* Lavender 色系 - 薰衣草紫系 */
+  --color-lavender-50: #f8f7fd;
+  --color-lavender-100: #f1effb;
+  --color-lavender-200: #e3def7;
+  --color-lavender-300: #d0c8f0;
+  --color-lavender-400: #b7abe6;
+  --color-lavender-500: #9f8edc;
+  --color-lavender-600: #8871d2;
+  --color-lavender-700: #7458c4;
+  --color-lavender-800: #624aa8;
+  --color-lavender-900: #523d8c;
+
+  /* Lemon 色系 - 柠檬绿系 */
+  --color-lemon-50: #fefdf6;
+  --color-lemon-100: #fafaed;
+  --color-lemon-200: #f9ecc4;
+  --color-lemon-300: #faecc4;
+  --color-lemon-400: #f7de9e;
+  --color-lemon-500: #f0cc77;
+  --color-lemon-600: #e8ba51;
+  --color-lemon-700: #dfa82b;
+  --color-lemon-800: #c8942e;
+  --color-lemon-900: #b17a25;
+
+  /* WarmGray 色系 - 温暖灰色调 */
+  --color-warmGray-50: #fafaf9;
+  --color-warmGray-100: #f5f5f4;
+  --color-warmGray-200: #e7e5e4;
+  --color-warmGray-300: #d6d3d1;
   --color-warmGray-400: #a8a29e;
   --color-warmGray-500: #78716c;
   --color-warmGray-600: #57534e;
   --color-warmGray-700: #44403c;
+  --color-warmGray-800: #292524;
+  --color-warmGray-900: #1c1917;
 
-  --color-coral-50: #fef6f6;
-  --color-coral-100: #fde2e2;
-  --color-coral-200: #fecaca;
-  --color-coral-300: #fca5a5;
-  --color-coral-400: #f87171;
-  --color-coral-500: #ef4444;
-  --color-coral-600: #dc2626;
-  --color-coral-700: #b91c1c;
-
-  --color-lavender-50: #f8f5ff;
-  --color-lavender-100: #f0ebff;
-  --color-lavender-200: #e5d8ff;
-  --color-lavender-300: #d4bbff;
-  --color-lavender-400: #b794f4;
-  --color-lavender-500: #a855f7;
-  --color-lavender-600: #9333ea;
-  --color-lavender-700: #7e22ce;
-
-  /* box‑shadow 变量 */
-  --shadow-card: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
-  --shadow-card-hover: 0 8px 24px 0 rgba(0, 0, 0, 0.12);
-  --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-  --shadow-warm-sm: 0 2px 6px 0 rgba(201, 168, 124, 0.08), 0 1px 2px 0 rgba(201, 168, 124, 0.03);
-  --shadow-warm-md: 0 4px 12px 0 rgba(201, 168, 124, 0.12), 0 2px 4px 0 rgba(201, 168, 124, 0.05);
-  --shadow-warm-lg: 0 8px 24px 0 rgba(201, 168, 124, 0.15), 0 4px 8px 0 rgba(201, 168, 124, 0.08);
+  /* box‑shadow 变量 - 深度阴影 */
+  --shadow-warm-sm: 0 2px 4px rgba(194, 104, 20, 0.08);
+  --shadow-warm-md: 0 4px 12px rgba(194, 104, 20, 0.12);
+  --shadow-warm-lg: 0 8px 24px rgba(194, 104, 20, 0.16);
+  --shadow-card: 0 4px 16px rgba(232, 193, 120, 0.15);
+  --shadow-card-hover: 0 8px 32px rgba(232, 193, 120, 0.25);
+  --shadow-soft: 0 2px 8px rgba(247, 233, 195, 0.4);
 }

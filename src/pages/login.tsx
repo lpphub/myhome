@@ -1,11 +1,19 @@
 import { useMutation } from '@tanstack/react-query'
-import { Eye, EyeOff, Heart } from 'lucide-react'
+import { Eye, EyeOff, Heart, Home } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
 import { signIn } from '@/api/auth'
-import Button from '@/components/primitives/Button'
-import Card from '@/components/primitives/Card'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  Input,
+} from '@/components/ui'
 import { useAuth } from '@/hooks/useAuth'
 
 interface FormData {
@@ -103,7 +111,7 @@ export default function Login() {
   }
 
   return (
-    <div className='min-h-screen bg-linear-to-b from-cream-50 to-white flex items-center justify-center p-4'>
+    <div className='min-h-screen bg-honey-50 from-cream-300 to-white flex items-center justify-center p-4'>
       {/* 背景装饰元素 */}
       <div className='absolute top-1/4 left-1/4 w-64 h-64 bg-honey-100 rounded-full filter blur-3xl opacity-50 animate-pulse'></div>
       <div
@@ -112,131 +120,129 @@ export default function Login() {
       ></div>
 
       {/* 登录卡片 */}
-      <Card variant='glass' className='w-full max-w-md p-6 md:p-8 z-10'>
-        {/* Logo和标题 */}
-        <div className='text-center mb-8'>
-          <div className='flex items-center justify-center mb-2'>
-            <Heart className='w-8 h-8 text-coral-500 mr-2' />
-            <h1 className='text-2xl font-bold text-honey-700'>收纳小助手</h1>
-          </div>
-          <p className='text-warmGray-500'>欢迎回家</p>
-        </div>
-
-        {/* 登录表单 */}
-        <form onSubmit={handleSubmit} className='space-y-5'>
-          {/* 通用错误信息 */}
-          {errors.general && (
-            <div className='bg-coral-50 border border-coral-200 text-coral-700 px-4 py-3 rounded-lg text-sm'>
-              {errors.general}
+      <Card variant='glass' hoverable={false} decorative className='w-full max-w-md z-10'>
+        <CardHeader>
+          <div className='text-center space-y-3'>
+            {/* Logo 图标 */}
+            <div className='flex items-center justify-center mb-4'>
+              <div className='w-16 h-16 bg-linear-to-br from-honey-400 to-coral-400 rounded-2xl flex items-center justify-center shadow-warm-md'>
+                <Home className='w-8 h-8 text-white' />
+              </div>
             </div>
-          )}
 
-          {/* 邮箱输入 */}
-          <div className='space-y-2'>
-            <label htmlFor='email' className='block text-sm font-medium text-warmGray-700'>
-              邮箱地址
-            </label>
-            <div className='relative'>
-              <input
+            {/* 标题 */}
+            <CardTitle>家庭收纳小助手</CardTitle>
+
+            {/* 欢迎语 */}
+            <CardDescription className='flex items-center justify-center gap-2'>
+              <Heart className='w-4 h-4 text-coral-400' />
+              <span>欢迎回到家</span>
+              <Heart className='w-4 h-4 text-coral-400' />
+            </CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent className='p-6 md:p-8'>
+          {/* 登录表单 */}
+          <form onSubmit={handleSubmit} className='space-y-5'>
+            {/* 通用错误信息 */}
+            {errors.general && (
+              <div className='bg-coral-50 border border-coral-200 text-coral-700 px-4 py-3 rounded-lg text-sm'>
+                {errors.general}
+              </div>
+            )}
+
+            {/* 邮箱输入 */}
+            <div className='space-y-2'>
+              <label htmlFor='email' className='block text-sm font-medium text-warmGray-700'>
+                邮箱地址
+              </label>
+              <Input
                 id='email'
                 name='email'
                 type='email'
                 value={formData.email}
                 onChange={handleInputChange}
                 disabled={isPending}
-                className='w-full px-4 py-3 rounded-xl border border-cream-200 bg-white/80 focus:border-honey-400 focus:ring-2 focus:ring-honey-200 transition-all'
                 placeholder='your@email.com'
+                variant={errors.email ? 'error' : 'default'}
               />
+              {errors.email && <p className='text-coral-500 text-sm'>{errors.email}</p>}
             </div>
-            {errors.email && <p className='text-coral-500 text-sm'>{errors.email}</p>}
-          </div>
 
-          {/* 密码输入 */}
-          <div className='space-y-2'>
-            <label htmlFor='password' className='block text-sm font-medium text-warmGray-700'>
-              密码
-            </label>
-            <div className='relative'>
-              <input
-                id='password'
-                name='password'
-                type={showPassword ? 'text' : 'password'}
-                value={formData.password}
-                onChange={handleInputChange}
-                disabled={isPending}
-                className='w-full px-4 py-3 rounded-xl border border-cream-200 bg-white/80 focus:border-honey-400 focus:ring-2 focus:ring-honey-200 transition-all pr-10'
-                placeholder='请输入密码'
-              />
-              <button
-                type='button'
-                onClick={() => setShowPassword(!showPassword)}
-                className='absolute right-3 top-1/2 -translate-y-1/2 text-warmGray-500 hover:text-honey-500 transition-colors'
-                disabled={isPending}
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
-            {errors.password && <p className='text-coral-500 text-sm'>{errors.password}</p>}
-          </div>
-
-          {/* 记住我 */}
-          <div className='flex items-center justify-between'>
-            <div className='flex items-center'>
-              <input
-                id='rememberMe'
-                name='rememberMe'
-                type='checkbox'
-                checked={formData.rememberMe}
-                onChange={handleInputChange}
-                disabled={isPending}
-                className='h-4 w-4 rounded border-cream-300 text-honey-500 focus:ring-honey-300'
-              />
-              <label htmlFor='rememberMe' className='ml-2 block text-sm text-warmGray-600'>
-                记住我
+            {/* 密码输入 */}
+            <div className='space-y-2'>
+              <label htmlFor='password' className='block text-sm font-medium text-warmGray-700'>
+                密码
               </label>
+              <div className='relative'>
+                <Input
+                  id='password'
+                  name='password'
+                  type={showPassword ? 'text' : 'password'}
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  disabled={isPending}
+                  placeholder='请输入密码'
+                  className='pr-10'
+                  variant={errors.password ? 'error' : 'default'}
+                />
+                <button
+                  type='button'
+                  onClick={() => setShowPassword(!showPassword)}
+                  className='absolute right-3 top-1/2 -translate-y-1/2 text-warmGray-500 hover:text-honey-500 transition-colors'
+                  disabled={isPending}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              {errors.password && <p className='text-coral-500 text-sm'>{errors.password}</p>}
             </div>
+
+            {/* 记住我 */}
+            <div className='flex items-center justify-between'>
+              <div className='flex items-center'>
+                <input
+                  id='rememberMe'
+                  name='rememberMe'
+                  type='checkbox'
+                  checked={formData.rememberMe}
+                  onChange={handleInputChange}
+                  disabled={isPending}
+                  className='h-4 w-4 rounded border-cream-300 text-honey-500 focus:ring-honey-300'
+                />
+                <label htmlFor='rememberMe' className='ml-2 block text-sm text-warmGray-600'>
+                  记住我
+                </label>
+              </div>
+              <a
+                href='/forgot-password'
+                className='text-sm font-medium text-honey-600 hover:text-honey-700 transition-colors'
+              >
+                忘记密码?
+              </a>
+            </div>
+
+            {/* 登录按钮 */}
+            <Button type='submit' className='w-full' disabled={isPending} loading={isPending}>
+              {isPending ? '登录中...' : '登录'}
+            </Button>
+          </form>
+
+          {/* 注册链接 */}
+          <div className='mt-6 text-center text-sm text-warmGray-600'>
+            还没有账号？{' '}
             <a
-              href='/forgot-password'
-              className='text-sm font-medium text-honey-600 hover:text-honey-700 transition-colors'
+              href='/register'
+              className='font-medium text-honey-600 hover:text-honey-700 transition-colors'
             >
-              忘记密码?
+              立即注册
             </a>
           </div>
-
-          {/* 登录按钮 */}
-          <Button
-            type='submit'
-            variant='primary'
-            size='lg'
-            className='w-full'
-            disabled={isPending}
-            loading={isPending}
-            decorative={true}
-          >
-            {isPending ? '登录中...' : '登录'}
-          </Button>
-        </form>
-
-        {/* 注册链接 */}
-        <div className='mt-6 text-center text-sm text-warmGray-600'>
-          还没有账号？{' '}
-          <a
-            href='/register'
-            className='font-medium text-honey-600 hover:text-honey-700 transition-colors'
-          >
-            立即注册
-          </a>
-        </div>
-
-        {/* 装饰元素 */}
-        <div className='absolute -bottom-2 -right-2 w-16 h-16 bg-lavender-100 rounded-full opacity-60 blur-md'></div>
-        <div className='absolute -top-3 -left-3 w-12 h-12 bg-coral-100 rounded-full opacity-60 blur-md'></div>
+        </CardContent>
+        <CardFooter className='text-center'>
+          <div className='text-center text-warmGray-400 text-xs mb-2'>✨ 让收纳变得简单</div>
+        </CardFooter>
       </Card>
-
-      {/* 底部文字 */}
-      <div className='absolute bottom-4 text-center text-warmGray-400 text-xs'>
-        让收纳变得简单 ✨
-      </div>
     </div>
   )
 }

@@ -8,7 +8,6 @@ interface ImportMetaEnv {
   readonly VITE_ENABLE_MOCK: string
 }
 
-// biome-ignore lint/correctness/noUnusedVariables: env
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }

@@ -1,6 +1,6 @@
 // router/index.ts
 import { createBrowserRouter } from 'react-router'
-import { Dashboard, Login } from '@/pages'
+import { Dashboard, Login, NotFound, TestComponents } from '@/pages'
 import { requireAuth, requireGuest } from './guards'
 
 export const router = createBrowserRouter([
@@ -14,8 +14,12 @@ export const router = createBrowserRouter([
     element: <Login />,
     loader: requireGuest, // 仅未登录
   },
-  // {
-  //   path: "*",
-  //   element: <NotFoundPage />,
-  // },
+  {
+    path: '*',
+    element: <NotFound />,
+  },
+  {
+    path: '/testComponents',
+    element: <TestComponents />,
+  },
 ])
