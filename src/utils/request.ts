@@ -4,9 +4,9 @@ import axios, {
   type AxiosRequestConfig,
   type AxiosResponse,
   type InternalAxiosRequestConfig,
-} from "axios"
-import { useAuthStore } from "@/stores/useAuthStore"
-import { env } from "./env"
+} from 'axios'
+import { useAuthStore } from '@/stores/useAuthStore'
+import { env } from './env'
 
 export interface ApiResponse<T = unknown> {
   code: number
@@ -15,11 +15,11 @@ export interface ApiResponse<T = unknown> {
 }
 
 export enum RequestMethod {
-  GET = "GET",
-  POST = "POST",
-  PUT = "PUT",
-  PATCH = "PATCH",
-  DELETE = "DELETE",
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  PATCH = 'PATCH',
+  DELETE = 'DELETE',
 }
 
 export class ApiError extends Error {
@@ -29,7 +29,7 @@ export class ApiError extends Error {
     public response?: unknown
   ) {
     super(message)
-    this.name = "ApiError"
+    this.name = 'ApiError'
   }
 }
 
@@ -69,7 +69,7 @@ class HttpClient {
       baseURL: this.baseURL,
       timeout: this.timeout,
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     })
 
@@ -92,7 +92,7 @@ class HttpClient {
         return config
       },
       error => {
-        this.logError("Request Error:", error)
+        this.logError('Request Error:', error)
         return Promise.reject(error)
       }
     )
@@ -104,7 +104,7 @@ class HttpClient {
         return response
       },
       error => {
-        this.logError("Response Error:", error)
+        this.logError('Response Error:', error)
         return this.handleError(error)
       }
     )
@@ -113,9 +113,9 @@ class HttpClient {
   private logRequest(config: InternalAxiosRequestConfig): void {
     if (env.IS_DEV) {
       console.group(`🚀 ${config.method?.toUpperCase()} ${config.url}`)
-      console.log("Headers:", config.headers)
-      console.log("Params:", config.params)
-      console.log("Data:", config.data)
+      console.log('Headers:', config.headers)
+      console.log('Params:', config.params)
+      console.log('Data:', config.data)
       console.groupEnd()
     }
   }
@@ -123,7 +123,7 @@ class HttpClient {
   private logResponse(response: AxiosResponse): void {
     if (env.IS_DEV) {
       console.group(`✅ ${response.status} ${response.config.url}`)
-      console.log("Response:", response.data)
+      console.log('Response:', response.data)
       console.groupEnd()
     }
   }
@@ -156,7 +156,7 @@ class HttpClient {
     try {
       // 防止死循环
       if (originalConfig._retry) {
-        throw new Error("Token refresh loop detected")
+        throw new Error('Token refresh loop detected')
       }
 
       originalConfig._retry = true
@@ -164,7 +164,7 @@ class HttpClient {
       const newToken = await useAuthStore.getState().refreshAccessToken()
       if (!newToken) {
         useAuthStore.getState().logout()
-        throw new Error("Token refresh failed")
+        throw new Error('Token refresh failed')
       }
 
       originalConfig.headers = {
@@ -218,35 +218,35 @@ class HttpClient {
   /**
    * GET 请求
    */
-  get<T = unknown>(options: Omit<RequestOptions<T, void>, "method">): Promise<T> {
+  get<T = unknown>(options: Omit<RequestOptions<T, void>, 'method'>): Promise<T> {
     return this.request<T>({ ...options, method: RequestMethod.GET })
   }
 
   /**
    * POST 请求
    */
-  post<T = unknown, D = unknown>(options: Omit<RequestOptions<T, D>, "method">): Promise<T> {
+  post<T = unknown, D = unknown>(options: Omit<RequestOptions<T, D>, 'method'>): Promise<T> {
     return this.request<T, D>({ ...options, method: RequestMethod.POST })
   }
 
   /**
    * PUT 请求
    */
-  put<T = unknown, D = unknown>(options: Omit<RequestOptions<T, D>, "method">): Promise<T> {
+  put<T = unknown, D = unknown>(options: Omit<RequestOptions<T, D>, 'method'>): Promise<T> {
     return this.request<T, D>({ ...options, method: RequestMethod.PUT })
   }
 
   /**
    * PATCH 请求
    */
-  patch<T = unknown, D = unknown>(options: Omit<RequestOptions<T, D>, "method">): Promise<T> {
+  patch<T = unknown, D = unknown>(options: Omit<RequestOptions<T, D>, 'method'>): Promise<T> {
     return this.request<T, D>({ ...options, method: RequestMethod.PATCH })
   }
 
   /**
    * DELETE 请求
    */
-  delete<T = unknown>(options: Omit<RequestOptions<T, void>, "method">): Promise<T> {
+  delete<T = unknown>(options: Omit<RequestOptions<T, void>, 'method'>): Promise<T> {
     return this.request<T>({ ...options, method: RequestMethod.DELETE })
   }
 
@@ -259,7 +259,7 @@ class HttpClient {
     additionalData?: Record<string, FormDataEntryValue>
   ): Promise<T> {
     const formData = new FormData()
-    formData.append("file", file)
+    formData.append('file', file)
 
     if (additionalData) {
       Object.entries(additionalData).forEach(([key, value]) => {
@@ -271,7 +271,7 @@ class HttpClient {
       url,
       method: RequestMethod.POST,
       data: formData,
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: { 'Content-Type': 'multipart/form-data' },
     })
   }
 
@@ -279,11 +279,11 @@ class HttpClient {
    * 下载文件
    */
   async download(url: string, filename?: string): Promise<void> {
-    const response = await this.instance.get(url, { responseType: "blob" })
+    const response = await this.instance.get(url, { responseType: 'blob' })
     const blob = new Blob([response.data])
-    const link = document.createElement("a")
+    const link = document.createElement('a')
     link.href = URL.createObjectURL(blob)
-    link.download = filename || "download"
+    link.download = filename || 'download'
     link.click()
     URL.revokeObjectURL(link.href)
   }

@@ -1,12 +1,12 @@
-import { MutationCache, QueryCache, QueryClient } from "@tanstack/react-query"
-import { env } from "@/utils/env"
+import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query'
+import { env } from '@/utils/env'
 
 // 定义默认配置常量
 const DEFAULT_QUERY_CONFIG = {
   // 缓存配置 - 10分钟后清理未使用的查询缓存
   gcTime: 10 * 60 * 1000,
   // 网络模式配置
-  networkMode: "online" as const,
+  networkMode: 'online' as const,
   // 组件挂载时如果数据过期则重新获取
   refetchOnMount: true,
   // 网络重连时重新获取
@@ -23,7 +23,7 @@ const DEFAULT_QUERY_CONFIG = {
 }
 
 const DEFAULT_MUTATION_CONFIG = {
-  networkMode: "online" as const,
+  networkMode: 'online' as const,
   retry: 1,
   retryDelay: (attemptIndex: number) => Math.min(1000 * 2 ** attemptIndex, 10000),
 }
@@ -38,7 +38,7 @@ export const queryClient = new QueryClient({
     onError: (error: unknown) => {
       // 在开发环境中记录错误信息，帮助调试
       if (env.IS_DEV) {
-        console.error("Mutation error:", error)
+        console.error('Mutation error:', error)
       }
       // 在生产环境中，可以将错误发送到错误监控服务（如 Sentry）
     },
@@ -47,7 +47,7 @@ export const queryClient = new QueryClient({
     onError: (error: unknown) => {
       // 在开发环境中记录错误信息，帮助调试
       if (env.IS_DEV) {
-        console.error("Query error:", error)
+        console.error('Query error:', error)
       }
       // 在生产环境中，可以将错误发送到错误监控服务（如 Sentry）
     },

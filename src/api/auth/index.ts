@@ -1,4 +1,4 @@
-import httpClient from "@/utils/request"
+import httpClient from '@/utils/request'
 
 export interface AuthForm {
   email: string
@@ -20,10 +20,10 @@ export interface AuthResp {
 }
 
 enum AuthApi {
-  SignIn = "/auth/signin",
-  SignUp = "/auth/signup",
-  Logout = "/auth/logout",
-  Refresh = "/auth/refresh",
+  SignIn = '/auth/signin',
+  SignUp = '/auth/signup',
+  Logout = '/auth/logout',
+  Refresh = '/auth/refresh',
 }
 
 /**

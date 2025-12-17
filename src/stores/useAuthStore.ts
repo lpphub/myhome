@@ -1,6 +1,6 @@
-import { create } from "zustand"
-import { createJSONStorage, devtools, persist } from "zustand/middleware"
-import { refreshToken as apiRefreshToken } from "@/api/auth"
+import { create } from 'zustand'
+import { createJSONStorage, devtools, persist } from 'zustand/middleware'
+import { refreshToken as apiRefreshToken } from '@/api/auth'
 
 export interface User {
   id: number
@@ -51,13 +51,13 @@ export const useAuthStore = create<AuthState>()(
 
             return res.accessToken
           } catch (error) {
-            console.error("Failed to refresh token:", error)
+            console.error('Failed to refresh token:', error)
             return null
           }
         },
       }),
       {
-        name: "auth-store",
+        name: 'auth-store',
         storage: createJSONStorage(() => localStorage),
         partialize: state => ({
           user: state.user,

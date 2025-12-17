@@ -1,19 +1,19 @@
-import { QueryClientProvider } from "@tanstack/react-query"
-import React from "react"
-import ReactDOM from "react-dom/client"
-import { queryClient } from "@/api/query-client"
-import { ErrorBoundary } from "@/components/ErrorBoundary"
-import { startMockService } from "@/mocks/browser"
-import App from "./App"
-import "./styles/global.css"
+import { QueryClientProvider } from '@tanstack/react-query'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { queryClient } from '@/api/queryClient'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { startMockService } from '@/mocks/browser'
+import App from './App'
+import './styles/global.css'
 
 // 启动 Mock 服务（仅在开发环境）
 startMockService()
 
-const rootElement = document.getElementById("root")
+const rootElement = document.getElementById('root')
 
 if (!rootElement) {
-  throw new Error("Failed to find the root element")
+  throw new Error('Failed to find the root element')
 }
 
 ReactDOM.createRoot(rootElement).render(
