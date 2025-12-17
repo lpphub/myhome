@@ -129,9 +129,27 @@ class HttpClient {
   }
 
   private logError(label: string, error: unknown): void {
-    if (env.IS_DEV) {
-      console.error(label, error)
+    if (!env.IS_DEV) return
+
+    console.group(`❌ ${label}`)
+    // 基本信息
+    if (error instanceof Error) {
+      console.log('Message:', error.message)
     }
+    // Axios 错误信息
+    if (axios.isAxiosError(error)) {
+      if (error.config) {
+        console.log('Request:', `${error.config.method?.toUpperCase()} ${error.config.url}`)
+      }
+
+      if (error.response) {
+        console.log('Response:', `${error.response.status} ${error.response.statusText}`)
+        console.log('Data:', error.response.data)
+      } else {
+        console.log('Network error - no response')
+      }
+    }
+    console.groupEnd()
   }
 
   private async handleError(error: unknown): Promise<never> {

@@ -1,25 +1,31 @@
 // router/index.ts
 import { createBrowserRouter } from 'react-router'
+import { AuthGuard } from '@/components/AuthGuard'
 import { Dashboard, Login, NotFound, TestComponents } from '@/pages'
-import { requireAuth, requireGuest } from './guards'
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Dashboard />,
-    loader: requireAuth, // 必须登录
+    element: (
+      <AuthGuard>
+        <Dashboard />
+      </AuthGuard>
+    ),
   },
   {
     path: '/login',
-    element: <Login />,
-    loader: requireGuest, // 仅未登录
+    element: (
+      <AuthGuard requireAuth={false}>
+        <Login />
+      </AuthGuard>
+    ),
   },
   {
     path: '*',
     element: <NotFound />,
   },
   {
-    path: '/testComponents',
+    path: '/testui',
     element: <TestComponents />,
   },
 ])
