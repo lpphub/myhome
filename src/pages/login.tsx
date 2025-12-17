@@ -48,7 +48,7 @@ export default function Login() {
         })
 
         toast.success("登录成功！")
-        navigate("/dashboard")
+        navigate("/")
       }
     } catch (_error) {
       toast.error("登录失败，请稍后重试")
@@ -58,11 +58,11 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex-center bg-[#faf9f7]">
+    <div className="min-h-screen flex items-center justify-center bg-bg-light">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-lg shadow-md p-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-light text-[#3d3d3d] mb-2">欢迎回来</h1>
+            <h1 className="text-3xl font-light text-text-primary mb-2">欢迎回来</h1>
             <p className="text-gray-500 text-sm">请登录您的账户</p>
           </div>
 
@@ -85,7 +85,7 @@ export default function Login() {
                 className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
                   errors.email
                     ? "border-red-300 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-[#c9a87c] focus:border-[#c9a87c]"
+                    : "border-gray-300 focus:ring-primary focus:border-primary"
                 }`}
                 placeholder="请输入邮箱地址"
               />
@@ -110,7 +110,7 @@ export default function Login() {
                 className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
                   errors.password
                     ? "border-red-300 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-[#c9a87c] focus:border-[#c9a87c]"
+                    : "border-gray-300 focus:ring-primary focus:border-primary"
                 }`}
                 placeholder="请输入密码"
               />
@@ -125,7 +125,7 @@ export default function Login() {
                   {...register("rememberMe")}
                   id="rememberMe"
                   type="checkbox"
-                  className="h-4 w-4 text-[#c9a87c] focus:ring-[#c9a87c] border-gray-300 rounded"
+                  className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
                 />
                 <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-700">
                   记住我
@@ -133,7 +133,7 @@ export default function Login() {
               </div>
               <button
                 type="button"
-                className="text-sm text-[#c9a87c] hover:text-[#b89668] transition-colors"
+                className="text-sm text-primary hover:text-primary-dark transition-colors"
               >
                 忘记密码？
               </button>
@@ -142,7 +142,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-[#c9a87c] hover:bg-[#b89668] text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c9a87c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-primary hover:bg-primary-dark text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? "登录中..." : "登录"}
             </button>

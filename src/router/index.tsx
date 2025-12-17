@@ -5,7 +5,7 @@ import { requireAuth, requireGuest } from "./guards"
 
 export const router = createBrowserRouter([
   {
-    path: "/dashboard",
+    path: "/",
     element: <Dashboard />,
     loader: requireAuth, // 必须登录
   },

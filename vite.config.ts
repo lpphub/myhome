@@ -1,15 +1,16 @@
 import { resolve } from "node:path"
+import tailwindcss from "@tailwindcss/vite"
 import React from "@vitejs/plugin-react"
-import UnoCSS from "unocss/vite"
 import { defineConfig, loadEnv } from "vite"
 
 // https://vitejs.dev/config/
+// @ts-expect-error
 export default defineConfig(({ mode }) => {
   // 加载环境变量
   const env = loadEnv(mode, process.cwd(), "")
 
   return {
-    plugins: [React(), UnoCSS()],
+    plugins: [React(), tailwindcss()],
     resolve: {
       alias: {
         "@": resolve(__dirname, "src"),

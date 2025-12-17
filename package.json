@@ -33,16 +33,14 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.8",
+    "@tailwindcss/vite": "^4.1.18",
     "@types/node": "^22.10.7",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "@unocss/preset-attributify": "^66.5.10",
-    "@unocss/reset": "^66.5.10",
-    "@unocss/vite": "^66.5.10",
     "@vitejs/plugin-react": "^5.1.2",
     "msw": "^2.7.0",
+    "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3",
-    "unocss": "^66.5.10",
     "vite": "^7.2.7"
   },
   "msw": {
