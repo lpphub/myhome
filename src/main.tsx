@@ -5,7 +5,7 @@ import { queryClient } from '@/api/queryClient'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { startMockService } from '@/mocks/browser'
 import App from './App'
-import './styles/global.css'
+import './styles/globals.css'
 
 // 启动 Mock 服务（仅在开发环境）
 startMockService()
