@@ -1,0 +1,134 @@
+{
+  "dashboard": {
+    "overview": {
+      "totalItems": 156,
+      "totalSpaces": 12,
+      "utilizationRate": 68,
+      "expiredItems": 3,
+      "borrowedItems": 8,
+      "lowStockItems": 5
+    },
+    "recentActivities": [
+      {
+        "id": "1",
+        "type": "入库",
+        "itemName": "冬季围巾",
+        "quantity": 2,
+        "timestamp": "2025-12-18T10:30:00Z",
+        "operator": "小美",
+        "status": "已完成",
+        "fromSpace": null,
+        "toSpace": "衣柜上层"
+      },
+      {
+        "id": "2", 
+        "type": "出库",
+        "itemName": "咖啡杯",
+        "quantity": 1,
+        "timestamp": "2025-12-18T09:15:00Z",
+        "operator": "小明",
+        "status": "已完成",
+        "fromSpace": "厨房橱柜",
+        "toSpace": null
+      },
+      {
+        "id": "3",
+        "type": "转移",
+        "itemName": "书籍集合",
+        "quantity": 5,
+        "timestamp": "2025-12-17T20:45:00Z",
+        "operator": "小美",
+        "status": "已完成",
+        "fromSpace": "书桌",
+        "toSpace": "书房书架"
+      },
+      {
+        "id": "4",
+        "type": "盘点",
+        "itemName": "季节性衣物",
+        "quantity": 15,
+        "timestamp": "2025-12-17T16:20:00Z",
+        "operator": "小明",
+        "status": "进行中",
+        "fromSpace": "储物间",
+        "toSpace": null
+      },
+      {
+        "id": "5",
+        "type": "借出",
+        "itemName": "蓝牙耳机",
+        "quantity": 1,
+        "timestamp": "2025-12-16T14:00:00Z",
+        "operator": "小美",
+        "status": "已完成",
+        "borrower": "朋友小张",
+        "fromSpace": "床头柜",
+        "toSpace": null
+      }
+    ],
+    "reminders": [
+      {
+        "id": "1",
+        "type": "过期提醒",
+        "itemName": "牛奶",
+        "dueDate": "2025-12-15T00:00:00Z",
+        "urgency": "high",
+        "description": "牛奶已经过期，需要及时处理"
+      },
+      {
+        "id": "2",
+        "type": "低库存提醒",
+        "itemName": "纸巾",
+        "dueDate": "2025-12-25T00:00:00Z",
+        "urgency": "medium",
+        "description": "纸巾库存不足，建议补充"
+      },
+      {
+        "id": "3",
+        "type": "借出归还",
+        "itemName": "蓝牙耳机",
+        "dueDate": "2025-12-20T00:00:00Z",
+        "urgency": "medium",
+        "description": "借出的耳机即将到期，需要提醒归还"
+      },
+      {
+        "id": "4",
+        "type": "季节性整理",
+        "itemName": "夏季衣物",
+        "dueDate": null,
+        "urgency": "low",
+        "description": "可以考虑将夏季衣物收纳起来，为冬季腾出空间"
+      }
+    ],
+    "quickActions": [
+      {
+        "id": "1",
+        "title": "添加新物品",
+        "description": "记录新收纳的物品信息",
+        "icon": "Plus",
+        "action": "add-item"
+      },
+      {
+        "id": "2", 
+        "title": "查找物品",
+        "description": "快速搜索想要的物品",
+        "icon": "Search",
+        "action": "search-item"
+      },
+      {
+        "id": "3",
+        "title": "空间管理",
+        "description": "查看和管理收纳空间",
+        "icon": "Archive",
+        "action": "manage-spaces"
+      },
+      {
+        "id": "4",
+        "title": "批量盘点",
+        "description": "对指定区域进行批量盘点",
+        "icon": "Package",
+        "action": "inventory-check"
+      }
+    ]
+  }
+}

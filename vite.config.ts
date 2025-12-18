@@ -4,7 +4,6 @@ import React from '@vitejs/plugin-react'
 import { defineConfig, loadEnv } from 'vite'
 
 // https://vitejs.dev/config/
-// @ts-expect-error
 export default defineConfig(({ mode }) => {
   // 加载环境变量
   const env = loadEnv(mode, process.cwd(), '')

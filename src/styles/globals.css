@@ -1,6 +1,7 @@
 /* globals.css */
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "./animations.css";
 
 @theme {
   /* Cream 色系 - 奶白色系 */

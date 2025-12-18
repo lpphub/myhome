@@ -23,11 +23,7 @@ export enum RequestMethod {
 }
 
 export class ApiError extends Error {
-  constructor(
-    public code: number,
-    public message: string,
-    public response?: unknown
-  ) {
+  constructor(public code: number, public message: string, public response?: unknown) {
     super(message)
     this.name = 'ApiError'
   }
@@ -91,10 +87,10 @@ class HttpClient {
         this.logRequest(config)
         return config
       },
-      error => {
+      (error) => {
         this.logError('Request Error:', error)
         return Promise.reject(error)
-      }
+      },
     )
 
     // 响应拦截器
@@ -103,10 +99,10 @@ class HttpClient {
         this.logResponse(response)
         return response
       },
-      error => {
+      (error) => {
         this.logError('Response Error:', error)
         return this.handleError(error)
-      }
+      },
     )
   }
 
@@ -209,7 +205,7 @@ class HttpClient {
   }
 
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms))
+    return new Promise((resolve) => setTimeout(resolve, ms))
   }
 
   private getToken(): string | null {
@@ -274,7 +270,7 @@ class HttpClient {
   upload<T = unknown>(
     url: string,
     file: File,
-    additionalData?: Record<string, FormDataEntryValue>
+    additionalData?: Record<string, FormDataEntryValue>,
   ): Promise<T> {
     const formData = new FormData()
     formData.append('file', file)
