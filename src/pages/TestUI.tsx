@@ -1,5 +1,6 @@
-import { Heart } from 'lucide-react'
+import { Heart, Star, AlertCircle, CheckCircle, Info } from 'lucide-react'
 
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -195,6 +196,92 @@ export default function ComponentTest() {
                   <h4 className='font-medium text-honey-700 mb-2'>Decorative Card</h4>
                   <p className='text-warmGray-500 text-sm'>带装饰性元素</p>
                 </Card>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Badge Variants Test */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Badge 组件测试</CardTitle>
+            <CardDescription>测试所有 Badge 变体和动效</CardDescription>
+          </CardHeader>
+          <CardContent className='space-y-4'>
+            {/* Variants */}
+            <div className='space-y-2'>
+              <h3 className='font-medium text-honey-700'>变体测试:</h3>
+              <div className='flex flex-wrap gap-2'>
+                <Badge>Default</Badge>
+                <Badge variant='secondary'>Secondary</Badge>
+                <Badge variant='destructive'>Destructive</Badge>
+                <Badge variant='outline'>Outline</Badge>
+                <Badge variant='success'>Success</Badge>
+                <Badge variant='info'>Info</Badge>
+              </div>
+            </div>
+
+            {/* Badge with Icons */}
+            <div className='space-y-2'>
+              <h3 className='font-medium text-honey-700'>带图标徽章:</h3>
+              <div className='flex flex-wrap gap-2'>
+                <Badge>
+                  <Heart className='size-3' />
+                  Favorite
+                </Badge>
+                <Badge variant='success'>
+                  <CheckCircle className='size-3' />
+                  Completed
+                </Badge>
+                <Badge variant='destructive'>
+                  <AlertCircle className='size-3' />
+                  Error
+                </Badge>
+                <Badge variant='info'>
+                  <Info className='size-3' />
+                  Info
+                </Badge>
+              </div>
+            </div>
+
+            {/* Badge Status Examples */}
+            <div className='space-y-2'>
+              <h3 className='font-medium text-honey-700'>状态示例:</h3>
+              <div className='space-y-2'>
+                <div className='flex items-center gap-2'>
+                  <span className='text-sm text-warmGray-600'>订单状态:</span>
+                  <Badge variant='success'>已完成</Badge>
+                </div>
+                <div className='flex items-center gap-2'>
+                  <span className='text-sm text-warmGray-600'>库存状态:</span>
+                  <Badge variant='destructive'>缺货</Badge>
+                </div>
+                <div className='flex items-center gap-2'>
+                  <span className='text-sm text-warmGray-600'>版本信息:</span>
+                  <Badge variant='info'>Beta</Badge>
+                </div>
+                <div className='flex items-center gap-2'>
+                  <span className='text-sm text-warmGray-600'>会员等级:</span>
+                  <Badge variant='secondary'>VIP</Badge>
+                </div>
+              </div>
+            </div>
+
+            {/* Interactive Examples */}
+            <div className='space-y-2'>
+              <h3 className='font-medium text-honey-700'>交互测试:</h3>
+              <div className='p-4 bg-cream-50 rounded-lg'>
+                <p className='text-sm text-warmGray-700 mb-3'>悬停徽章查看动效:</p>
+                <div className='flex flex-wrap gap-2'>
+                  <Badge className='cursor-pointer'>可点击徽章</Badge>
+                  <Badge variant='outline' className='cursor-pointer'>
+                    边框样式
+                  </Badge>
+                  <Badge variant='success' className='cursor-pointer'>
+                    <Star className='size-3' />
+                    推荐标签
+                  </Badge>
+                </div>
               </div>
             </div>
           </CardContent>
