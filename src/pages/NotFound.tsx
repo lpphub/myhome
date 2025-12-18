@@ -59,8 +59,8 @@ export default function NotFound() {
           </div>
 
           {/* 动画装饰线 */}
-          <div className='relative h-1 bg-gradient-to-r from-transparent via-honey-300 to-transparent rounded-full overflow-hidden'>
-            <div className='absolute inset-0 bg-gradient-to-r from-transparent via-honey-500 to-transparent animate-pulse'></div>
+          <div className='relative h-1 bg-linear-to-r from-transparent via-honey-300 to-transparent rounded-full overflow-hidden'>
+            <div className='absolute inset-0 bg-linear-to-r from-transparent via-honey-500 to-transparent animate-pulse'></div>
           </div>
 
           {/* 操作按钮 */}

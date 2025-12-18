@@ -1,4 +1,4 @@
-export { default as Dashboard } from './dashboard'
-export { default as Login } from './login'
-export { default as NotFound } from './not-found'
-export { default as TestComponents } from './test-components'
+export { default as Dashboard } from './Dashboard'
+export { default as Login } from './Login'
+export { default as NotFound } from './NotFound'
+export { default as TestComponents } from './TestUI'

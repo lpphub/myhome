@@ -1,7 +1,7 @@
 import { QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { queryClient } from '@/api/queryClient'
+import { queryClient } from '@/api/query-client'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { startMockService } from '@/mocks/browser'
 import App from './App'
