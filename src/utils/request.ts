@@ -23,7 +23,11 @@ export enum RequestMethod {
 }
 
 export class ApiError extends Error {
-  constructor(public code: number, public message: string, public response?: unknown) {
+  constructor(
+    public code: number,
+    public message: string,
+    public response?: unknown
+  ) {
     super(message)
     this.name = 'ApiError'
   }
@@ -87,7 +91,7 @@ class HttpClient {
         this.logRequest(config)
         return config
       },
-      (error) => {
+      error => {
         this.logError('Request Error:', error)
         return Promise.reject(error)
       }
@@ -99,7 +103,7 @@ class HttpClient {
         this.logResponse(response)
         return response
       },
-      (error) => {
+      error => {
         this.logError('Response Error:', error)
         return this.handleError(error)
       }
@@ -205,7 +209,7 @@ class HttpClient {
   }
 
   private delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms))
+    return new Promise(resolve => setTimeout(resolve, ms))
   }
 
   private getToken(): string | null {

@@ -31,7 +31,7 @@ export const handlers = [
     const body = (await request.json()) as AuthForm
 
     const user = Array.from(users.values()).find(
-      (u) => u.email === body.email && u.password === body.password
+      u => u.email === body.email && u.password === body.password
     )
 
     if (!user) {
@@ -73,7 +73,7 @@ export const handlers = [
   // 仪表板数据接口
   http.get('/api/dashboard', async () => {
     // 模拟数据库延迟
-    await new Promise((resolve) => setTimeout(resolve, 300))
+    await new Promise(resolve => setTimeout(resolve, 300))
 
     // 返回模拟数据
     return HttpResponse.json({

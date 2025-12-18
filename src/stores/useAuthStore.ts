@@ -5,6 +5,7 @@ import { refreshToken as apiRefreshToken } from '@/api/auth'
 export interface User {
   id: number
   name: string
+  email?: string
   avatar?: string
   role?: string
 }
@@ -59,7 +60,7 @@ export const useAuthStore = create<AuthState>()(
       {
         name: 'auth-store',
         storage: createJSONStorage(() => localStorage),
-        partialize: (state) => ({
+        partialize: state => ({
           user: state.user,
           accessToken: state.accessToken,
           refreshToken: state.refreshToken,

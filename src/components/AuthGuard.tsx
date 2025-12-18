@@ -7,11 +7,7 @@ interface AuthGuardProps {
   redirectTo?: string
 }
 
-export const AuthGuard: React.FC<AuthGuardProps> = ({
-  children,
-  requireAuth = true,
-  redirectTo,
-}) => {
+export function AuthGuard({ children, requireAuth = true, redirectTo }: AuthGuardProps) {
   const { isAuthenticated } = useAuth()
 
   const shouldRedirect = requireAuth ? !isAuthenticated : isAuthenticated
