@@ -36,18 +36,18 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         {/* 装饰性元素 */}
         {decorative && (
           <>
-            <div className='absolute top-0 right-0 w-32 h-32 bg-honey-100 rounded-full filter blur-2xl opacity-30' />
-            <div className='absolute bottom-0 left-0 w-24 h-24 bg-coral-100 rounded-full filter blur-2xl opacity-20' />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-honey-100 rounded-full filter blur-2xl opacity-30" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-coral-100 rounded-full filter blur-2xl opacity-20" />
           </>
         )}
 
         {/* 悬停光效 */}
         {hoverable && (
-          <div className='absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
+          <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         )}
 
         {/* 内容区域 */}
-        <div className='relative z-10'>{children}</div>
+        <div className="relative z-10">{children}</div>
       </div>
     )
   }

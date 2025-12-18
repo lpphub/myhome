@@ -66,9 +66,9 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: state.isAuthenticated,
         }),
         version: 1,
-      },
-    ),
-  ),
+      }
+    )
+  )
 )
 
 export default useAuthStore

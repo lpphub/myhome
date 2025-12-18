@@ -90,7 +90,7 @@ class HttpClient {
       (error) => {
         this.logError('Request Error:', error)
         return Promise.reject(error)
-      },
+      }
     )
 
     // 响应拦截器
@@ -102,7 +102,7 @@ class HttpClient {
       (error) => {
         this.logError('Response Error:', error)
         return this.handleError(error)
-      },
+      }
     )
   }
 
@@ -270,7 +270,7 @@ class HttpClient {
   upload<T = unknown>(
     url: string,
     file: File,
-    additionalData?: Record<string, FormDataEntryValue>,
+    additionalData?: Record<string, FormDataEntryValue>
   ): Promise<T> {
     const formData = new FormData()
     formData.append('file', file)

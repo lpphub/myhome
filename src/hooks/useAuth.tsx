@@ -1,11 +1,11 @@
 import useAuthStore from '@/stores/useAuthStore'
 
 export function useAuth() {
-  const user = useAuthStore(s => s.user)
-  const isAuthenticated = useAuthStore(s => s.isAuthenticated)
-  const login = useAuthStore(s => s.login)
-  const logout = useAuthStore(s => s.logout)
-  const refresh = useAuthStore(s => s.refreshAccessToken)
+  const user = useAuthStore((s) => s.user)
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
+  const login = useAuthStore((s) => s.login)
+  const logout = useAuthStore((s) => s.logout)
+  const refresh = useAuthStore((s) => s.refreshAccessToken)
 
   return {
     user,
