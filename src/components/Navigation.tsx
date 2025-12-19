@@ -4,13 +4,13 @@ import {
   Heart,
   Home,
   LogOut,
-  Plus,
   Search,
   Settings,
   Sparkles,
   Tag,
   User,
 } from 'lucide-react'
+import { motion } from 'motion/react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { useAuth } from '../hooks/useAuth'
 
@@ -118,7 +118,18 @@ function Navigation() {
                   >
                     {/* 活跃状态的装饰点 */}
                     {isActive && (
-                      <div className='absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-coral-500 rounded-full animate-pulse'></div>
+                      <motion.div
+                        className='absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-coral-500 rounded-full'
+                        animate={{
+                          opacity: [1, 0.5, 1],
+                          scale: [1, 1.5, 1],
+                        }}
+                        transition={{
+                          duration: 1.5,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                        }}
+                      />
                     )}
 
                     <div className='flex items-center space-x-2'>
@@ -140,7 +151,21 @@ function Navigation() {
                       <span className='font-medium'>{item.label}</span>
 
                       {/* 活跃状态的装饰 */}
-                      {isActive && <Sparkles className='w-3 h-3 text-coral-500 animate-pulse' />}
+                      {isActive && (
+                        <motion.div
+                          animate={{
+                            opacity: [1, 0.7, 1],
+                            scale: [1, 1.1, 1],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: 'easeInOut',
+                          }}
+                        >
+                          <Sparkles className='w-3 h-3 text-coral-500' />
+                        </motion.div>
+                      )}
                     </div>
                   </Link>
                 )
@@ -219,7 +244,18 @@ function Navigation() {
                 >
                   {/* 活跃指示器 */}
                   {isActive && (
-                    <div className='absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-coral-500 rounded-full animate-pulse'></div>
+                    <motion.div
+                      className='absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-coral-500 rounded-full'
+                      animate={{
+                        opacity: [1, 0.5, 1],
+                        scale: [1, 1.5, 1],
+                      }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                      }}
+                    />
                   )}
 
                   <div

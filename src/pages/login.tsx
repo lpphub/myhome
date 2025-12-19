@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { Eye, EyeOff, Heart, Home } from 'lucide-react'
+import { motion } from 'motion/react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
@@ -67,11 +68,29 @@ export default function Login() {
   return (
     <div className='min-h-screen bg-honey-50 from-cream-300 to-white flex items-center justify-center p-4'>
       {/* 背景装饰元素 */}
-      <div className='absolute top-1/4 left-1/4 w-64 h-64 bg-honey-100 rounded-full filter blur-3xl opacity-50 animate-pulse'></div>
-      <div
-        className='absolute bottom-1/3 right-1/3 w-80 h-80 bg-coral-100 rounded-full filter blur-3xl opacity-40 animate-pulse'
-        style={{ animationDelay: '1s' }}
-      ></div>
+      <motion.div
+        className='absolute top-1/4 left-1/4 w-64 h-64 bg-honey-100 rounded-full filter blur-3xl opacity-50'
+        animate={{
+          opacity: [0.5, 0.8, 0.5],
+          scale: [1, 1.05, 1],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+        }}
+      />
+      <motion.div
+        className='absolute bottom-1/3 right-1/3 w-80 h-80 bg-coral-100 rounded-full filter blur-3xl opacity-40'
+        animate={{
+          opacity: [0.4, 0.6, 0.4],
+          scale: [1, 1.05, 1],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          delay: 1,
+        }}
+      />
 
       {/* 登录卡片 */}
       <Card className='w-full max-w-md z-10'>

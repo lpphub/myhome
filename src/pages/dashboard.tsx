@@ -19,6 +19,7 @@ import {
   TrendingUp,
   XCircle,
 } from 'lucide-react'
+import { motion } from 'motion/react'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { getDashboardData } from '@/api/dashboard'
@@ -117,7 +118,15 @@ export default function Dashboard() {
     return (
       <div className='min-h-screen bg-cream-50 flex items-center justify-center'>
         <div className='text-center'>
-          <div className='w-12 h-12 border-4 border-honey-200 border-t-honey-500 rounded-full animate-spin mx-auto mb-4'></div>
+          <motion.div
+            className='w-12 h-12 border-4 border-honey-200 border-t-honey-500 rounded-full mx-auto mb-4'
+            animate={{ rotate: 360 }}
+            transition={{
+              duration: 1,
+              repeat: Infinity,
+              ease: 'linear',
+            }}
+          />
           <p className='text-warmGray-600 text-lg'>正在加载您的小窝...</p>
         </div>
       </div>
@@ -144,14 +153,34 @@ export default function Dashboard() {
         <div className='relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center space-x-4'>
-              <div className='w-16 h-16 bg-linear-to-br from-honey-400 to-honey-600 rounded-3xl flex items-center justify-center shadow-warm-lg animate-float'>
+              <motion.div
+                className='w-16 h-16 bg-linear-to-br from-honey-400 to-honey-600 rounded-3xl flex items-center justify-center shadow-warm-lg'
+                animate={{
+                  y: [-8, 0, -8],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                }}
+              >
                 <Home className='w-8 h-8 text-white' />
-              </div>
+              </motion.div>
               <div>
                 <div className='flex items-center space-x-3 mb-2'>
                   <GreetingIcon className={`w-6 h-6 ${greeting.color}`} />
                   <h1 className='text-3xl font-bold text-warmGray-800'>{greeting.text}！</h1>
-                  <Heart className='w-6 h-6 text-coral-400 animate-pulse' />
+                  <motion.div
+                    animate={{
+                      opacity: [1, 0.8, 1],
+                      scale: [1, 1.05, 1],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                    }}
+                  >
+                    <Heart className='w-6 h-6 text-coral-400' />
+                  </motion.div>
                 </div>
                 <p className='text-warmGray-600 text-lg'>
                   今天是{' '}
@@ -196,7 +225,18 @@ export default function Dashboard() {
               </div>
             </div>
             <div className='absolute top-2 right-2'>
-              <Star className='w-4 h-4 text-honey-500 animate-pulse' />
+              <motion.div
+                animate={{
+                  opacity: [1, 0.8, 1],
+                  scale: [1, 1.05, 1],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                }}
+              >
+                <Star className='w-4 h-4 text-honey-500' />
+              </motion.div>
             </div>
           </Card>
           <Card className='relative'>
@@ -213,7 +253,17 @@ export default function Dashboard() {
               </div>
             </div>
             <div className='absolute top-2 right-2'>
-              <Sparkles className='w-4 h-4 text-lavender-500 animate-bounce-gentle' />
+              <motion.div
+                animate={{
+                  y: [0, -4, 0],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                }}
+              >
+                <Sparkles className='w-4 h-4 text-lavender-500' />
+              </motion.div>
             </div>
           </Card>
 
@@ -231,7 +281,18 @@ export default function Dashboard() {
               </div>
             </div>
             <div className='absolute top-2 right-2'>
-              <Heart className='w-4 h-4 text-coral-500 animate-pulse' />
+              <motion.div
+                animate={{
+                  opacity: [1, 0.8, 1],
+                  scale: [1, 1.05, 1],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                }}
+              >
+                <Heart className='w-4 h-4 text-coral-500' />
+              </motion.div>
             </div>
           </Card>
 
@@ -249,7 +310,17 @@ export default function Dashboard() {
               </div>
             </div>
             <div className='absolute top-2 right-2'>
-              <Coffee className='w-4 h-4 text-lemon-500 animate-float' />
+              <motion.div
+                animate={{
+                  y: [-8, 0, -8],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                }}
+              >
+                <Coffee className='w-4 h-4 text-lemon-500' />
+              </motion.div>
             </div>
           </Card>
         </div>
@@ -265,11 +336,14 @@ export default function Dashboard() {
               <CardContent>
                 <div className='space-y-4'>
                   {dashboardData.recentActivities.map((activity, index) => (
-                    <div
+                    <motion.div
                       key={activity.id}
-                      className='flex items-center justify-between p-4 bg-linear-to-r from-cream-50/50 to-honey-50/30 rounded-2xl border border-cream-200 hover:shadow-warm-sm transition-all duration-300 animate-fade-in'
-                      style={{
-                        animationDelay: `${index * 100}ms`,
+                      className='flex items-center justify-between p-4 bg-linear-to-r from-cream-50/50 to-honey-50/30 rounded-2xl border border-cream-200 hover:shadow-warm-sm transition-all duration-300'
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        duration: 0.6,
+                        delay: index * 0.1,
                       }}
                     >
                       <div className='flex items-center space-x-4'>
@@ -293,7 +367,7 @@ export default function Dashboard() {
                         </Badge>
                         {getStatusIcon(activity.status)}
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </CardContent>
@@ -311,13 +385,14 @@ export default function Dashboard() {
               <CardContent>
                 <div className='space-y-3'>
                   {dashboardData.reminders.map((reminder, index) => (
-                    <div
+                    <motion.div
                       key={reminder.id}
-                      className='p-4 bg-linear-to-r from-white/80 to-cream-50/60 rounded-xl border border-cream-200 shadow-soft hover:shadow-warm-sm transition-all duration-300 animate-fade-in'
-                      style={{
-                        animationDelay: `${
-                          (dashboardData.recentActivities.length + index) * 100
-                        }ms`,
+                      className='p-4 bg-linear-to-r from-white/80 to-cream-50/60 rounded-xl border border-cream-200 shadow-soft hover:shadow-warm-sm transition-all duration-300'
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        duration: 0.6,
+                        delay: (dashboardData.recentActivities.length + index) * 0.1,
                       }}
                     >
                       <div className='flex items-start justify-between mb-2'>
@@ -341,7 +416,7 @@ export default function Dashboard() {
                           截止: {new Date(reminder.dueDate).toLocaleDateString('zh-CN')}
                         </p>
                       )}
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </CardContent>

@@ -1,4 +1,5 @@
 import { AlertCircle, Home, RefreshCw } from 'lucide-react'
+import { motion } from 'motion/react'
 import { useNavigate } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -17,15 +18,41 @@ export default function NotFound() {
   return (
     <div className='min-h-screen bg-honey-50 flex items-center justify-center p-4 relative overflow-hidden'>
       {/* 背景装饰元素 */}
-      <div className='absolute top-1/4 left-1/4 w-64 h-64 bg-honey-100 rounded-full filter blur-3xl opacity-30 animate-pulse'></div>
-      <div
-        className='absolute bottom-1/3 right-1/3 w-80 h-80 bg-coral-100 rounded-full filter blur-3xl opacity-20 animate-pulse'
-        style={{ animationDelay: '1s' }}
-      ></div>
-      <div
-        className='absolute top-1/2 left-1/3 w-48 h-48 bg-lavender-100 rounded-full filter blur-2xl opacity-25 animate-pulse'
-        style={{ animationDelay: '2s' }}
-      ></div>
+      <motion.div
+        className='absolute top-1/4 left-1/4 w-64 h-64 bg-honey-100 rounded-full filter blur-3xl opacity-30'
+        animate={{
+          opacity: [0.3, 0.5, 0.3],
+          scale: [1, 1.02, 1],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+        }}
+      />
+      <motion.div
+        className='absolute bottom-1/3 right-1/3 w-80 h-80 bg-coral-100 rounded-full filter blur-3xl opacity-20'
+        animate={{
+          opacity: [0.2, 0.4, 0.2],
+          scale: [1, 1.03, 1],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          delay: 1,
+        }}
+      />
+      <motion.div
+        className='absolute top-1/2 left-1/3 w-48 h-48 bg-lavender-100 rounded-full filter blur-2xl opacity-25'
+        animate={{
+          opacity: [0.25, 0.4, 0.25],
+          scale: [1, 1.02, 1],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          delay: 2,
+        }}
+      />
 
       {/* 主内容 */}
       <Card className='w-full max-w-lg p-8 md:p-12 z-10 relative'>
@@ -35,17 +62,46 @@ export default function NotFound() {
             <div className='absolute inset-0 flex items-center justify-center'>
               <span className='text-9xl font-bold text-honey-200 select-none'>404</span>
             </div>
-            <div className='absolute inset-0 flex items-center justify-center animate-bounce'>
+            <motion.div
+              className='absolute inset-0 flex items-center justify-center'
+              animate={{
+                y: [0, -20, 0],
+              }}
+              transition={{
+                duration: 1,
+                repeat: Infinity,
+              }}
+            >
               <span className='text-9xl font-bold text-honey-600 select-none'>404</span>
-            </div>
+            </motion.div>
           </div>
 
           {/* 错误图标 */}
           <div className='relative'>
-            <div className='w-20 h-20 mx-auto bg-coral-100 rounded-full flex items-center justify-center animate-pulse'>
+            <motion.div
+              className='w-20 h-20 mx-auto bg-coral-100 rounded-full flex items-center justify-center'
+              animate={{
+                opacity: [1, 0.8, 1],
+                scale: [1, 1.05, 1],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+              }}
+            >
               <AlertCircle className='w-10 h-10 text-coral-500' />
-            </div>
-            <div className='absolute -top-2 -right-2 w-6 h-6 bg-lavender-500 rounded-full animate-ping'></div>
+            </motion.div>
+            <motion.div
+              className='absolute -top-2 -right-2 w-6 h-6 bg-lavender-500 rounded-full'
+              animate={{
+                scale: [1, 2],
+                opacity: [1, 0],
+              }}
+              transition={{
+                duration: 1,
+                repeat: Infinity,
+              }}
+            />
           </div>
 
           {/* 错误信息 */}
@@ -60,13 +116,32 @@ export default function NotFound() {
 
           {/* 动画装饰线 */}
           <div className='relative h-1 bg-linear-to-r from-transparent via-honey-300 to-transparent rounded-full overflow-hidden'>
-            <div className='absolute inset-0 bg-linear-to-r from-transparent via-honey-500 to-transparent animate-pulse'></div>
+            <motion.div
+              className='absolute inset-0 bg-linear-to-r from-transparent via-honey-500 to-transparent'
+              animate={{
+                opacity: [0.5, 1, 0.5],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+              }}
+            />
           </div>
 
           {/* 操作按钮 */}
           <div className='flex flex-col sm:flex-row gap-4 justify-center pt-4'>
             <Button onClick={handleGoHome} className='flex items-center gap-2 group'>
-              <Home className='w-4 h-4 group-hover:animate-bounce' />
+              <motion.div
+                whileHover={{
+                  y: [-5, -15, -5],
+                }}
+                transition={{
+                  duration: 0.5,
+                  repeat: 2,
+                }}
+              >
+                <Home className='w-4 h-4' />
+              </motion.div>
               返回首页
             </Button>
             <Button
@@ -74,7 +149,16 @@ export default function NotFound() {
               onClick={handleRefresh}
               className='flex items-center gap-2 group'
             >
-              <RefreshCw className='w-4 h-4 group-hover:animate-spin' />
+              <motion.div
+                whileHover={{
+                  rotate: [0, 360],
+                }}
+                transition={{
+                  duration: 0.5,
+                }}
+              >
+                <RefreshCw className='w-4 h-4' />
+              </motion.div>
               刷新页面
             </Button>
           </div>
@@ -90,33 +174,86 @@ export default function NotFound() {
         </div>
 
         {/* 装饰元素 */}
-        <div className='absolute -bottom-4 -right-4 w-16 h-16 bg-lavender-100 rounded-full opacity-60 blur-md animate-pulse'></div>
-        <div className='absolute -top-4 -left-4 w-12 h-12 bg-coral-100 rounded-full opacity-60 blur-md animate-pulse'></div>
+        <motion.div
+          className='absolute -bottom-4 -right-4 w-16 h-16 bg-lavender-100 rounded-full opacity-60 blur-md'
+          animate={{
+            opacity: [0.6, 0.8, 0.6],
+            scale: [1, 1.05, 1],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+          }}
+        />
+        <motion.div
+          className='absolute -top-4 -left-4 w-12 h-12 bg-coral-100 rounded-full opacity-60 blur-md'
+          animate={{
+            opacity: [0.6, 0.8, 0.6],
+            scale: [1, 1.05, 1],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            delay: 0.5,
+          }}
+        />
 
         {/* 漂浮的小元素 */}
-        <div
-          className='absolute top-8 right-8 text-2xl animate-bounce'
-          style={{ animationDelay: '0.5s' }}
+        <motion.div
+          className='absolute top-8 right-8 text-2xl'
+          animate={{
+            y: [0, -20, 0],
+          }}
+          transition={{
+            duration: 1,
+            repeat: Infinity,
+            delay: 0.5,
+          }}
         >
           ✨
-        </div>
-        <div
-          className='absolute bottom-8 left-8 text-xl animate-bounce'
-          style={{ animationDelay: '1.5s' }}
+        </motion.div>
+        <motion.div
+          className='absolute bottom-8 left-8 text-xl'
+          animate={{
+            y: [0, -20, 0],
+          }}
+          transition={{
+            duration: 1,
+            repeat: Infinity,
+            delay: 1.5,
+          }}
         >
           🌸
-        </div>
-        <div
-          className='absolute top-16 left-12 text-lg animate-bounce'
-          style={{ animationDelay: '2.5s' }}
+        </motion.div>
+        <motion.div
+          className='absolute top-16 left-12 text-lg'
+          animate={{
+            y: [0, -20, 0],
+          }}
+          transition={{
+            duration: 1,
+            repeat: Infinity,
+            delay: 2.5,
+          }}
         >
           🍯
-        </div>
+        </motion.div>
       </Card>
 
       {/* 底部装饰 */}
       <div className='absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center'>
-        <p className='text-warmGray-400 text-sm animate-pulse'>让我们回到温暖的家 ✨</p>
+        <motion.p
+          className='text-warmGray-400 text-sm'
+          animate={{
+            opacity: [1, 0.7, 1],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+          }}
+        >
+          让我们回到温暖的家 ✨
+        </motion.p>
       </div>
     </div>
   )

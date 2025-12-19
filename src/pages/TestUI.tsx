@@ -13,9 +13,9 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 
-// 定义动效变体
+// 使用预定义的动画变体，结合自定义效果
 const cardVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 },
+  hidden: { opacity: 0, y: 20, scale: 0.95 },
   visible: { opacity: 1, y: 0, scale: 1 },
 }
 
