@@ -74,30 +74,30 @@ function Navigation() {
   return (
     <>
       {/* 顶部导航栏 - 温馨小型设计 */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/85 backdrop-blur-xl border-b border-honey-100/80 shadow-[0_1px_3px_-1px_rgba(0,0,0,0.04),0_1px_2px_-1px_rgba(0,0,0,0.02)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+      <nav className='fixed top-0 left-0 right-0 z-50 bg-white/85 backdrop-blur-xl border-b border-honey-100/80 shadow-[0_1px_3px_-1px_rgba(0,0,0,0.04),0_1px_2px_-1px_rgba(0,0,0,0.02)]'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='flex items-center justify-between h-16'>
             {/* Logo 区域 - 小巧设计 */}
             <Link
-              to="/"
-              className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+              to='/'
+              className='flex items-center space-x-3 hover:opacity-80 transition-opacity'
             >
-              <div className="relative">
-                <div className="w-10 h-10 bg-gradient-to-br from-coral-400 to-coral-600 rounded-2xl flex items-center justify-center shadow-lg">
-                  <Home className="w-5 h-5 text-white" />
+              <div className='relative'>
+                <div className='w-10 h-10 bg-gradient-to-br from-coral-400 to-coral-600 rounded-2xl flex items-center justify-center shadow-lg'>
+                  <Home className='w-5 h-5 text-white' />
                 </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-honey-400 to-honey-600 rounded-full flex items-center justify-center">
-                  <Heart className="w-2 h-2 text-white" />
+                <div className='absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-honey-400 to-honey-600 rounded-full flex items-center justify-center'>
+                  <Heart className='w-2 h-2 text-white' />
                 </div>
               </div>
-              <div className="hidden sm:block">
-                <h1 className="text-lg font-bold text-warmGray-800">家庭收纳小助手</h1>
-                <p className="text-xs text-warmGray-600">温馨收纳助手</p>
+              <div className='hidden sm:block'>
+                <h1 className='text-lg font-bold text-warmGray-800'>家庭收纳小助手</h1>
+                <p className='text-xs text-warmGray-600'>温馨收纳助手</p>
               </div>
             </Link>
 
             {/* 主导航项 - 水平排列 */}
-            <div className="hidden md:flex items-center space-x-1">
+            <div className='hidden md:flex items-center space-x-1'>
               {navItems.map((item, index) => {
                 const isActive = currentPage === item.id
                 return (
@@ -118,10 +118,10 @@ function Navigation() {
                   >
                     {/* 活跃状态的装饰点 */}
                     {isActive && (
-                      <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-coral-500 rounded-full animate-pulse"></div>
+                      <div className='absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-coral-500 rounded-full animate-pulse'></div>
                     )}
 
-                    <div className="flex items-center space-x-2">
+                    <div className='flex items-center space-x-2'>
                       {/* 图标 */}
                       <div
                         className={`
@@ -137,10 +137,10 @@ function Navigation() {
                       </div>
 
                       {/* 文字 */}
-                      <span className="font-medium">{item.label}</span>
+                      <span className='font-medium'>{item.label}</span>
 
                       {/* 活跃状态的装饰 */}
-                      {isActive && <Sparkles className="w-3 h-3 text-coral-500 animate-pulse" />}
+                      {isActive && <Sparkles className='w-3 h-3 text-coral-500 animate-pulse' />}
                     </div>
                   </Link>
                 )
@@ -148,46 +148,46 @@ function Navigation() {
             </div>
 
             {/* 右侧操作区 */}
-            <div className="flex items-center space-x-2">
+            <div className='flex items-center space-x-2'>
               {/* 搜索按钮 */}
               <button
-                type="button"
-                className="p-2.5 text-warmGray-500 hover:text-honey-600 hover:bg-honey-50 rounded-xl transition-all duration-300 group"
+                type='button'
+                className='p-2.5 text-warmGray-500 hover:text-honey-600 hover:bg-honey-50 rounded-xl transition-all duration-300 group'
               >
-                <Search className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                <Search className='w-5 h-5 group-hover:scale-110 transition-transform' />
               </button>
 
               {/* 设置按钮 */}
               <button
-                type="button"
-                className="p-2.5 text-warmGray-500 hover:text-honey-600 hover:bg-honey-50 rounded-xl transition-all duration-300 group"
+                type='button'
+                className='p-2.5 text-warmGray-500 hover:text-honey-600 hover:bg-honey-50 rounded-xl transition-all duration-300 group'
               >
-                <Settings className="w-5 h-5 group-hover:rotate-45 transition-transform" />
+                <Settings className='w-5 h-5 group-hover:rotate-45 transition-transform' />
               </button>
 
               {/* 用户信息下拉菜单 */}
-              <div className="relative group">
+              <div className='relative group'>
                 <button
-                  type="button"
-                  className="flex items-center space-x-2 p-2.5 text-warmGray-700 hover:bg-honey-50 rounded-xl transition-all duration-300"
+                  type='button'
+                  className='flex items-center space-x-2 p-2.5 text-warmGray-700 hover:bg-honey-50 rounded-xl transition-all duration-300'
                 >
-                  <div className="w-8 h-8 bg-gradient-to-br from-honey-400 to-coral-400 rounded-full flex items-center justify-center">
-                    <User className="w-4 h-4 text-white" />
+                  <div className='w-8 h-8 bg-gradient-to-br from-honey-400 to-coral-400 rounded-full flex items-center justify-center'>
+                    <User className='w-4 h-4 text-white' />
                   </div>
-                  <span className="hidden sm:block text-sm font-medium">
+                  <span className='hidden sm:block text-sm font-medium'>
                     {user?.name || user?.email?.split('@')[0] || '用户'}
                   </span>
                 </button>
 
                 {/* 下拉菜单 */}
-                <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-warm-lg border border-honey-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform group-hover:translate-y-0 translate-y-2">
-                  <div className="p-2">
+                <div className='absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-warm-lg border border-honey-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform group-hover:translate-y-0 translate-y-2'>
+                  <div className='p-2'>
                     <button
-                      type="button"
+                      type='button'
                       onClick={handleLogout}
-                      className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-semantic-danger hover:bg-semantic-danger/10 rounded-lg transition-colors cursor-pointer"
+                      className='w-full flex items-center space-x-2 px-3 py-2 text-sm text-semantic-danger hover:bg-semantic-danger/10 rounded-lg transition-colors cursor-pointer'
                     >
-                      <LogOut className="w-4 h-4" />
+                      <LogOut className='w-4 h-4' />
                       <span>退出登录</span>
                     </button>
                   </div>
@@ -199,10 +199,10 @@ function Navigation() {
       </nav>
 
       {/* 移动端底部导航栏 */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50">
-        <div className="bg-white/85 backdrop-blur-xl border-t border-honey-100/80 shadow-[0_-1px_3px_-1px_rgba(0,0,0,0.04),0_-1px_2px_-1px_rgba(0,0,0,0.02)] px-3 py-2">
-          <div className="flex justify-around">
-            {navItems.map((item) => {
+      <div className='md:hidden fixed bottom-0 left-0 right-0 z-50'>
+        <div className='bg-white/85 backdrop-blur-xl border-t border-honey-100/80 shadow-[0_-1px_3px_-1px_rgba(0,0,0,0.04),0_-1px_2px_-1px_rgba(0,0,0,0.02)] px-3 py-2'>
+          <div className='flex justify-around'>
+            {navItems.map(item => {
               const isActive = currentPage === item.id
               return (
                 <Link
@@ -219,7 +219,7 @@ function Navigation() {
                 >
                   {/* 活跃指示器 */}
                   {isActive && (
-                    <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-coral-500 rounded-full animate-pulse"></div>
+                    <div className='absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-coral-500 rounded-full animate-pulse'></div>
                   )}
 
                   <div
@@ -234,7 +234,7 @@ function Navigation() {
                   >
                     <item.icon className={`h-4 w-4 ${isActive ? 'text-coral-600' : ''}`} />
                   </div>
-                  <span className="text-xs">{item.label}</span>
+                  <span className='text-xs'>{item.label}</span>
                 </Link>
               )
             })}

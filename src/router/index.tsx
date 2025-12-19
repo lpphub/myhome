@@ -23,15 +23,15 @@ export const router = createBrowserRouter([
       },
       {
         path: 'spaces',
-        element: <ComingSoon feature="spaces" />,
+        element: <ComingSoon feature='spaces' />,
       },
       {
         path: 'items',
-        element: <ComingSoon feature="items" />,
+        element: <ComingSoon feature='items' />,
       },
       {
         path: 'tags',
-        element: <ComingSoon feature="tags" />,
+        element: <ComingSoon feature='tags' />,
       },
     ],
   },
