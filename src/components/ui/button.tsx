@@ -5,29 +5,22 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center font-medium rounded-2xl transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none relative overflow-hidden group whitespace-nowrap shrink-0 gap-2 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 relative group',
   {
     variants: {
       variant: {
-        default:
-          'bg-gradient-to-r from-honey-500 to-honey-600 text-white hover:from-honey-600 hover:to-honey-700 hover:shadow-warm-lg hover:scale-105 active:scale-95 focus:ring-honey-300',
-        destructive:
-          'bg-gradient-to-r from-coral-500 to-coral-600 text-white hover:from-coral-600 hover:to-coral-700 hover:shadow-warm-lg hover:scale-105 focus:ring-coral-300',
-        outline:
-          'border-2 border-cream-200 bg-white/80 text-honey-700 hover:bg-cream-100 hover:border-honey-300 hover:text-honey-800 focus:ring-honey-300',
-        secondary:
-          'bg-gradient-to-r from-cream-100 to-cream-200 text-honey-700 hover:from-cream-200 hover:to-cream-300 hover:text-honey-800 hover:shadow-warm-md hover:scale-102 focus:ring-honey-300',
-        ghost:
-          'text-warmGray-700 hover:text-honey-700 hover:bg-white/60 hover:shadow-soft focus:ring-honey-300',
-        link: 'text-honey-600 underline-offset-4 hover:text-honey-700 hover:underline focus:ring-honey-300',
+        default: 'bg-primary text-foreground hover:bg-primary/90 active:scale-95',
+        accent: 'bg-accent text-foreground hover:bg-accent/90 active:scale-95',
+        outline: 'border border-border bg-background hover:bg-accent/10',
+        secondary: 'bg-secondary text-foreground hover:bg-secondary/90',
+        ghost: 'hover:bg-accent/10 hover:text-accent-foreground',
+        link: 'text-primary underline-offset-4 hover:underline',
       },
       size: {
-        default: 'px-6 py-3 text-sm min-h-[44px]',
-        sm: 'px-4 py-2 text-sm min-h-[36px]',
-        lg: 'px-8 py-4 text-base min-h-[52px]',
-        icon: 'size-9 px-0',
-        'icon-sm': 'size-8 px-0',
-        'icon-lg': 'size-10 px-0',
+        default: 'h-10 px-4 py-2',
+        sm: 'h-9 rounded-md px-3',
+        lg: 'h-11 rounded-md px-8',
+        icon: 'h-10 w-10',
       },
     },
     defaultVariants: {

@@ -91,11 +91,9 @@ export default function Dashboard() {
       case 'high':
         return 'destructive'
       case 'medium':
-        return 'success'
-      case 'low':
-        return 'info'
-      default:
         return 'secondary'
+      default:
+        return 'default'
     }
   }
 
@@ -135,18 +133,18 @@ export default function Dashboard() {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-cream-50 via-cream-100 to-honey-50'>
+    <div className='min-h-screen bg-linear-to-br from-cream-50 via-cream-100 to-honey-50'>
       {/* 温馨的头部区域 */}
       <div className='relative overflow-hidden'>
         {/* 背景装饰 */}
-        <div className='absolute inset-0 bg-gradient-to-r from-honey-100/50 via-cream-200/30 to-coral-100/50'></div>
-        <div className='absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-honey-200/20 to-transparent rounded-full blur-3xl'></div>
-        <div className='absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-coral-200/20 to-transparent rounded-full blur-2xl'></div>
+        <div className='absolute inset-0 bg-linear-to-r from-honey-100/50 via-cream-200/30 to-coral-100/50'></div>
+        <div className='absolute top-0 right-0 w-64 h-64 bg-linear-to-bl from-honey-200/20 to-transparent rounded-full blur-3xl'></div>
+        <div className='absolute bottom-0 left-0 w-48 h-48 bg-linear-to-tr from-coral-200/20 to-transparent rounded-full blur-2xl'></div>
 
         <div className='relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center space-x-4'>
-              <div className='w-16 h-16 bg-gradient-to-br from-honey-400 to-honey-600 rounded-3xl flex items-center justify-center shadow-warm-lg animate-float'>
+              <div className='w-16 h-16 bg-linear-to-br from-honey-400 to-honey-600 rounded-3xl flex items-center justify-center shadow-warm-lg animate-float'>
                 <Home className='w-8 h-8 text-white' />
               </div>
               <div>
@@ -184,7 +182,7 @@ export default function Dashboard() {
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
         {/* 温馨统计卡片 - 仿手账风格 */}
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8'>
-          <Card variant='warm' decorative className='relative'>
+          <Card className='relative'>
             <div className='flex items-center justify-between p-6'>
               <div>
                 <p className='text-sm font-medium text-warmGray-600 mb-1'>我的收藏</p>
@@ -193,7 +191,7 @@ export default function Dashboard() {
                 </p>
                 <p className='text-xs text-warmGray-500 mt-1'>件温馨小物</p>
               </div>
-              <div className='p-4 bg-gradient-to-br from-honey-200 to-honey-300 rounded-2xl shadow-soft'>
+              <div className='p-4 bg-linear-to-br from-honey-200 to-honey-300 rounded-2xl shadow-soft'>
                 <Package className='w-8 h-8 text-honey-700' />
               </div>
             </div>
@@ -201,8 +199,7 @@ export default function Dashboard() {
               <Star className='w-4 h-4 text-honey-500 animate-pulse' />
             </div>
           </Card>
-
-          <Card variant='warm' decorative className='relative'>
+          <Card className='relative'>
             <div className='flex items-center justify-between p-6'>
               <div>
                 <p className='text-sm font-medium text-warmGray-600 mb-1'>收纳空间</p>
@@ -211,7 +208,7 @@ export default function Dashboard() {
                 </p>
                 <p className='text-xs text-warmGray-500 mt-1'>个温馨角落</p>
               </div>
-              <div className='p-4 bg-gradient-to-br from-lavender-200 to-lavender-300 rounded-2xl shadow-soft'>
+              <div className='p-4 bg-linear-to-br from-lavender-200 to-lavender-300 rounded-2xl shadow-soft'>
                 <Archive className='w-8 h-8 text-lavender-700' />
               </div>
             </div>
@@ -220,7 +217,7 @@ export default function Dashboard() {
             </div>
           </Card>
 
-          <Card variant='warm' decorative className='relative'>
+          <Card className='relative'>
             <div className='flex items-center justify-between p-6'>
               <div>
                 <p className='text-sm font-medium text-warmGray-600 mb-1'>空间利用率</p>
@@ -229,7 +226,7 @@ export default function Dashboard() {
                 </p>
                 <p className='text-xs text-warmGray-500 mt-1'>利用率刚好</p>
               </div>
-              <div className='p-4 bg-gradient-to-br from-coral-200 to-coral-300 rounded-2xl shadow-soft'>
+              <div className='p-4 bg-linear-to-br from-coral-200 to-coral-300 rounded-2xl shadow-soft'>
                 <TrendingUp className='w-8 h-8 text-coral-700' />
               </div>
             </div>
@@ -238,7 +235,7 @@ export default function Dashboard() {
             </div>
           </Card>
 
-          <Card variant='warm' decorative className='relative'>
+          <Card className='relative'>
             <div className='flex items-center justify-between p-6'>
               <div>
                 <p className='text-sm font-medium text-warmGray-600 mb-1'>待处理事项</p>
@@ -247,7 +244,7 @@ export default function Dashboard() {
                 </p>
                 <p className='text-xs text-warmGray-500 mt-1'>个小提醒</p>
               </div>
-              <div className='p-4 bg-gradient-to-br from-lemon-200 to-lemon-300 rounded-2xl shadow-soft'>
+              <div className='p-4 bg-linear-to-br from-lemon-200 to-lemon-300 rounded-2xl shadow-soft'>
                 <AlertTriangle className='w-8 h-8 text-lemon-700' />
               </div>
             </div>
@@ -260,7 +257,7 @@ export default function Dashboard() {
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
           {/* 最近活动 - 手账风格 */}
           <div className='lg:col-span-2'>
-            <Card variant='soft' decorative>
+            <Card>
               <CardHeader>
                 <CardTitle>最近的小变化</CardTitle>
                 <CardDescription>物品流动的温馨记录</CardDescription>
@@ -270,7 +267,7 @@ export default function Dashboard() {
                   {dashboardData.recentActivities.map((activity, index) => (
                     <div
                       key={activity.id}
-                      className='flex items-center justify-between p-4 bg-gradient-to-r from-cream-50/50 to-honey-50/30 rounded-2xl border border-cream-200 hover:shadow-warm-sm transition-all duration-300 animate-fade-in'
+                      className='flex items-center justify-between p-4 bg-linear-to-r from-cream-50/50 to-honey-50/30 rounded-2xl border border-cream-200 hover:shadow-warm-sm transition-all duration-300 animate-fade-in'
                       style={{
                         animationDelay: `${index * 100}ms`,
                       }}
@@ -291,7 +288,7 @@ export default function Dashboard() {
                         </div>
                       </div>
                       <div className='flex items-center space-x-2'>
-                        <Badge variant={activity.status === '已完成' ? 'default' : 'success'}>
+                        <Badge variant={activity.status === '已完成' ? 'default' : 'secondary'}>
                           {activity.status}
                         </Badge>
                         {getStatusIcon(activity.status)}
@@ -306,7 +303,7 @@ export default function Dashboard() {
           {/* 温馨提醒和快捷操作 */}
           <div className='space-y-6'>
             {/* 提醒事项 - 温馨样式 */}
-            <Card variant='glass' decorative>
+            <Card>
               <CardHeader>
                 <CardTitle>贴心提醒</CardTitle>
                 <CardDescription>需要关注的小事情</CardDescription>
@@ -316,7 +313,7 @@ export default function Dashboard() {
                   {dashboardData.reminders.map((reminder, index) => (
                     <div
                       key={reminder.id}
-                      className='p-4 bg-gradient-to-r from-white/80 to-cream-50/60 rounded-xl border border-cream-200 shadow-soft hover:shadow-warm-sm transition-all duration-300 animate-fade-in'
+                      className='p-4 bg-linear-to-r from-white/80 to-cream-50/60 rounded-xl border border-cream-200 shadow-soft hover:shadow-warm-sm transition-all duration-300 animate-fade-in'
                       style={{
                         animationDelay: `${
                           (dashboardData.recentActivities.length + index) * 100
@@ -351,7 +348,7 @@ export default function Dashboard() {
             </Card>
 
             {/* 快捷操作 - 手账贴纸风格 */}
-            <Card variant='warm' decorative>
+            <Card>
               <CardHeader>
                 <CardTitle>常用小工具</CardTitle>
                 <CardDescription>让整理更轻松</CardDescription>

@@ -28,7 +28,7 @@ export default function NotFound() {
       ></div>
 
       {/* 主内容 */}
-      <Card variant='glass' className='w-full max-w-lg p-8 md:p-12 z-10 relative'>
+      <Card className='w-full max-w-lg p-8 md:p-12 z-10 relative'>
         <div className='text-center space-y-6'>
           {/* 404 数字动画 */}
           <div className='relative h-32 flex items-center justify-center'>

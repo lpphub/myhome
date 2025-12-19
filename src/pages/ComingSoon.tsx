@@ -38,12 +38,12 @@ function ComingSoon({ feature }: ComingSoonProps) {
   const Icon = featureInfo.icon
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-cream-50 via-cream-100 to-honey-50 pt-20 pb-20 md:pb-8'>
+    <div className='min-h-screen bg-linear-to-br from-cream-50 via-cream-100 to-honey-50 pt-20 pb-20 md:pb-8'>
       {/* 背景装饰 */}
       <div className='fixed inset-0 overflow-hidden pointer-events-none'>
-        <div className='absolute top-20 right-10 w-64 h-64 bg-gradient-to-bl from-honey-200/20 to-transparent rounded-full blur-3xl'></div>
-        <div className='absolute bottom-20 left-10 w-48 h-48 bg-gradient-to-tr from-coral-200/20 to-transparent rounded-full blur-2xl'></div>
-        <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-lavender-200/10 to-transparent rounded-full blur-3xl'></div>
+        <div className='absolute top-20 right-10 w-64 h-64 bg-linear-to-bl from-honey-200/20 to-transparent rounded-full blur-3xl'></div>
+        <div className='absolute bottom-20 left-10 w-48 h-48 bg-linear-to-tr from-coral-200/20 to-transparent rounded-full blur-2xl'></div>
+        <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-linear-to-br from-lavender-200/10 to-transparent rounded-full blur-3xl'></div>
       </div>
 
       <div className='relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
@@ -52,7 +52,7 @@ function ComingSoon({ feature }: ComingSoonProps) {
           {/* 图标和标题区域 */}
           <div className='text-center mb-8'>
             <div
-              className={`inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-${featureInfo.color}-400 to-${featureInfo.color}-600 rounded-3xl shadow-lg mb-6 animate-float`}
+              className={`inline-flex items-center justify-center w-24 h-24 bg-linear-to-br from-${featureInfo.color}-400 to-${featureInfo.color}-600 rounded-3xl shadow-lg mb-6 animate-float`}
             >
               <Icon className='w-12 h-12 text-white' />
             </div>
@@ -65,7 +65,7 @@ function ComingSoon({ feature }: ComingSoonProps) {
             <p className='text-xl text-warmGray-600 mb-4'>{featureInfo.description}</p>
 
             {/* 敬请期待标签 */}
-            <div className='inline-flex items-center space-x-2 bg-gradient-to-r from-honey-100 to-coral-100 px-6 py-3 rounded-2xl border border-honey-200'>
+            <div className='inline-flex items-center space-x-2 bg-linear-to-r from-honey-100 to-coral-100 px-6 py-3 rounded-2xl border border-honey-200'>
               <Sparkles className='w-5 h-5 text-honey-600 animate-bounce-gentle' />
               <span className='text-lg font-medium text-warmGray-700'>敬请期待</span>
               <Sparkles className='w-5 h-5 text-coral-600 animate-bounce-gentle' />
@@ -73,7 +73,7 @@ function ComingSoon({ feature }: ComingSoonProps) {
           </div>
 
           {/* 功能描述 */}
-          <div className='bg-gradient-to-r from-cream-50 to-honey-50 rounded-2xl p-6 mb-8 border border-cream-200'>
+          <div className='bg-linear-to-r from-cream-50 to-honey-50 rounded-2xl p-6 mb-8 border border-cream-200'>
             <p className='text-warmGray-700 text-center leading-relaxed'>{featureInfo.details}</p>
           </div>
 
@@ -85,7 +85,7 @@ function ComingSoon({ feature }: ComingSoonProps) {
             </div>
             <div className='w-full bg-cream-200 rounded-full h-3 overflow-hidden'>
               <div
-                className='bg-gradient-to-r from-honey-400 to-coral-400 h-3 rounded-full animate-pulse transition-all duration-1000'
+                className='bg-linear-to-r from-honey-400 to-coral-400 h-3 rounded-full animate-pulse transition-all duration-1000'
                 style={{ width: '65%' }}
               ></div>
             </div>
@@ -125,7 +125,7 @@ function ComingSoon({ feature }: ComingSoonProps) {
           <div className='text-center'>
             <Link
               to='/'
-              className='inline-flex items-center space-x-3 bg-gradient-to-r from-coral-400 to-coral-500 text-white px-8 py-4 rounded-2xl hover:from-coral-500 hover:to-coral-600 transition-all duration-300 shadow-lg hover:shadow-xl group'
+              className='inline-flex items-center space-x-3 bg-linear-to-r from-coral-400 to-coral-500 text-white px-8 py-4 rounded-2xl hover:from-coral-500 hover:to-coral-600 transition-all duration-300 shadow-lg hover:shadow-xl group'
             >
               <Home className='w-5 h-5 group-hover:scale-110 transition-transform' />
               <span className='font-medium'>返回首页</span>

@@ -7,16 +7,16 @@ import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { signIn } from '@/api/auth'
+import { Button } from '@/components/ui/button'
 import {
-  Button,
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-  Input,
-} from '@/components/ui'
+} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { useAuth } from '@/hooks/useAuth'
 
 const loginSchema = z.object({
@@ -74,7 +74,7 @@ export default function Login() {
       ></div>
 
       {/* 登录卡片 */}
-      <Card variant='glass' hoverable={false} decorative className='w-full max-w-md z-10'>
+      <Card className='w-full max-w-md z-10'>
         <CardHeader>
           <div className='text-center space-y-3'>
             {/* Logo 图标 */}
@@ -114,7 +114,7 @@ export default function Login() {
                 id='email'
                 type='email'
                 placeholder='your@email.com'
-                variant={errors.email ? 'error' : 'default'}
+                className={errors.email ? 'border-coral-500' : 'border-cream-300'}
                 disabled={isPending || isSubmitting}
                 {...register('email')}
               />
@@ -131,8 +131,7 @@ export default function Login() {
                   id='password'
                   type={showPassword ? 'text' : 'password'}
                   placeholder='请输入密码'
-                  className='pr-10'
-                  variant={errors.password ? 'error' : 'default'}
+                  className={errors.password ? 'border-coral-500 pr-10' : 'border-cream-300 pr-10'}
                   disabled={isPending || isSubmitting}
                   {...register('password')}
                 />

@@ -3,7 +3,33 @@
 @import "tw-animate-css";
 @import "./animations.css";
 
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
 @theme {
+    /* 主色 - 暖米色 (代表木材、纸张) */
+  --color-primary: oklch(0.85 0.08 60); /* 暖米色 */
+  /* 强调色 - 暖黄色 (代表温暖、阳光) */
+  --color-accent: oklch(0.75 0.15 80); /* 暖黄色 */
+  /* 辅助色 - 浅灰色 (代表金属、陶瓷) */
+  --color-secondary: oklch(0.85 0.02 0); /* 浅灰色 */
+  /* 背景色 - 米白色 */
+  --color-background: oklch(0.98 0.01 100); /* 米白色 */
+  /* 前景色 - 深棕色 */
+  --color-foreground: oklch(0.2 0.05 30); /* 深棕色 */
+  /* 边框色 - 浅米色 */
+  --color-border: oklch(0.9 0.03 50); /* 浅米色 */
+  /* 焦点光环 - 暖米色 */
+  --color-ring: oklch(0.85 0.08 60);
+  /* 圆角 - 柔和的圆角 */
+  --radius: 0.375rem;
+
   /* Cream 色系 - 奶白色系 */
   --color-cream-50: #fffefa;
   --color-cream-100: #fffbf5;
@@ -83,4 +109,18 @@
   --shadow-card: 0 4px 16px rgba(232, 193, 120, 0.15);
   --shadow-card-hover: 0 8px 32px rgba(232, 193, 120, 0.25);
   --shadow-soft: 0 2px 8px rgba(247, 233, 195, 0.4);
+}
+
+@layer utilities {
+  .paper-shadow {
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.05),
+      0 1px 2px rgba(0, 0, 0, 0.02);
+    transition: box-shadow 0.2s ease;
+  }
+  .paper-shadow:hover {
+    box-shadow:
+      0 4px 6px rgba(0, 0, 0, 0.1),
+      0 2px 4px rgba(0, 0, 0, 0.05);
+  }
 }
