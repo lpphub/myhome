@@ -64,45 +64,64 @@ export default function Login() {
   }
 
   return (
-    <div className='min-h-screen bg-linear-to-br from-honey-50 via-cream-100 to-white flex items-center justify-center p-4'>
-      {/* 背景装饰元素 */}
-      <motion.div
-        className='absolute top-1/4 left-1/4 w-64 h-64 bg-honey-100 rounded-full filter blur-3xl opacity-50'
-        animate={{
-          opacity: [0.5, 0.8, 0.5],
-          scale: [1, 1.05, 1],
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-        }}
-      />
-      <motion.div
-        className='absolute bottom-1/3 right-1/3 w-80 h-80 bg-coral-100 rounded-full filter blur-3xl opacity-40'
-        animate={{
-          opacity: [0.4, 0.6, 0.4],
-          scale: [1, 1.05, 1],
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          delay: 1,
-        }}
-      />
+    <div className='min-h-screen flex items-center justify-center p-4 relative overflow-hidden'>
+      {/* 背景装饰 */}
+      <div className='absolute inset-0 bg-gradient-to-br from-cream-100 via-honey-100 to-lavender-100' />
+      <div className='absolute inset-0'>
+        {/* 浮动装饰元素 */}
+        <motion.div
+          className='absolute top-20 left-20 w-32 h-32 bg-honey-200 rounded-full opacity-30'
+          animate={{
+            y: [0, -20, 0],
+            x: [0, 10, 0],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+        <motion.div
+          className='absolute top-40 right-32 w-24 h-24 bg-coral-200 rounded-full opacity-25'
+          animate={{
+            y: [0, -15, 0],
+            x: [0, -10, 0],
+          }}
+          transition={{
+            duration: 3.5,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: 1,
+          }}
+        />
+        <motion.div
+          className='absolute bottom-32 left-32 w-40 h-40 bg-lavender-200 rounded-full opacity-20'
+          animate={{
+            y: [0, -25, 0],
+            x: [0, 15, 0],
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: 2,
+          }}
+        />
+      </div>
 
       {/* 登录卡片 */}
-      <Card className='w-full max-w-md z-10 shadow-2xl border border-honey-100/50'>
+      <Card className='w-96 z-10 shadow-2xl border border-honey-200/30 backdrop-blur-lg bg-white/60'>
         <CardHeader>
-          <div className='text-center space-y-3'>
+          <div className='text-center space-y-2'>
             {/* Logo 图标 */}
-            <div className='flex items-center justify-center mb-4'>
-              <div className='w-16 h-16 bg-linear-to-br from-honey-400 to-coral-400 rounded-2xl flex items-center justify-center shadow-warm-md'>
+            <div className='flex items-center justify-center mb-2'>
+              <div className='w-16 h-16 bg-gradient-to-br from-honey-400 to-coral-400 rounded-2xl flex items-center justify-center shadow-warm-md'>
                 <Home className='w-8 h-8 text-white' />
               </div>
             </div>
 
             {/* 标题 */}
-            <CardTitle>家庭收纳小助手</CardTitle>
+            <CardTitle>收纳宝</CardTitle>
 
             {/* 欢迎语 */}
             <CardDescription className='flex items-center justify-center gap-2'>
@@ -112,9 +131,9 @@ export default function Login() {
             </CardDescription>
           </div>
         </CardHeader>
-        <CardContent className='p-6 md:p-8'>
+        <CardContent>
           {/* 登录表单 */}
-          <form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
+          <form onSubmit={handleSubmit(onSubmit)} className='space-y-2'>
             {/* 通用错误信息 */}
             {errors.root && (
               <div className='bg-coral-50 border border-coral-200 text-coral-700 px-4 py-3 rounded-lg text-sm'>
@@ -123,7 +142,7 @@ export default function Login() {
             )}
 
             {/* 邮箱输入 */}
-            <div className='space-y-2'>
+            <div className='w-[90%] mx-auto space-y-2'>
               <label htmlFor='email' className='block text-sm font-medium text-warmGray-700'>
                 邮箱地址
               </label>
@@ -131,7 +150,7 @@ export default function Login() {
                 id='email'
                 type='email'
                 placeholder='your@email.com'
-                className={errors.email ? 'border-coral-500' : 'border-cream-300'}
+                className={errors.email ? 'border-coral-500' : 'border-warmGray-200'}
                 disabled={isPending || isSubmitting}
                 {...register('email')}
               />
@@ -139,7 +158,7 @@ export default function Login() {
             </div>
 
             {/* 密码输入 */}
-            <div className='space-y-2'>
+            <div className='w-[90%] mx-auto space-y-2'>
               <label htmlFor='password' className='block text-sm font-medium text-warmGray-700'>
                 密码
               </label>
@@ -148,7 +167,9 @@ export default function Login() {
                   id='password'
                   type={showPassword ? 'text' : 'password'}
                   placeholder='请输入密码'
-                  className={errors.password ? 'border-coral-500 pr-10' : 'border-cream-300 pr-10'}
+                  className={
+                    errors.password ? 'border-coral-500 pr-10' : 'border-warmGray-200 pr-10'
+                  }
                   disabled={isPending || isSubmitting}
                   {...register('password')}
                 />
@@ -166,30 +187,32 @@ export default function Login() {
               )}
             </div>
 
-            {/* 登录按钮 */}
-            <Button
-              type='submit'
-              className='w-full bg-linear-to-r from-honey-400 to-coral-400 hover:from-honey-500 hover:to-coral-500 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105'
-              disabled={isPending || isSubmitting}
-              loading={isPending || isSubmitting}
-            >
-              {isPending || isSubmitting ? '登录中...' : '登录'}
-            </Button>
+            <div className='w-[90%] mx-auto space-y-1'>
+              {/* 登录按钮 */}
+              <Button
+                type='submit'
+                className='w-full bg-linear-to-r from-honey-400 to-coral-400 hover:from-honey-500 hover:to-coral-500 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 justify-center'
+                disabled={isPending || isSubmitting}
+                loading={isPending || isSubmitting}
+              >
+                {isPending || isSubmitting ? '登录中...' : '登录'}
+              </Button>
 
-            {/* 忘记密码按钮 */}
-            <Button
-              type='button'
-              variant='ghost'
-              className='w-full text-honey-600 hover:text-honey-700 hover:bg-honey-50 transition-all duration-300 hover:scale-105'
-              disabled={isPending || isSubmitting}
-              onClick={() => navigate('/forgot-password')}
-            >
-              忘记密码?
-            </Button>
+              {/* 忘记密码按钮 */}
+              <Button
+                type='button'
+                variant='ghost'
+                className='w-full text-honey-600 hover:text-honey-700 transition-all duration-300 justify-center'
+                disabled={isPending || isSubmitting}
+                onClick={() => navigate('/forgot-password')}
+              >
+                忘记密码?
+              </Button>
+            </div>
           </form>
 
           {/* 注册链接 */}
-          <div className='mt-6 text-center text-sm text-warmGray-600'>
+          <div className='mt-2 text-center text-sm text-warmGray-600'>
             还没有账号？{' '}
             <a
               href='/register'

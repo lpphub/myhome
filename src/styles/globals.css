@@ -21,13 +21,13 @@
   /* 主色与辅助色 */
   --color-primary: var(--color-cream-700);
   --color-accent: var(--color-honey-500);
-  --color-secondary: var(--color-warmGray-300);
+  --color-secondary: var(--color-warmGray-200);
   --color-destructive: var(--color-coral-700);
 
   /* 页面基础颜色 */
   --color-background: var(--color-cream-50);
   --color-foreground: var(--color-warmGray-800);
-  --color-border: var(--color-cream-400);
+  --color-border: var(--color-warmGray-300);
   --color-ring: var(--color-honey-400);
 
   /* 全局圆角 */
