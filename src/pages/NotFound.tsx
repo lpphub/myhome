@@ -1,7 +1,6 @@
-import { AlertCircle, Home, RefreshCw } from 'lucide-react'
+import { AlertCircle, Home, RefreshCw, Sparkles } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useNavigate } from 'react-router'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 
 export default function NotFound() {
@@ -130,7 +129,11 @@ export default function NotFound() {
 
           {/* 操作按钮 */}
           <div className='flex flex-col sm:flex-row gap-4 justify-center pt-4'>
-            <Button onClick={handleGoHome} className='flex items-center gap-2 group'>
+            <button
+              type='button'
+              onClick={handleGoHome}
+              className='inline-flex items-center space-x-3 bg-linear-to-r from-coral-400 to-coral-500 text-white px-8 py-3 rounded-xl hover:from-coral-500 hover:to-coral-600 transition-all duration-300 shadow-lg hover:shadow-xl group'
+            >
               <motion.div
                 whileHover={{
                   y: [-5, -15, -5],
@@ -140,14 +143,27 @@ export default function NotFound() {
                   repeat: 2,
                 }}
               >
-                <Home className='w-4 h-4' />
+                <Home className='w-4 h-4 group-hover:scale-110 transition-transform' />
               </motion.div>
-              返回首页
-            </Button>
-            <Button
-              variant='outline'
+              <span className='font-medium'>返回首页</span>
+              <motion.div
+                animate={{
+                  opacity: [1, 0.7, 1],
+                  scale: [1, 1.1, 1],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              >
+                <Sparkles className='w-3 h-3' />
+              </motion.div>
+            </button>
+            <button
+              type='button'
               onClick={handleRefresh}
-              className='flex items-center gap-2 group'
+              className='inline-flex items-center space-x-3 bg-linear-to-r from-honey-100 to-honey-200 text-honey-700 px-8 py-3 rounded-xl hover:from-honey-200 hover:to-honey-300 transition-all duration-300 shadow-warm-sm hover:shadow-warm-md border border-honey-300 group'
             >
               <motion.div
                 whileHover={{
@@ -157,10 +173,10 @@ export default function NotFound() {
                   duration: 0.5,
                 }}
               >
-                <RefreshCw className='w-4 h-4' />
+                <RefreshCw className='w-4 h-4 group-hover:scale-110 transition-transform' />
               </motion.div>
-              刷新页面
-            </Button>
+              <span className='font-medium'>刷新页面</span>
+            </button>
           </div>
 
           {/* 提示文字 */}

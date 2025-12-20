@@ -23,7 +23,6 @@ import { useAuth } from '@/hooks/useAuth'
 const loginSchema = z.object({
   email: z.email('请输入有效的邮箱地址').min(1, '请输入邮箱地址'),
   password: z.string().min(1, '请输入密码').min(6, '密码长度至少为6位'),
-  rememberMe: z.boolean().default(false),
 })
 
 export default function Login() {
@@ -41,7 +40,6 @@ export default function Login() {
     defaultValues: {
       email: '',
       password: '',
-      rememberMe: false,
     },
   })
 
@@ -66,7 +64,7 @@ export default function Login() {
   }
 
   return (
-    <div className='min-h-screen bg-honey-50 from-cream-300 to-white flex items-center justify-center p-4'>
+    <div className='min-h-screen bg-linear-to-br from-honey-50 via-cream-100 to-white flex items-center justify-center p-4'>
       {/* 背景装饰元素 */}
       <motion.div
         className='absolute top-1/4 left-1/4 w-64 h-64 bg-honey-100 rounded-full filter blur-3xl opacity-50'
@@ -93,7 +91,7 @@ export default function Login() {
       />
 
       {/* 登录卡片 */}
-      <Card className='w-full max-w-md z-10'>
+      <Card className='w-full max-w-md z-10 shadow-2xl border border-honey-100/50'>
         <CardHeader>
           <div className='text-center space-y-3'>
             {/* Logo 图标 */}
@@ -168,36 +166,25 @@ export default function Login() {
               )}
             </div>
 
-            {/* 记住我 */}
-            <div className='flex items-center justify-between'>
-              <div className='flex items-center'>
-                <input
-                  id='rememberMe'
-                  type='checkbox'
-                  disabled={isPending || isSubmitting}
-                  className='h-4 w-4 rounded border-cream-300 text-honey-500 focus:ring-honey-300'
-                  {...register('rememberMe')}
-                />
-                <label htmlFor='rememberMe' className='ml-2 block text-sm text-warmGray-600'>
-                  记住我
-                </label>
-              </div>
-              <a
-                href='/forgot-password'
-                className='text-sm font-medium text-honey-600 hover:text-honey-700 transition-colors'
-              >
-                忘记密码?
-              </a>
-            </div>
-
             {/* 登录按钮 */}
             <Button
               type='submit'
-              className='w-full'
+              className='w-full bg-linear-to-r from-honey-400 to-coral-400 hover:from-honey-500 hover:to-coral-500 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105'
               disabled={isPending || isSubmitting}
               loading={isPending || isSubmitting}
             >
               {isPending || isSubmitting ? '登录中...' : '登录'}
+            </Button>
+
+            {/* 忘记密码按钮 */}
+            <Button
+              type='button'
+              variant='ghost'
+              className='w-full text-honey-600 hover:text-honey-700 hover:bg-honey-50 transition-all duration-300 hover:scale-105'
+              disabled={isPending || isSubmitting}
+              onClick={() => navigate('/forgot-password')}
+            >
+              忘记密码?
             </Button>
           </form>
 
@@ -212,8 +199,8 @@ export default function Login() {
             </a>
           </div>
         </CardContent>
-        <CardFooter className='text-center'>
-          <div className='text-center text-warmGray-400 text-xs mb-2'>✨ 让收纳变得简单</div>
+        <CardFooter className='flex justify-center'>
+          <div className='text-warmGray-400 text-xs'>✨ 让收纳变得简单</div>
         </CardFooter>
       </Card>
     </div>
