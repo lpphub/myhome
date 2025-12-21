@@ -6,6 +6,7 @@ import ComingSoon from '@/pages/ComingSoon'
 import Dashboard from '@/pages/Dashboard'
 import Login from '@/pages/Login'
 import NotFound from '@/pages/NotFound'
+import Register from '@/pages/Register'
 import TestComponents from '@/pages/TestUI'
 
 export const router = createBrowserRouter([
@@ -40,6 +41,14 @@ export const router = createBrowserRouter([
     element: (
       <AuthGuard requireAuth={false}>
         <Login />
+      </AuthGuard>
+    ),
+  },
+  {
+    path: '/register',
+    element: (
+      <AuthGuard requireAuth={false}>
+        <Register />
       </AuthGuard>
     ),
   },
