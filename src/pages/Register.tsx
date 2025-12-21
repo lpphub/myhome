@@ -40,7 +40,7 @@ export default function Register() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     setError,
   } = useForm({
     resolver: zodResolver(registerSchema),
@@ -158,7 +158,7 @@ export default function Register() {
                 type='email'
                 placeholder='your@email.com'
                 className={errors.email ? 'border-coral-500' : 'border-warmGray-200'}
-                disabled={isPending || isSubmitting}
+                disabled={isPending}
                 {...register('email')}
               />
               {errors.email && <p className='text-coral-500 text-sm'>{errors.email.message}</p>}
@@ -177,14 +177,14 @@ export default function Register() {
                   className={
                     errors.password ? 'border-coral-500 pr-10' : 'border-warmGray-200 pr-10'
                   }
-                  disabled={isPending || isSubmitting}
+                  disabled={isPending}
                   {...register('password')}
                 />
                 <button
                   type='button'
                   onClick={() => setShowPassword(!showPassword)}
                   className='absolute right-3 top-1/2 -translate-y-1/2 text-warmGray-500 hover:text-honey-500 transition-colors'
-                  disabled={isPending || isSubmitting}
+                  disabled={isPending}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -210,14 +210,14 @@ export default function Register() {
                   className={
                     errors.confirmPassword ? 'border-coral-500 pr-10' : 'border-warmGray-200 pr-10'
                   }
-                  disabled={isPending || isSubmitting}
+                  disabled={isPending}
                   {...register('confirmPassword')}
                 />
                 <button
                   type='button'
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className='absolute right-3 top-1/2 -translate-y-1/2 text-warmGray-500 hover:text-honey-500 transition-colors'
-                  disabled={isPending || isSubmitting}
+                  disabled={isPending}
                 >
                   {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -232,10 +232,10 @@ export default function Register() {
               <Button
                 type='submit'
                 className='w-full bg-linear-to-r from-honey-400 to-coral-400 hover:from-honey-500 hover:to-coral-500 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 justify-center'
-                disabled={isPending || isSubmitting}
-                loading={isPending || isSubmitting}
+                disabled={isPending}
+                loading={isPending}
               >
-                {isPending || isSubmitting ? '注册中...' : '立即注册'}
+                {isPending ? '注册中...' : '立即注册'}
               </Button>
             </div>
           </form>

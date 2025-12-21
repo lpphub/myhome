@@ -33,7 +33,7 @@ export default function Login() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     setError,
   } = useForm({
     resolver: zodResolver(loginSchema),
@@ -151,7 +151,7 @@ export default function Login() {
                 type='email'
                 placeholder='your@email.com'
                 className={errors.email ? 'border-coral-500' : 'border-warmGray-200'}
-                disabled={isPending || isSubmitting}
+                disabled={isPending}
                 {...register('email')}
               />
               {errors.email && <p className='text-coral-500 text-sm'>{errors.email.message}</p>}
@@ -170,14 +170,14 @@ export default function Login() {
                   className={
                     errors.password ? 'border-coral-500 pr-10' : 'border-warmGray-200 pr-10'
                   }
-                  disabled={isPending || isSubmitting}
+                  disabled={isPending}
                   {...register('password')}
                 />
                 <button
                   type='button'
                   onClick={() => setShowPassword(!showPassword)}
                   className='absolute right-3 top-1/2 -translate-y-1/2 text-warmGray-500 hover:text-honey-500 transition-colors'
-                  disabled={isPending || isSubmitting}
+                  disabled={isPending}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -192,10 +192,10 @@ export default function Login() {
               <Button
                 type='submit'
                 className='w-full bg-linear-to-r from-honey-400 to-coral-400 hover:from-honey-500 hover:to-coral-500 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 justify-center'
-                disabled={isPending || isSubmitting}
-                loading={isPending || isSubmitting}
+                disabled={isPending}
+                loading={isPending}
               >
-                {isPending || isSubmitting ? '登录中...' : '登录'}
+                {isPending ? '登录中...' : '登录'}
               </Button>
 
               {/* 忘记密码按钮 */}
@@ -203,7 +203,7 @@ export default function Login() {
                 type='button'
                 variant='ghost'
                 className='w-full text-honey-600 hover:text-honey-700 transition-all duration-300 justify-center'
-                disabled={isPending || isSubmitting}
+                disabled={isPending}
                 onClick={() => navigate('/forgot-password')}
               >
                 忘记密码?
