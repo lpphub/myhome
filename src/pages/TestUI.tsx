@@ -1,4 +1,15 @@
-import { AlertCircle, CheckCircle, Heart, Info, Star } from 'lucide-react'
+import {
+  AlertCircle,
+  CheckCircle,
+  Eye,
+  EyeOff,
+  Heart,
+  Info,
+  Loader2,
+  Plus,
+  Star,
+  X,
+} from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
@@ -13,148 +24,251 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 
-// 使用预定义的动画变体，结合自定义效果
-const cardVariants = {
-  hidden: { opacity: 0, y: 20, scale: 0.95 },
-  visible: { opacity: 1, y: 0, scale: 1 },
-}
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-}
-
 export default function TestUI() {
-  const [expandedCard, setExpandedCard] = useState<number | null>(null)
+  const [inputValue, setInputValue] = useState('')
+  const [passwordVisible, setPasswordVisible] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [toggleState, setToggleState] = useState(false)
+  const [selectedCard, setSelectedCard] = useState<number | null>(null)
+
+  const handleLoading = () => {
+    setIsLoading(true)
+    setTimeout(() => setIsLoading(false), 2000)
+  }
 
   return (
-    <div className='min-h-screen bg-background p-8'>
-      <div className='max-w-4xl mx-auto space-y-12'>
-        {/* 标题区域 */}
-        <div className='text-center'>
-          <h1 className='text-4xl font-light text-foreground mb-2'>家庭收纳</h1>
-          <p className='text-secondary text-lg'>整理生活，从收纳开始</p>
-        </div>
-
-        {/* 收纳分类卡片 */}
-        <motion.div
-          variants={containerVariants}
-          initial='hidden'
-          animate='visible'
-          className='grid grid-cols-1 md:grid-cols-3 gap-6'
-        >
-          <div className='h-full'>
-            <motion.div
-              variants={cardVariants}
-              whileHover={{
-                scale: 1.02,
-                y: -4,
-                boxShadow:
-                  '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-              }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-              className='bg-white rounded-lg p-6 shadow-sm border border-border h-full'
-            >
-              <h3 className='font-medium text-foreground mb-3'>衣物收纳</h3>
-              <Button variant='outline' className='w-full paper-shadow'>
-                查看方案
+    <div className='min-h-screen bg-background'>
+      {/* 导航栏 */}
+      <nav className='sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border'>
+        <div className='max-w-6xl mx-auto px-6 py-4'>
+          <div className='flex items-center justify-between'>
+            <h1 className='text-2xl font-light text-foreground'>UI 组件测试</h1>
+            <div className='flex gap-4'>
+              <Button variant='ghost' size='sm'>
+                Input
               </Button>
-            </motion.div>
-          </div>
-
-          <div className='h-full'>
-            <motion.div
-              variants={cardVariants}
-              whileHover={{
-                scale: 1.02,
-                y: -4,
-                boxShadow:
-                  '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-              }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-              className='bg-white rounded-lg p-6 shadow-sm border border-border h-full'
-            >
-              <h3 className='font-medium text-foreground mb-3'>厨房用品</h3>
-              <Button variant='outline' className='w-full paper-shadow'>
-                查看方案
+              <Button variant='ghost' size='sm'>
+                Button
               </Button>
-            </motion.div>
-          </div>
-
-          <div className='h-full'>
-            <motion.div
-              variants={cardVariants}
-              whileHover={{
-                scale: 1.02,
-                y: -4,
-                boxShadow:
-                  '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-              }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-              className='bg-white rounded-lg p-6 shadow-sm border border-border h-full'
-            >
-              <h3 className='font-medium text-foreground mb-3'>杂物整理</h3>
-              <Button variant='outline' className='w-full paper-shadow'>
-                查看方案
+              <Button variant='ghost' size='sm'>
+                Card
               </Button>
-            </motion.div>
-          </div>
-        </motion.div>
-
-        {/* 搜索区域 */}
-        <div className='flex justify-center'>
-          <div className='w-full max-w-md'>
-            <Input placeholder='搜索收纳方案...' className='w-full h-12 text-base' />
+              <Button variant='ghost' size='sm'>
+                Badge
+              </Button>
+            </div>
           </div>
         </div>
+      </nav>
 
-        {/* 特色功能按钮 */}
-        <div className='flex justify-center gap-4'>
-          <Button variant='default' className='paper-shadow'>
-            🏠 默认按钮 (Primary)
-          </Button>
-          <Button variant='accent' className='paper-shadow text-white'>
-            📦 添加新物品
-          </Button>
-          <Button variant='secondary' className='paper-shadow'>
-            📋 查看清单
-          </Button>
-        </div>
+      <div className='max-w-6xl mx-auto px-6 py-8 space-y-16'>
+        {/* Input 组件测试 */}
+        <section id='input' className='space-y-8'>
+          <div className='text-center'>
+            <h2 className='text-3xl font-light text-foreground mb-2'>Input 组件</h2>
+            <p className='text-muted-foreground'>输入框的各种状态和样式</p>
+          </div>
+
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {/* 基础输入框 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className='text-lg'>基础输入框</CardTitle>
+                <CardDescription>标准输入框样式</CardDescription>
+              </CardHeader>
+              <CardContent className='space-y-4'>
+                <Input placeholder='请输入内容...' />
+                <Input
+                  value={inputValue}
+                  onChange={e => setInputValue(e.target.value)}
+                  placeholder='受控输入框'
+                />
+                <div className='text-sm text-muted-foreground'>当前值: {inputValue}</div>
+              </CardContent>
+            </Card>
+
+            {/* 状态输入框 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className='text-lg'>状态输入框</CardTitle>
+                <CardDescription>不同状态的输入框</CardDescription>
+              </CardHeader>
+              <CardContent className='space-y-4'>
+                <Input placeholder='正常状态' />
+                <Input placeholder='禁用状态' disabled />
+                <Input placeholder='只读状态' readOnly value='只读内容' />
+              </CardContent>
+            </Card>
+
+            {/* 特殊输入框 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className='text-lg'>特殊输入框</CardTitle>
+                <CardDescription>带附加功能的输入框</CardDescription>
+              </CardHeader>
+              <CardContent className='space-y-4'>
+                <div className='relative'>
+                  <Input type={passwordVisible ? 'text' : 'password'} placeholder='密码输入' />
+                  <Button
+                    type='button'
+                    variant='ghost'
+                    size='sm'
+                    className='absolute right-0 top-0 h-full px-3'
+                    onClick={() => setPasswordVisible(!passwordVisible)}
+                  >
+                    {passwordVisible ? <EyeOff className='h-4 w-4' /> : <Eye className='h-4 w-4' />}
+                  </Button>
+                </div>
+                <Input type='email' placeholder='邮箱输入' />
+                <Input type='number' placeholder='数字输入' />
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Button 组件测试 */}
+        <section id='button' className='space-y-8'>
+          <div className='text-center'>
+            <h2 className='text-3xl font-light text-foreground mb-2'>Button 组件</h2>
+            <p className='text-muted-foreground'>按钮的各种变体和状态</p>
+          </div>
+
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {/* 按钮变体 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className='text-lg'>按钮变体</CardTitle>
+                <CardDescription>不同样式的按钮</CardDescription>
+              </CardHeader>
+              <CardContent className='space-y-3'>
+                <Button variant='default' className='w-full'>
+                  默认按钮
+                </Button>
+                <Button className='w-full bg-accent text-accent-foreground hover:bg-accent/90'>
+                  强调按钮
+                </Button>
+                <Button variant='secondary' className='w-full'>
+                  次要按钮
+                </Button>
+                <Button variant='outline' className='w-full'>
+                  轮廓按钮
+                </Button>
+                <Button variant='ghost' className='w-full'>
+                  幽灵按钮
+                </Button>
+                <Button variant='link' className='w-full'>
+                  链接按钮
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* 按钮尺寸 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className='text-lg'>按钮尺寸</CardTitle>
+                <CardDescription>不同大小的按钮</CardDescription>
+              </CardHeader>
+              <CardContent className='space-y-3'>
+                <Button size='lg' className='w-full'>
+                  大号按钮
+                </Button>
+                <Button size='default' className='w-full'>
+                  默认按钮
+                </Button>
+                <Button size='sm' className='w-full'>
+                  小号按钮
+                </Button>
+                <Button size='icon' className='w-full'>
+                  <Plus className='h-4 w-4' />
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* 按钮状态 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className='text-lg'>按钮状态</CardTitle>
+                <CardDescription>不同状态的按钮</CardDescription>
+              </CardHeader>
+              <CardContent className='space-y-3'>
+                <Button disabled className='w-full'>
+                  禁用按钮
+                </Button>
+                <Button onClick={handleLoading} disabled={isLoading} className='w-full'>
+                  {isLoading ? (
+                    <>
+                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                      加载中...
+                    </>
+                  ) : (
+                    '点击加载'
+                  )}
+                </Button>
+                <Button
+                  variant='outline'
+                  className='w-full'
+                  onClick={() => setToggleState(!toggleState)}
+                >
+                  {toggleState ? '已开启' : '已关闭'}
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* 带图标的按钮 */}
+          <Card>
+            <CardHeader>
+              <CardTitle className='text-lg'>带图标的按钮</CardTitle>
+              <CardDescription>结合图标的按钮样式</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className='flex flex-wrap gap-3'>
+                <Button>
+                  <Plus className='mr-2 h-4 w-4' />
+                  添加
+                </Button>
+                <Button variant='outline'>
+                  <Heart className='mr-2 h-4 w-4' />
+                  收藏
+                </Button>
+                <Button variant='secondary'>
+                  <Star className='mr-2 h-4 w-4' />
+                  收藏
+                </Button>
+                <Button variant='destructive'>
+                  <X className='mr-2 h-4 w-4' />
+                  删除
+                </Button>
+                <Button variant='ghost'>
+                  <Info className='mr-2 h-4 w-4' />
+                  信息
+                </Button>
+                <Button className='bg-accent text-accent-foreground hover:bg-accent/90'>
+                  <CheckCircle className='mr-2 h-4 w-4' />
+                  完成
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
 
         {/* Card 组件测试 */}
-        <div className='space-y-6'>
-          <h2 className='text-2xl font-light text-foreground text-center'>Card 组件动效测试</h2>
-          <motion.div
-            variants={containerVariants}
-            initial='hidden'
-            animate='visible'
-            className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
-          >
-            {/* 基础悬停效果 */}
-            <motion.div
-              variants={cardVariants}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-            >
+        <section id='card' className='space-y-8'>
+          <div className='text-center'>
+            <h2 className='text-3xl font-light text-foreground mb-2'>Card 组件</h2>
+            <p className='text-muted-foreground'>卡片的各种布局和交互</p>
+          </div>
+
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {/* 基础卡片 */}
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Card>
                 <CardHeader>
-                  <CardTitle>基础悬停</CardTitle>
-                  <CardDescription>悬停时轻微放大效果</CardDescription>
+                  <CardTitle>基础卡片</CardTitle>
+                  <CardDescription>这是一个基础的卡片组件</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className='text-sm text-muted-foreground'>
-                    这里是卡片的主要内容区域，可以放置各种信息。
-                  </p>
+                  <p className='text-sm text-muted-foreground'>卡片内容区域，可以放置任何内容。</p>
                 </CardContent>
                 <CardFooter>
                   <Button className='w-full'>确认</Button>
@@ -162,38 +276,23 @@ export default function TestUI() {
               </Card>
             </motion.div>
 
-            {/* 3D 倾斜效果 */}
-            <motion.div
-              variants={cardVariants}
-              whileHover={{
-                rotateY: 5,
-                rotateX: -5,
-                scale: 1.02,
-                boxShadow:
-                  '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-              }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              style={{ transformStyle: 'preserve-3d' }}
-            >
-              <Card>
-                <CardHeader>
+            {/* 带徽章的卡片 */}
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Card className='border-accent'>
+                <CardHeader className='bg-accent/5'>
                   <div className='flex items-center justify-between'>
-                    <CardTitle className='flex items-center gap-2'>
-                      <Star className='w-4 h-4' />
-                      3D 卡片
-                    </CardTitle>
-                    <Badge className='bg-accent text-accent-foreground'>热门</Badge>
+                    <CardTitle className='text-accent'>特殊卡片</CardTitle>
+                    <Badge className='bg-accent text-accent-foreground'>NEW</Badge>
                   </div>
-                  <CardDescription>悬停时有3D倾斜效果</CardDescription>
+                  <CardDescription>带有强调色和徽章的卡片</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className='space-y-2'>
-                    <div className='flex justify-between items-center'>
+                    <div className='flex justify-between'>
                       <span>状态</span>
                       <Badge variant='secondary'>活跃</Badge>
                     </div>
-                    <div className='flex justify-between items-center'>
+                    <div className='flex justify-between'>
                       <span>优先级</span>
                       <Badge variant='destructive'>高</Badge>
                     </div>
@@ -204,357 +303,182 @@ export default function TestUI() {
                     <Button variant='outline' className='flex-1'>
                       取消
                     </Button>
-                    <Button className='flex-1'>保存</Button>
+                    <Button className='flex-1 bg-accent text-accent-foreground hover:bg-accent/90'>
+                      保存
+                    </Button>
                   </div>
                 </CardFooter>
               </Card>
             </motion.div>
 
-            {/* 特殊样式卡片 - 弹簧动画 */}
-            <div className='h-full'>
-              <motion.div
-                variants={cardVariants}
-                whileHover={{
-                  y: -4,
-                  scale: 1.02,
-                  boxShadow:
-                    '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-                }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-                className='h-full'
+            {/* 可交互的卡片 */}
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Card
+                className='cursor-pointer'
+                onClick={() => setSelectedCard(selectedCard === 1 ? null : 1)}
               >
-                <Card className='border-accent h-full'>
-                  <CardHeader className='bg-accent/5'>
-                    <CardTitle className='text-accent'>弹簧动画</CardTitle>
-                    <CardDescription>优化的弹性效果</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className='flex items-center gap-2'>
-                      <CheckCircle className='w-5 h-5 text-green-500' />
-                      <span className='text-sm'>已完成配置</span>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button
-                      variant='accent'
-                      className='w-full bg-accent text-accent-foreground hover:bg-accent/90'
-                    >
-                      查看详情
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </motion.div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* 交互式卡片动效 */}
-        <div className='space-y-6'>
-          <h2 className='text-2xl font-light text-foreground text-center'>交互式卡片动效</h2>
-          <motion.div layout className='space-y-4'>
-            {/* 可点击展开的卡片 */}
-            <motion.div
-              layout
-              onClick={() => setExpandedCard(expandedCard === 1 ? null : 1)}
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-            >
-              <Card className='cursor-pointer overflow-hidden'>
                 <CardHeader>
                   <CardTitle className='flex items-center justify-between'>
-                    点击展开的卡片
+                    可交互卡片
                     <motion.div
-                      animate={{ rotate: expandedCard === 1 ? 180 : 0 }}
+                      animate={{ rotate: selectedCard === 1 ? 180 : 0 }}
                       transition={{ duration: 0.3 }}
                     >
                       <Star className='w-4 h-4' />
                     </motion.div>
                   </CardTitle>
-                  <CardDescription>点击查看详细内容</CardDescription>
+                  <CardDescription>点击展开/收起内容</CardDescription>
                 </CardHeader>
-
                 <AnimatePresence>
-                  {expandedCard === 1 && (
+                  {selectedCard === 1 && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3, ease: 'easeInOut' }}
-                      className='overflow-hidden'
-                    >
-                      <CardContent>
-                        <div className='space-y-3'>
-                          <p className='text-sm text-muted-foreground'>
-                            这里是展开的详细内容，支持高度动画。你可以看到平滑的过渡效果，
-                            包括透明度和高度的同时变化。
-                          </p>
-                          <div className='flex gap-2'>
-                            <Badge>功能完整</Badge>
-                            <Badge variant='secondary'>性能优化</Badge>
-                            <Badge variant='outline'>响应式设计</Badge>
-                          </div>
-                          <div className='pt-2'>
-                            <Button size='sm' className='mr-2'>
-                              主要操作
-                            </Button>
-                            <Button size='sm' variant='outline'>
-                              次要操作
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </Card>
-            </motion.div>
-
-            {/* 第二个可展开卡片 */}
-            <motion.div
-              layout
-              onClick={() => setExpandedCard(expandedCard === 2 ? null : 2)}
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-            >
-              <Card className='cursor-pointer overflow-hidden border-accent'>
-                <CardHeader className='bg-accent/5'>
-                  <CardTitle className='flex items-center justify-between text-accent'>
-                    特殊样式的展开卡片
-                    <motion.div
-                      animate={{ rotate: expandedCard === 2 ? 180 : 0 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <CheckCircle className='w-4 h-4' />
-                    </motion.div>
-                  </CardTitle>
-                  <CardDescription>使用强调色的交互卡片</CardDescription>
-                </CardHeader>
-
-                <AnimatePresence>
-                  {expandedCard === 2 && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3, ease: 'easeInOut' }}
-                      className='overflow-hidden'
-                    >
                       <CardContent>
-                        <div className='space-y-4'>
-                          <div className='grid grid-cols-2 gap-4'>
-                            <div className='text-center p-3 bg-secondary rounded-lg'>
-                              <div className='text-2xl font-bold text-primary'>98%</div>
-                              <div className='text-sm text-muted-foreground'>完成率</div>
-                            </div>
-                            <div className='text-center p-3 bg-secondary rounded-lg'>
-                              <div className='text-2xl font-bold text-accent'>24/7</div>
-                              <div className='text-sm text-muted-foreground'>支持</div>
-                            </div>
-                          </div>
-                          <Button className='w-full bg-accent text-accent-foreground hover:bg-accent/90'>
-                            了解更多
-                          </Button>
-                        </div>
+                        <p className='text-sm text-muted-foreground'>
+                          这是展开的详细内容。点击卡片标题可以收起这部分内容。
+                        </p>
                       </CardContent>
                     </motion.div>
                   )}
                 </AnimatePresence>
+                <CardFooter>
+                  <Button variant='outline' className='w-full'>
+                    查看更多
+                  </Button>
+                </CardFooter>
               </Card>
             </motion.div>
-          </motion.div>
-        </div>
+          </div>
+        </section>
 
         {/* Badge 组件测试 */}
-        <div className='space-y-6'>
-          <h2 className='text-2xl font-light text-foreground text-center'>Badge 组件测试</h2>
-
-          <div className='space-y-4'>
-            <h3 className='text-lg font-medium'>徽章变体</h3>
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className='flex flex-wrap gap-2'
-            >
-              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                <Badge>默认</Badge>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                <Badge variant='secondary'>次要</Badge>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                <Badge variant='destructive'>危险</Badge>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                <Badge variant='outline'>轮廓</Badge>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                <Badge className='bg-accent text-accent-foreground'>强调</Badge>
-              </motion.div>
-            </motion.div>
+        <section id='badge' className='space-y-8'>
+          <div className='text-center'>
+            <h2 className='text-3xl font-light text-foreground mb-2'>Badge 组件</h2>
+            <p className='text-muted-foreground'>徽章的各种变体和用法</p>
           </div>
 
-          <div className='space-y-4'>
-            <h3 className='text-lg font-medium'>带图标的徽章</h3>
-            <div className='flex flex-wrap gap-2'>
-              <Badge className='flex items-center gap-1'>
-                <CheckCircle className='w-3 h-3' />
-                成功
-              </Badge>
-              <Badge variant='destructive' className='flex items-center gap-1'>
-                <AlertCircle className='w-3 h-3' />
-                错误
-              </Badge>
-              <Badge variant='secondary' className='flex items-center gap-1'>
-                <Info className='w-3 h-3' />
-                信息
-              </Badge>
-              <Badge variant='outline' className='flex items-center gap-1'>
-                <Heart className='w-3 h-3' />
-                收藏
-              </Badge>
-            </div>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {/* 基础徽章 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className='text-lg'>基础徽章</CardTitle>
+                <CardDescription>徽章的各种变体</CardDescription>
+              </CardHeader>
+              <CardContent className='space-y-4'>
+                <div className='flex flex-wrap gap-2'>
+                  <Badge>默认</Badge>
+                  <Badge variant='secondary'>次要</Badge>
+                  <Badge variant='destructive'>危险</Badge>
+                  <Badge variant='outline'>轮廓</Badge>
+                  <Badge className='bg-accent text-accent-foreground'>强调</Badge>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 带图标的徽章 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className='text-lg'>带图标的徽章</CardTitle>
+                <CardDescription>结合图标的徽章</CardDescription>
+              </CardHeader>
+              <CardContent className='space-y-4'>
+                <div className='flex flex-wrap gap-2'>
+                  <Badge className='flex items-center gap-1'>
+                    <CheckCircle className='w-3 h-3' />
+                    成功
+                  </Badge>
+                  <Badge variant='destructive' className='flex items-center gap-1'>
+                    <AlertCircle className='w-3 h-3' />
+                    错误
+                  </Badge>
+                  <Badge variant='secondary' className='flex items-center gap-1'>
+                    <Info className='w-3 h-3' />
+                    信息
+                  </Badge>
+                  <Badge variant='outline' className='flex items-center gap-1'>
+                    <Heart className='w-3 h-3' />
+                    收藏
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 状态徽章 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className='text-lg'>状态徽章</CardTitle>
+                <CardDescription>表示不同状态的徽章</CardDescription>
+              </CardHeader>
+              <CardContent className='space-y-4'>
+                <div className='flex flex-wrap gap-2'>
+                  <Badge className='bg-green-500'>进行中</Badge>
+                  <Badge className='bg-blue-500'>计划中</Badge>
+                  <Badge className='bg-yellow-500'>待审核</Badge>
+                  <Badge className='bg-gray-500'>已归档</Badge>
+                  <Badge className='bg-purple-500'>新功能</Badge>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* 综合测试 */}
+        <section className='space-y-8'>
+          <div className='text-center'>
+            <h2 className='text-3xl font-light text-foreground mb-2'>综合测试</h2>
+            <p className='text-muted-foreground'>组件组合使用场景</p>
           </div>
 
-          <div className='space-y-4'>
-            <h3 className='text-lg font-medium'>状态徽章</h3>
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className='flex flex-wrap gap-2'
-            >
-              {[
-                { color: 'bg-green-500', text: '进行中' },
-                { color: 'bg-blue-500', text: '计划中' },
-                { color: 'bg-yellow-500', text: '待审核' },
-                { color: 'bg-gray-500', text: '已归档' },
-                { color: 'bg-purple-500', text: '新功能' },
-              ].map((badge, index) => (
-                <motion.div
-                  key={badge.text}
-                  whileHover={{
-                    scale: 1.15,
-                    y: -2,
-                    transition: { type: 'spring', stiffness: 400, damping: 17 },
-                  }}
-                  whileTap={{ scale: 0.9 }}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{
-                    opacity: 1,
-                    scale: 1,
-                    transition: { delay: 0.7 + index * 0.1 },
-                  }}
-                >
-                  <Badge className={badge.color}>{badge.text}</Badge>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-
-          <div className='space-y-4'>
-            <h3 className='text-lg font-medium'>在卡片中使用徽章</h3>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, type: 'spring', stiffness: 100 }}
-            >
-              <Card>
-                <CardContent className='pt-6'>
-                  <div className='space-y-3'>
-                    <motion.div
-                      className='flex items-center justify-between'
-                      whileHover={{ x: 5 }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                    >
-                      <span>项目进度</span>
-                      <div className='flex gap-2'>
-                        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                          <Badge variant='outline'>75%</Badge>
-                        </motion.div>
-                        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                          <Badge variant='secondary'>进行中</Badge>
-                        </motion.div>
-                      </div>
-                    </motion.div>
-                    <motion.div
-                      className='flex items-center justify-between'
-                      whileHover={{ x: 5 }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                    >
-                      <span>任务状态</span>
-                      <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                        <Badge className='bg-green-500'>已完成</Badge>
-                      </motion.div>
-                    </motion.div>
-                    <motion.div
-                      className='flex items-center justify-between'
-                      whileHover={{ x: 5 }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                    >
-                      <span>优先级</span>
-                      <motion.div
-                        whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
-                        whileTap={{ scale: 0.95 }}
-                        transition={{ rotate: { duration: 0.5 } }}
-                      >
-                        <Badge variant='destructive'>紧急</Badge>
-                      </motion.div>
-                    </motion.div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* 测试所有按钮变体 */}
-        <div className='space-y-6'>
-          <h2 className='text-2xl font-light text-foreground text-center'>按钮颜色测试</h2>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, type: 'spring', stiffness: 100 }}
-            className='flex flex-wrap justify-center gap-4'
-          >
-            {[
-              { variant: 'default', text: '默认 (bg-primary)' },
-              { variant: 'accent', text: '强调色' },
-              { variant: 'secondary', text: '辅助色' },
-              { variant: 'outline', text: '轮廓' },
-              { variant: 'ghost', text: '幽灵' },
-              { variant: 'link', text: '链接' },
-            ].map((btn, index) => (
-              <motion.div
-                key={btn.variant}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                  transition: { delay: 1.1 + index * 0.1, type: 'spring', stiffness: 100 },
-                }}
-              >
-                <Button
-                  variant={
-                    btn.variant as 'default' | 'accent' | 'secondary' | 'outline' | 'ghost' | 'link'
-                  }
-                  className={
-                    btn.variant === 'accent'
-                      ? 'bg-accent text-accent-foreground hover:bg-accent/90'
-                      : ''
-                  }
-                >
-                  {btn.text}
+          <Card>
+            <CardHeader>
+              <CardTitle>表单示例</CardTitle>
+              <CardDescription>结合所有组件的表单示例</CardDescription>
+            </CardHeader>
+            <CardContent className='space-y-4'>
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                <div>
+                  <label htmlFor='username' className='text-sm font-medium mb-2 block'>
+                    用户名
+                  </label>
+                  <Input id='username' placeholder='请输入用户名' />
+                </div>
+                <div>
+                  <label htmlFor='email' className='text-sm font-medium mb-2 block'>
+                    邮箱
+                  </label>
+                  <Input id='email' type='email' placeholder='请输入邮箱' />
+                </div>
+              </div>
+              <div>
+                <label htmlFor='tags' className='text-sm font-medium mb-2 block'>
+                  标签
+                </label>
+                <div className='flex flex-wrap gap-2 mb-2'>
+                  <Badge variant='outline'>前端</Badge>
+                  <Badge variant='outline'>React</Badge>
+                  <Badge variant='outline'>TypeScript</Badge>
+                  <Button variant='outline' size='sm'>
+                    <Plus className='w-3 h-3 mr-1' />
+                    添加标签
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <div className='flex gap-3 w-full'>
+                <Button variant='outline' className='flex-1'>
+                  取消
                 </Button>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+                <Button className='flex-1'>保存</Button>
+              </div>
+            </CardFooter>
+          </Card>
+        </section>
       </div>
     </div>
   )

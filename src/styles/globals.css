@@ -24,7 +24,7 @@
   --color-destructive: var(--color-coral-700);
 
   /* 页面基础颜色 */
-  --color-background: var(--color-cream-50);
+  --color-background: var(--color-cream-100);
   --color-foreground: var(--color-warmGray-800);
   --color-border: var(--color-warmGray-300);
   --color-ring: var(--color-honey-400);

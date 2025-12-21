@@ -1,4 +1,4 @@
-import { HttpResponse, http } from 'msw'
+import { delay, HttpResponse, http } from 'msw'
 import type { AuthForm } from '@/api/auth'
 
 // 模拟用户数据存储
@@ -73,7 +73,7 @@ export const handlers = [
   // 仪表板数据接口
   http.get('/api/dashboard', async () => {
     // 模拟数据库延迟
-    await new Promise(resolve => setTimeout(resolve, 300))
+    await delay(200)
 
     // 返回模拟数据
     return HttpResponse.json({
