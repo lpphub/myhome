@@ -118,15 +118,7 @@ export default function Dashboard() {
     return (
       <div className='min-h-screen bg-cream-50 flex items-center justify-center'>
         <div className='text-center'>
-          <motion.div
-            className='w-12 h-12 border-4 border-honey-200 border-t-honey-500 rounded-full mx-auto mb-4'
-            animate={{ rotate: 360 }}
-            transition={{
-              duration: 1,
-              repeat: Infinity,
-              ease: 'linear',
-            }}
-          />
+          <div className='w-12 h-12 border-4 border-honey-200 border-t-honey-500 rounded-full mx-auto mb-4 loading-spinner' />
           <p className='text-warmGray-600 text-lg'>正在加载您的小窝...</p>
         </div>
       </div>
@@ -153,34 +145,16 @@ export default function Dashboard() {
         <div className='relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center space-x-4'>
-              <motion.div
-                className='w-16 h-16 bg-linear-to-br from-honey-400 to-honey-600 rounded-3xl flex items-center justify-center shadow-warm-lg'
-                animate={{
-                  y: [-8, 0, -8],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                }}
-              >
+              <div className='w-16 h-16 bg-linear-to-br from-honey-400 to-honey-600 rounded-3xl flex items-center justify-center shadow-warm-lg float-gentle'>
                 <Home className='w-8 h-8 text-white' />
-              </motion.div>
+              </div>
               <div>
                 <div className='flex items-center space-x-3 mb-2'>
                   <GreetingIcon className={`w-6 h-6 ${greeting.color}`} />
                   <h1 className='text-3xl font-bold text-warmGray-800'>{greeting.text}！</h1>
-                  <motion.div
-                    animate={{
-                      opacity: [1, 0.8, 1],
-                      scale: [1, 1.05, 1],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                    }}
-                  >
+                  <div className='heartbeat'>
                     <Heart className='w-6 h-6 text-coral-400' />
-                  </motion.div>
+                  </div>
                 </div>
                 <p className='text-warmGray-600 text-lg'>
                   今天是{' '}
@@ -225,18 +199,9 @@ export default function Dashboard() {
               </div>
             </div>
             <div className='absolute top-2 right-2'>
-              <motion.div
-                animate={{
-                  opacity: [1, 0.8, 1],
-                  scale: [1, 1.05, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                }}
-              >
+              <div className='pulse-soft'>
                 <Star className='w-4 h-4 text-honey-500' />
-              </motion.div>
+              </div>
             </div>
           </Card>
           <Card className='relative'>
@@ -253,17 +218,9 @@ export default function Dashboard() {
               </div>
             </div>
             <div className='absolute top-2 right-2'>
-              <motion.div
-                animate={{
-                  y: [0, -4, 0],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                }}
-              >
+              <div className='sparkle'>
                 <Sparkles className='w-4 h-4 text-lavender-500' />
-              </motion.div>
+              </div>
             </div>
           </Card>
 
@@ -281,18 +238,9 @@ export default function Dashboard() {
               </div>
             </div>
             <div className='absolute top-2 right-2'>
-              <motion.div
-                animate={{
-                  opacity: [1, 0.8, 1],
-                  scale: [1, 1.05, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                }}
-              >
+              <div className='heartbeat'>
                 <Heart className='w-4 h-4 text-coral-500' />
-              </motion.div>
+              </div>
             </div>
           </Card>
 
@@ -310,17 +258,9 @@ export default function Dashboard() {
               </div>
             </div>
             <div className='absolute top-2 right-2'>
-              <motion.div
-                animate={{
-                  y: [-8, 0, -8],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                }}
-              >
+              <div className='coffee-float'>
                 <Coffee className='w-4 h-4 text-lemon-500' />
-              </motion.div>
+              </div>
             </div>
           </Card>
         </div>
@@ -434,16 +374,8 @@ export default function Dashboard() {
                     <Button
                       key={action.id}
                       variant='secondary'
-                      className='w-full justify-start text-left h-auto py-4 px-4'
+                      className={`w-full justify-start text-left h-auto py-4 px-4 button-decoration stagger-${index + 1}`}
                       onClick={() => console.log(`Quick action: ${action.action}`)}
-                      style={{
-                        animationDelay: `${
-                          (dashboardData.recentActivities.length +
-                            dashboardData.reminders.length +
-                            index) *
-                          100
-                        }ms`,
-                      }}
                     >
                       <div className='flex items-center space-x-3 w-full'>
                         <div className='p-2 bg-honey-100 rounded-lg'>

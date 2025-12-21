@@ -1,0 +1,277 @@
+/* animations.css - 分级动画规范 */
+
+/* -----------------------------
+  L0 - 导航/Tab/路由动画
+  特点：纯CSS transitions，无JS，禁止无限动画影响交互
+------------------------------ */
+.nav-transition {
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.nav-hover {
+  transition:
+    transform 0.15s ease-out,
+    background-color 0.2s ease;
+}
+
+.nav-hover:hover {
+  transform: scale(1.02);
+}
+
+/* 导航激活指示器 - 静态显示，L0禁止无限动画 */
+.nav-indicator {
+  opacity: 0.8;
+}
+
+/* -----------------------------
+  L1 - Hover/Focus 动画
+  特点：CSS transforms，功能性反馈，静态loading图标
+------------------------------ */
+.button-loading {
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.hover-lift {
+  transition:
+    transform 0.15s ease-out,
+    box-shadow 0.2s ease-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+.hover-scale {
+  transition: transform 0.15s ease-out;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+.hover-scale:active {
+  transform: scale(0.98);
+}
+
+/* -----------------------------
+  L2 - 页面进入动画 (保持Motion.js)
+  特点：JS动画可控，禁止无限动画，一次性执行
+  注：此类动画继续使用motion/react，仅在此注释说明规范
+------------------------------ */
+
+/* -----------------------------
+  L3 - 装饰/氛围动画
+  特点：纯CSS keyframes，无限循环，不参与交互
+------------------------------ */
+
+/* 通用浮动动画 */
+@keyframes float-gentle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.float-gentle {
+  animation: float-gentle 3s ease-in-out infinite;
+}
+
+/* 水平浮动 */
+@keyframes float-horizontal {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+}
+
+.float-horizontal {
+  animation: float-horizontal 4s ease-in-out infinite;
+}
+
+/* 组合浮动动画 */
+@keyframes float-complex {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-10px) translateX(5px);
+  }
+  50% {
+    transform: translateY(-5px) translateX(10px);
+  }
+  75% {
+    transform: translateY(-15px) translateX(5px);
+  }
+}
+
+.float-complex {
+  animation: float-complex 6s ease-in-out infinite;
+}
+
+/* 星光闪烁动画 */
+@keyframes sparkle-float {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-20px) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+.sparkle {
+  animation: sparkle-float 2s ease-in-out infinite;
+}
+
+/* 装饰性脉冲动画 */
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+/* 爱心装饰动画 */
+@keyframes heartbeat {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.heartbeat {
+  animation: heartbeat 2.5s ease-in-out infinite;
+}
+
+/* 咖啡杯浮动 */
+@keyframes coffee-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-5deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(5deg);
+  }
+}
+
+.coffee-float {
+  animation: coffee-float 4s ease-in-out infinite;
+}
+
+/* 按钮装饰延迟动画 */
+@keyframes button-decoration {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.button-decoration {
+  animation: button-decoration 3s ease-in-out infinite;
+}
+
+/* Staggered animation delays for decorative elements */
+.stagger-1 {
+  animation-delay: 0.1s;
+}
+.stagger-2 {
+  animation-delay: 0.2s;
+}
+.stagger-3 {
+  animation-delay: 0.3s;
+}
+.stagger-4 {
+  animation-delay: 0.4s;
+}
+.stagger-5 {
+  animation-delay: 0.5s;
+}
+.stagger-6 {
+  animation-delay: 0.6s;
+}
+.stagger-7 {
+  animation-delay: 0.7s;
+}
+.stagger-8 {
+  animation-delay: 0.8s;
+}
+
+/* -----------------------------
+  性能优化
+------------------------------ */
+/* 启用硬件加速 */
+.hardware-accelerated {
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* 动画期间禁用过渡以避免冲突 */
+.no-transition-during-animation {
+  animation: none;
+  transition: none;
+}
+
+/* -----------------------------
+  响应式动画控制
+------------------------------ */
+/* 移动端减少动画强度 */
+@media (max-width: 768px) {
+  .float-complex {
+    animation-duration: 8s;
+  }
+
+  .coffee-float {
+    animation-duration: 6s;
+  }
+}
+
+/* 减少动画偏好设置支持 */
+@media (prefers-reduced-motion: reduce) {
+  .nav-indicator,
+  .loading-spinner,
+  .float-gentle,
+  .float-horizontal,
+  .float-complex,
+  .sparkle,
+  .pulse-soft,
+  .heartbeat,
+  .coffee-float,
+  .button-decoration {
+    animation: none;
+  }
+}

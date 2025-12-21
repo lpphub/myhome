@@ -10,7 +10,6 @@ import {
   Tag,
   User,
 } from 'lucide-react'
-import { motion } from 'motion/react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { useAuth } from '../hooks/useAuth'
 
@@ -61,7 +60,7 @@ function Navigation() {
   const getCurrentPage = () => {
     const path = location.pathname
     if (path === '/' || path === '') return 'dashboard'
-    return path.slice(1) // 移除前导斜杠
+    return path.slice(1)
   }
 
   const currentPage = getCurrentPage()
@@ -73,11 +72,11 @@ function Navigation() {
 
   return (
     <>
-      {/* 顶部导航栏 - 温馨小型设计 */}
-      <nav className='fixed top-0 left-0 right-0 z-50 bg-white/85 backdrop-blur-xl border-b border-honey-100/80 shadow-[0_1px_3px_-1px_rgba(0,0,0,0.04),0_1px_2px_-1px_rgba(0,0,0,0.02)]'>
+      {/* 顶部导航栏 */}
+      <nav className='fixed top-0 left-0 right-0 z-50 bg-white/85 backdrop-blur-xl border-b border-honey-100/80'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='flex items-center justify-between h-16'>
-            {/* Logo 区域 - 小巧设计 */}
+            {/* Logo 区域 */}
             <Link
               to='/'
               className='flex items-center space-x-3 hover:opacity-80 transition-opacity'
@@ -96,52 +95,34 @@ function Navigation() {
               </div>
             </Link>
 
-            {/* 主导航项 - 水平排列 */}
+            {/* 主导航项 */}
             <div className='hidden md:flex items-center space-x-1'>
-              {navItems.map((item, index) => {
+              {navItems.map(item => {
                 const isActive = currentPage === item.id
                 return (
                   <Link
                     key={item.id}
                     to={item.path}
-                    className={`
-                      group flex items-center px-4 py-2 text-sm font-medium rounded-2xl transition-all duration-300 relative
-                      ${
-                        isActive
-                          ? 'bg-gradient-to-r from-coral-100 to-coral-200 text-coral-700 shadow-md transform scale-105'
-                          : 'text-warmGray-600 hover:bg-honey-50 hover:text-honey-700 hover:shadow-sm'
-                      }
-                    `}
-                    style={{
-                      animationDelay: `${index * 100}ms`,
-                    }}
+                    className={`group flex items-center px-4 py-2 text-sm font-medium rounded-xl transition-colors relative ${
+                      isActive
+                        ? 'bg-coral-100 text-coral-700'
+                        : 'text-warmGray-600 hover:bg-honey-50 hover:text-honey-700'
+                    }`}
                   >
                     {/* 活跃状态的装饰点 */}
                     {isActive && (
-                      <motion.div
-                        className='absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-coral-500 rounded-full'
-                        animate={{
-                          opacity: [1, 0.5, 1],
-                          scale: [1, 1.5, 1],
-                        }}
-                        transition={{
-                          duration: 1.5,
-                          repeat: Infinity,
-                          ease: 'easeInOut',
-                        }}
-                      />
+                      <div className='absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-coral-500 rounded-full' />
                     )}
 
                     <div className='flex items-center space-x-2'>
                       {/* 图标 */}
                       <div
-                        className={`
-                        p-1.5 rounded-xl transition-all duration-300
-                        ${isActive ? 'bg-white/60' : 'group-hover:bg-white/40'}
-                      `}
+                        className={`p-1.5 rounded-lg ${
+                          isActive ? 'bg-white/70' : 'group-hover:bg-white/40'
+                        }`}
                       >
                         <item.icon
-                          className={`w-4 h-4 transition-all duration-300 ${
+                          className={`w-4 h-4 transition-colors ${
                             isActive ? 'text-coral-600' : 'group-hover:text-honey-600'
                           }`}
                         />
@@ -151,21 +132,7 @@ function Navigation() {
                       <span className='font-medium'>{item.label}</span>
 
                       {/* 活跃状态的装饰 */}
-                      {isActive && (
-                        <motion.div
-                          animate={{
-                            opacity: [1, 0.7, 1],
-                            scale: [1, 1.1, 1],
-                          }}
-                          transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            ease: 'easeInOut',
-                          }}
-                        >
-                          <Sparkles className='w-3 h-3 text-coral-500' />
-                        </motion.div>
-                      )}
+                      {isActive && <Sparkles className='w-3 h-3 text-coral-500' />}
                     </div>
                   </Link>
                 )
@@ -177,24 +144,24 @@ function Navigation() {
               {/* 搜索按钮 */}
               <button
                 type='button'
-                className='p-2.5 text-warmGray-500 hover:text-honey-600 hover:bg-honey-50 rounded-xl transition-all duration-300 group'
+                className='p-2.5 text-warmGray-500 hover:text-honey-600 hover:bg-honey-50 rounded-lg transition-colors'
               >
-                <Search className='w-5 h-5 group-hover:scale-110 transition-transform' />
+                <Search className='w-5 h-5' />
               </button>
 
               {/* 设置按钮 */}
               <button
                 type='button'
-                className='p-2.5 text-warmGray-500 hover:text-honey-600 hover:bg-honey-50 rounded-xl transition-all duration-300 group'
+                className='p-2.5 text-warmGray-500 hover:text-honey-600 hover:bg-honey-50 rounded-lg transition-colors'
               >
-                <Settings className='w-5 h-5 group-hover:rotate-45 transition-transform' />
+                <Settings className='w-5 h-5' />
               </button>
 
               {/* 用户信息下拉菜单 */}
               <div className='relative group'>
                 <button
                   type='button'
-                  className='flex items-center space-x-2 p-2.5 text-warmGray-700 hover:bg-honey-50 rounded-xl transition-all duration-300'
+                  className='flex items-center space-x-2 p-2.5 text-warmGray-700 hover:bg-honey-50 rounded-lg transition-colors'
                 >
                   <div className='w-8 h-8 bg-gradient-to-br from-honey-400 to-coral-400 rounded-full flex items-center justify-center'>
                     <User className='w-4 h-4 text-white' />
@@ -205,12 +172,12 @@ function Navigation() {
                 </button>
 
                 {/* 下拉菜单 */}
-                <div className='absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-warm-lg border border-honey-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform group-hover:translate-y-0 translate-y-2'>
+                <div className='absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-honey-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200'>
                   <div className='p-2'>
                     <button
                       type='button'
                       onClick={handleLogout}
-                      className='w-full flex items-center space-x-2 px-3 py-2 text-sm text-semantic-danger hover:bg-semantic-danger/10 rounded-lg transition-colors cursor-pointer'
+                      className='w-full flex items-center space-x-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition-colors cursor-pointer'
                     >
                       <LogOut className='w-4 h-4' />
                       <span>退出登录</span>
@@ -225,7 +192,7 @@ function Navigation() {
 
       {/* 移动端底部导航栏 */}
       <div className='md:hidden fixed bottom-0 left-0 right-0 z-50'>
-        <div className='bg-white/85 backdrop-blur-xl border-t border-honey-100/80 shadow-[0_-1px_3px_-1px_rgba(0,0,0,0.04),0_-1px_2px_-1px_rgba(0,0,0,0.02)] px-3 py-2'>
+        <div className='bg-white/85 backdrop-blur-xl border-t border-honey-100/80'>
           <div className='flex justify-around'>
             {navItems.map(item => {
               const isActive = currentPage === item.id
@@ -233,41 +200,18 @@ function Navigation() {
                 <Link
                   key={item.id}
                   to={item.path}
-                  className={`
-                    flex flex-col items-center px-3 py-2 text-xs font-medium rounded-2xl transition-all duration-300 relative
-                    ${
-                      isActive
-                        ? 'text-coral-700 bg-coral-50 shadow-md scale-105'
-                        : 'text-warmGray-600 hover:text-honey-600 hover:bg-honey-50'
-                    }
-                  `}
+                  className={`flex flex-col items-center px-3 py-2 text-xs font-medium rounded-lg transition-colors relative ${
+                    isActive
+                      ? 'text-coral-700 bg-coral-50'
+                      : 'text-warmGray-600 hover:text-honey-600'
+                  }`}
                 >
                   {/* 活跃指示器 */}
                   {isActive && (
-                    <motion.div
-                      className='absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-coral-500 rounded-full'
-                      animate={{
-                        opacity: [1, 0.5, 1],
-                        scale: [1, 1.5, 1],
-                      }}
-                      transition={{
-                        duration: 1.5,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                      }}
-                    />
+                    <div className='absolute -top-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-coral-500 rounded-full' />
                   )}
 
-                  <div
-                    className={`
-                    p-2 rounded-xl mb-1 transition-all duration-300
-                    ${
-                      isActive
-                        ? 'bg-gradient-to-br from-coral-100 to-coral-200'
-                        : 'group-hover:bg-white/60'
-                    }
-                  `}
-                  >
+                  <div className={`p-2 rounded-lg mb-1 ${isActive ? 'bg-coral-100' : ''}`}>
                     <item.icon className={`h-4 w-4 ${isActive ? 'text-coral-600' : ''}`} />
                   </div>
                   <span className='text-xs'>{item.label}</span>
