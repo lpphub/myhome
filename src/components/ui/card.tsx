@@ -1,7 +1,30 @@
+import { cva, type VariantProps } from 'class-variance-authority'
 import * as React from 'react'
 import { cn } from '@/lib/utils'
 
-export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {}
+const cardVariants = cva(
+  'bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm',
+  {
+    variants: {
+      variant: {
+        default: '',
+        warm: 'from-honey-50 to-cream-50 border-honey-200 shadow-warm-sm',
+        soft: 'bg-white/60 backdrop-blur-sm border-cream-200 shadow-soft',
+        glass: 'bg-white/40 backdrop-blur-md border-cream-200/50 shadow-card',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+    },
+  }
+)
+
+export interface CardProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof cardVariants> {
+  decorative?: boolean
+}
+
 export interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {}
 export interface CardTitleProps extends React.HTMLAttributes<HTMLDivElement> {}
 export interface CardDescriptionProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -9,19 +32,18 @@ export interface CardActionProps extends React.HTMLAttributes<HTMLDivElement> {}
 export interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {}
 export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-const Card = React.forwardRef<HTMLDivElement, CardProps>(({ className, ...props }, ref) => {
-  return (
-    <div
-      ref={ref}
-      data-slot='card'
-      className={cn(
-        'bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm',
-        className
-      )}
-      {...props}
-    />
-  )
-})
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ className, variant, decorative, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        data-slot='card'
+        className={cn(cardVariants({ variant }), className)}
+        {...props}
+      />
+    )
+  }
+)
 Card.displayName = 'Card'
 
 const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
@@ -104,4 +126,13 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
 )
 CardFooter.displayName = 'CardFooter'
 
-export { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent }
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardAction,
+  CardDescription,
+  CardContent,
+  cardVariants,
+}

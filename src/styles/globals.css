@@ -20,7 +20,6 @@
 @theme {
   /* 主色与辅助色 */
   --color-primary: var(--color-cream-700);
-  --color-accent: var(--color-honey-500);
   --color-secondary: var(--color-warmGray-200);
   --color-destructive: var(--color-coral-700);
 
