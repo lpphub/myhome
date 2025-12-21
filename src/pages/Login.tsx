@@ -66,7 +66,7 @@ export default function Login() {
   return (
     <div className='min-h-screen flex items-center justify-center p-4 relative overflow-hidden'>
       {/* 背景装饰 */}
-      <div className='absolute inset-0 bg-gradient-to-br from-cream-100 via-honey-100 to-lavender-100' />
+      <div className='absolute inset-0 bg-linear-to-br from-cream-100 via-honey-100 to-lavender-100' />
       <div className='absolute inset-0'>
         {/* 浮动装饰元素 */}
         <motion.div
