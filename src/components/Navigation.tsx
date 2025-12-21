@@ -90,8 +90,8 @@ function Navigation() {
                 </div>
               </div>
               <div className='hidden sm:block'>
-                <h1 className='text-lg font-bold text-warmGray-800'>家庭收纳小助手</h1>
-                <p className='text-xs text-warmGray-600'>温馨收纳助手</p>
+                <h1 className='text-lg font-bold text-warmGray-800'>收纳宝</h1>
+                <p className='text-xs text-warmGray-600'>温馨收纳小助手</p>
               </div>
             </Link>
 
@@ -144,7 +144,7 @@ function Navigation() {
               {/* 搜索按钮 */}
               <button
                 type='button'
-                className='p-2.5 text-warmGray-500 hover:text-honey-600 hover:bg-honey-50 rounded-lg transition-colors'
+                className='p-2.5 text-warmGray-500 hover:text-coral-500 hover:bg-honey-50 rounded-lg transition-colors'
               >
                 <Search className='w-5 h-5' />
               </button>
@@ -152,7 +152,7 @@ function Navigation() {
               {/* 设置按钮 */}
               <button
                 type='button'
-                className='p-2.5 text-warmGray-500 hover:text-honey-600 hover:bg-honey-50 rounded-lg transition-colors'
+                className='p-2.5 text-warmGray-500 hover:text-coral-500 hover:bg-honey-50 rounded-lg transition-colors'
               >
                 <Settings className='w-5 h-5' />
               </button>
@@ -167,12 +167,12 @@ function Navigation() {
                     <User className='w-4 h-4 text-white' />
                   </div>
                   <span className='hidden sm:block text-sm font-medium'>
-                    {user?.name || user?.email?.split('@')[0] || '用户'}
+                    {user?.name?.split('@')[0] || '用户'}
                   </span>
                 </button>
 
                 {/* 下拉菜单 */}
-                <div className='absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-honey-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200'>
+                <div className='absolute left-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-honey-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200'>
                   <div className='p-2'>
                     <button
                       type='button'

@@ -118,7 +118,11 @@ export default function Dashboard() {
     return (
       <div className='min-h-screen bg-cream-50 flex items-center justify-center'>
         <div className='text-center'>
-          <div className='w-12 h-12 border-4 border-honey-200 border-t-honey-500 rounded-full mx-auto mb-4 loading-spinner' />
+          <motion.div
+            className='w-12 h-12 border-4 border-honey-200 border-t-honey-500 rounded-full mx-auto mb-4'
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+          />
           <p className='text-warmGray-600 text-lg'>正在加载您的小窝...</p>
         </div>
       </div>
