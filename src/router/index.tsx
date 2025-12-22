@@ -2,11 +2,11 @@
 import { createBrowserRouter } from 'react-router'
 import { AuthGuard } from '@/components/AuthGuard'
 import MainLayout from '@/components/MainLayout'
-import ComingSoon from '@/pages/ComingSoon'
-import Dashboard from '@/pages/Dashboard'
-import Login from '@/pages/Login'
-import NotFound from '@/pages/NotFound'
-import Register from '@/pages/Register'
+import ComingSoon from '@/pages/general/ComingSoon'
+import Dashboard from '@/pages/general/Dashboard'
+import Login from '@/pages/auth/Login'
+import NotFound from '@/pages/errors/NotFound'
+import Register from '@/pages/auth/Register'
 import TestComponents from '@/pages/TestUI'
 
 export const router = createBrowserRouter([

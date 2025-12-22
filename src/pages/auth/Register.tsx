@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { Eye, EyeOff, Heart, Home, UserPlus } from 'lucide-react'
+import { Eye, EyeOff, Home, UserPlus } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'

@@ -115,7 +115,7 @@ export default function Login() {
           <div className='text-center space-y-2'>
             {/* Logo 图标 */}
             <div className='flex items-center justify-center mb-2'>
-              <div className='w-16 h-16 bg-gradient-to-br from-honey-400 to-coral-400 rounded-2xl flex items-center justify-center shadow-warm-md'>
+              <div className='w-16 h-16 bg-linear-to-br from-honey-400 to-coral-400 rounded-2xl flex items-center justify-center shadow-warm-md'>
                 <Home className='w-8 h-8 text-white' />
               </div>
             </div>
