@@ -53,10 +53,20 @@ export interface RequestOptions<_T = unknown, D = unknown> extends AxiosRequestC
   mock?: boolean
 }
 
+interface QueuedRequest {
+  config: RetriableConfig
+  resolve: (value: any) => void
+  reject: (error: any) => void
+}
+
 class HttpClient {
   private instance: AxiosInstance
   private baseURL: string
   private timeout: number
+
+  // 刷新协调锁机制
+  private isRefreshing = false
+  private refreshQueue: QueuedRequest[] = []
 
   constructor(baseURL: string = env.API_BASE_URL, timeout: number = 60000) {
     this.baseURL = baseURL
@@ -171,20 +181,35 @@ class HttpClient {
    * 刷新token并重试
    */
   private async refreshTokenAndRetry(originalConfig: RetriableConfig): Promise<never> {
+    // 防止死循环
+    if (originalConfig._retry) {
+      throw new Error('Token refresh loop detected')
+    }
+
+    // 如果正在刷新，将请求加入队列
+    if (this.isRefreshing) {
+      return new Promise((resolve, reject) => {
+        this.refreshQueue.push({
+          config: originalConfig,
+          resolve,
+          reject,
+        })
+      })
+    }
+
+    this.isRefreshing = true
+
     try {
-      // 防止死循环
-      if (originalConfig._retry) {
-        throw new Error('Token refresh loop detected')
-      }
-
-      originalConfig._retry = true
-
       const newToken = await useAuthStore.getState().refreshAccessToken()
       if (!newToken) {
-        useAuthStore.getState().logout()
         throw new Error('Token refresh failed')
       }
 
+      // 处理队列中的请求
+      this.processRefreshQueue(newToken)
+
+      // 重试原始请求
+      originalConfig._retry = true
       originalConfig.headers = {
         ...(originalConfig.headers ?? {}),
         Authorization: `Bearer ${newToken}`,
@@ -192,9 +217,43 @@ class HttpClient {
 
       return this.instance.request(originalConfig)
     } catch (e) {
+      // 刷新失败，拒绝所有队列中的请求
+      this.rejectRefreshQueue(e)
       useAuthStore.getState().logout()
-      return Promise.reject(e)
+      throw e
+    } finally {
+      this.isRefreshing = false
     }
+  }
+
+  /**
+   * 处理刷新队列中的请求
+   */
+  private processRefreshQueue(newToken: string): void {
+    const queue = [...this.refreshQueue]  // 复制队列
+    this.refreshQueue = []  // 清空原队列
+
+    queue.forEach(({ config, resolve, reject }) => {
+      config.headers = {
+        ...(config.headers ?? {}),
+        Authorization: `Bearer ${newToken}`,
+      }
+
+      // 异步执行请求，不阻塞队列处理
+      this.instance.request(config)
+        .then(resolve)
+        .catch(reject)
+    })
+  }
+
+  /**
+   * 拒绝刷新队列中的所有请求
+   */
+  private rejectRefreshQueue(error: any): void {
+    const queue = [...this.refreshQueue]  // 复制队列
+    this.refreshQueue = []  // 清空原队列
+
+    queue.forEach(({ reject }) => reject(error))
   }
 
   private unwrapResponse<T>(response: AxiosResponse<ApiResponse<T>>): T {
