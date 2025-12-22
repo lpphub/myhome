@@ -1,4 +1,4 @@
-import { ShieldX, Home, RefreshCw } from 'lucide-react'
+import { Home, RefreshCw, ShieldX } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useNavigate } from 'react-router'
 import { Card } from '@/components/ui/card'

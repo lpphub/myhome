@@ -50,20 +50,6 @@ export default function TestUI() {
         <div className='max-w-6xl mx-auto px-6 py-4'>
           <div className='flex items-center justify-between'>
             <h1 className='text-2xl font-light text-foreground'>UI 组件展示</h1>
-            <div className='flex gap-4'>
-              <Button variant='ghost' size='sm'>
-                Input
-              </Button>
-              <Button variant='ghost' size='sm'>
-                Button
-              </Button>
-              <Button variant='ghost' size='sm'>
-                Card
-              </Button>
-              <Button variant='ghost' size='sm'>
-                Badge
-              </Button>
-            </div>
           </div>
         </div>
       </nav>
@@ -97,7 +83,7 @@ export default function TestUI() {
             >
               <Card variant='soft' className='h-full'>
                 <CardHeader>
-                  <CardTitle className='text-foreground'>衣物收纳</CardTitle>
+                  <CardTitle>衣物收纳</CardTitle>
                   <CardDescription>智能分类，节省空间</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -127,7 +113,7 @@ export default function TestUI() {
             >
               <Card variant='soft' className='h-full'>
                 <CardHeader>
-                  <CardTitle className='text-foreground'>厨房用品</CardTitle>
+                  <CardTitle>厨房用品</CardTitle>
                   <CardDescription>整洁有序，烹饪愉快</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -157,7 +143,7 @@ export default function TestUI() {
             >
               <Card variant='soft' className='h-full'>
                 <CardHeader>
-                  <CardTitle className='text-foreground'>杂物整理</CardTitle>
+                  <CardTitle>杂物整理</CardTitle>
                   <CardDescription>告别混乱，拥抱整洁</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -370,7 +356,7 @@ export default function TestUI() {
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <Card>
                 <CardHeader>
-                  <CardTitle>基础卡片</CardTitle>
+                  <CardTitle className='text-foreground'>基础卡片</CardTitle>
                   <CardDescription>这是一个基础的卡片组件</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -387,7 +373,7 @@ export default function TestUI() {
               <Card variant='warm'>
                 <CardHeader>
                   <div className='flex items-center justify-between'>
-                    <CardTitle>特殊卡片</CardTitle>
+                    <CardTitle className='text-foreground'>特殊卡片</CardTitle>
                     <Badge variant='honey'>NEW</Badge>
                   </div>
                   <CardDescription>带有特殊样式的卡片</CardDescription>
@@ -422,7 +408,7 @@ export default function TestUI() {
                 onClick={() => setSelectedCard(selectedCard === 1 ? null : 1)}
               >
                 <CardHeader>
-                  <CardTitle className='flex items-center justify-between'>
+                  <CardTitle className='flex items-center justify-between text-foreground'>
                     可交互卡片
                     <motion.div
                       animate={{ rotate: selectedCard === 1 ? 180 : 0 }}
@@ -552,7 +538,7 @@ export default function TestUI() {
             >
               <Card className='cursor-pointer overflow-hidden'>
                 <CardHeader>
-                  <CardTitle className='flex items-center justify-between'>
+                  <CardTitle className='flex items-center justify-between text-foreground'>
                     点击展开的卡片
                     <motion.div
                       animate={{ rotate: expandedCard === 1 ? 180 : 0 }}
@@ -610,7 +596,7 @@ export default function TestUI() {
             >
               <Card className='cursor-pointer overflow-hidden' variant='warm'>
                 <CardHeader>
-                  <CardTitle className='flex items-center justify-between'>
+                  <CardTitle className='flex items-center justify-between text-foreground'>
                     特殊样式的展开卡片
                     <motion.div
                       animate={{ rotate: expandedCard === 2 ? 180 : 0 }}
