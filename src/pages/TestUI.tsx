@@ -353,20 +353,18 @@ export default function TestUI() {
 
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {/* 基础卡片 */}
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Card>
-                <CardHeader>
-                  <CardTitle className='text-foreground'>基础卡片</CardTitle>
-                  <CardDescription>这是一个基础的卡片组件</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className='text-sm text-muted-foreground'>卡片内容区域，可以放置任何内容。</p>
-                </CardContent>
-                <CardFooter>
-                  <Button className='w-full'>确认</Button>
-                </CardFooter>
-              </Card>
-            </motion.div>
+            <Card className='paper-shadow'>
+              <CardHeader>
+                <CardTitle className='text-foreground'>基础卡片</CardTitle>
+                <CardDescription>这是一个基础的卡片组件</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className='text-sm text-muted-foreground'>卡片内容区域，可以放置任何内容。</p>
+              </CardContent>
+              <CardFooter>
+                <Button className='w-full'>确认</Button>
+              </CardFooter>
+            </Card>
 
             {/* 特殊样式卡片 */}
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>

@@ -1,6 +1,6 @@
 import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { Loader } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { motion } from 'motion/react'
 import * as React from 'react'
 import { cn } from '@/lib/utils'
@@ -50,7 +50,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
             >
-              <Loader className='h-4 w-4' />
+              <Loader2 className='h-4 w-4' />
             </motion.div>
           )}
           {children}
