@@ -1,13 +1,14 @@
-// router/index.ts
 import { createBrowserRouter } from 'react-router'
 import { AuthGuard } from '@/components/AuthGuard'
 import MainLayout from '@/components/MainLayout'
-import ComingSoon from '@/pages/general/ComingSoon'
-import Dashboard from '@/pages/general/Dashboard'
 import Login from '@/pages/auth/Login'
-import NotFound from '@/pages/errors/NotFound'
 import Register from '@/pages/auth/Register'
+import Dashboard from '@/pages/dashboard'
+import NotFound from '@/pages/errors/NotFound'
+import Items from '@/pages/items'
+import Spaces from '@/pages/spaces'
 import TestComponents from '@/pages/TestUI'
+import Tags from '@/pages/tags'
 
 export const router = createBrowserRouter([
   {
@@ -24,15 +25,15 @@ export const router = createBrowserRouter([
       },
       {
         path: 'spaces',
-        element: <ComingSoon feature='spaces' />,
+        element: <Spaces />,
       },
       {
         path: 'items',
-        element: <ComingSoon feature='items' />,
+        element: <Items />,
       },
       {
         path: 'tags',
-        element: <ComingSoon feature='tags' />,
+        element: <Tags />,
       },
     ],
   },
