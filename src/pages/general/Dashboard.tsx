@@ -19,7 +19,7 @@ import {
   TrendingUp,
   XCircle,
 } from 'lucide-react'
-import { motion } from 'motion/react'
+
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { getDashboardData } from '@/api/dashboard'
@@ -373,12 +373,8 @@ const DashboardLoading = () => {
   return (
     <div className='min-h-screen bg-cream-50 flex items-center justify-center'>
       <div className='text-center'>
-        <motion.div
-          className='w-12 h-12 border-4 border-honey-200 border-t-honey-500 rounded-full mx-auto mb-4'
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-        />
-        <p className='text-warmGray-600 text-lg'>正在加载您的小窝...</p>
+        <div className='w-12 h-12 border-4 border-honey-200 border-t-honey-500 rounded-full mx-auto mb-4 animate-spin' />
+        <p className='text-ring text-lg'>正在加载您的小窝...</p>
       </div>
     </div>
   )
@@ -388,7 +384,7 @@ const DashboardLoading = () => {
 const DashboardError = () => {
   return (
     <div className='min-h-screen bg-cream-50 flex items-center justify-center'>
-      <p className='text-warmGray-600'>数据加载失败</p>
+      <p className='text-ring'>数据加载失败</p>
     </div>
   )
 }

@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { Eye, EyeOff, Heart, Home } from 'lucide-react'
-import { motion } from 'motion/react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
@@ -69,43 +68,14 @@ export default function Login() {
       <div className='absolute inset-0 bg-linear-to-br from-cream-100 via-honey-100 to-lavender-100' />
       <div className='absolute inset-0'>
         {/* 浮动装饰元素 */}
-        <motion.div
-          className='absolute top-20 left-20 w-32 h-32 bg-honey-200 rounded-full opacity-30'
-          animate={{
-            y: [0, -20, 0],
-            x: [0, 10, 0],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
+        <div className='absolute top-20 left-20 w-32 h-32 bg-honey-200 rounded-full opacity-30 animate-pulse duration-4000' />
+        <div
+          className='absolute top-40 right-32 w-24 h-24 bg-coral-200 rounded-full opacity-25 animate-pulse duration-3500'
+          style={{ animationDelay: '1s' }}
         />
-        <motion.div
-          className='absolute top-40 right-32 w-24 h-24 bg-coral-200 rounded-full opacity-25'
-          animate={{
-            y: [0, -15, 0],
-            x: [0, -10, 0],
-          }}
-          transition={{
-            duration: 3.5,
-            repeat: Infinity,
-            ease: 'easeInOut',
-            delay: 1,
-          }}
-        />
-        <motion.div
-          className='absolute bottom-32 left-32 w-40 h-40 bg-lavender-200 rounded-full opacity-20'
-          animate={{
-            y: [0, -25, 0],
-            x: [0, 15, 0],
-          }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: 'easeInOut',
-            delay: 2,
-          }}
+        <div
+          className='absolute bottom-32 left-32 w-40 h-40 bg-lavender-200 rounded-full opacity-20 animate-pulse duration-5000'
+          style={{ animationDelay: '2s' }}
         />
       </div>
 

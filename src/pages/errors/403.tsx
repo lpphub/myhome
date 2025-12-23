@@ -1,5 +1,4 @@
 import { Home, RefreshCw, ShieldX } from 'lucide-react'
-import { motion } from 'motion/react'
 import { useNavigate } from 'react-router'
 import { Card } from '@/components/ui/card'
 
@@ -23,18 +22,9 @@ export default function Forbidden() {
             <div className='absolute inset-0 flex items-center justify-center'>
               <span className='text-9xl font-bold text-honey-200 select-none'>403</span>
             </div>
-            <motion.div
-              className='absolute inset-0 flex items-center justify-center'
-              animate={{
-                y: [0, -20, 0],
-              }}
-              transition={{
-                duration: 1,
-                repeat: Infinity,
-              }}
-            >
+            <div className='absolute inset-0 flex items-center justify-center animate-bounce'>
               <span className='text-9xl font-bold text-lavender-600 select-none'>403</span>
-            </motion.div>
+            </div>
           </div>
 
           {/* 错误图标 */}

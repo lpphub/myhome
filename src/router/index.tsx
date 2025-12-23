@@ -4,6 +4,7 @@ import { AuthGuard } from '@/components/AuthGuard'
 import MainLayout from '@/components/MainLayout'
 import ComingSoon from '@/pages/general/ComingSoon'
 import Dashboard from '@/pages/general/Dashboard'
+import Tags from '@/pages/general/Tags'
 import Login from '@/pages/auth/Login'
 import NotFound from '@/pages/errors/NotFound'
 import Register from '@/pages/auth/Register'
@@ -32,7 +33,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'tags',
-        element: <ComingSoon feature='tags' />,
+        element: <Tags />,
       },
     ],
   },

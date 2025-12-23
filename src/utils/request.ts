@@ -55,7 +55,7 @@ export interface RequestOptions<_T = unknown, D = unknown> extends AxiosRequestC
 
 interface QueuedRequest {
   config: RetriableConfig
-  resolve: (value: AxiosResponse) => void
+  resolve: (response: AxiosResponse) => void
   reject: (error: unknown) => void
 }
 

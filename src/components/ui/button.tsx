@@ -1,7 +1,6 @@
 import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { Loader2 } from 'lucide-react'
-import { motion } from 'motion/react'
 import * as React from 'react'
 import { cn } from '@/lib/utils'
 
@@ -44,15 +43,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
         <span className='relative z-10 flex items-center'>
-          {loading && (
-            <motion.div
-              className='mr-2'
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-            >
-              <Loader2 className='h-4 w-4' />
-            </motion.div>
-          )}
+          {loading && <Loader2 className='h-4 w-4 animate-spin ease-linear' />}
           {children}
         </span>
       </Comp>

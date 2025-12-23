@@ -1,5 +1,4 @@
 import { Archive, Camera, Clock, Heart, Home, Sparkles, Tag } from 'lucide-react'
-import { motion } from 'motion/react'
 import { Link } from 'react-router'
 
 interface ComingSoonProps {
@@ -52,64 +51,28 @@ function ComingSoon({ feature }: ComingSoonProps) {
         <div className='bg-white/80 backdrop-blur-lg rounded-3xl shadow-warm-xl border border-honey-200 p-8 md:p-12'>
           {/* 图标和标题区域 */}
           <div className='text-center mb-8'>
-            <motion.div
-              className={`inline-flex items-center justify-center w-24 h-24 bg-linear-to-br from-${featureInfo.color}-400 to-${featureInfo.color}-600 rounded-3xl shadow-lg mb-6`}
-              animate={{
-                y: [-8, 0, -8],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            >
+            <div className='inline-flex items-center justify-center w-24 h-24 bg-linear-to-br from-honey-400 to-honey-600 rounded-3xl shadow-lg mb-6 animate-bounce duration-3000'>
               <Icon className='w-12 h-12 text-white' />
-            </motion.div>
+            </div>
 
             <h1 className='text-4xl font-bold text-warmGray-800 mb-2 flex items-center justify-center space-x-3'>
               <span>{featureInfo.title}</span>
-              <motion.div
-                animate={{
-                  opacity: [1, 0.8, 1],
-                  scale: [1, 1.05, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                }}
-              >
+              <div className='animate-pulse duration-2000'>
                 <Heart className='w-8 h-8 text-coral-400' />
-              </motion.div>
+              </div>
             </h1>
 
             <p className='text-xl text-warmGray-600 mb-4'>{featureInfo.description}</p>
 
             {/* 敬请期待标签 */}
             <div className='inline-flex items-center space-x-2 bg-linear-to-r from-honey-100 to-coral-100 px-6 py-3 rounded-2xl border border-honey-200'>
-              <motion.div
-                animate={{
-                  y: [0, -4, 0],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                }}
-              >
+              <div className='animate-pulse duration-2000'>
                 <Sparkles className='w-5 h-5 text-honey-600' />
-              </motion.div>
+              </div>
               <span className='text-lg font-medium text-warmGray-700'>敬请期待</span>
-              <motion.div
-                animate={{
-                  y: [0, -4, 0],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  delay: 0.5,
-                }}
-              >
+              <div className='animate-pulse duration-2000' style={{ animationDelay: '0.5s' }}>
                 <Sparkles className='w-5 h-5 text-coral-600' />
-              </motion.div>
+              </div>
             </div>
           </div>
 
@@ -125,16 +88,9 @@ function ComingSoon({ feature }: ComingSoonProps) {
               <span className='text-sm font-medium text-honey-600'>进行中...</span>
             </div>
             <div className='w-full bg-cream-200 rounded-full h-3 overflow-hidden'>
-              <motion.div
-                className='bg-linear-to-r from-honey-400 to-coral-400 h-3 rounded-full transition-all duration-1000'
+              <div
+                className='bg-linear-to-r from-honey-400 to-coral-400 h-3 rounded-full transition-all duration-1000 animate-pulse duration-1000'
                 style={{ width: '65%' }}
-                animate={{
-                  opacity: [0.8, 1, 0.8],
-                }}
-                transition={{
-                  duration: 1,
-                  repeat: Infinity,
-                }}
               />
             </div>
           </div>
@@ -177,19 +133,9 @@ function ComingSoon({ feature }: ComingSoonProps) {
             >
               <Home className='w-5 h-5 group-hover:scale-110 transition-transform' />
               <span className='font-medium'>返回首页</span>
-              <motion.div
-                animate={{
-                  opacity: [1, 0.7, 1],
-                  scale: [1, 1.1, 1],
-                }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-              >
+              <div className='animate-pulse duration-1500'>
                 <Sparkles className='w-4 h-4' />
-              </motion.div>
+              </div>
             </Link>
           </div>
         </div>
