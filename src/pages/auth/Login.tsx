@@ -80,7 +80,7 @@ export default function Login() {
       </div>
 
       {/* 登录卡片 */}
-      <Card className='w-96 z-10 shadow-2xl border border-honey-200/30 backdrop-blur-lg bg-white/60 py-4'>
+      <Card className='w-96 z-10 shadow-2xl border border-honey-200/30 backdrop-blur-lg bg-white/60 py-8'>
         <CardHeader>
           <div className='text-center space-y-2'>
             {/* Logo 图标 */}
@@ -103,7 +103,7 @@ export default function Login() {
         </CardHeader>
         <CardContent className='px-4'>
           {/* 登录表单 */}
-          <form onSubmit={handleSubmit(onSubmit)} className='space-y-1.5'>
+          <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
             {/* 通用错误信息 */}
             {errors.root && (
               <div className='bg-coral-50 border border-coral-200 text-coral-700 px-4 py-3 rounded-lg text-sm'>
@@ -157,7 +157,7 @@ export default function Login() {
               )}
             </div>
 
-            <div className='w-[95%] pt-2 mx-auto space-y-1.5'>
+            <div className='w-[95%] pt-4 mx-auto space-y-1.5'>
               {/* 登录按钮 */}
               <Button
                 type='submit'

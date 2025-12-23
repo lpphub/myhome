@@ -19,10 +19,10 @@
 ------------------------------ */
 @theme {
   /* 主色与辅助色 */
-  --color-primary: #e6a23c;
-  --color-secondary: #bfa46a;
+  --color-primary: #dfaa50;
+  --color-secondary: #f1d8a0;
   --color-destructive: #f05b3a;
-  --color-ring: #efc77a;
+  --color-ring: #f5e2be;
 
   --color-background: #fffcf6;
   --color-foreground: #3f3a32;
@@ -126,17 +126,34 @@
   Utilities
 ------------------------------ */
 @layer utilities {
-  /* 自定义阴影类 */
-  .paper-shadow {
-    box-shadow:
-      0 1px 3px rgba(0, 0, 0, 0.05),
-      0 1px 2px rgba(0, 0, 0, 0.02);
-    transition: box-shadow 0.2s ease;
+  /* Hover 阴影效果 */
+  .card-hover {
+    transition:
+      box-shadow 0.3s ease,
+      transform 0.3s ease;
   }
 
-  .paper-shadow:hover {
-    box-shadow:
-      0 4px 6px rgba(0, 0, 0, 0.1),
-      0 2px 4px rgba(0, 0, 0, 0.05);
+  .card-hover:hover {
+    box-shadow: var(--shadow-warm-lg);
+    transform: translateY(-4px);
+  }
+
+  .item-hover {
+    transition:
+      box-shadow 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .item-hover:hover {
+    box-shadow: var(--shadow-warm-sm);
+    transform: translateY(-4px);
+  }
+
+  .card-hover-no-transform {
+    transition: box-shadow 0.3s ease;
+  }
+
+  .card-hover-no-transform:hover {
+    box-shadow: var(--shadow-warm-lg);
   }
 }

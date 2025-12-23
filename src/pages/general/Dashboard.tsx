@@ -92,10 +92,7 @@ const DashboardHeader = () => {
 const DashboardStats = ({ data }: { data: any }) => {
   return (
     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8'>
-      <Card
-        variant='warm'
-        className='relative py-3 hover:shadow-warm-lg transition-all duration-300 transform hover:-translate-y-1'
-      >
+      <Card variant='warm' className='relative py-3 card-hover'>
         <div className='flex items-center justify-between py-1.5 px-3'>
           <div>
             <p className='text-sm font-medium text-warmGray-600 mb-1'>我的收藏</p>
@@ -112,10 +109,7 @@ const DashboardStats = ({ data }: { data: any }) => {
           <Star className='w-4 h-4 text-honey-500 animate-pulse' />
         </div>
       </Card>
-      <Card
-        variant='warm'
-        className='relative py-3 hover:shadow-warm-lg transition-all duration-300 transform hover:-translate-y-1'
-      >
+      <Card variant='warm' className='relative py-3 card-hover'>
         <div className='flex items-center justify-between py-1.5 px-3'>
           <div>
             <p className='text-sm font-medium text-warmGray-600 mb-1'>收纳空间</p>
@@ -133,10 +127,7 @@ const DashboardStats = ({ data }: { data: any }) => {
         </div>
       </Card>
 
-      <Card
-        variant='warm'
-        className='relative py-3 hover:shadow-warm-lg transition-all duration-300 transform hover:-translate-y-1'
-      >
+      <Card variant='warm' className='relative py-3 card-hover'>
         <div className='flex items-center justify-between py-1.5 px-3'>
           <div>
             <p className='text-sm font-medium text-warmGray-600 mb-1'>空间利用率</p>
@@ -154,10 +145,7 @@ const DashboardStats = ({ data }: { data: any }) => {
         </div>
       </Card>
 
-      <Card
-        variant='warm'
-        className='relative py-3 hover:shadow-warm-lg transition-all duration-300 transform hover:-translate-y-1'
-      >
+      <Card variant='warm' className='relative py-3 card-hover'>
         <div className='flex items-center justify-between py-1.5 px-3'>
           <div>
             <p className='text-sm font-medium text-warmGray-600 mb-1'>待处理事项</p>
@@ -240,7 +228,7 @@ const DashboardActivities = ({ activities }: { activities: any[] }) => {
             {activities.map((activity, index) => (
               <div
                 key={activity.id}
-                className='flex items-center justify-between p-4 bg-linear-to-r from-cream-50/50 to-honey-50/30 rounded-2xl border border-cream-200 hover:shadow-warm-sm transition-all duration-300 transform hover:-translate-y-1'
+                className='flex items-center justify-between p-4 bg-linear-to-r from-cream-50/50 to-honey-50/30 rounded-2xl border border-cream-200 item-hover'
                 style={{
                   animationDelay: `${index * 100}ms`,
                 }}
@@ -301,7 +289,7 @@ const DashboardReminders = ({ reminders }: { reminders: any[] }) => {
           {reminders.map((reminder, index) => (
             <div
               key={reminder.id}
-              className='p-4 bg-linear-to-r from-white/80 to-cream-50/60 rounded-xl border border-cream-200 shadow-soft hover:shadow-warm-sm transition-all duration-300 transform hover:-translate-y-1'
+              className='p-4 bg-linear-to-r from-white/80 to-cream-50/60 rounded-xl border border-cream-200 shadow-soft item-hover'
               style={{
                 animationDelay: `${(reminders.length + index) * 100}ms`,
               }}
@@ -345,7 +333,7 @@ const DashboardQuickActions = ({ quickActions }: { quickActions: any[] }) => {
             <Button
               key={action.id}
               variant='secondary'
-              className={`w-full justify-start text-left h-auto py-4 px-4 button-decoration stagger-${index + 1} hover:shadow-warm-sm transition-all duration-300 transform hover:-translate-y-1`}
+              className={`w-full justify-start text-left h-auto py-4 px-4 button-decoration stagger-${index + 1} item-hover`}
               onClick={() => console.log(`Quick action: ${action.action}`)}
               style={{
                 animationDelay: `${(quickActions.length + index) * 100}ms`,
@@ -374,7 +362,7 @@ const DashboardLoading = () => {
     <div className='min-h-screen bg-cream-50 flex items-center justify-center'>
       <div className='text-center'>
         <div className='w-12 h-12 border-4 border-honey-200 border-t-honey-500 rounded-full mx-auto mb-4 animate-spin' />
-        <p className='text-ring text-lg'>正在加载您的小窝...</p>
+        <p className='text-primary text-lg'>正在加载您的小窝...</p>
       </div>
     </div>
   )
@@ -384,7 +372,7 @@ const DashboardLoading = () => {
 const DashboardError = () => {
   return (
     <div className='min-h-screen bg-cream-50 flex items-center justify-center'>
-      <p className='text-ring'>数据加载失败</p>
+      <p className='text-primary'>数据加载失败</p>
     </div>
   )
 }

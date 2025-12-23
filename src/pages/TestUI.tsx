@@ -353,7 +353,7 @@ export default function TestUI() {
 
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {/* 基础卡片 */}
-            <Card className='paper-shadow'>
+            <Card className='shadow-soft'>
               <CardHeader>
                 <CardTitle className='text-foreground'>基础卡片</CardTitle>
                 <CardDescription>这是一个基础的卡片组件</CardDescription>

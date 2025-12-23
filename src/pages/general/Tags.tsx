@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import { useEffect } from 'react'
 import {
   AlertTriangle,
   BookOpen,
@@ -23,8 +22,7 @@ import {
   Trash2,
   Users,
 } from 'lucide-react'
-
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { getTagsData } from '@/api/tags'
 import { Badge } from '@/components/ui/badge'
@@ -398,7 +396,7 @@ const TagsLoading = () => {
     <div className='min-h-screen bg-cream-50 flex items-center justify-center'>
       <div className='text-center'>
         <div className='w-12 h-12 border-4 border-honey-200 border-t-honey-500 rounded-full mx-auto mb-4 animate-spin' />
-        <p className='text-ring text-lg'>正在布置我们的温馨便签墙...</p>
+        <p className='text-primary text-lg'>正在布置我们的温馨便签墙...</p>
       </div>
     </div>
   )
