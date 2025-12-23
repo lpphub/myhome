@@ -8,7 +8,7 @@ import App from './App'
 import './styles/globals.css'
 
 // 启动 Mock 服务（仅在开发环境）
-startMockService()
+await startMockService()
 
 const rootElement = document.getElementById('root')
 
