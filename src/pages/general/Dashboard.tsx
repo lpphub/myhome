@@ -27,23 +27,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
-// 公共工具函数
-const formatTimestamp = (timestamp: string) => {
-  const date = new Date(timestamp)
-  const now = new Date()
-  const diff = now.getTime() - date.getTime()
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-  const hours = Math.floor(diff / (1000 * 60 * 60))
-
-  if (days > 0) {
-    return `${days}天前`
-  } else if (hours > 0) {
-    return `${hours}小时前`
-  } else {
-    return '刚刚'
-  }
-}
-
 // DashboardHeader 组件
 const DashboardHeader = () => {
   const getGreeting = () => {
@@ -59,14 +42,14 @@ const DashboardHeader = () => {
   return (
     <div className='relative overflow-hidden'>
       {/* 背景装饰 */}
-      <div className='absolute inset-0 bg-gradient-to-r from-honey-100/50 via-cream-200/30 to-coral-100/50'></div>
-      <div className='absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-honey-200/20 to-transparent rounded-full blur-3xl'></div>
-      <div className='absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-coral-200/20 to-transparent rounded-full blur-2xl'></div>
+      <div className='absolute inset-0 bg-linear-to-r from-honey-100/50 via-cream-200/30 to-coral-100/50'></div>
+      <div className='absolute top-0 right-0 w-64 h-64 bg-linear-to-bl from-honey-200/20 to-transparent rounded-full blur-3xl'></div>
+      <div className='absolute bottom-0 left-0 w-48 h-48 bg-linear-to-tr from-coral-200/20 to-transparent rounded-full blur-2xl'></div>
 
       <div className='relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
         <div className='flex items-center justify-between'>
           <div className='flex items-center space-x-4'>
-            <div className='w-16 h-16 bg-gradient-to-br from-honey-400 to-honey-600 rounded-3xl flex items-center justify-center shadow-warm-lg animate-float'>
+            <div className='w-16 h-16 bg-linear-to-br from-honey-400 to-honey-600 rounded-3xl flex items-center justify-center shadow-warm-lg animate-float'>
               <Home className='w-8 h-8 text-white' />
             </div>
             <div>
@@ -90,11 +73,11 @@ const DashboardHeader = () => {
             </div>
           </div>
           <div className='hidden md:flex items-center space-x-4'>
-            <Button variant='secondary' size='default'>
+            <Button variant='secondary'>
               <Plus className='w-4 h-4 mr-2' />
               快速添加
             </Button>
-            <Button variant='default' size='default'>
+            <Button variant='default'>
               <Search className='w-4 h-4 mr-2' />
               找找看
             </Button>
@@ -121,7 +104,7 @@ const DashboardStats = ({ data }: { data: any }) => {
             </p>
             <p className='text-xs text-warmGray-500 mt-1'>件温馨小物</p>
           </div>
-          <div className='p-2 bg-gradient-to-br from-honey-200 to-honey-300 rounded-lg shadow-soft'>
+          <div className='p-2 bg-linear-to-br from-honey-200 to-honey-300 rounded-lg shadow-soft'>
             <Package className='w-6 h-6 text-honey-700' />
           </div>
         </div>
@@ -141,7 +124,7 @@ const DashboardStats = ({ data }: { data: any }) => {
             </p>
             <p className='text-xs text-warmGray-500 mt-1'>个温馨角落</p>
           </div>
-          <div className='p-2 bg-gradient-to-br from-lavender-200 to-lavender-300 rounded-lg shadow-soft'>
+          <div className='p-2 bg-linear-to-br from-lavender-200 to-lavender-300 rounded-lg shadow-soft'>
             <Archive className='w-6 h-6 text-lavender-700' />
           </div>
         </div>
@@ -162,7 +145,7 @@ const DashboardStats = ({ data }: { data: any }) => {
             </p>
             <p className='text-xs text-warmGray-500 mt-1'>利用率刚好</p>
           </div>
-          <div className='p-2 bg-gradient-to-br from-coral-200 to-coral-300 rounded-lg shadow-soft'>
+          <div className='p-2 bg-linear-to-br from-coral-200 to-coral-300 rounded-lg shadow-soft'>
             <TrendingUp className='w-6 h-6 text-coral-700' />
           </div>
         </div>
@@ -183,7 +166,7 @@ const DashboardStats = ({ data }: { data: any }) => {
             </p>
             <p className='text-xs text-warmGray-500 mt-1'>个小提醒</p>
           </div>
-          <div className='p-2 bg-gradient-to-br from-lemon-200 to-lemon-300 rounded-lg shadow-soft'>
+          <div className='p-2 bg-linear-to-br from-lemon-200 to-lemon-300 rounded-lg shadow-soft'>
             <AlertTriangle className='w-6 h-6 text-lemon-700' />
           </div>
         </div>
@@ -229,6 +212,22 @@ const DashboardActivities = ({ activities }: { activities: any[] }) => {
     }
   }
 
+  const formatTimestamp = (timestamp: string) => {
+    const date = new Date(timestamp)
+    const now = new Date()
+    const diff = now.getTime() - date.getTime()
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+    const hours = Math.floor(diff / (1000 * 60 * 60))
+
+    if (days > 0) {
+      return `${days}天前`
+    } else if (hours > 0) {
+      return `${hours}小时前`
+    } else {
+      return '刚刚'
+    }
+  }
+
   return (
     <div className='lg:col-span-2'>
       <Card variant='soft'>
@@ -241,7 +240,7 @@ const DashboardActivities = ({ activities }: { activities: any[] }) => {
             {activities.map((activity, index) => (
               <div
                 key={activity.id}
-                className='flex items-center justify-between p-4 bg-gradient-to-r from-cream-50/50 to-honey-50/30 rounded-2xl border border-cream-200 hover:shadow-warm-sm transition-all duration-300 transform hover:-translate-y-1'
+                className='flex items-center justify-between p-4 bg-linear-to-r from-cream-50/50 to-honey-50/30 rounded-2xl border border-cream-200 hover:shadow-warm-sm transition-all duration-300 transform hover:-translate-y-1'
                 style={{
                   animationDelay: `${index * 100}ms`,
                 }}
@@ -302,7 +301,7 @@ const DashboardReminders = ({ reminders }: { reminders: any[] }) => {
           {reminders.map((reminder, index) => (
             <div
               key={reminder.id}
-              className='p-4 bg-gradient-to-r from-white/80 to-cream-50/60 rounded-xl border border-cream-200 shadow-soft hover:shadow-warm-sm transition-all duration-300 transform hover:-translate-y-1'
+              className='p-4 bg-linear-to-r from-white/80 to-cream-50/60 rounded-xl border border-cream-200 shadow-soft hover:shadow-warm-sm transition-all duration-300 transform hover:-translate-y-1'
               style={{
                 animationDelay: `${(reminders.length + index) * 100}ms`,
               }}
@@ -422,7 +421,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-cream-50 via-cream-100 to-honey-50'>
+    <div className='min-h-screen bg-linear-to-br from-cream-50 via-cream-100 to-honey-50'>
       {/* 温馨的头部区域 */}
       <DashboardHeader />
 

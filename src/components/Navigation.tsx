@@ -27,21 +27,21 @@ const navItems: NavItem[] = [
     label: '首页',
     icon: Home,
     path: '/',
-    description: '家庭收纳控制中心',
+    description: '家庭中心',
   },
   {
     id: 'spaces',
-    label: '收纳空间',
+    label: '家庭空间',
     icon: Archive,
     path: '/spaces',
-    description: '房屋平面图',
+    description: '家庭收纳空间',
   },
   {
     id: 'items',
-    label: '物品收藏',
+    label: '物品收纳',
     icon: Camera,
     path: '/items',
-    description: '物品收藏展示',
+    description: '收纳物品展示',
   },
   {
     id: 'tags',
@@ -191,7 +191,7 @@ const NavActions = ({ handleLogout }: { handleLogout: () => void }) => {
         </button>
 
         {/* 下拉菜单 */}
-        <div className='absolute left-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-honey-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200'>
+        <div className='absolute left-0 mt-2 w-32 bg-white rounded-lg shadow-lg border border-honey-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200'>
           <div className='p-2'>
             <button
               type='button'

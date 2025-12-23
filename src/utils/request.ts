@@ -55,8 +55,8 @@ export interface RequestOptions<_T = unknown, D = unknown> extends AxiosRequestC
 
 interface QueuedRequest {
   config: RetriableConfig
-  resolve: (value: any) => void
-  reject: (error: any) => void
+  resolve: (value: AxiosResponse) => void
+  reject: (error: unknown) => void
 }
 
 class HttpClient {
@@ -90,7 +90,7 @@ class HttpClient {
   private setupInterceptors(instance: AxiosInstance): void {
     // 请求拦截器
     instance.interceptors.request.use(
-      (config: InternalAxiosRequestConfig) => {
+      config => {
         // 添加认证token
         const token = this.getToken()
         if (token) {
@@ -109,7 +109,7 @@ class HttpClient {
 
     // 响应拦截器
     instance.interceptors.response.use(
-      (response: AxiosResponse) => {
+      response => {
         this.logResponse(response)
         return response
       },
@@ -162,7 +162,7 @@ class HttpClient {
     console.groupEnd()
   }
 
-  private async handleError(error: unknown): Promise<never> {
+  private async handleError(error: unknown): Promise<AxiosResponse> {
     if (!axios.isAxiosError(error)) {
       return Promise.reject(error)
     }
@@ -180,7 +180,7 @@ class HttpClient {
   /**
    * 刷新token并重试
    */
-  private async refreshTokenAndRetry(originalConfig: RetriableConfig): Promise<never> {
+  private async refreshTokenAndRetry(originalConfig: RetriableConfig): Promise<AxiosResponse> {
     // 防止死循环
     if (originalConfig._retry) {
       throw new Error('Token refresh loop detected')
@@ -230,8 +230,8 @@ class HttpClient {
    * 处理刷新队列中的请求
    */
   private processRefreshQueue(newToken: string): void {
-    const queue = [...this.refreshQueue]  // 复制队列
-    this.refreshQueue = []  // 清空原队列
+    const queue = [...this.refreshQueue] // 复制队列
+    this.refreshQueue = [] // 清空原队列
 
     queue.forEach(({ config, resolve, reject }) => {
       config.headers = {
@@ -240,20 +240,20 @@ class HttpClient {
       }
 
       // 异步执行请求，不阻塞队列处理
-      this.instance.request(config)
-        .then(resolve)
-        .catch(reject)
+      this.instance.request(config).then(resolve).catch(reject)
     })
   }
 
   /**
    * 拒绝刷新队列中的所有请求
    */
-  private rejectRefreshQueue(error: any): void {
-    const queue = [...this.refreshQueue]  // 复制队列
-    this.refreshQueue = []  // 清空原队列
+  private rejectRefreshQueue(error: unknown): void {
+    const queue = [...this.refreshQueue] // 复制队列
+    this.refreshQueue = [] // 清空原队列
 
-    queue.forEach(({ reject }) => reject(error))
+    queue.forEach(({ reject }) => {
+      reject(error)
+    })
   }
 
   private unwrapResponse<T>(response: AxiosResponse<ApiResponse<T>>): T {
