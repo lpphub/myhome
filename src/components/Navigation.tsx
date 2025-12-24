@@ -229,7 +229,7 @@ function Navigation() {
   return (
     <>
       {/* 顶部导航栏 */}
-      <nav className='fixed top-0 left-0 right-0 z-50 bg-white/85 backdrop-blur-xl border-b border-honey-100/80'>
+      <nav className='fixed top-0 left-0 right-0 w-screen z-40 bg-white/85 backdrop-blur-xl border-b border-honey-100/80'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='flex items-center justify-between h-16'>
             {/* Logo 区域 */}

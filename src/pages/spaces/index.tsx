@@ -1,6 +1,15 @@
-import { Archive, Heart, Link2 as Link, MapPin, Plus, Sparkles } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Archive, Heart, Link2 as Link, Sparkles } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect, useMemo } from 'react'
+import type { Room, StoragePoint, SortType } from '@/types/spaces'
+import { useSpacesStore } from '@/stores/useSpacesStore'
+import { RoomCard } from './components/RoomCard'
+import { StoragePointCard } from './components/StoragePointCard'
+import { AddRoomDrawer } from './components/AddRoomDrawer'
+import { AddItemDrawer } from './components/AddItemDrawer'
+import { SortDropdown } from './components/SortDropdown'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { LoadingState } from '@/components/LoadingState'
 
 interface SpaceStat {
   type: 'warm' | 'comfort' | 'overall'
@@ -16,7 +25,6 @@ interface HomeTip {
   id: string
 }
 
-// SpaceTitle 组件
 const SpaceTitle = () => {
   return (
     <div className='flex items-center justify-between mb-8'>
@@ -29,15 +37,11 @@ const SpaceTitle = () => {
           <p className='text-warmGray-400'>每个空间都承载着生活的美好</p>
         </div>
       </div>
-      <Button className='text-white'>
-        <Plus className='w-5 h-5 mr-2' />
-        添加新房间
-      </Button>
+      <AddRoomDrawer />
     </div>
   )
 }
 
-// SpaceStats 组件
 const SpaceStats = ({ stats }: { stats: SpaceStat[] }) => {
   const getStyleByType = (type: 'warm' | 'comfort' | 'overall') => {
     const styles = {
@@ -96,72 +100,21 @@ const SpaceStats = ({ stats }: { stats: SpaceStat[] }) => {
   )
 }
 
-// FloorPlan 组件
-const FloorPlan = () => {
-  return (
-    <div className='lg:col-span-2'>
-      <Card className='border-cream-200'>
-        <CardHeader className='pb-4'>
-          <div className='flex items-center justify-between'>
-            <div className='flex items-center space-x-3'>
-              <MapPin className='w-5 h-5 text-warmGray-600' />
-              <CardTitle className='text-lg font-semibold text-warmGray-800'>房屋平面图</CardTitle>
-            </div>
-            <div className='flex items-center space-x-4 text-sm'>
-              <div className='flex items-center space-x-2'>
-                <div className='w-3 h-3 bg-green-500 rounded-full'></div>
-                <span className='text-warmGray-600'>宽敞</span>
-              </div>
-              <div className='flex items-center space-x-2'>
-                <div className='w-3 h-3 bg-yellow-500 rounded-full'></div>
-                <span className='text-warmGray-600'>刚好</span>
-              </div>
-              <div className='flex items-center space-x-2'>
-                <div className='w-3 h-3 bg-red-500 rounded-full'></div>
-                <span className='text-warmGray-600'>拥挤</span>
-              </div>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <p className='text-warmGray-600'>点击房间查看详细信息</p>
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
-
-// SelectRoom 组件
-const SelectRoom = () => {
-  return (
-    <Card className='border-cream-200'>
-      <CardHeader className='pb-4'>
-        <CardTitle className='text-lg font-semibold text-warmGray-800'>选择房间</CardTitle>
-      </CardHeader>
-      <CardContent className='text-center py-12'>
-        <MapPin className='w-12 h-12 text-warmGray-400 mx-auto mb-4' />
-        <p className='text-warmGray-600'>点击左侧任意房间卡片查看详细信息</p>
-      </CardContent>
-    </Card>
-  )
-}
-
-// HomeTips 组件
 const HomeTips = ({ tips }: { tips: HomeTip[] }) => {
   return (
     <Card className='border-cream-200'>
       <CardHeader className='pb-4'>
-        <div className='flex items-center space-x-3'>
-          <Sparkles className='w-5 h-5 text-purple-600' />
-          <CardTitle className='text-lg font-semibold text-warmGray-800'>家居小贴士</CardTitle>
+        <div className='flex items-center space-x-2'>
+          <Sparkles className='w-4 h-4 text-purple-600' />
+          <CardTitle className='text-base font-semibold text-warmGray-800'>家居小贴士</CardTitle>
         </div>
       </CardHeader>
       <CardContent>
-        <div className='space-y-4'>
+        <div className='space-y-3'>
           {tips.map(tip => (
-            <div key={tip.id} className='flex items-center space-x-3 p-3 bg-white/50 rounded-lg'>
-              {tip.icon}
-              <span className='text-warmGray-700 text-sm'>{tip.text}</span>
+            <div key={tip.id} className='flex items-start gap-2 p-3 bg-white/50 rounded-lg'>
+              <span className='mt-0.5'>{tip.icon}</span>
+              <span className='text-warmGray-700 text-xs leading-relaxed'>{tip.text}</span>
             </div>
           ))}
         </div>
@@ -170,30 +123,198 @@ const HomeTips = ({ tips }: { tips: HomeTip[] }) => {
   )
 }
 
-export default function Spaces() {
-  const spaceStats: SpaceStat[] = [
+const useMockData = () => {
+  const mockRooms: Room[] = [
     {
-      type: 'warm',
-      title: '温馨房间',
-      count: 0,
-      subtitle: '个房间',
-      icon: <Archive className='w-8 h-8' />,
+      id: '1',
+      name: '主卧',
+      type: 'bedroom',
+      area: 20,
+      position: { x: 10, y: 10, width: 30, height: 40 },
+      storagePoints: [
+        {
+          id: '1-1',
+          roomId: '1',
+          name: '衣柜',
+          type: 'closet',
+          capacity: 60,
+          itemCount: 45,
+          utilization: 75,
+          lastOrganized: '2024-12-20T00:00:00Z',
+          items: [],
+          createdAt: '2024-12-01T00:00:00Z',
+          updatedAt: '2024-12-01T00:00:00Z',
+        },
+        {
+          id: '1-2',
+          roomId: '1',
+          name: '床头柜',
+          type: 'cabinet',
+          capacity: 20,
+          itemCount: 18,
+          utilization: 90,
+          lastOrganized: '2024-12-18T00:00:00Z',
+          items: [],
+          createdAt: '2024-12-01T00:00:00Z',
+          updatedAt: '2024-12-01T00:00:00Z',
+        },
+      ],
+      createdAt: '2024-12-01T00:00:00Z',
+      updatedAt: '2024-12-01T00:00:00Z',
     },
     {
-      type: 'comfort',
-      title: '舒适空间',
-      count: 0,
-      subtitle: '个房间',
-      icon: <Link className='w-8 h-8' />,
+      id: '2',
+      name: '客厅',
+      type: 'living',
+      area: 35,
+      position: { x: 50, y: 10, width: 40, height: 35 },
+      storagePoints: [
+        {
+          id: '2-1',
+          roomId: '2',
+          name: '电视柜',
+          type: 'cabinet',
+          capacity: 40,
+          itemCount: 20,
+          utilization: 50,
+          lastOrganized: '2024-12-19T00:00:00Z',
+          items: [],
+          createdAt: '2024-12-01T00:00:00Z',
+          updatedAt: '2024-12-01T00:00:00Z',
+        },
+      ],
+      createdAt: '2024-12-01T00:00:00Z',
+      updatedAt: '2024-12-01T00:00:00Z',
     },
     {
-      type: 'overall',
-      title: '整体状况',
-      count: 0,
-      subtitle: '温馨度',
-      icon: <Heart className='w-8 h-8' />,
+      id: '3',
+      name: '厨房',
+      type: 'kitchen',
+      area: 15,
+      position: { x: 10, y: 60, width: 25, height: 30 },
+      storagePoints: [
+        {
+          id: '3-1',
+          roomId: '3',
+          name: '橱柜',
+          type: 'cabinet',
+          capacity: 80,
+          itemCount: 65,
+          utilization: 81,
+          lastOrganized: '2024-12-21T00:00:00Z',
+          items: [],
+          createdAt: '2024-12-01T00:00:00Z',
+          updatedAt: '2024-12-01T00:00:00Z',
+        },
+        {
+          id: '3-2',
+          roomId: '3',
+          name: '冰箱',
+          type: 'other',
+          capacity: 50,
+          itemCount: 40,
+          utilization: 80,
+          lastOrganized: '2024-12-17T00:00:00Z',
+          items: [],
+          createdAt: '2024-12-01T00:00:00Z',
+          updatedAt: '2024-12-01T00:00:00Z',
+        },
+      ],
+      createdAt: '2024-12-01T00:00:00Z',
+      updatedAt: '2024-12-01T00:00:00Z',
     },
   ]
+
+  return { data: mockRooms }
+}
+
+const sortStoragePoints = (points: StoragePoint[], sortType: SortType): StoragePoint[] => {
+  const sorted = [...points]
+  switch (sortType) {
+    case 'utilization-desc':
+      return sorted.sort((a, b) => b.utilization - a.utilization)
+    case 'utilization-asc':
+      return sorted.sort((a, b) => a.utilization - b.utilization)
+    case 'count-desc':
+      return sorted.sort((a, b) => b.itemCount - a.itemCount)
+    case 'count-asc':
+      return sorted.sort((a, b) => a.itemCount - b.itemCount)
+    case 'name-asc':
+      return sorted.sort((a, b) => a.name.localeCompare(b.name))
+    case 'name-desc':
+      return sorted.sort((a, b) => b.name.localeCompare(a.name))
+    case 'date-desc':
+      return sorted.sort((a, b) => (b.lastOrganized || '').localeCompare(a.lastOrganized || ''))
+    case 'date-asc':
+      return sorted.sort((a, b) => (a.lastOrganized || '').localeCompare(b.lastOrganized || ''))
+    default:
+      return sorted
+  }
+}
+
+export default function Spaces() {
+  const { data: mockData, isLoading } = useQuery({
+    queryKey: ['spaces'],
+    queryFn: useMockData,
+  })
+  const { rooms, setRooms, selectedRoomId } = useSpacesStore()
+
+  useEffect(() => {
+    if (mockData?.data) {
+      setRooms(mockData.data)
+    }
+  }, [mockData, setRooms])
+
+  const selectedRoom = useMemo(
+    () => rooms.find(r => r.id === selectedRoomId) || null,
+    [rooms, selectedRoomId]
+  )
+
+  const { sortType } = useSpacesStore()
+
+  const sortedPoints = useMemo(() => {
+    const points = selectedRoom?.storagePoints || []
+    return sortStoragePoints(points, sortType)
+  }, [selectedRoom, sortType])
+
+  const spaceStats: SpaceStat[] = useMemo(() => {
+    const totalRooms = rooms.length
+    const totalStoragePoints = rooms.reduce((sum, room) => sum + room.storagePoints.length, 0)
+    const avgUtilization =
+      totalStoragePoints > 0
+        ? rooms.reduce(
+            (sum, room) =>
+              sum +
+              room.storagePoints.reduce((acc, p) => acc + p.utilization, 0) /
+                room.storagePoints.length,
+            0
+          ) / rooms.length
+        : 0
+
+    return [
+      {
+        type: 'warm',
+        title: '温馨房间',
+        count: totalRooms,
+        subtitle: '个房间',
+        icon: <Archive className='w-8 h-8' />,
+      },
+      {
+        type: 'comfort',
+        title: '收纳空间',
+        count: totalStoragePoints,
+        subtitle: '个收纳点',
+        icon: <Link className='w-8 h-8' />,
+      },
+      {
+        type: 'overall',
+        title: '整体状况',
+        count: Math.round(avgUtilization),
+        subtitle: '平均利用率%',
+        icon: <Heart className='w-8 h-8' />,
+      },
+    ]
+  }, [rooms])
 
   const homeTips: HomeTip[] = [
     {
@@ -213,28 +334,86 @@ export default function Spaces() {
     },
   ]
 
+  if (isLoading) {
+    return <LoadingState type='loading' />
+  }
+
   return (
     <div className='min-h-screen'>
-      {/* 主内容区域 */}
       <main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6'>
-        {/* 标题区域 */}
         <SpaceTitle />
-
-        {/* 统计卡片区域 */}
         <SpaceStats stats={spaceStats} />
 
-        {/* 房屋平面图和选择房间区域 */}
-        <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
-          {/* 房屋平面图 */}
-          <FloorPlan />
+        <div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>
+          <div className='lg:col-span-3 space-y-6'>
+            <Card className='border-cream-200'>
+              <CardHeader className='pb-4'>
+                <div className='flex items-center space-x-3'>
+                  <Archive className='w-5 h-5 text-warmGray-600' />
+                  <CardTitle className='text-lg font-semibold text-warmGray-800'>房间</CardTitle>
+                  <span className='text-sm text-warmGray-500'>({rooms.length} 个房间)</span>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {rooms.length === 0 ? (
+                  <div className='text-center py-12 text-warmGray-500'>
+                    <Archive className='w-16 h-16 mx-auto mb-4 opacity-50' />
+                    <p>还没有添加房间</p>
+                    <p className='text-sm'>点击右上角按钮添加你的第一个房间</p>
+                  </div>
+                ) : (
+                  <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+                    {rooms.map(room => (
+                      <RoomCard key={room.id} room={room} isSelected={selectedRoomId === room.id} />
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
-          {/* 右侧列：选择房间 + 家居小贴士 */}
-          <div className='space-y-6'>
-            <SelectRoom />
+            {selectedRoom && (
+              <Card className='border-cream-200'>
+                <CardHeader className='pb-4'>
+                  <div className='flex items-center justify-between'>
+                    <div className='flex items-center space-x-3'>
+                      <Archive className='w-5 h-5 text-warmGray-600' />
+                      <div>
+                        <CardTitle className='text-lg font-semibold text-warmGray-800'>
+                          收纳空间
+                        </CardTitle>
+                        <p className='text-sm text-warmGray-500 mt-1'>
+                          {selectedRoom.name} · {sortedPoints.length} 个收纳点
+                        </p>
+                      </div>
+                    </div>
+                    <SortDropdown />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {sortedPoints.length === 0 ? (
+                    <div className='text-center py-12 text-warmGray-500'>
+                      <Archive className='w-16 h-16 mx-auto mb-4 opacity-50' />
+                      <p>该房间还没有收纳点</p>
+                      <p className='text-sm'>稍后添加吧</p>
+                    </div>
+                  ) : (
+                    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+                      {sortedPoints.map(point => (
+                        <StoragePointCard key={point.id} point={point} />
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          <div className='lg:col-span-1'>
             <HomeTips tips={homeTips} />
           </div>
         </div>
       </main>
+      <AddItemDrawer />
     </div>
   )
 }

@@ -3,7 +3,7 @@
 @import "tw-animate-css";
 
 /* -----------------------------
-  Base 样式
+   Base 样式
 ------------------------------ */
 @layer base {
   * {
@@ -11,6 +11,11 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* 防止抽屉/模态框打开时 fixed 元素跳动 */
+  body:has([data-radix-scroll-lock]) {
+    padding-right: var(--scrollbar-width, 0px);
   }
 }
 
