@@ -34,23 +34,19 @@ export class ApiError extends Error {
 }
 
 /**
+ * 统一请求参数类型
+ */
+export interface RequestOptions<_T, _D = unknown> extends AxiosRequestConfig {
+  retryCount?: number
+  retryDelay?: number
+  mock?: boolean
+}
+
+/**
  * 重放请求配置
  */
 export interface RetriableConfig extends AxiosRequestConfig {
   _retry?: boolean
-}
-
-/**
- * 统一请求参数类型
- */
-export interface RequestOptions<_T = unknown, D = unknown> extends AxiosRequestConfig {
-  url: string
-  method?: RequestMethod | string
-  data?: D
-  params?: Record<string, unknown>
-  retryCount?: number
-  retryDelay?: number
-  mock?: boolean
 }
 
 interface QueuedRequest {

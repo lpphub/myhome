@@ -8,7 +8,7 @@ const cardVariants = cva(
     variants: {
       variant: {
         default: '',
-        warm: 'from-honey-50 to-cream-50 border-honey-200 shadow-warm-sm',
+        warm: 'bg-white/80 border-honey-200 shadow-warm-sm',
         soft: 'bg-white/60 backdrop-blur-sm border-cream-200 shadow-soft',
         glass: 'bg-white/40 backdrop-blur-md border-cream-200/50 shadow-card',
       },

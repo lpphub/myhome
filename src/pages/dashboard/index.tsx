@@ -74,11 +74,11 @@ const DashboardHeader = () => {
             </div>
           </div>
           <div className='hidden md:flex items-center space-x-4'>
-            <Button variant='secondary'>
+            <Button variant='secondary' className='text-primary'>
               <Plus className='w-4 h-4 mr-2' />
               快速添加
             </Button>
-            <Button variant='default'>
+            <Button variant='default' className='text-white'>
               <Search className='w-4 h-4 mr-2' />
               找找看
             </Button>
@@ -385,7 +385,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className='min-h-screen bg-linear-to-br from-cream-50 via-cream-100 to-honey-50'>
+    <div className='min-h-screen'>
       {/* 温馨的头部区域 */}
       <DashboardHeader />
 

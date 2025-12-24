@@ -14,7 +14,7 @@ export default function NotFound() {
   }
 
   return (
-    <div className='min-h-screen bg-honey-50 flex items-center justify-center p-4'>
+    <div className='min-h-screen flex items-center justify-center p-4'>
       <Card className='w-full max-w-lg p-8 md:p-12 relative'>
         <div className='text-center space-y-6'>
           {/* 404 数字动画 */}

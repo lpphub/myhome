@@ -1,113 +1,230 @@
-import { Archive, Clock, Heart, Home, Sparkles } from 'lucide-react'
-import { Link } from 'react-router'
+import { Archive, Heart, Link2 as Link, MapPin, Plus, Sparkles } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+
+interface SpaceStat {
+  type: 'warm' | 'comfort' | 'overall'
+  title: string
+  count: number
+  subtitle: string
+  icon: React.ReactNode
+  bgClass: string
+  iconBgClass: string
+  iconColor: string
+  textColor: string
+  numberColor: string
+  subtitleColor: string
+}
+
+interface HomeTip {
+  icon: React.ReactNode
+  text: string
+  id: string
+}
+
+// SpaceTitle 组件
+const SpaceTitle = () => {
+  return (
+    <div className='flex items-center justify-between mb-8'>
+      <div className='flex items-center space-x-4'>
+        <div className='w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center'>
+          <Archive className='w-8 h-8 text-pink-600' />
+        </div>
+        <div>
+          <h1 className='text-3xl font-bold text-warmGray-600 mb-2'>家庭空间</h1>
+          <p className='text-warmGray-400'>每个空间都承载着生活的美好</p>
+        </div>
+      </div>
+      <Button className='text-white'>
+        <Plus className='w-5 h-5 mr-2' />
+        添加新房间
+      </Button>
+    </div>
+  )
+}
+
+// SpaceStats 组件
+const SpaceStats = ({ stats }: { stats: SpaceStat[] }) => {
+  return (
+    <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
+      {stats.map(stat => (
+        <Card key={stat.type} variant='warm' className={`relative py-3 card-hover ${stat.bgClass}`}>
+          <div className='flex items-center space-x-4 py-1.5 px-3'>
+            <div className={`p-2 rounded-lg shadow-soft ${stat.iconBgClass}`}>
+              <div className={stat.iconColor}>{stat.icon}</div>
+            </div>
+            <div>
+              <p className={`text-sm font-medium mb-1 ${stat.textColor}`}>{stat.title}</p>
+              <p className={`text-2xl font-hand font-bold ${stat.numberColor}`}>{stat.count}</p>
+              <p className={`text-xs mt-1 ${stat.subtitleColor}`}>{stat.subtitle}</p>
+            </div>
+          </div>
+        </Card>
+      ))}
+    </div>
+  )
+}
+
+// FloorPlan 组件
+const FloorPlan = () => {
+  return (
+    <div className='lg:col-span-2'>
+      <Card className='border-cream-200'>
+        <CardHeader className='pb-4'>
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center space-x-3'>
+              <MapPin className='w-5 h-5 text-warmGray-600' />
+              <CardTitle className='text-lg font-semibold text-warmGray-800'>房屋平面图</CardTitle>
+            </div>
+            <div className='flex items-center space-x-4 text-sm'>
+              <div className='flex items-center space-x-2'>
+                <div className='w-3 h-3 bg-green-500 rounded-full'></div>
+                <span className='text-warmGray-600'>宽敞</span>
+              </div>
+              <div className='flex items-center space-x-2'>
+                <div className='w-3 h-3 bg-yellow-500 rounded-full'></div>
+                <span className='text-warmGray-600'>刚好</span>
+              </div>
+              <div className='flex items-center space-x-2'>
+                <div className='w-3 h-3 bg-red-500 rounded-full'></div>
+                <span className='text-warmGray-600'>拥挤</span>
+              </div>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <p className='text-warmGray-600'>点击房间查看详细信息</p>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+// SelectRoom 组件
+const SelectRoom = () => {
+  return (
+    <div className='lg:col-span-1'>
+      <Card className='border-cream-200'>
+        <CardHeader className='pb-4'>
+          <CardTitle className='text-lg font-semibold text-warmGray-800'>选择房间</CardTitle>
+        </CardHeader>
+        <CardContent className='text-center py-12'>
+          <MapPin className='w-12 h-12 text-warmGray-400 mx-auto mb-4' />
+          <p className='text-warmGray-600'>点击左侧任意房间卡片查看详细信息</p>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+// HomeTips 组件
+const HomeTips = ({ tips }: { tips: HomeTip[] }) => {
+  return (
+    <div className='mt-8'>
+      <Card className='border-cream-200'>
+        <CardHeader className='pb-4'>
+          <div className='flex items-center space-x-3'>
+            <Sparkles className='w-5 h-5 text-purple-600' />
+            <CardTitle className='text-lg font-semibold text-warmGray-800'>家居小贴士</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className='space-y-4'>
+            {tips.map(tip => (
+              <div key={tip.id} className='flex items-center space-x-3 p-3 bg-white/50 rounded-lg'>
+                {tip.icon}
+                <span className='text-warmGray-700 text-sm'>{tip.text}</span>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
 
 export default function Spaces() {
-  const title = '家庭空间'
-  const description = '房屋平面图'
-  const Icon = Archive
-  const details = '这里将显示您的房屋收纳平面图，帮助您直观管理每个空间的收纳情况'
+  const spaceStats: SpaceStat[] = [
+    {
+      type: 'warm',
+      title: '温馨房间',
+      count: 0,
+      subtitle: '个房间',
+      icon: <Archive className='w-8 h-8' />,
+      bgClass: 'bg-amber-50',
+      iconBgClass: 'bg-amber-200',
+      iconColor: 'text-amber-700',
+      textColor: 'text-amber-800',
+      numberColor: 'text-amber-900',
+      subtitleColor: 'text-amber-600',
+    },
+    {
+      type: 'comfort',
+      title: '舒适空间',
+      count: 0,
+      subtitle: '个房间',
+      icon: <Link className='w-8 h-8' />,
+      bgClass: 'bg-rose-50',
+      iconBgClass: 'bg-rose-200',
+      iconColor: 'text-rose-700',
+      textColor: 'text-rose-800',
+      numberColor: 'text-rose-900',
+      subtitleColor: 'text-rose-600',
+    },
+    {
+      type: 'overall',
+      title: '整体状况',
+      count: 0,
+      subtitle: '温馨度',
+      icon: <Heart className='w-8 h-8' />,
+      bgClass: 'bg-purple-50',
+      iconBgClass: 'bg-purple-200',
+      iconColor: 'text-purple-700',
+      textColor: 'text-purple-800',
+      numberColor: 'text-purple-900',
+      subtitleColor: 'text-purple-600',
+    },
+  ]
+
+  const homeTips: HomeTip[] = [
+    {
+      icon: <Sparkles className='w-4 h-4 text-yellow-500' />,
+      text: '定期整理能让家居空间更加舒适',
+      id: 'tip-1',
+    },
+    {
+      icon: <Archive className='w-4 h-4 text-orange-500' />,
+      text: '保持70%以下的使用率更加舒适',
+      id: 'tip-2',
+    },
+    {
+      icon: <Sparkles className='w-4 h-4 text-purple-500' />,
+      text: '合理分类让找物品更轻松',
+      id: 'tip-3',
+    },
+  ]
 
   return (
-    <div className='min-h-screen bg-linear-to-br from-cream-50 via-cream-100 to-honey-50 pt-20 pb-20 md:pb-8'>
-      <div className='fixed inset-0 overflow-hidden pointer-events-none'>
-        <div className='absolute top-20 right-10 w-64 h-64 bg-linear-to-bl from-honey-200/20 to-transparent rounded-full blur-3xl'></div>
-        <div className='absolute bottom-20 left-10 w-48 h-48 bg-linear-to-tr from-coral-200/20 to-transparent rounded-full blur-2xl'></div>
-        <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-linear-to-br from-lavender-200/10 to-transparent rounded-full blur-3xl'></div>
-      </div>
+    <div className='min-h-screen'>
+      {/* 主内容区域 */}
+      <main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6'>
+        {/* 标题区域 */}
+        <SpaceTitle />
 
-      <div className='relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
-        <div className='bg-white/80 backdrop-blur-lg rounded-3xl shadow-warm-xl border border-honey-200 p-8 md:p-12'>
-          <div className='text-center mb-8'>
-            <div className='inline-flex items-center justify-center w-24 h-24 bg-linear-to-br from-honey-400 to-honey-600 rounded-3xl shadow-lg mb-6 animate-bounce duration-3000'>
-              <Icon className='w-12 h-12 text-white' />
-            </div>
+        {/* 统计卡片区域 */}
+        <SpaceStats stats={spaceStats} />
 
-            <h1 className='text-4xl font-bold text-warmGray-800 mb-2 flex items-center justify-center space-x-3'>
-              <span>{title}</span>
-              <div className='animate-pulse duration-2000'>
-                <Heart className='w-8 h-8 text-coral-400' />
-              </div>
-            </h1>
-
-            <p className='text-xl text-warmGray-600 mb-4'>{description}</p>
-
-            <div className='inline-flex items-center space-x-2 bg-linear-to-r from-honey-100 to-coral-100 px-6 py-3 rounded-2xl border border-honey-200'>
-              <div className='animate-pulse duration-2000'>
-                <Sparkles className='w-5 h-5 text-honey-600' />
-              </div>
-              <span className='text-lg font-medium text-warmGray-700'>敬请期待</span>
-              <div className='animate-pulse duration-2000' style={{ animationDelay: '0.5s' }}>
-                <Sparkles className='w-5 h-5 text-coral-600' />
-              </div>
-            </div>
-          </div>
-
-          <div className='bg-linear-to-r from-cream-50 to-honey-50 rounded-2xl p-6 mb-8 border border-cream-200'>
-            <p className='text-warmGray-700 text-center leading-relaxed'>{details}</p>
-          </div>
-
-          <div className='mb-8'>
-            <div className='flex items-center justify-between mb-3'>
-              <span className='text-sm font-medium text-warmGray-600'>开发进度</span>
-              <span className='text-sm font-medium text-honey-600'>进行中...</span>
-            </div>
-            <div className='w-full bg-cream-200 rounded-full h-3 overflow-hidden'>
-              <div
-                className='bg-linear-to-r from-honey-400 to-coral-400 h-3 rounded-full transition-all duration-1000 animate-pulse duration-1000'
-                style={{ width: '65%' }}
-              />
-            </div>
-          </div>
-
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-            <button
-              type='button'
-              className='p-4 bg-white/60 rounded-xl border border-cream-200 hover:shadow-warm-sm transition-all duration-300 text-center group'
-            >
-              <Clock className='w-6 h-6 text-honey-500 mx-auto mb-2 group-hover:scale-110 transition-transform' />
-              <span className='text-sm text-warmGray-700'>预计完成时间</span>
-              <p className='text-xs text-warmGray-500 mt-1'>2024年2月</p>
-            </button>
-
-            <button
-              type='button'
-              className='p-4 bg-white/60 rounded-xl border border-cream-200 hover:shadow-warm-sm transition-all duration-300 text-center group'
-            >
-              <Sparkles className='w-6 h-6 text-coral-500 mx-auto mb-2 group-hover:rotate-12 transition-transform' />
-              <span className='text-sm text-warmGray-700'>新功能</span>
-              <p className='text-xs text-warmGray-500 mt-1'>正在开发</p>
-            </button>
-
-            <button
-              type='button'
-              className='p-4 bg-white/60 rounded-xl border border-cream-200 hover:shadow-warm-sm transition-all duration-300 text-center group'
-            >
-              <Heart className='w-6 h-6 text-lavender-500 mx-auto mb-2 group-hover:scale-110 transition-transform' />
-              <span className='text-sm text-warmGray-700'>用户体验</span>
-              <p className='text-xs text-warmGray-500 mt-1'>优先保证</p>
-            </button>
-          </div>
-
-          <div className='text-center'>
-            <Link
-              to='/'
-              className='inline-flex items-center space-x-3 bg-linear-to-r from-coral-400 to-coral-500 text-white px-8 py-4 rounded-2xl hover:from-coral-500 hover:to-coral-600 transition-all duration-300 shadow-lg hover:shadow-xl group'
-            >
-              <Home className='w-5 h-5 group-hover:scale-110 transition-transform' />
-              <span className='font-medium'>返回首页</span>
-              <div className='animate-pulse duration-1500'>
-                <Sparkles className='w-4 h-4' />
-              </div>
-            </Link>
-          </div>
+        {/* 房屋平面图和选择房间区域 */}
+        <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+          {/* 房屋平面图 */}
+          <FloorPlan />
+          {/* 选择房间 */}
+          <SelectRoom />
         </div>
 
-        <div className='text-center mt-8'>
-          <p className='text-warmGray-500 text-sm'>
-            感谢您的耐心等待，我们正在努力为您打造更好的收纳体验 ✨
-          </p>
-        </div>
-      </div>
+        {/* 家居小贴士 */}
+        <HomeTips tips={homeTips} />
+      </main>
     </div>
   )
 }

@@ -8,7 +8,7 @@ export default function Items() {
   const details = '这里将展示您收藏的所有物品，支持拍照记录和智能分类'
 
   return (
-    <div className='min-h-screen bg-linear-to-br from-cream-50 via-cream-100 to-honey-50 pt-20 pb-20 md:pb-8'>
+    <div className='min-h-screen pt-20 pb-20 md:pb-8'>
       <div className='fixed inset-0 overflow-hidden pointer-events-none'>
         <div className='absolute top-20 right-10 w-64 h-64 bg-linear-to-bl from-honey-200/20 to-transparent rounded-full blur-3xl'></div>
         <div className='absolute bottom-20 left-10 w-48 h-48 bg-linear-to-tr from-coral-200/20 to-transparent rounded-full blur-2xl'></div>
@@ -53,7 +53,7 @@ export default function Items() {
             </div>
             <div className='w-full bg-cream-200 rounded-full h-3 overflow-hidden'>
               <div
-                className='bg-linear-to-r from-honey-400 to-coral-400 h-3 rounded-full transition-all duration-1000 animate-pulse duration-1000'
+                className='bg-linear-to-r from-honey-400 to-coral-400 h-3 rounded-full transition-all duration-1000 animate-pulse'
                 style={{ width: '65%' }}
               />
             </div>
