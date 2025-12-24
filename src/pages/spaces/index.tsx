@@ -8,12 +8,6 @@ interface SpaceStat {
   count: number
   subtitle: string
   icon: React.ReactNode
-  bgClass: string
-  iconBgClass: string
-  iconColor: string
-  textColor: string
-  numberColor: string
-  subtitleColor: string
 }
 
 interface HomeTip {
@@ -45,22 +39,59 @@ const SpaceTitle = () => {
 
 // SpaceStats 组件
 const SpaceStats = ({ stats }: { stats: SpaceStat[] }) => {
+  const getStyleByType = (type: 'warm' | 'comfort' | 'overall') => {
+    const styles = {
+      warm: {
+        bgClass: 'bg-amber-50',
+        iconBgClass: 'bg-amber-200',
+        iconColor: 'text-amber-700',
+        textColor: 'text-amber-800',
+        numberColor: 'text-amber-900',
+        subtitleColor: 'text-amber-600',
+      },
+      comfort: {
+        bgClass: 'bg-rose-50',
+        iconBgClass: 'bg-rose-200',
+        iconColor: 'text-rose-700',
+        textColor: 'text-rose-800',
+        numberColor: 'text-rose-900',
+        subtitleColor: 'text-rose-600',
+      },
+      overall: {
+        bgClass: 'bg-purple-50',
+        iconBgClass: 'bg-purple-200',
+        iconColor: 'text-purple-700',
+        textColor: 'text-purple-800',
+        numberColor: 'text-purple-900',
+        subtitleColor: 'text-purple-600',
+      },
+    }
+    return styles[type]
+  }
+
   return (
     <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
-      {stats.map(stat => (
-        <Card key={stat.type} variant='warm' className={`relative py-3 card-hover ${stat.bgClass}`}>
-          <div className='flex items-center space-x-4 py-1.5 px-3'>
-            <div className={`p-2 rounded-lg shadow-soft ${stat.iconBgClass}`}>
-              <div className={stat.iconColor}>{stat.icon}</div>
+      {stats.map(stat => {
+        const style = getStyleByType(stat.type)
+        return (
+          <Card
+            key={stat.type}
+            variant='warm'
+            className={`relative py-3 card-hover ${style.bgClass}`}
+          >
+            <div className='flex items-center space-x-4 py-1.5 px-3'>
+              <div className={`p-2 rounded-lg shadow-soft ${style.iconBgClass}`}>
+                <div className={style.iconColor}>{stat.icon}</div>
+              </div>
+              <div>
+                <p className={`text-sm font-medium mb-1 ${style.textColor}`}>{stat.title}</p>
+                <p className={`text-2xl font-hand font-bold ${style.numberColor}`}>{stat.count}</p>
+                <p className={`text-xs mt-1 ${style.subtitleColor}`}>{stat.subtitle}</p>
+              </div>
             </div>
-            <div>
-              <p className={`text-sm font-medium mb-1 ${stat.textColor}`}>{stat.title}</p>
-              <p className={`text-2xl font-hand font-bold ${stat.numberColor}`}>{stat.count}</p>
-              <p className={`text-xs mt-1 ${stat.subtitleColor}`}>{stat.subtitle}</p>
-            </div>
-          </div>
-        </Card>
-      ))}
+          </Card>
+        )
+      })}
     </div>
   )
 }
@@ -103,43 +134,39 @@ const FloorPlan = () => {
 // SelectRoom 组件
 const SelectRoom = () => {
   return (
-    <div className='lg:col-span-1'>
-      <Card className='border-cream-200'>
-        <CardHeader className='pb-4'>
-          <CardTitle className='text-lg font-semibold text-warmGray-800'>选择房间</CardTitle>
-        </CardHeader>
-        <CardContent className='text-center py-12'>
-          <MapPin className='w-12 h-12 text-warmGray-400 mx-auto mb-4' />
-          <p className='text-warmGray-600'>点击左侧任意房间卡片查看详细信息</p>
-        </CardContent>
-      </Card>
-    </div>
+    <Card className='border-cream-200'>
+      <CardHeader className='pb-4'>
+        <CardTitle className='text-lg font-semibold text-warmGray-800'>选择房间</CardTitle>
+      </CardHeader>
+      <CardContent className='text-center py-12'>
+        <MapPin className='w-12 h-12 text-warmGray-400 mx-auto mb-4' />
+        <p className='text-warmGray-600'>点击左侧任意房间卡片查看详细信息</p>
+      </CardContent>
+    </Card>
   )
 }
 
 // HomeTips 组件
 const HomeTips = ({ tips }: { tips: HomeTip[] }) => {
   return (
-    <div className='mt-8'>
-      <Card className='border-cream-200'>
-        <CardHeader className='pb-4'>
-          <div className='flex items-center space-x-3'>
-            <Sparkles className='w-5 h-5 text-purple-600' />
-            <CardTitle className='text-lg font-semibold text-warmGray-800'>家居小贴士</CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className='space-y-4'>
-            {tips.map(tip => (
-              <div key={tip.id} className='flex items-center space-x-3 p-3 bg-white/50 rounded-lg'>
-                {tip.icon}
-                <span className='text-warmGray-700 text-sm'>{tip.text}</span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    <Card className='border-cream-200'>
+      <CardHeader className='pb-4'>
+        <div className='flex items-center space-x-3'>
+          <Sparkles className='w-5 h-5 text-purple-600' />
+          <CardTitle className='text-lg font-semibold text-warmGray-800'>家居小贴士</CardTitle>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className='space-y-4'>
+          {tips.map(tip => (
+            <div key={tip.id} className='flex items-center space-x-3 p-3 bg-white/50 rounded-lg'>
+              {tip.icon}
+              <span className='text-warmGray-700 text-sm'>{tip.text}</span>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -151,12 +178,6 @@ export default function Spaces() {
       count: 0,
       subtitle: '个房间',
       icon: <Archive className='w-8 h-8' />,
-      bgClass: 'bg-amber-50',
-      iconBgClass: 'bg-amber-200',
-      iconColor: 'text-amber-700',
-      textColor: 'text-amber-800',
-      numberColor: 'text-amber-900',
-      subtitleColor: 'text-amber-600',
     },
     {
       type: 'comfort',
@@ -164,12 +185,6 @@ export default function Spaces() {
       count: 0,
       subtitle: '个房间',
       icon: <Link className='w-8 h-8' />,
-      bgClass: 'bg-rose-50',
-      iconBgClass: 'bg-rose-200',
-      iconColor: 'text-rose-700',
-      textColor: 'text-rose-800',
-      numberColor: 'text-rose-900',
-      subtitleColor: 'text-rose-600',
     },
     {
       type: 'overall',
@@ -177,12 +192,6 @@ export default function Spaces() {
       count: 0,
       subtitle: '温馨度',
       icon: <Heart className='w-8 h-8' />,
-      bgClass: 'bg-purple-50',
-      iconBgClass: 'bg-purple-200',
-      iconColor: 'text-purple-700',
-      textColor: 'text-purple-800',
-      numberColor: 'text-purple-900',
-      subtitleColor: 'text-purple-600',
     },
   ]
 
@@ -218,12 +227,13 @@ export default function Spaces() {
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
           {/* 房屋平面图 */}
           <FloorPlan />
-          {/* 选择房间 */}
-          <SelectRoom />
-        </div>
 
-        {/* 家居小贴士 */}
-        <HomeTips tips={homeTips} />
+          {/* 右侧列：选择房间 + 家居小贴士 */}
+          <div className='space-y-6'>
+            <SelectRoom />
+            <HomeTips tips={homeTips} />
+          </div>
+        </div>
       </main>
     </div>
   )
