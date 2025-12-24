@@ -7,12 +7,12 @@ import { Progress } from '@/components/ui/progress'
 import type { Storage } from '@/types/spaces'
 import { getRoomStatus, getRoomStatusColor, STORAGE_TYPE_LABELS } from '@/types/spaces'
 
-interface StoragePointCardProps {
+interface StorageCardProps {
   point: Storage
   onAddItem: (pointId: string) => void
 }
 
-export function StoragePointCard({ point, onAddItem }: StoragePointCardProps) {
+export function StorageCard({ point, onAddItem }: StorageCardProps) {
   const [isHovered, setIsHovered] = useState(false)
 
   const status = getRoomStatus(point.utilization)
@@ -35,7 +35,7 @@ export function StoragePointCard({ point, onAddItem }: StoragePointCardProps) {
 
   return (
     <Card
-      className='bg-gradient-to-br from-white to-cream-50 border-cream-200 shadow-soft card-hover cursor-pointer relative overflow-hidden group'
+      className='bg-linear-to-br from-white to-cream-50 border-cream-200 shadow-soft card-hover cursor-pointer relative overflow-hidden group'
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

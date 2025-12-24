@@ -8,7 +8,7 @@ import { AddItemDrawer, type AddItemDrawerRef } from './components/AddItemDrawer
 import { AddRoomDrawer } from './components/AddRoomDrawer'
 import { RoomCard } from './components/RoomCard'
 import { SortDropdown } from './components/SortDropdown'
-import { StoragePointCard } from './components/StorageCard'
+import { StorageCard } from './components/StorageCard'
 
 interface SpaceStat {
   type: 'warm' | 'comfort' | 'overall'
@@ -197,13 +197,13 @@ const StorageList = ({
         {sortedStorages.length === 0 ? (
           <div className='text-center py-12 text-warmGray-500'>
             <Archive className='w-16 h-16 mx-auto mb-4 opacity-50' />
-            <p>该房间还没有收纳点</p>
+            <p>该房间还没有收纳空间</p>
             <p className='text-sm'>稍后添加吧</p>
           </div>
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
             {sortedStorages.map(storage => (
-              <StoragePointCard key={storage.id} point={storage} onAddItem={onAddItem} />
+              <StorageCard key={storage.id} point={storage} onAddItem={onAddItem} />
             ))}
           </div>
         )}
@@ -381,7 +381,7 @@ export default function Spaces() {
     setRooms(prev =>
       prev.map(room => ({
         ...room,
-        storagePoints: room.storages.map(point =>
+        storages: room.storages.map(point =>
           point.id === pointId
             ? {
                 ...point,
@@ -401,9 +401,9 @@ export default function Spaces() {
   // 统计数据
   const spaceStats: SpaceStat[] = useMemo(() => {
     const totalRooms = rooms.length
-    const totalStoragePoints = rooms.reduce((sum, room) => sum + room.storages.length, 0)
+    const totalStorages = rooms.reduce((sum, room) => sum + room.storages.length, 0)
     const avgUtilization =
-      totalStoragePoints > 0
+      totalStorages > 0
         ? rooms.reduce(
             (sum, room) =>
               sum + room.storages.reduce((acc, p) => acc + p.utilization, 0) / room.storages.length,
@@ -422,7 +422,7 @@ export default function Spaces() {
       {
         type: 'comfort',
         title: '收纳空间',
-        count: totalStoragePoints,
+        count: totalStorages,
         subtitle: '个收纳点',
         icon: <Archive className='w-8 h-8' />,
       },
