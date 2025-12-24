@@ -23,6 +23,7 @@ import {
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { getDashboardData } from '@/api/dashboard'
+import { LoadingState } from '@/components/LoadingState'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -356,27 +357,6 @@ const DashboardQuickActions = ({ quickActions }: { quickActions: any[] }) => {
   )
 }
 
-// DashboardLoading 组件
-const DashboardLoading = () => {
-  return (
-    <div className='min-h-screen bg-cream-50 flex items-center justify-center'>
-      <div className='text-center'>
-        <div className='w-12 h-12 border-4 border-honey-200 border-t-honey-500 rounded-full mx-auto mb-4 animate-spin' />
-        <p className='text-primary text-lg'>正在加载您的小窝...</p>
-      </div>
-    </div>
-  )
-}
-
-// DashboardError 组件
-const DashboardError = () => {
-  return (
-    <div className='min-h-screen bg-cream-50 flex items-center justify-center'>
-      <p className='text-primary'>数据加载失败</p>
-    </div>
-  )
-}
-
 export default function Dashboard() {
   // 使用React Query获取数据
   const {
@@ -397,11 +377,11 @@ export default function Dashboard() {
   }, [error])
 
   if (isLoading) {
-    return <DashboardLoading />
+    return <LoadingState type='loading' />
   }
 
   if (!dashboardData) {
-    return <DashboardError />
+    return <LoadingState type='error' />
   }
 
   return (
