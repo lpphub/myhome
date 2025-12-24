@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { Plus } from 'lucide-react'
+import { Home, Ruler, Tag } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -94,39 +94,59 @@ export function AddRoomDrawer({ onAddRoom }: AddRoomDrawerProps) {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button className='text-white'>
-          <Plus className='w-4 h-4 mr-1' />
+        <Button className='bg-linear-to-r from-honey-400 to-honey-600 text-white hover:from-honey-500 hover:to-honey-700 shadow-warm-sm'>
+          <Home className='w-4 h-4 mr-1' />
           添加房间
         </Button>
       </SheetTrigger>
-      <SheetContent side='right' className='w-125 sm:w-125'>
-        <SheetHeader>
-          <SheetTitle>添加新房间</SheetTitle>
-          <SheetDescription>填写房间信息，创建新的收纳空间</SheetDescription>
+      <SheetContent
+        side='right'
+        className='w-full sm:w-[520px] bg-gradient-to-br from-white via-cream-50/90 to-honey-50/60 !border-l-honey-200'
+      >
+        <SheetHeader className='border-b border-cream-200 pb-4'>
+          <div className='flex items-center gap-3'>
+            <div className='p-2 bg-honey-100 rounded-lg shadow-soft'>
+              <Home className='w-5 h-5 text-honey-600' />
+            </div>
+            <div>
+              <SheetTitle className='text-warmGray-800'>添加新房间</SheetTitle>
+              <SheetDescription>创建一个温馨的收纳空间</SheetDescription>
+            </div>
+          </div>
         </SheetHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className='grid gap-6 py-4'>
+        <form onSubmit={handleSubmit(onSubmit)} className='grid gap-5 py-6 px-2'>
           <div className='grid gap-3'>
-            <Label htmlFor='name'>房间名称</Label>
+            <Label htmlFor='name' className='flex items-center gap-2'>
+              <Home className='w-4 h-4 text-warmGray-500' />
+              房间名称
+            </Label>
             <Input
               id='name'
               placeholder='例如：主卧、客厅...'
               {...register('name')}
-              className={errors.name ? 'border-red-500' : ''}
+              className={
+                errors.name
+                  ? 'border-red-500 ring-1 ring-red-500'
+                  : 'border-cream-300 focus:border-honey-400'
+              }
             />
-            {errors.name && <p className='text-sm text-red-500'>{errors.name.message}</p>}
+            {errors.name && <p className='text-sm text-coral-500'>{errors.name.message}</p>}
           </div>
 
           <div className='grid gap-3'>
-            <Label htmlFor='type'>房间类型</Label>
+            <Label htmlFor='type' className='flex items-center gap-2'>
+              <Tag className='w-4 h-4 text-warmGray-500' />
+              房间类型
+            </Label>
             <Select
               value={watch('type')}
               onValueChange={value => setValue('type', value as RoomFormData['type'])}
             >
-              <SelectTrigger>
+              <SelectTrigger className='w-full border-cream-300 focus:border-honey-400'>
                 <SelectValue placeholder='选择房间类型' />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className='bg-white border-honey-200 shadow-warm-sm min-w-[var(--radix-select-trigger-width)]'>
                 {Object.entries(ROOM_TYPE_LABELS).map(([value, label]) => (
                   <SelectItem key={value} value={value}>
                     {label}
@@ -134,23 +154,34 @@ export function AddRoomDrawer({ onAddRoom }: AddRoomDrawerProps) {
                 ))}
               </SelectContent>
             </Select>
-            {errors.type && <p className='text-sm text-red-500'>{errors.type.message}</p>}
+            {errors.type && <p className='text-sm text-coral-500'>{errors.type.message}</p>}
           </div>
 
           <div className='grid gap-3'>
-            <Label htmlFor='area'>房间面积 (㎡)</Label>
+            <Label htmlFor='area' className='flex items-center gap-2'>
+              <Ruler className='w-4 h-4 text-warmGray-500' />
+              房间面积 (㎡)
+            </Label>
             <Input
               id='area'
               type='number'
               placeholder='例如：15'
               {...register('area', { valueAsNumber: true })}
-              className={errors.area ? 'border-red-500' : ''}
+              className={
+                errors.area
+                  ? 'border-red-500 ring-1 ring-red-500'
+                  : 'border-cream-300 focus:border-honey-400'
+              }
             />
-            {errors.area && <p className='text-sm text-red-500'>{errors.area.message}</p>}
+            {errors.area && <p className='text-sm text-coral-500'>{errors.area.message}</p>}
           </div>
 
           <SheetFooter className='pt-4'>
-            <Button type='submit' className='w-full' disabled={isPending}>
+            <Button
+              type='submit'
+              className='w-full bg-linear-to-r from-honey-400 to-honey-600 text-white hover:from-honey-500 hover:to-honey-700 shadow-warm-sm'
+              disabled={isPending}
+            >
               {isPending ? '添加中...' : '确认添加'}
             </Button>
           </SheetFooter>

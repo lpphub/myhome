@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { Archive, Heart, Home, Sparkles } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { LoadingState } from '@/components/LoadingState'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type { Room, SortType, Storage, StorageItem } from '@/types/spaces'
-import { AddItemDrawer, type AddItemDrawerRef } from './components/AddItemDrawer'
+import type { Room, SortType, Storage } from '@/types/spaces'
 import { AddRoomDrawer } from './components/AddRoomDrawer'
 import { RoomCard } from './components/RoomCard'
 import { SortDropdown } from './components/SortDropdown'
@@ -167,16 +166,9 @@ interface StorageListProps {
   sortedStorages: Storage[]
   sortType: SortType
   onChangeSortType: (type: SortType) => void
-  onAddItem: (pointId: string) => void
 }
 
-const StorageList = ({
-  room,
-  sortedStorages,
-  sortType,
-  onChangeSortType,
-  onAddItem,
-}: StorageListProps) => {
+const StorageList = ({ room, sortedStorages, sortType, onChangeSortType }: StorageListProps) => {
   return (
     <Card className='border-cream-200'>
       <CardHeader className='pb-4'>
@@ -203,7 +195,7 @@ const StorageList = ({
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
             {sortedStorages.map(storage => (
-              <StorageCard key={storage.id} point={storage} onAddItem={onAddItem} />
+              <StorageCard key={storage.id} point={storage} />
             ))}
           </div>
         )}
@@ -212,7 +204,7 @@ const StorageList = ({
   )
 }
 
-const useMockData = () => {
+const useMockData = async () => {
   const mockRooms: Room[] = [
     {
       id: '1',
@@ -314,7 +306,11 @@ const useMockData = () => {
     },
   ]
 
-  return { data: mockRooms }
+  return new Promise<{ data: Room[] }>(resolve => {
+    setTimeout(() => {
+      resolve({ data: mockRooms })
+    }, 500)
+  })
 }
 
 const sortStorages = (storages: Storage[], sortType: SortType): Storage[] => {
@@ -351,12 +347,14 @@ export default function Spaces() {
   const [rooms, setRooms] = useState<Room[]>([])
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null)
   const [sortType, setSortType] = useState<SortType>('utilization-desc')
-  const addItemDrawerRef = useRef<AddItemDrawerRef>(null)
 
   // 同步 API 数据
   useEffect(() => {
     if (mockData?.data) {
       setRooms(mockData.data)
+      if (mockData.data.length > 0) {
+        setSelectedRoomId(mockData.data[0].id)
+      }
     }
   }, [mockData])
 
@@ -375,27 +373,6 @@ export default function Spaces() {
   // 操作函数
   const handleAddRoom = (room: Room) => {
     setRooms(prev => [...prev, room])
-  }
-
-  const handleAddItem = (pointId: string, item: StorageItem) => {
-    setRooms(prev =>
-      prev.map(room => ({
-        ...room,
-        storages: room.storages.map(point =>
-          point.id === pointId
-            ? {
-                ...point,
-                itemCount: point.itemCount + item.quantity,
-                items: [...point.items, item],
-              }
-            : point
-        ),
-      }))
-    )
-  }
-
-  const handleOpenAddItem = (pointId: string) => {
-    addItemDrawerRef.current?.open(pointId)
   }
 
   // 统计数据
@@ -478,7 +455,6 @@ export default function Spaces() {
                 sortedStorages={sortedStorages}
                 sortType={sortType}
                 onChangeSortType={setSortType}
-                onAddItem={handleOpenAddItem}
               />
             )}
           </div>
@@ -488,8 +464,6 @@ export default function Spaces() {
           </div>
         </div>
       </main>
-
-      <AddItemDrawer ref={addItemDrawerRef} onAddItem={handleAddItem} />
     </div>
   )
 }

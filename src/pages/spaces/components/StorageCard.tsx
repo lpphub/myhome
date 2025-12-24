@@ -1,4 +1,4 @@
-import { Clock, Edit2, Package, Plus } from 'lucide-react'
+import { Clock, Edit2, Package } from 'lucide-react'
 import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -9,18 +9,13 @@ import { getRoomStatus, getRoomStatusColor, STORAGE_TYPE_LABELS } from '@/types/
 
 interface StorageCardProps {
   point: Storage
-  onAddItem: (pointId: string) => void
 }
 
-export function StorageCard({ point, onAddItem }: StorageCardProps) {
+export function StorageCard({ point }: StorageCardProps) {
   const [isHovered, setIsHovered] = useState(false)
 
   const status = getRoomStatus(point.utilization)
   const statusColor = getRoomStatusColor(status)
-
-  const handleAddItem = () => {
-    onAddItem(point.id)
-  }
 
   const formatLastOrganized = (date?: string) => {
     if (!date) return '未整理'
@@ -102,17 +97,6 @@ export function StorageCard({ point, onAddItem }: StorageCardProps) {
             }}
           >
             <Edit2 className='w-4 h-4' />
-          </Button>
-          <Button
-            size='icon'
-            variant='ghost'
-            className='h-8 w-8'
-            onClick={e => {
-              e.stopPropagation()
-              handleAddItem()
-            }}
-          >
-            <Plus className='w-4 h-4' />
           </Button>
         </div>
       </CardContent>
