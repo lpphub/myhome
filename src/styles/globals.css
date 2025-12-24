@@ -19,8 +19,8 @@
 ------------------------------ */
 @theme {
   /* 主色与辅助色 */
-  --color-primary: #e8c178;
-  --color-secondary: #fff3d8;
+  --color-primary: #dfaa50;
+  --color-secondary: #f1d8a0;
   --color-destructive: #f05b3a;
   --color-ring: #f5e2be;
 
@@ -29,7 +29,7 @@
   --color-muted: #7a6f61;
   --color-border: #d6d3d1;
 
-  --color-card: #fffdf6;
+  --color-card: #ffffff;
   --color-card-foreground: #3f3a32;
   --color-muted-background: #fbf3d7;
 
