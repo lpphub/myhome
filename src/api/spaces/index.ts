@@ -1,5 +1,5 @@
 import httpClient from '@/utils/request'
-import type { Room, StoragePoint, StorageItem, AddRoomForm } from '@/types/spaces'
+import type { Room, Storage, StorageItem, AddRoomForm } from '@/types/spaces'
 
 enum SpacesApi {
   GetRooms = '/spaces',
@@ -25,18 +25,18 @@ export const deleteRoom = (id: string) =>
   httpClient.delete({ url: SpacesApi.DeleteRoom.replace(':id', id) })
 
 export const getStoragePoints = (roomId: string) =>
-  httpClient.get<StoragePoint[]>({
+  httpClient.get<Storage[]>({
     url: SpacesApi.GetStoragePoints.replace(':roomId', roomId),
   })
 
-export const createStoragePoint = (roomId: string, data: Partial<StoragePoint>) =>
-  httpClient.post<StoragePoint>({
+export const createStoragePoint = (roomId: string, data: Partial<Storage>) =>
+  httpClient.post<Storage>({
     url: SpacesApi.CreateStoragePoint.replace(':roomId', roomId),
     data,
   })
 
-export const updateStoragePoint = (id: string, data: Partial<StoragePoint>) =>
-  httpClient.patch<StoragePoint>({
+export const updateStoragePoint = (id: string, data: Partial<Storage>) =>
+  httpClient.patch<Storage>({
     url: SpacesApi.UpdateStoragePoint.replace(':id', id),
     data,
   })

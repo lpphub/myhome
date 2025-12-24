@@ -8,7 +8,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useSpacesStore } from '@/stores/useSpacesStore'
 import type { SortType } from '@/types/spaces'
 
 const SORT_OPTIONS: Array<{
@@ -26,9 +25,12 @@ const SORT_OPTIONS: Array<{
   { type: 'date-asc', label: '最早整理', icon: <Calendar className='w-4 h-4' /> },
 ]
 
-export function SortDropdown() {
-  const { sortType, setSortType } = useSpacesStore()
+interface SortDropdownProps {
+  sortType: SortType
+  onChangeSortType: (type: SortType) => void
+}
 
+export function SortDropdown({ sortType, onChangeSortType }: SortDropdownProps) {
   const currentSort = SORT_OPTIONS.find(opt => opt.type === sortType)
 
   return (
@@ -45,7 +47,7 @@ export function SortDropdown() {
         {SORT_OPTIONS.map(option => (
           <DropdownMenuItem
             key={option.type}
-            onClick={() => setSortType(option.type)}
+            onClick={() => onChangeSortType(option.type)}
             className={sortType === option.type ? 'bg-accent' : ''}
           >
             <span className='flex items-center gap-2'>

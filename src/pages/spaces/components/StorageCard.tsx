@@ -1,27 +1,25 @@
 import { Clock, Edit2, Package, Plus } from 'lucide-react'
 import { useState } from 'react'
-import type { StoragePoint } from '@/types/spaces'
-import { STORAGE_TYPE_LABELS, getRoomStatus, getRoomStatusColor } from '@/types/spaces'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
-import { Badge } from '@/components/ui/badge'
-import { useSpacesStore } from '@/stores/useSpacesStore'
+import type { Storage } from '@/types/spaces'
+import { getRoomStatus, getRoomStatusColor, STORAGE_TYPE_LABELS } from '@/types/spaces'
 
 interface StoragePointCardProps {
-  point: StoragePoint
+  point: Storage
+  onAddItem: (pointId: string) => void
 }
 
-export function StoragePointCard({ point }: StoragePointCardProps) {
+export function StoragePointCard({ point, onAddItem }: StoragePointCardProps) {
   const [isHovered, setIsHovered] = useState(false)
-  const { setAddItemDrawerOpen, setActiveStoragePointId } = useSpacesStore()
 
   const status = getRoomStatus(point.utilization)
   const statusColor = getRoomStatusColor(status)
 
   const handleAddItem = () => {
-    setActiveStoragePointId(point.id)
-    setAddItemDrawerOpen(true)
+    onAddItem(point.id)
   }
 
   const formatLastOrganized = (date?: string) => {

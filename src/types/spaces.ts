@@ -37,12 +37,12 @@ export interface Room {
   type: RoomType
   area: number
   position: { x: number; y: number; width: number; height: number }
-  storagePoints: StoragePoint[]
+  storages: Storage[]
   createdAt: string
   updatedAt: string
 }
 
-export interface StoragePoint {
+export interface Storage {
   id: string
   roomId: string
   name: string

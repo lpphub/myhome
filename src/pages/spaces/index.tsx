@@ -1,15 +1,14 @@
-import { Archive, Heart, Link2 as Link, Sparkles } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
-import { useEffect, useMemo } from 'react'
-import type { Room, StoragePoint, SortType } from '@/types/spaces'
-import { useSpacesStore } from '@/stores/useSpacesStore'
-import { RoomCard } from './components/RoomCard'
-import { StoragePointCard } from './components/StoragePointCard'
-import { AddRoomDrawer } from './components/AddRoomDrawer'
-import { AddItemDrawer } from './components/AddItemDrawer'
-import { SortDropdown } from './components/SortDropdown'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Archive, Heart, Home, Sparkles } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { LoadingState } from '@/components/LoadingState'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import type { Room, SortType, Storage, StorageItem } from '@/types/spaces'
+import { AddItemDrawer, type AddItemDrawerRef } from './components/AddItemDrawer'
+import { AddRoomDrawer } from './components/AddRoomDrawer'
+import { RoomCard } from './components/RoomCard'
+import { SortDropdown } from './components/SortDropdown'
+import { StoragePointCard } from './components/StorageCard'
 
 interface SpaceStat {
   type: 'warm' | 'comfort' | 'overall'
@@ -25,7 +24,7 @@ interface HomeTip {
   id: string
 }
 
-const SpaceTitle = () => {
+const SpaceTitle = ({ onAddRoom }: { onAddRoom: (room: Room) => void }) => {
   return (
     <div className='flex items-center justify-between mb-8'>
       <div className='flex items-center space-x-4'>
@@ -37,7 +36,7 @@ const SpaceTitle = () => {
           <p className='text-warmGray-400'>每个空间都承载着生活的美好</p>
         </div>
       </div>
-      <AddRoomDrawer />
+      <AddRoomDrawer onAddRoom={onAddRoom} />
     </div>
   )
 }
@@ -103,21 +102,111 @@ const SpaceStats = ({ stats }: { stats: SpaceStat[] }) => {
 const HomeTips = ({ tips }: { tips: HomeTip[] }) => {
   return (
     <Card className='border-cream-200'>
-      <CardHeader className='pb-4'>
+      <CardHeader className='pb-1'>
         <div className='flex items-center space-x-2'>
-          <Sparkles className='w-4 h-4 text-purple-600' />
+          <Sparkles className='w-4 h-4 text-lavender-600' />
           <CardTitle className='text-base font-semibold text-warmGray-800'>家居小贴士</CardTitle>
         </div>
       </CardHeader>
       <CardContent>
         <div className='space-y-3'>
           {tips.map(tip => (
-            <div key={tip.id} className='flex items-start gap-2 p-3 bg-white/50 rounded-lg'>
+            <div key={tip.id} className='flex items-start gap-2 p-2 bg-white/50 rounded-lg'>
               <span className='mt-0.5'>{tip.icon}</span>
               <span className='text-warmGray-700 text-xs leading-relaxed'>{tip.text}</span>
             </div>
           ))}
         </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+interface RoomListProps {
+  rooms: Room[]
+  selectedRoomId: string | null
+  onSelectRoom: (roomId: string) => void
+}
+
+const RoomList = ({ rooms, selectedRoomId, onSelectRoom }: RoomListProps) => {
+  return (
+    <Card className='border-cream-200'>
+      <CardHeader className='pb-4'>
+        <div className='flex items-center space-x-3'>
+          <Home className='w-5 h-5 text-warmGray-600' />
+          <CardTitle className='text-lg font-semibold text-warmGray-800'>房间</CardTitle>
+          <span className='text-sm text-warmGray-500'>({rooms.length} 个房间)</span>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {rooms.length === 0 ? (
+          <div className='text-center py-12 text-warmGray-500'>
+            <Archive className='w-16 h-16 mx-auto mb-4 opacity-50' />
+            <p>还没有添加房间</p>
+            <p className='text-sm'>点击右上角按钮添加你的第一个房间</p>
+          </div>
+        ) : (
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+            {rooms.map(room => (
+              <RoomCard
+                key={room.id}
+                room={room}
+                isSelected={selectedRoomId === room.id}
+                onSelectRoom={onSelectRoom}
+              />
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+interface StorageListProps {
+  room: Room
+  sortedStorages: Storage[]
+  sortType: SortType
+  onChangeSortType: (type: SortType) => void
+  onAddItem: (pointId: string) => void
+}
+
+const StorageList = ({
+  room,
+  sortedStorages,
+  sortType,
+  onChangeSortType,
+  onAddItem,
+}: StorageListProps) => {
+  return (
+    <Card className='border-cream-200'>
+      <CardHeader className='pb-4'>
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center space-x-3'>
+            <Archive className='w-5 h-5 text-warmGray-600' />
+            <div>
+              <CardTitle className='text-lg font-semibold text-warmGray-800'>收纳空间</CardTitle>
+              <p className='text-sm text-warmGray-500 mt-1'>
+                {room.name} · {sortedStorages.length} 个收纳点
+              </p>
+            </div>
+          </div>
+          <SortDropdown sortType={sortType} onChangeSortType={onChangeSortType} />
+        </div>
+      </CardHeader>
+      <CardContent>
+        {sortedStorages.length === 0 ? (
+          <div className='text-center py-12 text-warmGray-500'>
+            <Archive className='w-16 h-16 mx-auto mb-4 opacity-50' />
+            <p>该房间还没有收纳点</p>
+            <p className='text-sm'>稍后添加吧</p>
+          </div>
+        ) : (
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+            {sortedStorages.map(storage => (
+              <StoragePointCard key={storage.id} point={storage} onAddItem={onAddItem} />
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   )
@@ -131,7 +220,7 @@ const useMockData = () => {
       type: 'bedroom',
       area: 20,
       position: { x: 10, y: 10, width: 30, height: 40 },
-      storagePoints: [
+      storages: [
         {
           id: '1-1',
           roomId: '1',
@@ -168,7 +257,7 @@ const useMockData = () => {
       type: 'living',
       area: 35,
       position: { x: 50, y: 10, width: 40, height: 35 },
-      storagePoints: [
+      storages: [
         {
           id: '2-1',
           roomId: '2',
@@ -192,7 +281,7 @@ const useMockData = () => {
       type: 'kitchen',
       area: 15,
       position: { x: 10, y: 60, width: 25, height: 30 },
-      storagePoints: [
+      storages: [
         {
           id: '3-1',
           roomId: '3',
@@ -228,8 +317,8 @@ const useMockData = () => {
   return { data: mockRooms }
 }
 
-const sortStoragePoints = (points: StoragePoint[], sortType: SortType): StoragePoint[] => {
-  const sorted = [...points]
+const sortStorages = (storages: Storage[], sortType: SortType): Storage[] => {
+  const sorted = [...storages]
   switch (sortType) {
     case 'utilization-desc':
       return sorted.sort((a, b) => b.utilization - a.utilization)
@@ -257,36 +346,67 @@ export default function Spaces() {
     queryKey: ['spaces'],
     queryFn: useMockData,
   })
-  const { rooms, setRooms, selectedRoomId } = useSpacesStore()
 
+  // 内部状态
+  const [rooms, setRooms] = useState<Room[]>([])
+  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null)
+  const [sortType, setSortType] = useState<SortType>('utilization-desc')
+  const addItemDrawerRef = useRef<AddItemDrawerRef>(null)
+
+  // 同步 API 数据
   useEffect(() => {
     if (mockData?.data) {
       setRooms(mockData.data)
     }
-  }, [mockData, setRooms])
+  }, [mockData])
 
+  // 计算选中的房间
   const selectedRoom = useMemo(
     () => rooms.find(r => r.id === selectedRoomId) || null,
     [rooms, selectedRoomId]
   )
 
-  const { sortType } = useSpacesStore()
-
-  const sortedPoints = useMemo(() => {
-    const points = selectedRoom?.storagePoints || []
-    return sortStoragePoints(points, sortType)
+  // 计算排序后的收纳点
+  const sortedStorages = useMemo(() => {
+    const storages = selectedRoom?.storages || []
+    return sortStorages(storages, sortType)
   }, [selectedRoom, sortType])
 
+  // 操作函数
+  const handleAddRoom = (room: Room) => {
+    setRooms(prev => [...prev, room])
+  }
+
+  const handleAddItem = (pointId: string, item: StorageItem) => {
+    setRooms(prev =>
+      prev.map(room => ({
+        ...room,
+        storagePoints: room.storages.map(point =>
+          point.id === pointId
+            ? {
+                ...point,
+                itemCount: point.itemCount + item.quantity,
+                items: [...point.items, item],
+              }
+            : point
+        ),
+      }))
+    )
+  }
+
+  const handleOpenAddItem = (pointId: string) => {
+    addItemDrawerRef.current?.open(pointId)
+  }
+
+  // 统计数据
   const spaceStats: SpaceStat[] = useMemo(() => {
     const totalRooms = rooms.length
-    const totalStoragePoints = rooms.reduce((sum, room) => sum + room.storagePoints.length, 0)
+    const totalStoragePoints = rooms.reduce((sum, room) => sum + room.storages.length, 0)
     const avgUtilization =
       totalStoragePoints > 0
         ? rooms.reduce(
             (sum, room) =>
-              sum +
-              room.storagePoints.reduce((acc, p) => acc + p.utilization, 0) /
-                room.storagePoints.length,
+              sum + room.storages.reduce((acc, p) => acc + p.utilization, 0) / room.storages.length,
             0
           ) / rooms.length
         : 0
@@ -297,14 +417,14 @@ export default function Spaces() {
         title: '温馨房间',
         count: totalRooms,
         subtitle: '个房间',
-        icon: <Archive className='w-8 h-8' />,
+        icon: <Home className='w-8 h-8' />,
       },
       {
         type: 'comfort',
         title: '收纳空间',
         count: totalStoragePoints,
         subtitle: '个收纳点',
-        icon: <Link className='w-8 h-8' />,
+        icon: <Archive className='w-8 h-8' />,
       },
       {
         type: 'overall',
@@ -318,7 +438,7 @@ export default function Spaces() {
 
   const homeTips: HomeTip[] = [
     {
-      icon: <Sparkles className='w-4 h-4 text-yellow-500' />,
+      icon: <Heart className='w-4 h-4 text-lemon-500' />,
       text: '定期整理能让家居空间更加舒适',
       id: 'tip-1',
     },
@@ -341,70 +461,25 @@ export default function Spaces() {
   return (
     <div className='min-h-screen'>
       <main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6'>
-        <SpaceTitle />
+        <SpaceTitle onAddRoom={handleAddRoom} />
         <SpaceStats stats={spaceStats} />
 
         <div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>
           <div className='lg:col-span-3 space-y-6'>
-            <Card className='border-cream-200'>
-              <CardHeader className='pb-4'>
-                <div className='flex items-center space-x-3'>
-                  <Archive className='w-5 h-5 text-warmGray-600' />
-                  <CardTitle className='text-lg font-semibold text-warmGray-800'>房间</CardTitle>
-                  <span className='text-sm text-warmGray-500'>({rooms.length} 个房间)</span>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {rooms.length === 0 ? (
-                  <div className='text-center py-12 text-warmGray-500'>
-                    <Archive className='w-16 h-16 mx-auto mb-4 opacity-50' />
-                    <p>还没有添加房间</p>
-                    <p className='text-sm'>点击右上角按钮添加你的第一个房间</p>
-                  </div>
-                ) : (
-                  <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-                    {rooms.map(room => (
-                      <RoomCard key={room.id} room={room} isSelected={selectedRoomId === room.id} />
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            <RoomList
+              rooms={rooms}
+              selectedRoomId={selectedRoomId}
+              onSelectRoom={setSelectedRoomId}
+            />
 
             {selectedRoom && (
-              <Card className='border-cream-200'>
-                <CardHeader className='pb-4'>
-                  <div className='flex items-center justify-between'>
-                    <div className='flex items-center space-x-3'>
-                      <Archive className='w-5 h-5 text-warmGray-600' />
-                      <div>
-                        <CardTitle className='text-lg font-semibold text-warmGray-800'>
-                          收纳空间
-                        </CardTitle>
-                        <p className='text-sm text-warmGray-500 mt-1'>
-                          {selectedRoom.name} · {sortedPoints.length} 个收纳点
-                        </p>
-                      </div>
-                    </div>
-                    <SortDropdown />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  {sortedPoints.length === 0 ? (
-                    <div className='text-center py-12 text-warmGray-500'>
-                      <Archive className='w-16 h-16 mx-auto mb-4 opacity-50' />
-                      <p>该房间还没有收纳点</p>
-                      <p className='text-sm'>稍后添加吧</p>
-                    </div>
-                  ) : (
-                    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
-                      {sortedPoints.map(point => (
-                        <StoragePointCard key={point.id} point={point} />
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+              <StorageList
+                room={selectedRoom}
+                sortedStorages={sortedStorages}
+                sortType={sortType}
+                onChangeSortType={setSortType}
+                onAddItem={handleOpenAddItem}
+              />
             )}
           </div>
 
@@ -413,7 +488,8 @@ export default function Spaces() {
           </div>
         </div>
       </main>
-      <AddItemDrawer />
+
+      <AddItemDrawer ref={addItemDrawerRef} onAddItem={handleAddItem} />
     </div>
   )
 }

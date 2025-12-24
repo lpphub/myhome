@@ -1,19 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
+import { Plus } from 'lucide-react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import { ROOM_TYPE_LABELS, type AddRoomForm as AddRoomFormType } from '@/types/spaces'
 import { Button } from '@/components/ui/button'
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -23,7 +15,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useSpacesStore } from '@/stores/useSpacesStore'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
+import { type AddRoomForm as AddRoomFormType, ROOM_TYPE_LABELS, type Room } from '@/types/spaces'
 
 const roomSchema = z.object({
   name: z.string().min(1, '请输入房间名称'),
@@ -42,8 +43,12 @@ const roomSchema = z.object({
 
 type RoomFormData = z.infer<typeof roomSchema>
 
-export function AddRoomDrawer() {
-  const { isAddRoomDrawerOpen, setAddRoomDrawerOpen } = useSpacesStore()
+interface AddRoomDrawerProps {
+  onAddRoom: (room: Room) => void
+}
+
+export function AddRoomDrawer({ onAddRoom }: AddRoomDrawerProps) {
+  const [isOpen, setIsOpen] = useState(false)
 
   const {
     register,
@@ -66,15 +71,15 @@ export function AddRoomDrawer() {
         id: Date.now().toString(),
         ...data,
         position: { x: 0, y: 0, width: 100, height: 100 },
-        storagePoints: [],
+        storages: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-      })
+      } as Room)
     },
     onSuccess: room => {
-      useSpacesStore.getState().addRoom(room)
+      onAddRoom(room)
       toast.success('房间添加成功！')
-      setAddRoomDrawerOpen(false)
+      setIsOpen(false)
     },
     onError: error => {
       toast.error('添加失败，请重试')
@@ -87,11 +92,14 @@ export function AddRoomDrawer() {
   }
 
   return (
-    <Sheet open={isAddRoomDrawerOpen} onOpenChange={setAddRoomDrawerOpen}>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button className='text-white'>添加新房间</Button>
+        <Button className='text-white'>
+          <Plus className='w-4 h-4 mr-1' />
+          添加房间
+        </Button>
       </SheetTrigger>
-      <SheetContent side='right' className='w-[500px] sm:w-[500px]'>
+      <SheetContent side='right' className='w-125 sm:w-125'>
         <SheetHeader>
           <SheetTitle>添加新房间</SheetTitle>
           <SheetDescription>填写房间信息，创建新的收纳空间</SheetDescription>
