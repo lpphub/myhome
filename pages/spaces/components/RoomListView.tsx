@@ -1,8 +1,8 @@
 import { Archive, Package } from 'lucide-react'
-import { ROOM_TYPE_LABELS, getRoomStatus, getRoomStatusColor } from '@/types/spaces'
-import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
 import { useSpacesStore } from '@/stores/useSpacesStore'
+import { getRoomStatus, getRoomStatusColor, ROOM_TYPE_LABELS } from '@/types/spaces'
 
 export function RoomListView() {
   const { rooms, selectedRoomId, setSelectedRoom } = useSpacesStore()

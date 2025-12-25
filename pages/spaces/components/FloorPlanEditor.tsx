@@ -1,18 +1,18 @@
-import { MapPin } from 'lucide-react'
-import type { Room, StoragePoint } from '@/types/spaces'
 import {
   DndContext,
+  type DragEndEvent,
   KeyboardSensor,
   MouseSensor,
   PointerSensor,
   useSensor,
   useSensors,
-  type DragEndEvent,
 } from '@dnd-kit/core'
-import { ROOM_TYPE_LABELS, getRoomStatus, getRoomStatusColor } from '@/types/spaces'
-import { useSpacesStore } from '@/stores/useSpacesStore'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { MapPin } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { useSpacesStore } from '@/stores/useSpacesStore'
+import type { Room, StoragePoint } from '@/types/spaces'
+import { getRoomStatus, getRoomStatusColor, ROOM_TYPE_LABELS } from '@/types/spaces'
 
 interface RoomNodeProps {
   room: Room

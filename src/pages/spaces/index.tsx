@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { LoadingState } from '@/components/LoadingState'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { Room, SortType, Storage } from '@/types/spaces'
-import { AddRoomDrawer } from './components/AddRoomDrawer'
+import { AddSpaceDrawer } from './components/AddSpaceDrawer'
 import { RoomCard } from './components/RoomCard'
 import { SortDropdown } from './components/SortDropdown'
 import { StorageCard } from './components/StorageCard'
@@ -23,7 +23,15 @@ interface HomeTip {
   id: string
 }
 
-const SpaceTitle = ({ onAddRoom }: { onAddRoom: (room: Room) => void }) => {
+const SpaceTitle = ({
+  onAddRoom,
+  onAddStorage,
+  rooms,
+}: {
+  onAddRoom: (room: Room) => void
+  onAddStorage: (storage: Storage) => void
+  rooms: Room[]
+}) => {
   return (
     <div className='flex items-center justify-between mb-8'>
       <div className='flex items-center space-x-4'>
@@ -35,7 +43,7 @@ const SpaceTitle = ({ onAddRoom }: { onAddRoom: (room: Room) => void }) => {
           <p className='text-warmGray-400'>每个空间都承载着生活的美好</p>
         </div>
       </div>
-      <AddRoomDrawer onAddRoom={onAddRoom} />
+      <AddSpaceDrawer onAddRoom={onAddRoom} onAddStorage={onAddStorage} rooms={rooms} />
     </div>
   )
 }
@@ -375,6 +383,14 @@ export default function Spaces() {
     setRooms(prev => [...prev, room])
   }
 
+  const handleAddStorage = (storage: Storage) => {
+    setRooms(prev =>
+      prev.map(room =>
+        room.id === storage.roomId ? { ...room, storages: [...room.storages, storage] } : room
+      )
+    )
+  }
+
   // 统计数据
   const spaceStats: SpaceStat[] = useMemo(() => {
     const totalRooms = rooms.length
@@ -438,7 +454,7 @@ export default function Spaces() {
   return (
     <div className='min-h-screen'>
       <main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6'>
-        <SpaceTitle onAddRoom={handleAddRoom} />
+        <SpaceTitle onAddRoom={handleAddRoom} onAddStorage={handleAddStorage} rooms={rooms} />
         <SpaceStats stats={spaceStats} />
 
         <div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>

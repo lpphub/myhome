@@ -3,8 +3,9 @@ import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import type { StorageItem } from '@/types/spaces'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import {
   Sheet,
   SheetContent,
@@ -13,10 +14,9 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { useSpacesStore } from '@/stores/useSpacesStore'
+import type { StorageItem } from '@/types/spaces'
 
 const itemSchema = z.object({
   name: z.string().min(1, '请输入物品名称'),

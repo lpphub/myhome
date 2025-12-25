@@ -74,6 +74,13 @@ export interface AddRoomForm {
   area: number
 }
 
+export interface AddStorageForm {
+  name: string
+  type: StorageType
+  roomId: string
+  capacity: number
+}
+
 export interface AddItemForm {
   storagePointId: string
   name: string

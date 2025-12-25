@@ -1,5 +1,5 @@
+import type { AddRoomForm, Room, Storage, StorageItem } from '@/types/spaces'
 import httpClient from '@/utils/request'
-import type { Room, Storage, StorageItem, AddRoomForm } from '@/types/spaces'
 
 enum SpacesApi {
   GetRooms = '/spaces',

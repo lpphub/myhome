@@ -3,17 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import { ROOM_TYPE_LABELS, type AddRoomForm as AddRoomFormType } from '@/types/spaces'
 import { Button } from '@/components/ui/button'
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -23,7 +13,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 import { useSpacesStore } from '@/stores/useSpacesStore'
+import { type AddRoomForm as AddRoomFormType, ROOM_TYPE_LABELS } from '@/types/spaces'
 
 const roomSchema = z.object({
   name: z.string().min(1, '请输入房间名称'),
