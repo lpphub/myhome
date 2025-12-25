@@ -30,7 +30,7 @@ export function StorageCard({ point }: StorageCardProps) {
 
   return (
     <Card
-      className='bg-linear-to-br from-white to-cream-50 border-cream-200 shadow-soft card-hover cursor-pointer relative overflow-hidden group'
+      className='bg-linear-to-br from-honey-50 to-coral-50 border-cream-400 shadow-soft card-hover cursor-pointer relative overflow-hidden group'
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

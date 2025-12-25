@@ -74,7 +74,7 @@ const DashboardHeader = () => {
             </div>
           </div>
           <div className='hidden md:flex items-center space-x-4'>
-            <Button variant='secondary' className='text-primary'>
+            <Button variant='secondary' className='text-honey-800'>
               <Plus className='w-4 h-4 mr-2' />
               快速添加
             </Button>
