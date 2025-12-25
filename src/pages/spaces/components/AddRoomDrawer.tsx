@@ -101,7 +101,7 @@ export function AddRoomDrawer({ onAddRoom }: AddRoomDrawerProps) {
       </SheetTrigger>
       <SheetContent
         side='right'
-        className='w-full sm:w-[520px] bg-gradient-to-br from-white via-cream-50/90 to-honey-50/60 !border-l-honey-200'
+        className='w-full sm:w-130 bg-linear-to-br from-white via-cream-50/90 to-honey-50/60 border-l-honey-200!'
       >
         <SheetHeader className='border-b border-cream-200 pb-4'>
           <div className='flex items-center gap-3'>
@@ -128,7 +128,7 @@ export function AddRoomDrawer({ onAddRoom }: AddRoomDrawerProps) {
               className={
                 errors.name
                   ? 'border-red-500 ring-1 ring-red-500'
-                  : 'border-cream-300 focus:border-honey-400'
+                  : 'border-warmGray-300 focus:border-honey-400'
               }
             />
             {errors.name && <p className='text-sm text-coral-500'>{errors.name.message}</p>}
@@ -143,10 +143,10 @@ export function AddRoomDrawer({ onAddRoom }: AddRoomDrawerProps) {
               value={watch('type')}
               onValueChange={value => setValue('type', value as RoomFormData['type'])}
             >
-              <SelectTrigger className='w-full border-cream-300 focus:border-honey-400'>
+              <SelectTrigger className='w-full border-warmGray-300 focus:border-honey-400'>
                 <SelectValue placeholder='选择房间类型' />
               </SelectTrigger>
-              <SelectContent className='bg-white border-honey-200 shadow-warm-sm min-w-[var(--radix-select-trigger-width)]'>
+              <SelectContent className='bg-white border-honey-200 shadow-warm-sm min-w-(--radix-select-trigger-width)'>
                 {Object.entries(ROOM_TYPE_LABELS).map(([value, label]) => (
                   <SelectItem key={value} value={value}>
                     {label}
@@ -170,7 +170,7 @@ export function AddRoomDrawer({ onAddRoom }: AddRoomDrawerProps) {
               className={
                 errors.area
                   ? 'border-red-500 ring-1 ring-red-500'
-                  : 'border-cream-300 focus:border-honey-400'
+                  : 'border-warmGray-300 focus:border-honey-400'
               }
             />
             {errors.area && <p className='text-sm text-coral-500'>{errors.area.message}</p>}

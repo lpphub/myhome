@@ -6,11 +6,11 @@ enum SpacesApi {
   CreateRoom = '/spaces',
   UpdateRoom = '/spaces/:id',
   DeleteRoom = '/spaces/:id',
-  GetStoragePoints = '/spaces/:roomId/storage-points',
-  CreateStoragePoint = '/spaces/:roomId/storage-points',
-  UpdateStoragePoint = '/storage-points/:id',
-  DeleteStoragePoint = '/storage-points/:id',
-  AddItem = '/storage-points/:id/items',
+  GetStorages = '/spaces/:roomId/storages',
+  CreateStorage = '/spaces/:roomId/storages',
+  UpdateStorage = '/storages/:id',
+  DeleteStorage = '/storages/:id',
+  AddItem = '/storages/:id/items',
 }
 
 export const getRooms = () => httpClient.get<Room[]>({ url: SpacesApi.GetRooms })
@@ -24,25 +24,25 @@ export const updateRoom = (id: string, data: Partial<Room>) =>
 export const deleteRoom = (id: string) =>
   httpClient.delete({ url: SpacesApi.DeleteRoom.replace(':id', id) })
 
-export const getStoragePoints = (roomId: string) =>
+export const getStorages = (roomId: string) =>
   httpClient.get<Storage[]>({
-    url: SpacesApi.GetStoragePoints.replace(':roomId', roomId),
+    url: SpacesApi.GetStorages.replace(':roomId', roomId),
   })
 
-export const createStoragePoint = (roomId: string, data: Partial<Storage>) =>
+export const createStorage = (roomId: string, data: Partial<Storage>) =>
   httpClient.post<Storage>({
-    url: SpacesApi.CreateStoragePoint.replace(':roomId', roomId),
+    url: SpacesApi.CreateStorage.replace(':roomId', roomId),
     data,
   })
 
-export const updateStoragePoint = (id: string, data: Partial<Storage>) =>
+export const updateStorage = (id: string, data: Partial<Storage>) =>
   httpClient.patch<Storage>({
-    url: SpacesApi.UpdateStoragePoint.replace(':id', id),
+    url: SpacesApi.UpdateStorage.replace(':id', id),
     data,
   })
 
-export const deleteStoragePoint = (id: string) =>
-  httpClient.delete({ url: SpacesApi.DeleteStoragePoint.replace(':id', id) })
+export const deleteStorage = (id: string) =>
+  httpClient.delete({ url: SpacesApi.DeleteStorage.replace(':id', id) })
 
-export const addItemToStoragePoint = (pointId: string, data: StorageItem) =>
-  httpClient.post({ url: SpacesApi.AddItem.replace(':id', pointId), data })
+export const addItemToStorage = (id: string, data: StorageItem) =>
+  httpClient.post({ url: SpacesApi.AddItem.replace(':id', id), data })
