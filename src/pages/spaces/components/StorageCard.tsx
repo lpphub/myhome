@@ -70,13 +70,12 @@ export function StorageCard({ point }: StorageCardProps) {
             </span>
           </div>
 
-          <Progress value={point.utilization} className={`h-2 bg-cream-100`} />
           <Progress
             value={point.utilization}
-            className={`h-2 -mt-2 bg-transparent`}
-            style={{
-              background: `linear-gradient(90deg, ${statusColor === 'lemon' ? '#a3e01f' : statusColor === 'honey' ? '#dfaa50' : '#ff7250'} ${point.utilization}%, transparent ${point.utilization}%)`,
-            }}
+            className='h-2'
+            indicatorColor={
+              statusColor === 'lemon' ? '#a3e01f' : statusColor === 'honey' ? '#dfaa50' : '#ff7250'
+            }
           />
         </div>
 
