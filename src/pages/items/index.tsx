@@ -1,113 +1,297 @@
-import { Camera, Clock, Heart, Home, Sparkles } from 'lucide-react'
-import { Link } from 'react-router'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect, useMemo, useState } from 'react'
+import { LoadingState } from '@/components/LoadingState'
+import type { Item, ItemCategory, RecentActivity, SortByType, ViewMode } from '@/types/items'
+import { CATEGORY_ICONS, ITEM_CATEGORY_LABELS } from '@/types/items'
+import { ItemFilter } from './components/ItemFilter'
+import { ItemList } from './components/ItemList'
+import { ItemSidebar } from './components/ItemSidebar'
+import { ItemTitle } from './components/ItemTitle'
+
+const useMockData = async () => {
+  const mockItems: Item[] = [
+    {
+      id: '1',
+      storagePointId: '1-1',
+      name: '白色棉质T恤',
+      category: 'clothing',
+      type: '上衣',
+      quantity: 3,
+      price: 89,
+      description: '100%纯棉，舒适透气',
+      status: 'active',
+      location: '主卧衣柜第二层',
+      createdAt: '2024-12-20T00:00:00Z',
+      updatedAt: '2024-12-20T00:00:00Z',
+    },
+    {
+      id: '2',
+      storagePointId: '1-1',
+      name: '苹果iPhone 15',
+      category: 'electronics',
+      type: '手机',
+      quantity: 1,
+      price: 6999,
+      description: '128GB 黑色',
+      status: 'active',
+      location: '床头柜抽屉',
+      createdAt: '2024-12-21T00:00:00Z',
+      updatedAt: '2024-12-21T00:00:00Z',
+    },
+    {
+      id: '3',
+      storagePointId: '1-2',
+      name: '人类简史',
+      category: 'books',
+      type: '历史类',
+      quantity: 1,
+      price: 68,
+      description: '尤瓦尔·赫拉利著作',
+      status: 'active',
+      location: '书架第三层',
+      createdAt: '2024-12-22T00:00:00Z',
+      updatedAt: '2024-12-22T00:00:00Z',
+    },
+    {
+      id: '4',
+      storagePointId: '2-1',
+      name: '陶瓷花瓶',
+      category: 'decor',
+      type: '装饰品',
+      quantity: 2,
+      price: 199,
+      description: '手工制作，简约设计',
+      status: 'active',
+      location: '电视柜左侧',
+      createdAt: '2024-12-23T00:00:00Z',
+      updatedAt: '2024-12-23T00:00:00Z',
+    },
+    {
+      id: '5',
+      storagePointId: '3-1',
+      name: '不粘平底锅',
+      category: 'kitchen',
+      type: '厨具',
+      quantity: 1,
+      price: 299,
+      description: '28cm，含木质锅盖',
+      status: 'active',
+      location: '橱柜上层',
+      createdAt: '2024-12-24T00:00:00Z',
+      updatedAt: '2024-12-24T00:00:00Z',
+    },
+    {
+      id: '6',
+      storagePointId: '1-1',
+      name: '牛仔外套',
+      category: 'clothing',
+      type: '外套',
+      quantity: 1,
+      price: 399,
+      description: '浅蓝色，春秋款',
+      status: 'inactive',
+      location: '主卧衣柜第三层',
+      createdAt: '2024-12-19T00:00:00Z',
+      updatedAt: '2024-12-19T00:00:00Z',
+    },
+  ]
+
+  const mockActivities: RecentActivity[] = [
+    {
+      id: '1',
+      action: '添加了新物品',
+      itemName: '不粘平底锅',
+      timestamp: '2024-12-24T10:30:00Z',
+      icon: <span className='text-lg'>🍳</span>,
+    },
+    {
+      id: '2',
+      action: '更新了物品信息',
+      itemName: '白色棉质T恤',
+      timestamp: '2024-12-23T14:20:00Z',
+      icon: <span className='text-lg'>👕</span>,
+    },
+    {
+      id: '3',
+      action: '添加了新物品',
+      itemName: '陶瓷花瓶',
+      timestamp: '2024-12-23T09:15:00Z',
+      icon: <span className='text-lg'>🎨</span>,
+    },
+    {
+      id: '4',
+      action: '添加了新物品',
+      itemName: '人类简史',
+      timestamp: '2024-12-22T16:45:00Z',
+      icon: <span className='text-lg'>📚</span>,
+    },
+    {
+      id: '5',
+      action: '添加了新物品',
+      itemName: '苹果iPhone 15',
+      timestamp: '2024-12-21T11:30:00Z',
+      icon: <span className='text-lg'>📱</span>,
+    },
+    {
+      id: '6',
+      action: '添加了新物品',
+      itemName: '白色棉质T恤',
+      timestamp: '2024-12-20T13:20:00Z',
+      icon: <span className='text-lg'>👕</span>,
+    },
+    {
+      id: '7',
+      action: '添加了新物品',
+      itemName: '牛仔外套',
+      timestamp: '2024-12-19T15:10:00Z',
+      icon: <span className='text-lg'>👔</span>,
+    },
+    {
+      id: '8',
+      action: '系统初始化',
+      itemName: '欢迎使用物品收纳',
+      timestamp: '2024-12-18T00:00:00Z',
+      icon: <span className='text-lg'>✨</span>,
+    },
+  ]
+
+  return new Promise<{ data: { items: Item[]; activities: RecentActivity[] } }>(resolve => {
+    setTimeout(() => {
+      resolve({ data: { items: mockItems, activities: mockActivities } })
+    }, 500)
+  })
+}
+
+const sortItems = (items: Item[], sortBy: SortByType): Item[] => {
+  const sorted = [...items]
+  switch (sortBy) {
+    case 'name-asc':
+      return sorted.sort((a, b) => a.name.localeCompare(b.name))
+    case 'name-desc':
+      return sorted.sort((a, b) => b.name.localeCompare(a.name))
+    case 'date-asc':
+      return sorted.sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+    case 'date-desc':
+      return sorted.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    case 'quantity-asc':
+      return sorted.sort((a, b) => a.quantity - b.quantity)
+    case 'quantity-desc':
+      return sorted.sort((a, b) => b.quantity - a.quantity)
+    default:
+      return sorted
+  }
+}
 
 export default function Items() {
-  const title = '物品收纳'
-  const description = '收纳物品展示'
-  const Icon = Camera
-  const details = '这里将展示您收藏的所有物品，支持拍照记录和智能分类'
+  const { data: mockData, isLoading } = useQuery({
+    queryKey: ['items'],
+    queryFn: useMockData,
+  })
+
+  const [items, setItems] = useState<Item[]>([])
+  const [activities, setActivities] = useState<RecentActivity[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [selectedStatus, setSelectedStatus] = useState<string>('all')
+  const [viewMode, setViewMode] = useState<ViewMode>('card')
+  const [sortBy, setSortBy] = useState<SortByType>('date-desc')
+
+  useEffect(() => {
+    if (mockData?.data) {
+      setItems(mockData.data.items)
+      setActivities(mockData.data.activities)
+    }
+  }, [mockData])
+
+  const filteredItems = useMemo(() => {
+    let filtered = items
+
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase()
+      filtered = filtered.filter(
+        item =>
+          item.name.toLowerCase().includes(term) ||
+          item.description?.toLowerCase().includes(term) ||
+          item.location?.toLowerCase().includes(term)
+      )
+    }
+
+    if (selectedCategory) {
+      filtered = filtered.filter(item => item.category === selectedCategory)
+    }
+
+    if (selectedStatus !== 'all') {
+      filtered = filtered.filter(item => item.status === selectedStatus)
+    }
+
+    return sortItems(filtered, sortBy)
+  }, [items, searchTerm, selectedCategory, selectedStatus, sortBy])
+
+  const categories = useMemo(() => {
+    const categoryCount = items.reduce(
+      (acc, item) => {
+        acc[item.category] = (acc[item.category] || 0) + 1
+        return acc
+      },
+      {} as Record<string, number>
+    )
+
+    return Object.entries(ITEM_CATEGORY_LABELS).map(([type, name]) => ({
+      id: type,
+      name,
+      type: type as ItemCategory,
+      count: categoryCount[type] || 0,
+      icon: <span className='text-xl'>{CATEGORY_ICONS[type as ItemCategory]}</span>,
+    }))
+  }, [items])
+
+  const handleAddItem = (item: Item) => {
+    setItems(prev => [item, ...prev])
+    setActivities(prev => [
+      {
+        id: Date.now().toString(),
+        action: '添加了新物品',
+        itemName: item.name,
+        timestamp: new Date().toISOString(),
+        icon: <span className='text-lg'>{CATEGORY_ICONS[item.category]}</span>,
+      },
+      ...prev,
+    ])
+  }
+
+  if (isLoading) {
+    return <LoadingState type='loading' />
+  }
 
   return (
-    <div className='min-h-screen pt-20 pb-20 md:pb-8'>
-      <div className='fixed inset-0 overflow-hidden pointer-events-none'>
-        <div className='absolute top-20 right-10 w-64 h-64 bg-linear-to-bl from-honey-200/20 to-transparent rounded-full blur-3xl'></div>
-        <div className='absolute bottom-20 left-10 w-48 h-48 bg-linear-to-tr from-coral-200/20 to-transparent rounded-full blur-2xl'></div>
-        <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-linear-to-br from-honey-200/10 to-transparent rounded-full blur-3xl'></div>
-      </div>
+    <div className='min-h-screen'>
+      <main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6'>
+        <ItemTitle onAddItem={handleAddItem} />
 
-      <div className='relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
-        <div className='bg-white/80 backdrop-blur-lg rounded-3xl shadow-warm-xl border border-honey-200 p-8 md:p-12'>
-          <div className='text-center mb-8'>
-            <div className='inline-flex items-center justify-center w-24 h-24 bg-linear-to-br from-honey-400 to-honey-600 rounded-3xl shadow-lg mb-6 animate-bounce duration-3000'>
-              <Icon className='w-12 h-12 text-white' />
-            </div>
+        <ItemFilter
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          selectedStatus={selectedStatus}
+          onSelectStatus={setSelectedStatus}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+        />
 
-            <h1 className='text-4xl font-bold text-warmGray-800 mb-2 flex items-center justify-center space-x-3'>
-              <span>{title}</span>
-              <div className='animate-pulse duration-2000'>
-                <Heart className='w-8 h-8 text-coral-400' />
-              </div>
-            </h1>
-
-            <p className='text-xl text-warmGray-600 mb-4'>{description}</p>
-
-            <div className='inline-flex items-center space-x-2 bg-linear-to-r from-honey-100 to-coral-100 px-6 py-3 rounded-2xl border border-honey-200'>
-              <div className='animate-pulse duration-2000'>
-                <Sparkles className='w-5 h-5 text-honey-600' />
-              </div>
-              <span className='text-lg font-medium text-warmGray-700'>敬请期待</span>
-              <div className='animate-pulse duration-2000' style={{ animationDelay: '0.5s' }}>
-                <Sparkles className='w-5 h-5 text-coral-600' />
-              </div>
-            </div>
+        <div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>
+          <div className='lg:col-span-3'>
+            <ItemList items={filteredItems} viewMode={viewMode} />
           </div>
 
-          <div className='bg-linear-to-r from-cream-50 to-honey-50 rounded-2xl p-6 mb-8 border border-cream-200'>
-            <p className='text-warmGray-700 text-center leading-relaxed'>{details}</p>
-          </div>
-
-          <div className='mb-8'>
-            <div className='flex items-center justify-between mb-3'>
-              <span className='text-sm font-medium text-warmGray-600'>开发进度</span>
-              <span className='text-sm font-medium text-honey-600'>进行中...</span>
-            </div>
-            <div className='w-full bg-cream-200 rounded-full h-3 overflow-hidden'>
-              <div
-                className='bg-linear-to-r from-honey-400 to-coral-400 h-3 rounded-full transition-all duration-1000 animate-pulse'
-                style={{ width: '65%' }}
-              />
-            </div>
-          </div>
-
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-            <button
-              type='button'
-              className='p-4 bg-white/60 rounded-xl border border-cream-200 hover:shadow-warm-sm transition-all duration-300 text-center group'
-            >
-              <Clock className='w-6 h-6 text-honey-500 mx-auto mb-2 group-hover:scale-110 transition-transform' />
-              <span className='text-sm text-warmGray-700'>预计完成时间</span>
-              <p className='text-xs text-warmGray-500 mt-1'>2024年2月</p>
-            </button>
-
-            <button
-              type='button'
-              className='p-4 bg-white/60 rounded-xl border border-cream-200 hover:shadow-warm-sm transition-all duration-300 text-center group'
-            >
-              <Sparkles className='w-6 h-6 text-coral-500 mx-auto mb-2 group-hover:rotate-12 transition-transform' />
-              <span className='text-sm text-warmGray-700'>新功能</span>
-              <p className='text-xs text-warmGray-500 mt-1'>正在开发</p>
-            </button>
-
-            <button
-              type='button'
-              className='p-4 bg-white/60 rounded-xl border border-cream-200 hover:shadow-warm-sm transition-all duration-300 text-center group'
-            >
-              <Heart className='w-6 h-6 text-honey-500 mx-auto mb-2 group-hover:scale-110 transition-transform' />
-              <span className='text-sm text-warmGray-700'>用户体验</span>
-              <p className='text-xs text-warmGray-500 mt-1'>优先保证</p>
-            </button>
-          </div>
-
-          <div className='text-center'>
-            <Link
-              to='/'
-              className='inline-flex items-center space-x-3 bg-linear-to-r from-coral-400 to-coral-500 text-white px-8 py-4 rounded-2xl hover:from-coral-500 hover:to-coral-600 transition-all duration-300 shadow-lg hover:shadow-xl group'
-            >
-              <Home className='w-5 h-5 group-hover:scale-110 transition-transform' />
-              <span className='font-medium'>返回首页</span>
-              <div className='animate-pulse duration-1500'>
-                <Sparkles className='w-4 h-4' />
-              </div>
-            </Link>
-          </div>
+          <ItemSidebar
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onSelectCategory={setSelectedCategory}
+            activities={activities}
+          />
         </div>
-
-        <div className='text-center mt-8'>
-          <p className='text-warmGray-500 text-sm'>
-            感谢您的耐心等待，我们正在努力为您打造更好的收纳体验 ✨
-          </p>
-        </div>
-      </div>
+      </main>
     </div>
   )
 }

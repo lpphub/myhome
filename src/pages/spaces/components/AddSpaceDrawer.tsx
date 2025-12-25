@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { Archive, Home, Ruler, Tag } from 'lucide-react'
+import { Archive as ArchiveIcon, Home, Ruler, Tag } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -25,13 +25,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import type { Room, Storage } from '@/types/spaces'
 import {
   type AddRoomForm as AddRoomFormType,
   type AddStorageForm as AddStorageFormType,
   ROOM_TYPE_LABELS,
-  type Room,
   STORAGE_TYPE_LABELS,
-  type Storage,
 } from '@/types/spaces'
 
 const roomSchema = z.object({
@@ -173,7 +172,7 @@ export function AddSpaceDrawer({ onAddRoom, onAddStorage, rooms }: AddSpaceDrawe
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>
         <Button className='bg-linear-to-r from-honey-400 to-honey-600 text-white hover:from-honey-500 hover:to-honey-700 shadow-warm-sm'>
-          <Archive className='w-4 h-4 mr-1' />
+          <ArchiveIcon className='w-4 h-4 mr-1' />
           添加空间
         </Button>
       </SheetTrigger>
@@ -187,7 +186,7 @@ export function AddSpaceDrawer({ onAddRoom, onAddStorage, rooms }: AddSpaceDrawe
               {addType === 'room' ? (
                 <Home className='w-5 h-5 text-honey-600' />
               ) : (
-                <Archive className='w-5 h-5 text-honey-600' />
+                <ArchiveIcon className='w-5 h-5 text-honey-600' />
               )}
             </div>
             <div>
@@ -227,7 +226,7 @@ export function AddSpaceDrawer({ onAddRoom, onAddStorage, rooms }: AddSpaceDrawe
                 : 'border-honey-300 text-honey-700 hover:bg-honey-50'
             }
           >
-            <Archive className='w-4 h-4 mr-1' />
+            <ArchiveIcon className='w-4 h-4 mr-1' />
             添加收纳
           </Button>
         </div>
@@ -317,7 +316,7 @@ export function AddSpaceDrawer({ onAddRoom, onAddStorage, rooms }: AddSpaceDrawe
           >
             <div className='grid gap-3'>
               <Label htmlFor='storage-name' className='flex items-center gap-2'>
-                <Archive className='w-4 h-4 text-warmGray-500' />
+                <ArchiveIcon className='w-4 h-4 text-warmGray-500' />
                 收纳点名称
               </Label>
               <Input

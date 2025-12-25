@@ -152,7 +152,7 @@
   }
 
   .item-hover:hover {
-    box-shadow: var(--shadow-warm-sm);
+    box-shadow: var(--shadow-warm-md);
     transform: translateY(-4px);
   }
 
