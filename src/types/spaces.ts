@@ -19,7 +19,6 @@ export type SortType =
 
 export interface Storage {
   id: string
-  roomId: string
   name: string
   type: StorageType
   capacity: number
@@ -30,6 +29,9 @@ export interface Storage {
   items: StorageItem[]
   createdAt: string
   updatedAt: string
+  image?: string
+  description?: string
+  location?: string
 }
 
 export interface StorageItem {

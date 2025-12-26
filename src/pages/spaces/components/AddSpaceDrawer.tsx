@@ -1,11 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { Archive as ArchiveIcon, Ruler, Tag } from 'lucide-react'
+import { Archive, FileText, Ruler, Tag } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
-// import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -25,6 +24,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import { Textarea } from '@/components/ui/textarea'
 import type { Storage } from '@/types/spaces'
 import { type AddStorageForm as AddStorageFormType, STORAGE_TYPE_LABELS } from '@/types/spaces'
 
@@ -32,6 +32,8 @@ const storageSchema = z.object({
   name: z.string().min(1, '请输入收纳点名称'),
   type: z.enum(['closet', 'shoe-rack', 'bookshelf', 'cabinet', 'drawer', 'hanger', 'other']),
   capacity: z.number().min(1, '请输入容量'),
+  description: z.string().optional(),
+  location: z.string().optional(),
 })
 
 type StorageFormData = z.infer<typeof storageSchema>
@@ -49,6 +51,7 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
       name: '',
       type: 'cabinet',
       capacity: 20,
+      description: '',
     },
   })
 
@@ -57,7 +60,6 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
       return Promise.resolve({
         id: Date.now().toString(),
         ...data,
-        roomId: '1',
         itemCount: 0,
         utilization: 0,
         items: [],
@@ -92,7 +94,7 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>
         <Button className='bg-linear-to-r from-honey-400 to-honey-600 text-white hover:from-honey-500 hover:to-honey-700 shadow-warm-sm'>
-          <ArchiveIcon className='w-4 h-4 mr-1' />
+          <Archive className='w-4 h-4 mr-1' />
           添加空间
         </Button>
       </SheetTrigger>
@@ -103,7 +105,7 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
         <SheetHeader className='border-b border-cream-200 pb-4'>
           <div className='flex items-center gap-3'>
             <div className='p-2 bg-honey-100 rounded-lg shadow-soft'>
-              <ArchiveIcon className='w-5 h-5 text-honey-600' />
+              <Archive className='w-5 h-5 text-honey-600' />
             </div>
             <div>
               <SheetTitle className='text-warmGray-800'>添加收纳空间</SheetTitle>
@@ -115,7 +117,7 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
         <form onSubmit={storageForm.handleSubmit(onStorageSubmit)} className='grid gap-5 py-2 px-2'>
           <div className='grid gap-3'>
             <Label htmlFor='storage-name' className='flex items-center gap-2'>
-              <ArchiveIcon className='w-4 h-4 text-warmGray-500' />
+              <Archive className='w-4 h-4 text-warmGray-500' />
               收纳点名称
             </Label>
             <Input
@@ -179,6 +181,28 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
             {storageForm.formState.errors.capacity && (
               <p className='text-sm text-coral-500'>
                 {storageForm.formState.errors.capacity.message}
+              </p>
+            )}
+          </div>
+
+          <div className='grid gap-3'>
+            <Label htmlFor='storage-description' className='flex items-center gap-2'>
+              <FileText className='w-4 h-4 text-warmGray-500' />
+              描述
+            </Label>
+            <Textarea
+              id='storage-description'
+              placeholder='例如：卧室左侧的衣柜，用于存放衣物...'
+              {...storageForm.register('description')}
+              className={
+                storageForm.formState.errors.description
+                  ? 'border-red-500 ring-1 ring-red-500'
+                  : 'border-warmGray-300 focus:border-honey-400'
+              }
+            />
+            {storageForm.formState.errors.description && (
+              <p className='text-sm text-coral-500'>
+                {storageForm.formState.errors.description.message}
               </p>
             )}
           </div>

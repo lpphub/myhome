@@ -2,21 +2,21 @@ import type { Storage, StorageItem } from '@/types/spaces'
 import httpClient from '@/utils/request'
 
 enum SpacesApi {
-  GetStorages = '/spaces/:roomId/storages',
-  CreateStorage = '/spaces/:roomId/storages',
+  GetStorages = '/spaces/storages',
+  CreateStorage = '/spaces/storages',
   UpdateStorage = '/storages/:id',
   DeleteStorage = '/storages/:id',
   AddItem = '/storages/:id/items',
 }
 
-export const getStorages = (roomId: string) =>
+export const getStorages = () =>
   httpClient.get<Storage[]>({
-    url: SpacesApi.GetStorages.replace(':roomId', roomId),
+    url: SpacesApi.GetStorages,
   })
 
-export const createStorage = (roomId: string, data: Partial<Storage>) =>
+export const createStorage = (data: Partial<Storage>) =>
   httpClient.post<Storage>({
-    url: SpacesApi.CreateStorage.replace(':roomId', roomId),
+    url: SpacesApi.CreateStorage,
     data,
   })
 

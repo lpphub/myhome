@@ -65,7 +65,7 @@ const NavigationLogo = () => {
         </div>
       </div>
       <div className='hidden sm:block'>
-        <h1 className='text-lg font-bold text-warmGray-800'>收纳宝</h1>
+        <h1 className='text-lg font-bold text-warmGray-800'>AI收纳</h1>
         <p className='text-xs text-warmGray-600'>温馨收纳小助手</p>
       </div>
     </Link>

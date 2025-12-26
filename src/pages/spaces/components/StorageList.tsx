@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import type { Storage } from '@/types/spaces'
-import { STORAGE_TYPE_LABELS } from '@/types/spaces'
 
 interface StorageListProps {
   storages: Storage[]
@@ -27,56 +26,83 @@ export function StorageList({ storages }: StorageListProps) {
     }
 
     const getUtilizationColor = (utilization: number) => {
-      if (utilization < 70) return '#a3e01f' // lemon
-      if (utilization < 85) return '#dfaa50' // honey
-      return '#ff7250' // coral
+      if (utilization < 70) return '#34d399'
+      if (utilization < 85) return '#fbbf24'
+      return '#f87171'
     }
 
     const getUtilizationTextColor = (utilization: number) => {
-      if (utilization < 70) return 'text-lemon-700'
-      if (utilization < 85) return 'text-honey-700'
-      return 'text-coral-700'
+      if (utilization < 70) return 'text-emerald-600'
+      if (utilization < 85) return 'text-amber-600'
+      return 'text-red-600'
     }
 
     return (
       <Card
-        className='bg-linear-to-br from-honey-50 to-coral-50 border-cream-400 shadow-soft card-hover cursor-pointer relative overflow-hidden group'
+        className='bg-white border-cream-200 shadow-soft card-hover cursor-pointer relative overflow-hidden group'
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <CardContent className='p-4'>
-          <div className='flex items-start justify-between mb-3'>
+        <div className='aspect-square bg-linear-to-br from-gray-50 to-gray-100 relative mx-4 mt-1 mb-0 rounded-lg'>
+          {point.image ? (
+            <img
+              src={point.image}
+              alt={point.name}
+              className='w-full h-full object-cover rounded-lg'
+            />
+          ) : (
+            <div className='flex items-center justify-center h-full'>
+              <Package className='w-12 h-12 text-warmGray-400' />
+            </div>
+          )}
+        </div>
+
+        <CardContent className='p-4 pt-2'>
+          <div className='flex items-start justify-between mb-2'>
             <div className='flex-1'>
-              <div className='flex items-center gap-2 mb-1'>
-                <Package className='w-5 h-5 text-warmGray-600' />
-                <h3 className='font-semibold text-warmGray-800'>{point.name}</h3>
-              </div>
-              <Badge variant='outline' className='text-xs'>
-                {STORAGE_TYPE_LABELS[point.type]}
-              </Badge>
+              <h3 className='font-semibold text-warmGray-800 text-lg'>{point.name}</h3>
+              {point.description && (
+                <p className='text-sm text-warmGray-600 mt-1 line-clamp-2'>{point.description}</p>
+              )}
             </div>
           </div>
 
-          <div className='space-y-2'>
-            <div className='flex items-center justify-between text-sm'>
-              <span className='text-warmGray-600'>
-                {point.itemCount} / {point.capacity}
-              </span>
-              <span className={`font-medium ${getUtilizationTextColor(point.utilization)}`}>
+          <div className='space-y-3'>
+            <div className='flex items-center gap-3 text-xs'>
+              <div className='flex items-center gap-1 whitespace-nowrap'>
+                <Package className='w-3 h-3 text-warmGray-600' />
+                <span className='text-warmGray-600'>{point.itemCount}</span>
+              </div>
+              <Progress
+                value={point.utilization}
+                className='h-2 flex-1'
+                indicatorColor={getUtilizationColor(point.utilization)}
+              />
+              <span
+                className={`font-medium whitespace-nowrap ${getUtilizationTextColor(point.utilization)}`}
+              >
                 {point.utilization}%
               </span>
             </div>
 
-            <Progress
-              value={point.utilization}
-              className='h-2'
-              indicatorColor={getUtilizationColor(point.utilization)}
-            />
-          </div>
+            <div className='flex items-center gap-2 text-xs text-warmGray-600'>
+              <Clock className='w-3 h-3' />
+              <span>距离上次整理：{formatLastOrganized(point.lastOrganized)}</span>
+            </div>
 
-          <div className='flex items-center gap-2 mt-3 text-xs text-warmGray-600'>
-            <Clock className='w-3 h-3' />
-            <span>距离上次整理：{formatLastOrganized(point.lastOrganized)}</span>
+            {point.tags && point.tags.length > 0 && (
+              <div className='flex gap-1 flex-wrap'>
+                {point.tags.map(tag => (
+                  <Badge
+                    key={tag}
+                    variant='outline'
+                    className='text-xs bg-honey-200 text-gray-600 border-gray-200'
+                  >
+                    #{tag}
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
 
           <div
@@ -97,15 +123,23 @@ export function StorageList({ storages }: StorageListProps) {
       </Card>
     )
   }
-
   return (
     <Card className='border-cream-200'>
       <CardContent className='p-4'>
-        <div className='flex items-center space-x-3 mb-4'>
-          <Archive className='w-5 h-5 text-warmGray-600' />
-          <div>
-            <h3 className='text-lg font-semibold text-warmGray-800'>收纳空间</h3>
-            <p className='text-sm text-warmGray-500 mt-1'>{storages.length} 个收纳点</p>
+        <div className='flex items-center justify-between mb-4'>
+          <div className='flex items-center space-x-3'>
+            <Archive className='w-5 h-5 text-warmGray-600' />
+            <div>
+              <h3 className='text-lg font-semibold text-warmGray-800'>收纳空间</h3>
+            </div>
+          </div>
+          <div className='flex items-center space-x-2'>
+            <div className='w-3 h-3 bg-emerald-400 rounded-full' />
+            <span className='text-xs text-gray-600'>宽敞</span>
+            <div className='w-3 h-3 bg-amber-400 rounded-full' />
+            <span className='text-xs text-gray-600'>刚好</span>
+            <div className='w-3 h-3 bg-red-400 rounded-full' />
+            <span className='text-xs text-gray-600'>拥挤</span>
           </div>
         </div>
         {storages.length === 0 ? (
@@ -115,7 +149,7 @@ export function StorageList({ storages }: StorageListProps) {
             <p className='text-sm'>点击右上角按钮添加吧</p>
           </div>
         ) : (
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
             {storages.map(storage => (
               <StorageCard key={storage.id} point={storage} />
             ))}

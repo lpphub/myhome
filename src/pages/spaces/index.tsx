@@ -1,11 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { Archive, Heart, Package, Sparkles } from 'lucide-react'
+import { Archive, Heart, Package } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { LoadingState } from '@/components/LoadingState'
 import type { SortType, Storage } from '@/types/spaces'
 import { SpaceFilter } from './components/SpaceFilter'
 import { SpaceHeader } from './components/SpaceHeader'
-import { SpaceSidebar } from './components/SpaceSidebar'
 import { SpaceStats } from './components/SpaceStats'
 import { StorageList } from './components/StorageList'
 
@@ -21,7 +20,6 @@ const useMockData = async () => {
   const mockStorages: Storage[] = [
     {
       id: '1',
-      roomId: '1',
       name: '衣柜',
       type: 'closet',
       capacity: 60,
@@ -32,10 +30,11 @@ const useMockData = async () => {
       items: [],
       createdAt: '2024-12-01T00:00:00Z',
       updatedAt: '2024-12-01T00:00:00Z',
+      description: '卧室主衣柜，分三层',
+      location: '卧室',
     },
     {
       id: '2',
-      roomId: '1',
       name: '床头柜',
       type: 'cabinet',
       capacity: 20,
@@ -46,10 +45,11 @@ const useMockData = async () => {
       items: [],
       createdAt: '2024-12-01T00:00:00Z',
       updatedAt: '2024-12-01T00:00:00Z',
+      description: '双人床头柜',
+      location: '卧室',
     },
     {
       id: '3',
-      roomId: '1',
       name: '电视柜',
       type: 'cabinet',
       capacity: 40,
@@ -60,10 +60,11 @@ const useMockData = async () => {
       items: [],
       createdAt: '2024-12-01T00:00:00Z',
       updatedAt: '2024-12-01T00:00:00Z',
+      description: '客厅电视收纳柜',
+      location: '客厅',
     },
     {
       id: '4',
-      roomId: '1',
       name: '橱柜',
       type: 'cabinet',
       capacity: 80,
@@ -74,10 +75,11 @@ const useMockData = async () => {
       items: [],
       createdAt: '2024-12-01T00:00:00Z',
       updatedAt: '2024-12-01T00:00:00Z',
+      description: '整体厨房橱柜',
+      location: '厨房',
     },
     {
       id: '5',
-      roomId: '1',
       name: '冰箱',
       type: 'other',
       capacity: 50,
@@ -88,6 +90,8 @@ const useMockData = async () => {
       items: [],
       createdAt: '2024-12-01T00:00:00Z',
       updatedAt: '2024-12-01T00:00:00Z',
+      description: '双开门冰箱',
+      location: '厨房',
     },
   ]
 
@@ -214,24 +218,6 @@ export default function Spaces() {
     ]
   }, [storages])
 
-  const homeTips = [
-    {
-      icon: <Heart className='w-4 h-4 text-lemon-500' />,
-      text: '定期整理能让家居空间更加舒适',
-      id: 'tip-1',
-    },
-    {
-      icon: <Archive className='w-4 h-4 text-orange-500' />,
-      text: '保持70%以下的使用率更加舒适',
-      id: 'tip-2',
-    },
-    {
-      icon: <Sparkles className='w-4 h-4 text-purple-500' />,
-      text: '合理分类让找物品更轻松',
-      id: 'tip-3',
-    },
-  ]
-
   if (isLoading) {
     return <LoadingState type='loading' />
   }
@@ -251,12 +237,8 @@ export default function Spaces() {
           onTagToggle={handleTagToggle}
         />
 
-        <div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>
-          <div className='lg:col-span-3'>
-            <StorageList storages={filteredStorages} />
-          </div>
-
-          <SpaceSidebar tips={homeTips} />
+        <div className='grid grid-cols-1 gap-6'>
+          <StorageList storages={filteredStorages} />
         </div>
       </main>
     </div>
