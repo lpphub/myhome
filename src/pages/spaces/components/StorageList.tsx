@@ -4,14 +4,14 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
-import type { Storage } from '@/types/spaces'
+import type { StorageSchema } from '@/types/spaces'
 
 interface StorageListProps {
-  storages: Storage[]
+  storages: StorageSchema[]
 }
 
 export function StorageList({ storages }: StorageListProps) {
-  const StorageCard = ({ point }: { point: Storage }) => {
+  const StorageCard = ({ point }: { point: StorageSchema }) => {
     const [isHovered, setIsHovered] = useState(false)
 
     const formatLastOrganized = (date?: string) => {

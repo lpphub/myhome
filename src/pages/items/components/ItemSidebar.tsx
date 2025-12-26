@@ -27,17 +27,17 @@ export function ItemSidebar({
   const getCategoryBgColor = (category: ItemCategory) => {
     switch (category) {
       case 'clothing':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-cream-50 text-warmGray-800'
       case 'electronics':
-        return 'bg-purple-100 text-purple-800'
+        return 'bg-cream-50 text-warmGray-800'
       case 'books':
-        return 'bg-green-100 text-green-800'
+        return 'bg-cream-50 text-warmGray-800'
       case 'kitchen':
-        return 'bg-orange-100 text-orange-800'
+        return 'bg-cream-50 text-warmGray-800'
       case 'decor':
-        return 'bg-pink-100 text-pink-800'
+        return 'bg-cream-50 text-warmGray-800'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-cream-50 text-warmGray-800'
     }
   }
 

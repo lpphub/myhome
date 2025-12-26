@@ -2,7 +2,7 @@ import { Camera, MapPin, Package } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import type { Item, ViewMode } from '@/types/items'
-import { CATEGORY_ICONS, ITEM_CATEGORY_LABELS, ITEM_STATUS_LABELS } from '@/types/items'
+import { CATEGORY_ICONS, ITEM_STATUS_LABELS } from '@/types/items'
 
 interface ItemListProps {
   items: Item[]
@@ -14,49 +14,30 @@ export function ItemList({ items, viewMode }: ItemListProps) {
     const getStatusColor = (status: string) => {
       switch (status) {
         case 'active':
-          return 'bg-lime-100 text-lime-800'
+          return 'bg-lime-100 text-lime-700 border-lime-200'
         case 'inactive':
-          return 'bg-amber-100 text-amber-800'
+          return 'bg-amber-100 text-amber-700 border-amber-200'
         case 'lost':
-          return 'bg-rose-100 text-rose-800'
+          return 'bg-rose-100 text-rose-700 border-rose-200'
         case 'donated':
-          return 'bg-purple-100 text-purple-800'
+          return 'bg-purple-100 text-purple-700 border-purple-200'
         default:
-          return 'bg-gray-100 text-gray-800'
-      }
-    }
-
-    const getCategoryColor = (category: string) => {
-      switch (category) {
-        case 'clothing':
-          return 'bg-blue-50 border-blue-200'
-        case 'electronics':
-          return 'bg-purple-50 border-purple-200'
-        case 'books':
-          return 'bg-green-50 border-green-200'
-        case 'kitchen':
-          return 'bg-orange-50 border-orange-200'
-        case 'decor':
-          return 'bg-pink-50 border-pink-200'
-        default:
-          return 'bg-gray-50 border-gray-200'
+          return 'bg-gray-100 text-gray-700 border-gray-200'
       }
     }
 
     if (itemViewMode === 'list') {
       return (
-        <Card className='border-cream-200 item-hover'>
+        <Card className='bg-white border-cream-200 item-hover'>
           <CardContent className='p-4'>
             <div className='flex items-center space-x-4'>
-              <div
-                className={`w-16 h-16 rounded-lg flex items-center justify-center text-2xl ${getCategoryColor(item.category)}`}
-              >
+              <div className='w-14 h-14 rounded-lg flex items-center justify-center text-3xl bg-cream-50'>
                 {CATEGORY_ICONS[item.category]}
               </div>
               <div className='flex-1 min-w-0'>
                 <div className='flex items-center space-x-2 mb-1'>
                   <h3 className='font-semibold text-warmGray-800 truncate'>{item.name}</h3>
-                  <Badge className={`text-xs ${getStatusColor(item.status)}`}>
+                  <Badge className={`text-xs border ${getStatusColor(item.status)}`}>
                     {ITEM_STATUS_LABELS[item.status]}
                   </Badge>
                 </div>
@@ -82,18 +63,14 @@ export function ItemList({ items, viewMode }: ItemListProps) {
     }
 
     return (
-      <Card
-        className={`border-cream-200 cursor-pointer card-hover ${getCategoryColor(item.category)}`}
-      >
+      <Card className='bg-white border-cream-200 cursor-pointer card-hover'>
         <CardContent className='p-4'>
           <div className='flex flex-col h-full'>
             <div className='flex items-start justify-between mb-3'>
-              <div
-                className={`w-12 h-12 rounded-lg flex items-center justify-center text-2xl ${getCategoryColor(item.category)}`}
-              >
+              <div className='w-14 h-14 rounded-lg flex items-center justify-center text-3xl bg-cream-50'>
                 {CATEGORY_ICONS[item.category]}
               </div>
-              <Badge className={`text-xs ${getStatusColor(item.status)}`}>
+              <Badge className={`text-xs border ${getStatusColor(item.status)}`}>
                 {ITEM_STATUS_LABELS[item.status]}
               </Badge>
             </div>
@@ -109,8 +86,9 @@ export function ItemList({ items, viewMode }: ItemListProps) {
                 <Package className='w-3 h-3 mr-1' />
                 {item.quantity}
               </span>
-              <span className='px-2 py-0.5 bg-white/60 rounded text-warmGray-600'>
-                {ITEM_CATEGORY_LABELS[item.category]}
+              <span className='flex items-center'>
+                <MapPin className='w-3 h-3 mr-1' />
+                {item.location || '未设置位置'}
               </span>
               {item.price && <span className='text-honey-600 font-medium'>¥{item.price}</span>}
             </div>

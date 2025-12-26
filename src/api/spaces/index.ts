@@ -1,4 +1,4 @@
-import type { Storage, StorageItem } from '@/types/spaces'
+import type { StorageForm, StorageItem, StorageSchema } from '@/types/spaces'
 import httpClient from '@/utils/request'
 
 enum SpacesApi {
@@ -10,18 +10,18 @@ enum SpacesApi {
 }
 
 export const getStorages = () =>
-  httpClient.get<Storage[]>({
+  httpClient.get<StorageSchema[]>({
     url: SpacesApi.GetStorages,
   })
 
-export const createStorage = (data: Partial<Storage>) =>
-  httpClient.post<Storage>({
+export const createStorage = (data: StorageForm) =>
+  httpClient.post<StorageSchema>({
     url: SpacesApi.CreateStorage,
     data,
   })
 
-export const updateStorage = (id: string, data: Partial<Storage>) =>
-  httpClient.patch<Storage>({
+export const updateStorage = (id: string, data: Partial<StorageForm>) =>
+  httpClient.patch<StorageSchema>({
     url: SpacesApi.UpdateStorage.replace(':id', id),
     data,
   })

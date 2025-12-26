@@ -1,9 +1,9 @@
 import { Archive } from 'lucide-react'
-import type { Storage } from '@/types/spaces'
+import type { StorageSchema } from '@/types/spaces'
 import { AddSpaceDrawer } from './AddSpaceDrawer'
 
 interface SpaceHeaderProps {
-  onAddStorage: (storage: Storage) => void
+  onAddStorage: (storage: StorageSchema) => void
 }
 
 export function SpaceHeader({ onAddStorage }: SpaceHeaderProps) {

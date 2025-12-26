@@ -1,11 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { Archive, FileText, Ruler, Tag } from 'lucide-react'
+import { Archive, FileText, Image as ImageIcon, Ruler, Tag as TagIcon, X } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { z } from 'zod'
 import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -25,53 +30,132 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { Textarea } from '@/components/ui/textarea'
-import type { Storage } from '@/types/spaces'
-import { type AddStorageForm as AddStorageFormType, STORAGE_TYPE_LABELS } from '@/types/spaces'
+import type { StorageSchema } from '@/types/spaces'
+import { STORAGE_TYPE_LABELS, storageFormSchema, type StorageFormValues } from '@/types/spaces'
+import type { Tag } from '@/types/tags'
+import { TAG_COLOR_CLASSES } from '@/types/tags'
+import { Badge } from '@/components/ui/badge'
 
-const storageSchema = z.object({
-  name: z.string().min(1, '请输入收纳点名称'),
-  type: z.enum(['closet', 'shoe-rack', 'bookshelf', 'cabinet', 'drawer', 'hanger', 'other']),
-  capacity: z.number().min(1, '请输入容量'),
-  description: z.string().optional(),
-  location: z.string().optional(),
-})
-
-type StorageFormData = z.infer<typeof storageSchema>
+const MOCK_TAGS: Tag[] = [
+  {
+    id: '1',
+    name: '衣物',
+    category: 'type',
+    color: 'honey',
+    itemCount: 10,
+    createdAt: '2024-12-01T00:00:00Z',
+    updatedAt: '2024-12-01T00:00:00Z',
+  },
+  {
+    id: '2',
+    name: '家具',
+    category: 'type',
+    color: 'lemon',
+    itemCount: 5,
+    createdAt: '2024-12-01T00:00:00Z',
+    updatedAt: '2024-12-01T00:00:00Z',
+  },
+  {
+    id: '3',
+    name: '卧室',
+    category: 'room',
+    color: 'coral',
+    itemCount: 8,
+    createdAt: '2024-12-01T00:00:00Z',
+    updatedAt: '2024-12-01T00:00:00Z',
+  },
+  {
+    id: '4',
+    name: '厨房',
+    category: 'room',
+    color: 'lavender',
+    itemCount: 6,
+    createdAt: '2024-12-01T00:00:00Z',
+    updatedAt: '2024-12-01T00:00:00Z',
+  },
+  {
+    id: '5',
+    name: '客厅',
+    category: 'room',
+    color: 'cream',
+    itemCount: 4,
+    createdAt: '2024-12-01T00:00:00Z',
+    updatedAt: '2024-12-01T00:00:00Z',
+  },
+  {
+    id: '6',
+    name: '电器',
+    category: 'type',
+    color: 'pink',
+    itemCount: 3,
+    createdAt: '2024-12-01T00:00:00Z',
+    updatedAt: '2024-12-01T00:00:00Z',
+  },
+  {
+    id: '7',
+    name: '厨具',
+    category: 'type',
+    color: 'mint',
+    itemCount: 7,
+    createdAt: '2024-12-01T00:00:00Z',
+    updatedAt: '2024-12-01T00:00:00Z',
+  },
+  {
+    id: '8',
+    name: '日常',
+    category: 'functional',
+    color: 'honey',
+    itemCount: 9,
+    createdAt: '2024-12-01T00:00:00Z',
+    updatedAt: '2024-12-01T00:00:00Z',
+  },
+]
 
 interface AddSpaceDrawerProps {
-  onAddStorage: (storage: Storage) => void
+  onAddStorage: (storage: StorageSchema) => void
 }
 
 export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [imagePreview, setImagePreview] = useState<string>('')
+  const [imageUrlInput, setImageUrlInput] = useState<string>('')
 
-  const storageForm = useForm<StorageFormData>({
-    resolver: zodResolver(storageSchema),
+  const storageForm = useForm<StorageFormValues>({
+    resolver: zodResolver(storageFormSchema),
     defaultValues: {
       name: '',
       type: 'cabinet',
       capacity: 20,
       description: '',
+      tags: [],
+      image: '',
+      location: '',
     },
   })
 
   const { mutate: mutateStorage, isPending: isStoragePending } = useMutation({
-    mutationFn: (data: AddStorageFormType) => {
+    mutationFn: (data: StorageFormValues) => {
+      const formDataWithTags = {
+        ...data,
+        tags: selectedTags,
+        image: imagePreview || data.image,
+      }
       return Promise.resolve({
         id: Date.now().toString(),
-        ...data,
+        ...formDataWithTags,
         itemCount: 0,
         utilization: 0,
         items: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-      } as Storage)
+      } as StorageSchema)
     },
     onSuccess: storage => {
       onAddStorage(storage)
       toast.success('收纳空间添加成功！')
       setIsOpen(false)
-      storageForm.reset()
+      handleReset()
     },
     onError: error => {
       toast.error('添加失败，请重试')
@@ -79,14 +163,53 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
     },
   })
 
-  const onStorageSubmit = (data: StorageFormData) => {
-    mutateStorage(data as AddStorageFormType)
+  const onStorageSubmit = (data: StorageFormValues) => {
+    mutateStorage(data)
+  }
+
+  const handleReset = () => {
+    storageForm.reset()
+    setSelectedTags([])
+    setImagePreview('')
+    setImageUrlInput('')
+  }
+
+  const handleTagToggle = (tagName: string) => {
+    setSelectedTags(prev =>
+      prev.includes(tagName) ? prev.filter(t => t !== tagName) : [...prev, tagName]
+    )
+  }
+
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = event => {
+        const base64 = event.target?.result as string
+        setImagePreview(base64)
+        storageForm.setValue('image', base64)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleRemoveImage = () => {
+    setImagePreview('')
+    setImageUrlInput('')
+    storageForm.setValue('image', '')
+  }
+
+  const handleUrlInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const url = e.target.value
+    setImageUrlInput(url)
+    setImagePreview(url)
+    storageForm.setValue('image', url)
   }
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open)
-    if (open) {
-      storageForm.reset()
+    if (!open) {
+      handleReset()
     }
   }
 
@@ -137,13 +260,13 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
 
           <div className='grid gap-3'>
             <Label htmlFor='storage-type' className='flex items-center gap-2'>
-              <Tag className='w-4 h-4 text-warmGray-500' />
+              <TagIcon className='w-4 h-4 text-warmGray-500' />
               收纳类型
             </Label>
             <Select
               value={storageForm.watch('type')}
               onValueChange={value =>
-                storageForm.setValue('type', value as StorageFormData['type'])
+                storageForm.setValue('type', value as StorageFormValues['type'])
               }
             >
               <SelectTrigger className='w-full border-warmGray-300 focus:border-honey-400'>
@@ -204,6 +327,111 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
               <p className='text-sm text-coral-500'>
                 {storageForm.formState.errors.description.message}
               </p>
+            )}
+          </div>
+
+          <div className='grid gap-3'>
+            <Label className='flex items-center gap-2'>
+              <TagIcon className='w-4 h-4 text-warmGray-500' />
+              标签
+            </Label>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  type='button'
+                  variant='outline'
+                  className='w-full justify-between border-warmGray-300 focus:border-honey-400'
+                >
+                  {selectedTags.length > 0 ? `已选择 ${selectedTags.length} 个标签` : '选择标签'}
+                  <TagIcon className='w-4 h-4 opacity-50' />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className='bg-white border-honey-200 shadow-warm-sm min-w-(--radix-dropdown-menu-content-available-width)'>
+                {MOCK_TAGS.map(tag => (
+                  <DropdownMenuCheckboxItem
+                    key={tag.id}
+                    checked={selectedTags.includes(tag.name)}
+                    onCheckedChange={() => handleTagToggle(tag.name)}
+                  >
+                    <div
+                      className={`flex items-center gap-2 ${TAG_COLOR_CLASSES[tag.color].bg} px-2 py-1 rounded`}
+                    >
+                      <span className={TAG_COLOR_CLASSES[tag.color].text}>{tag.name}</span>
+                    </div>
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            {selectedTags.length > 0 && (
+              <div className='flex flex-wrap gap-2 mt-2'>
+                {selectedTags.map(tag => (
+                  <Badge
+                    key={tag}
+                    variant='outline'
+                    className='flex items-center gap-1 bg-honey-100 text-honey-700 border-honey-200'
+                  >
+                    #{tag}
+                    <button
+                      type='button'
+                      onClick={() => handleTagToggle(tag)}
+                      className='ml-1 hover:text-red-500'
+                    >
+                      <X className='w-3 h-3' />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className='grid gap-3'>
+            <Label className='flex items-center gap-2'>
+              <ImageIcon className='w-4 h-4 text-warmGray-500' />
+              图片
+            </Label>
+            {imagePreview ? (
+              <div className='relative'>
+                <img
+                  src={imagePreview}
+                  alt='预览'
+                  className='w-full h-48 object-cover rounded-lg border border-warmGray-200'
+                />
+                <Button
+                  type='button'
+                  variant='destructive'
+                  size='sm'
+                  onClick={handleRemoveImage}
+                  className='absolute top-2 right-2'
+                >
+                  <X className='w-4 h-4 mr-1' />
+                  删除
+                </Button>
+              </div>
+            ) : (
+              <div className='border-2 border-dashed border-warmGray-300 rounded-lg p-6'>
+                <div className='flex flex-col items-center gap-4'>
+                  <ImageIcon className='w-12 h-12 text-warmGray-400' />
+                  <div className='text-center'>
+                    <p className='text-sm text-warmGray-600 mb-2'>上传图片或输入图片 URL</p>
+                    <Input
+                      type='file'
+                      accept='image/*'
+                      onChange={handleImageFileChange}
+                      className='max-w-xs mx-auto'
+                    />
+                  </div>
+                  <div className='w-full flex items-center gap-2'>
+                    <span className='text-sm text-warmGray-400'>或</span>
+                  </div>
+                  <Input
+                    type='text'
+                    placeholder='输入图片 URL'
+                    value={imageUrlInput}
+                    onChange={handleUrlInputChange}
+                    className='w-full'
+                  />
+                </div>
+              </div>
             )}
           </div>
 

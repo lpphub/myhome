@@ -98,8 +98,8 @@ export function ItemFilter({
       </div>
 
       {/* Tag Filters */}
-      <div className='mt-4 pt-4 border-t border-gray-200'>
-        <p className='text-sm text-gray-600 mb-3 flex items-center'>
+      <div className='mt-4 pt-4 border-t border-cream-200'>
+        <p className='text-sm text-warmGray-600 mb-3 flex items-center'>
           <Tag className='w-4 h-4 mr-2' />
           按标签筛选:
         </p>
@@ -109,10 +109,10 @@ export function ItemFilter({
               type='button'
               key={tag.id}
               onClick={() => onTagToggle(tag.name)}
-              className={`px-3 py-2 text-sm rounded-xl border transition-all duration-200 ${
+              className={`px-3 py-1.5 text-sm rounded-lg border transition-all duration-200 ${
                 selectedTags.includes(tag.name)
-                  ? 'bg-linear-to-r from-coral-100 to-coral-200 text-coral-700 border-coral-300 shadow-sm'
-                  : 'bg-white/80 text-gray-600 border-almond-200 hover:border-coral-300 hover:bg-coral-50'
+                  ? 'bg-honey-100 text-honey-700 border-honey-300'
+                  : 'bg-white text-warmGray-600 border-cream-300 hover:border-honey-300 hover:bg-honey-50'
               }`}
             >
               #{tag.name}

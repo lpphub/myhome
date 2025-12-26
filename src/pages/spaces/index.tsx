@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Archive, Heart, Package } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { LoadingState } from '@/components/LoadingState'
-import type { SortType, Storage } from '@/types/spaces'
+import type { SortType, StorageSchema } from '@/types/spaces'
 import { SpaceFilter } from './components/SpaceFilter'
 import { SpaceHeader } from './components/SpaceHeader'
 import { SpaceStats } from './components/SpaceStats'
@@ -17,7 +17,7 @@ interface SpaceStat {
 }
 
 const useMockData = async () => {
-  const mockStorages: Storage[] = [
+  const mockStorages: StorageSchema[] = [
     {
       id: '1',
       name: '衣柜',
@@ -95,14 +95,14 @@ const useMockData = async () => {
     },
   ]
 
-  return new Promise<{ data: Storage[] }>(resolve => {
+  return new Promise<{ data: StorageSchema[] }>(resolve => {
     setTimeout(() => {
       resolve({ data: mockStorages })
     }, 500)
   })
 }
 
-const sortStorages = (storages: Storage[], sortType: SortType): Storage[] => {
+const sortStorages = (storages: StorageSchema[], sortType: SortType): StorageSchema[] => {
   const sorted = [...storages]
   switch (sortType) {
     case 'utilization-desc':
@@ -132,7 +132,7 @@ export default function Spaces() {
     queryFn: useMockData,
   })
 
-  const [storages, setStorages] = useState<Storage[]>([])
+  const [storages, setStorages] = useState<StorageSchema[]>([])
   const [sortType, setSortType] = useState<SortType>('utilization-desc')
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedTags, setSelectedTags] = useState<string[]>([])
@@ -152,7 +152,7 @@ export default function Spaces() {
   const tags = useMemo(() => {
     const allTags = storages.reduce((acc, storage) => {
       if (storage.tags && storage.tags.length > 0) {
-        storage.tags.forEach(tag => {
+        storage.tags.forEach((tag: string) => {
           acc.add(tag)
         })
       }
@@ -182,7 +182,7 @@ export default function Spaces() {
     return sortStorages(filtered, sortType)
   }, [storages, searchTerm, selectedTags, sortType])
 
-  const handleAddStorage = (storage: Storage) => {
+  const handleAddStorage = (storage: StorageSchema) => {
     setStorages(prev => [...prev, storage])
   }
 
