@@ -1,5 +1,4 @@
 import { createBrowserRouter } from 'react-router'
-import { AuthGuard } from '@/components/AuthGuard'
 import MainLayout from '@/components/MainLayout'
 import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
@@ -9,6 +8,7 @@ import Items from '@/pages/items'
 import Spaces from '@/pages/spaces'
 import TestComponents from '@/pages/TestUI'
 import Tags from '@/pages/tags'
+import { AuthGuard } from './guard'
 
 export const router = createBrowserRouter([
   {
@@ -39,19 +39,11 @@ export const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: (
-      <AuthGuard requireAuth={false}>
-        <Login />
-      </AuthGuard>
-    ),
+    element: <Login />,
   },
   {
     path: '/register',
-    element: (
-      <AuthGuard requireAuth={false}>
-        <Register />
-      </AuthGuard>
-    ),
+    element: <Register />,
   },
   {
     path: '*',
