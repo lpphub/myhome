@@ -14,7 +14,7 @@ export function ItemHeader({ onAddItem }: ItemHeaderProps) {
           <Package className='w-8 h-8 text-pink-600' />
         </div>
         <div>
-          <h1 className='text-3xl font-bold text-warmGray-600 mb-2'>物品收纳</h1>
+          <h1 className='text-3xl font-bold text-warmGray-600 mb-2'>收纳物品</h1>
           <p className='text-warmGray-400'>记录每一个珍爱的物品</p>
         </div>
       </div>

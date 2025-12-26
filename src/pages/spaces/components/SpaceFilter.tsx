@@ -67,10 +67,10 @@ export function SpaceFilter({
       </div>
 
       {/* Tag Filters */}
-      <div className='mt-4 pt-4'>
+      <div className='mt-4 pt-4 border-t border-gray-200'>
         <p className='text-sm text-gray-600 mb-3 flex items-center'>
           <Tag className='w-4 h-4 mr-2' />
-          按标签筛选:
+          按便签筛选:
         </p>
         <div className='flex flex-wrap gap-2'>
           {tags.slice(0, 8).map(tag => (

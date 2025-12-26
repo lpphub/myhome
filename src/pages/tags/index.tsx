@@ -1,113 +1,349 @@
-import { Clock, Heart, Home, Sparkles, Tag } from 'lucide-react'
-import { Link } from 'react-router'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect, useMemo, useState } from 'react'
+
+import { LoadingState } from '@/components/LoadingState'
+import type { SortByType, Tag, TagCategory } from '@/types/tags'
+import { TagFilter } from './components/TagFilter'
+import { TagHeader } from './components/TagHeader'
+import { TagSection } from './components/TagSection'
+
+const useMockData = async () => {
+  const mockTags: Tag[] = [
+    {
+      id: 'room-1',
+      name: '卧室',
+      category: 'room',
+      color: 'honey',
+      itemCount: 25,
+      description: '主卧和次卧的物品',
+      createdAt: '2024-12-20T00:00:00Z',
+      updatedAt: '2024-12-20T00:00:00Z',
+    },
+    {
+      id: 'room-2',
+      name: '厨房',
+      category: 'room',
+      color: 'lemon',
+      itemCount: 42,
+      description: '厨具、餐具和食材',
+      createdAt: '2024-12-19T00:00:00Z',
+      updatedAt: '2024-12-19T00:00:00Z',
+    },
+    {
+      id: 'room-3',
+      name: '书房',
+      category: 'room',
+      color: 'lavender',
+      itemCount: 18,
+      description: '书籍、文具和办公用品',
+      createdAt: '2024-12-18T00:00:00Z',
+      updatedAt: '2024-12-18T00:00:00Z',
+    },
+    {
+      id: 'room-4',
+      name: '客厅',
+      category: 'room',
+      color: 'coral',
+      itemCount: 35,
+      description: '客厅家具和装饰品',
+      createdAt: '2024-12-17T00:00:00Z',
+      updatedAt: '2024-12-17T00:00:00Z',
+    },
+    {
+      id: 'room-5',
+      name: '卫生间',
+      category: 'room',
+      color: 'cream',
+      itemCount: 15,
+      description: '洗漱用品和毛巾',
+      createdAt: '2024-12-16T00:00:00Z',
+      updatedAt: '2024-12-16T00:00:00Z',
+    },
+    {
+      id: 'room-6',
+      name: '阳台',
+      category: 'room',
+      color: 'mint',
+      itemCount: 8,
+      description: '植物和园艺用品',
+      createdAt: '2024-12-15T00:00:00Z',
+      updatedAt: '2024-12-15T00:00:00Z',
+    },
+    {
+      id: 'type-1',
+      name: '零食',
+      category: 'type',
+      color: 'lemon',
+      itemCount: 28,
+      description: '各种零食和零食包装',
+      createdAt: '2024-12-20T00:00:00Z',
+      updatedAt: '2024-12-20T00:00:00Z',
+    },
+    {
+      id: 'type-2',
+      name: '玩具',
+      category: 'type',
+      color: 'coral',
+      itemCount: 12,
+      description: '儿童玩具和游戏',
+      createdAt: '2024-12-19T00:00:00Z',
+      updatedAt: '2024-12-19T00:00:00Z',
+    },
+    {
+      id: 'type-3',
+      name: '主食',
+      category: 'type',
+      color: 'honey',
+      itemCount: 33,
+      description: '米、面、油等主食',
+      createdAt: '2024-12-18T00:00:00Z',
+      updatedAt: '2024-12-18T00:00:00Z',
+    },
+    {
+      id: 'type-4',
+      name: '饮品',
+      category: 'type',
+      color: 'lavender',
+      itemCount: 20,
+      description: '饮料、茶和咖啡',
+      createdAt: '2024-12-17T00:00:00Z',
+      updatedAt: '2024-12-17T00:00:00Z',
+    },
+    {
+      id: 'type-5',
+      name: '文具',
+      category: 'type',
+      color: 'cream',
+      itemCount: 16,
+      description: '笔、本子和办公用品',
+      createdAt: '2024-12-16T00:00:00Z',
+      updatedAt: '2024-12-16T00:00:00Z',
+    },
+    {
+      id: 'type-6',
+      name: '数码',
+      category: 'type',
+      color: 'pink',
+      itemCount: 8,
+      description: '电子产品和配件',
+      createdAt: '2024-12-15T00:00:00Z',
+      updatedAt: '2024-12-15T00:00:00Z',
+    },
+    {
+      id: 'type-7',
+      name: '化妆品',
+      category: 'type',
+      color: 'coral',
+      itemCount: 22,
+      description: '护肤品和彩妆',
+      createdAt: '2024-12-14T00:00:00Z',
+      updatedAt: '2024-12-14T00:00:00Z',
+    },
+    {
+      id: 'type-8',
+      name: '书籍',
+      category: 'type',
+      color: 'lavender',
+      itemCount: 45,
+      description: '各类书籍和杂志',
+      createdAt: '2024-12-13T00:00:00Z',
+      updatedAt: '2024-12-13T00:00:00Z',
+    },
+    {
+      id: 'functional-1',
+      name: '待办事项',
+      category: 'functional',
+      color: 'coral',
+      itemCount: 12,
+      description: '记录需要完成的任务',
+      createdAt: '2024-12-12T00:00:00Z',
+      updatedAt: '2024-12-12T00:00:00Z',
+    },
+    {
+      id: 'functional-2',
+      name: '购物清单',
+      category: 'functional',
+      color: 'lemon',
+      itemCount: 28,
+      description: '需要购买的物品列表',
+      createdAt: '2024-12-11T00:00:00Z',
+      updatedAt: '2024-12-11T00:00:00Z',
+    },
+    {
+      id: 'functional-3',
+      name: '备忘录',
+      category: 'functional',
+      color: 'lavender',
+      itemCount: 8,
+      description: '记录重要的提醒信息',
+      createdAt: '2024-12-10T00:00:00Z',
+      updatedAt: '2024-12-10T00:00:00Z',
+    },
+    {
+      id: 'functional-4',
+      name: '生日提醒',
+      category: 'functional',
+      color: 'honey',
+      itemCount: 15,
+      description: '亲友的生日和纪念日',
+      createdAt: '2024-12-09T00:00:00Z',
+      updatedAt: '2024-12-09T00:00:00Z',
+    },
+    {
+      id: 'functional-5',
+      name: '常用地址',
+      category: 'functional',
+      color: 'cream',
+      itemCount: 6,
+      description: '记录常用的家庭地址',
+      createdAt: '2024-12-08T00:00:00Z',
+      updatedAt: '2024-12-08T00:00:00Z',
+    },
+    {
+      id: 'functional-6',
+      name: '保修信息',
+      category: 'functional',
+      color: 'pink',
+      itemCount: 10,
+      description: '家电和产品的保修期记录',
+      createdAt: '2024-12-07T00:00:00Z',
+      updatedAt: '2024-12-07T00:00:00Z',
+    },
+  ]
+
+  return new Promise<{ data: Tag[] }>(resolve => {
+    setTimeout(() => {
+      resolve({ data: mockTags })
+    }, 500)
+  })
+}
+
+const sortTags = (tags: Tag[], sortBy: SortByType): Tag[] => {
+  const sorted = [...tags]
+  switch (sortBy) {
+    case 'name-asc':
+      return sorted.sort((a, b) => a.name.localeCompare(b.name))
+    case 'name-desc':
+      return sorted.sort((a, b) => b.name.localeCompare(a.name))
+    case 'count-asc':
+      return sorted.sort((a, b) => a.itemCount - b.itemCount)
+    case 'count-desc':
+      return sorted.sort((a, b) => b.itemCount - a.itemCount)
+    case 'date-desc':
+      return sorted.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    default:
+      return sorted
+  }
+}
 
 export default function Tags() {
-  const title = '分类标签'
-  const description = '分类标签管理'
-  const Icon = Tag
-  const details = '这里将帮助您管理物品分类标签，让收纳更加井井有条'
+  const { data: mockData, isLoading } = useQuery({
+    queryKey: ['tags'],
+    queryFn: useMockData,
+  })
+
+  const [tags, setTags] = useState<Tag[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState<TagCategory | 'all'>('all')
+  const [sortBy, setSortBy] = useState<SortByType>('date-desc')
+
+  useEffect(() => {
+    if (mockData?.data) {
+      setTags(mockData.data)
+    }
+  }, [mockData])
+
+  const filteredTags = useMemo(() => {
+    let filtered = tags
+
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase()
+      filtered = filtered.filter(
+        tag =>
+          tag.name.toLowerCase().includes(term) || tag.description?.toLowerCase().includes(term)
+      )
+    }
+
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(tag => tag.category === selectedCategory)
+    }
+
+    return sortTags(filtered, sortBy)
+  }, [tags, searchTerm, selectedCategory, sortBy])
+
+  const roomTags = useMemo(
+    () => filteredTags.filter(tag => tag.category === 'room'),
+    [filteredTags]
+  )
+  const typeTags = useMemo(
+    () => filteredTags.filter(tag => tag.category === 'type'),
+    [filteredTags]
+  )
+  const functionalTags = useMemo(
+    () => filteredTags.filter(tag => tag.category === 'functional'),
+    [filteredTags]
+  )
+
+  const handleAddTag = (tag: Tag) => {
+    setTags(prev => [tag, ...prev])
+  }
+
+  const handleDeleteTag = (tagId: string) => {
+    setTags(prev => prev.filter(tag => tag.id !== tagId))
+  }
+
+  const handleEditTag = (tag: Tag) => {
+    console.log('Edit tag:', tag)
+  }
+
+  if (isLoading) {
+    return <LoadingState type='loading' />
+  }
 
   return (
-    <div className='min-h-screen pt-20 pb-20 md:pb-8'>
-      <div className='fixed inset-0 overflow-hidden pointer-events-none'>
-        <div className='absolute top-20 right-10 w-64 h-64 bg-linear-to-bl from-honey-200/20 to-transparent rounded-full blur-3xl'></div>
-        <div className='absolute bottom-20 left-10 w-48 h-48 bg-linear-to-tr from-coral-200/20 to-transparent rounded-full blur-2xl'></div>
-        <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-linear-to-br from-coral-200/10 to-transparent rounded-full blur-3xl'></div>
-      </div>
+    <div className='min-h-screen'>
+      <main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6'>
+        <TagHeader onAddTag={handleAddTag} />
 
-      <div className='relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
-        <div className='bg-white/80 backdrop-blur-lg rounded-3xl shadow-warm-xl border border-honey-200 p-8 md:p-12'>
-          <div className='text-center mb-8'>
-            <div className='inline-flex items-center justify-center w-24 h-24 bg-linear-to-br from-honey-400 to-honey-600 rounded-3xl shadow-lg mb-6 animate-bounce duration-3000'>
-              <Icon className='w-12 h-12 text-white' />
-            </div>
+        <TagFilter
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+        />
 
-            <h1 className='text-4xl font-bold text-warmGray-800 mb-2 flex items-center justify-center space-x-3'>
-              <span>{title}</span>
-              <div className='animate-pulse duration-2000'>
-                <Heart className='w-8 h-8 text-coral-400' />
-              </div>
-            </h1>
+        {selectedCategory === 'all' || selectedCategory === 'room' ? (
+          <TagSection
+            title='房间 便签区'
+            category='room'
+            tags={selectedCategory === 'all' ? roomTags : filteredTags}
+            onDeleteTag={handleDeleteTag}
+            onEditTag={handleEditTag}
+          />
+        ) : null}
 
-            <p className='text-xl text-warmGray-600 mb-4'>{description}</p>
+        {selectedCategory === 'all' || selectedCategory === 'type' ? (
+          <TagSection
+            title='类型 便签区'
+            category='type'
+            tags={selectedCategory === 'all' ? typeTags : filteredTags}
+            onDeleteTag={handleDeleteTag}
+            onEditTag={handleEditTag}
+          />
+        ) : null}
 
-            <div className='inline-flex items-center space-x-2 bg-linear-to-r from-honey-100 to-coral-100 px-6 py-3 rounded-2xl border border-honey-200'>
-              <div className='animate-pulse duration-2000'>
-                <Sparkles className='w-5 h-5 text-honey-600' />
-              </div>
-              <span className='text-lg font-medium text-warmGray-700'>敬请期待</span>
-              <div className='animate-pulse duration-2000' style={{ animationDelay: '0.5s' }}>
-                <Sparkles className='w-5 h-5 text-coral-600' />
-              </div>
-            </div>
-          </div>
-
-          <div className='bg-linear-to-r from-cream-50 to-honey-50 rounded-2xl p-6 mb-8 border border-cream-200'>
-            <p className='text-warmGray-700 text-center leading-relaxed'>{details}</p>
-          </div>
-
-          <div className='mb-8'>
-            <div className='flex items-center justify-between mb-3'>
-              <span className='text-sm font-medium text-warmGray-600'>开发进度</span>
-              <span className='text-sm font-medium text-honey-600'>进行中...</span>
-            </div>
-            <div className='w-full bg-cream-200 rounded-full h-3 overflow-hidden'>
-              <div
-                className='bg-linear-to-r from-honey-400 to-coral-400 h-3 rounded-full transition-all duration-1000 animate-pulse'
-                style={{ width: '65%' }}
-              />
-            </div>
-          </div>
-
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-            <button
-              type='button'
-              className='p-4 bg-white/60 rounded-xl border border-cream-200 hover:shadow-warm-sm transition-all duration-300 text-center group'
-            >
-              <Clock className='w-6 h-6 text-honey-500 mx-auto mb-2 group-hover:scale-110 transition-transform' />
-              <span className='text-sm text-warmGray-700'>预计完成时间</span>
-              <p className='text-xs text-warmGray-500 mt-1'>2024年2月</p>
-            </button>
-
-            <button
-              type='button'
-              className='p-4 bg-white/60 rounded-xl border border-cream-200 hover:shadow-warm-sm transition-all duration-300 text-center group'
-            >
-              <Sparkles className='w-6 h-6 text-coral-500 mx-auto mb-2 group-hover:rotate-12 transition-transform' />
-              <span className='text-sm text-warmGray-700'>新功能</span>
-              <p className='text-xs text-warmGray-500 mt-1'>正在开发</p>
-            </button>
-
-            <button
-              type='button'
-              className='p-4 bg-white/60 rounded-xl border border-cream-200 hover:shadow-warm-sm transition-all duration-300 text-center group'
-            >
-              <Heart className='w-6 h-6 text-coral-500 mx-auto mb-2 group-hover:scale-110 transition-transform' />
-              <span className='text-sm text-warmGray-700'>用户体验</span>
-              <p className='text-xs text-warmGray-500 mt-1'>优先保证</p>
-            </button>
-          </div>
-
-          <div className='text-center'>
-            <Link
-              to='/'
-              className='inline-flex items-center space-x-3 bg-linear-to-r from-coral-400 to-coral-500 text-white px-8 py-4 rounded-2xl hover:from-coral-500 hover:to-coral-600 transition-all duration-300 shadow-lg hover:shadow-xl group'
-            >
-              <Home className='w-5 h-5 group-hover:scale-110 transition-transform' />
-              <span className='font-medium'>返回首页</span>
-              <div className='animate-pulse duration-1500'>
-                <Sparkles className='w-4 h-4' />
-              </div>
-            </Link>
-          </div>
-        </div>
-
-        <div className='text-center mt-8'>
-          <p className='text-warmGray-500 text-sm'>
-            感谢您的耐心等待，我们正在努力为您打造更好的收纳体验 ✨
-          </p>
-        </div>
-      </div>
+        {selectedCategory === 'all' || selectedCategory === 'functional' ? (
+          <TagSection
+            title='功能 便签区'
+            category='functional'
+            tags={selectedCategory === 'all' ? functionalTags : filteredTags}
+            onDeleteTag={handleDeleteTag}
+            onEditTag={handleEditTag}
+          />
+        ) : null}
+      </main>
     </div>
   )
 }

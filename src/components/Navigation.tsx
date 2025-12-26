@@ -38,7 +38,7 @@ const navItems: NavItem[] = [
   },
   {
     id: 'items',
-    label: '物品收纳',
+    label: '收纳物品',
     icon: Package,
     path: '/items',
     description: '收纳物品展示',
