@@ -39,11 +39,19 @@ export const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <Login />,
+    element: (
+      <AuthGuard requireAuth={false}>
+        <Login />
+      </AuthGuard>
+    ),
   },
   {
     path: '/register',
-    element: <Register />,
+    element: (
+      <AuthGuard requireAuth={false}>
+        <Register />
+      </AuthGuard>
+    ),
   },
   {
     path: '*',

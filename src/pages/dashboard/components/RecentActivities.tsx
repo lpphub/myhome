@@ -1,6 +1,6 @@
 import { Sparkles } from 'lucide-react'
+import type { ActivityType, DashboardActivity } from '@/api/dashboard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type { DashboardActivity, ActivityType } from '@/api/dashboard'
 
 interface RecentActivitiesProps {
   activities: DashboardActivity[]

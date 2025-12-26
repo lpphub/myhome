@@ -1,5 +1,4 @@
-import { Heart, Home, Moon, Plus, Search, Sun } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Heart, Home, Moon, Sun } from 'lucide-react'
 
 export function DashboardHeader() {
   const getGreeting = () => {
@@ -19,40 +18,26 @@ export function DashboardHeader() {
       <div className='absolute bottom-0 left-0 w-48 h-48 bg-linear-to-tr from-coral-200/20 to-transparent rounded-full blur-2xl'></div>
 
       <div className='relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
-        <div className='flex items-center justify-between'>
-          <div className='flex items-center space-x-4'>
-            <div className='w-16 h-16 bg-linear-to-br from-honey-400 to-honey-600 rounded-3xl flex items-center justify-center shadow-warm-lg animate-float'>
-              <Home className='w-8 h-8 text-white' />
-            </div>
-            <div>
-              <div className='flex items-center space-x-3 mb-2'>
-                <GreetingIcon className={`w-6 h-6 ${greeting.color}`} />
-                <h1 className='text-3xl font-hand font-bold text-warmGray-800'>
-                  {greeting.text}！
-                </h1>
-                <Heart className='w-6 h-6 text-coral-400 animate-pulse' />
-              </div>
-              <p className='text-warmGray-600 text-lg'>
-                今天是{' '}
-                {new Date().toLocaleDateString('zh-CN', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                  weekday: 'long',
-                })}
-              </p>
-              <p className='text-warmGray-500 mt-1'>让我们一起整理温馨的小窝吧 ✨</p>
-            </div>
+        <div className='flex items-center space-x-4'>
+          <div className='w-16 h-16 bg-linear-to-br from-honey-400 to-honey-600 rounded-3xl flex items-center justify-center shadow-warm-lg animate-float'>
+            <Home className='w-8 h-8 text-white' />
           </div>
-          <div className='hidden md:flex items-center space-x-4'>
-            <Button variant='secondary' className='text-honey-800'>
-              <Plus className='w-4 h-4 mr-2' />
-              快速添加
-            </Button>
-            <Button variant='default' className='text-white'>
-              <Search className='w-4 h-4 mr-2' />
-              找找看
-            </Button>
+          <div>
+            <div className='flex items-center space-x-3 mb-2'>
+              <GreetingIcon className={`w-6 h-6 ${greeting.color}`} />
+              <h1 className='text-3xl font-hand font-bold text-warmGray-800'>{greeting.text}！</h1>
+              <Heart className='w-6 h-6 text-coral-400 animate-pulse' />
+            </div>
+            <p className='text-warmGray-600 text-lg'>
+              今天是{' '}
+              {new Date().toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long',
+              })}
+            </p>
+            <p className='text-warmGray-500 mt-1'>让我们一起整理温馨的小窝吧 ✨</p>
           </div>
         </div>
       </div>

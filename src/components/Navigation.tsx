@@ -1,9 +1,9 @@
 import {
   Archive,
-  Camera,
   Heart,
   Home,
   LogOut,
+  Package,
   Search,
   Settings,
   Sparkles,
@@ -11,7 +11,7 @@ import {
   User,
 } from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '@/hooks/useAuth'
 
 interface NavItem {
   id: string
@@ -34,21 +34,21 @@ const navItems: NavItem[] = [
     label: '家庭空间',
     icon: Archive,
     path: '/spaces',
-    description: '家庭收纳空间',
+    description: '家庭空间管理',
   },
   {
     id: 'items',
     label: '物品收纳',
-    icon: Camera,
+    icon: Package,
     path: '/items',
     description: '收纳物品展示',
   },
   {
     id: 'tags',
-    label: '分类标签',
+    label: '便签墙',
     icon: Tag,
     path: '/tags',
-    description: '分类标签管理',
+    description: '便签墙管理',
   },
 ]
 

@@ -4,9 +4,9 @@ import { LoadingState } from '@/components/LoadingState'
 import type { Item, ItemCategory, RecentActivity, SortByType, ViewMode } from '@/types/items'
 import { CATEGORY_ICONS, ITEM_CATEGORY_LABELS } from '@/types/items'
 import { ItemFilter } from './components/ItemFilter'
+import { ItemHeader } from './components/ItemHeader'
 import { ItemList } from './components/ItemList'
 import { ItemSidebar } from './components/ItemSidebar'
-import { ItemTitle } from './components/ItemTitle'
 
 const useMockData = async () => {
   const mockItems: Item[] = [
@@ -19,6 +19,7 @@ const useMockData = async () => {
       quantity: 3,
       price: 89,
       description: '100%纯棉，舒适透气',
+      tags: ['日常', '夏季'],
       status: 'active',
       location: '主卧衣柜第二层',
       createdAt: '2024-12-20T00:00:00Z',
@@ -33,6 +34,7 @@ const useMockData = async () => {
       quantity: 1,
       price: 6999,
       description: '128GB 黑色',
+      tags: ['电子', '贵重'],
       status: 'active',
       location: '床头柜抽屉',
       createdAt: '2024-12-21T00:00:00Z',
@@ -47,6 +49,7 @@ const useMockData = async () => {
       quantity: 1,
       price: 68,
       description: '尤瓦尔·赫拉利著作',
+      tags: ['书籍', '历史'],
       status: 'active',
       location: '书架第三层',
       createdAt: '2024-12-22T00:00:00Z',
@@ -61,6 +64,7 @@ const useMockData = async () => {
       quantity: 2,
       price: 199,
       description: '手工制作，简约设计',
+      tags: ['装饰', '易碎'],
       status: 'active',
       location: '电视柜左侧',
       createdAt: '2024-12-23T00:00:00Z',
@@ -75,6 +79,7 @@ const useMockData = async () => {
       quantity: 1,
       price: 299,
       description: '28cm，含木质锅盖',
+      tags: ['厨具', '日常'],
       status: 'active',
       location: '橱柜上层',
       createdAt: '2024-12-24T00:00:00Z',
@@ -89,6 +94,7 @@ const useMockData = async () => {
       quantity: 1,
       price: 399,
       description: '浅蓝色，春秋款',
+      tags: ['衣物', '春秋'],
       status: 'inactive',
       location: '主卧衣柜第三层',
       createdAt: '2024-12-19T00:00:00Z',
@@ -193,6 +199,7 @@ export default function Items() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [selectedStatus, setSelectedStatus] = useState<string>('all')
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [viewMode, setViewMode] = useState<ViewMode>('card')
   const [sortBy, setSortBy] = useState<SortByType>('date-desc')
 
@@ -224,8 +231,27 @@ export default function Items() {
       filtered = filtered.filter(item => item.status === selectedStatus)
     }
 
+    if (selectedTags.length > 0) {
+      filtered = filtered.filter(item => selectedTags.every(tag => item.tags?.includes(tag)))
+    }
+
     return sortItems(filtered, sortBy)
-  }, [items, searchTerm, selectedCategory, selectedStatus, sortBy])
+  }, [items, searchTerm, selectedCategory, selectedStatus, selectedTags, sortBy])
+
+  const tags = useMemo(() => {
+    const allTags = items.reduce((acc, item) => {
+      if (item.tags && item.tags.length > 0) {
+        item.tags.forEach(tag => {
+          acc.add(tag)
+        })
+      }
+      return acc
+    }, new Set<string>())
+
+    return Array.from(allTags)
+      .map((name, index) => ({ id: index.toString(), name }))
+      .slice(0, 8)
+  }, [items])
 
   const categories = useMemo(() => {
     const categoryCount = items.reduce(
@@ -244,6 +270,12 @@ export default function Items() {
       icon: <span className='text-xl'>{CATEGORY_ICONS[type as ItemCategory]}</span>,
     }))
   }, [items])
+
+  const handleTagToggle = (tagName: string) => {
+    setSelectedTags(prev =>
+      prev.includes(tagName) ? prev.filter(t => t !== tagName) : [...prev, tagName]
+    )
+  }
 
   const handleAddItem = (item: Item) => {
     setItems(prev => [item, ...prev])
@@ -266,7 +298,7 @@ export default function Items() {
   return (
     <div className='min-h-screen'>
       <main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6'>
-        <ItemTitle onAddItem={handleAddItem} />
+        <ItemHeader onAddItem={handleAddItem} />
 
         <ItemFilter
           searchTerm={searchTerm}
@@ -277,6 +309,9 @@ export default function Items() {
           onViewModeChange={setViewMode}
           sortBy={sortBy}
           onSortChange={setSortBy}
+          tags={tags}
+          selectedTags={selectedTags}
+          onTagToggle={handleTagToggle}
         />
 
         <div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>

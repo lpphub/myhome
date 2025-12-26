@@ -1,13 +1,3 @@
-export type RoomType =
-  | 'bedroom'
-  | 'living'
-  | 'kitchen'
-  | 'bathroom'
-  | 'study'
-  | 'balcony'
-  | 'entrance'
-  | 'storage'
-
 export type StorageType =
   | 'closet'
   | 'shoe-rack'
@@ -16,8 +6,6 @@ export type StorageType =
   | 'drawer'
   | 'hanger'
   | 'other'
-
-export type RoomStatus = 'spacious' | 'comfortable' | 'crowded'
 
 export type SortType =
   | 'utilization-desc'
@@ -29,19 +17,6 @@ export type SortType =
   | 'date-desc'
   | 'date-asc'
 
-export type FilterType = 'all' | StorageType
-
-export interface Room {
-  id: string
-  name: string
-  type: RoomType
-  area: number
-  position: { x: number; y: number; width: number; height: number }
-  storages: Storage[]
-  createdAt: string
-  updatedAt: string
-}
-
 export interface Storage {
   id: string
   roomId: string
@@ -51,6 +26,7 @@ export interface Storage {
   itemCount: number
   utilization: number
   lastOrganized?: string
+  tags?: string[]
   items: StorageItem[]
   createdAt: string
   updatedAt: string
@@ -68,36 +44,10 @@ export interface StorageItem {
   updatedAt: string
 }
 
-export interface AddRoomForm {
-  name: string
-  type: RoomType
-  area: number
-}
-
 export interface AddStorageForm {
   name: string
   type: StorageType
-  roomId: string
   capacity: number
-}
-
-export interface AddItemForm {
-  storagePointId: string
-  name: string
-  type: string
-  quantity: number
-  description?: string
-}
-
-export const ROOM_TYPE_LABELS: Record<RoomType, string> = {
-  bedroom: '卧室',
-  living: '客厅',
-  kitchen: '厨房',
-  bathroom: '卫生间',
-  study: '书房',
-  balcony: '阳台',
-  entrance: '玄关',
-  storage: '储物间',
 }
 
 export const STORAGE_TYPE_LABELS: Record<StorageType, string> = {
@@ -108,21 +58,4 @@ export const STORAGE_TYPE_LABELS: Record<StorageType, string> = {
   drawer: '抽屉',
   hanger: '衣架',
   other: '其他',
-}
-
-export function getRoomStatus(utilization: number): RoomStatus {
-  if (utilization < 70) return 'spacious'
-  if (utilization < 85) return 'comfortable'
-  return 'crowded'
-}
-
-export function getRoomStatusColor(status: RoomStatus): string {
-  switch (status) {
-    case 'spacious':
-      return 'lemon'
-    case 'comfortable':
-      return 'honey'
-    case 'crowded':
-      return 'coral'
-  }
 }
