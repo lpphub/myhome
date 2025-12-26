@@ -10,7 +10,7 @@ import { TagSection } from './components/TagSection'
 const useMockData = async () => {
   const mockTags: Tag[] = [
     {
-      id: 'room-1',
+      id: 1,
       name: '卧室',
       category: 'room',
       color: 'honey',
@@ -20,7 +20,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-20T00:00:00Z',
     },
     {
-      id: 'room-2',
+      id: 2,
       name: '厨房',
       category: 'room',
       color: 'lemon',
@@ -30,7 +30,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-19T00:00:00Z',
     },
     {
-      id: 'room-3',
+      id: 3,
       name: '书房',
       category: 'room',
       color: 'lavender',
@@ -40,7 +40,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-18T00:00:00Z',
     },
     {
-      id: 'room-4',
+      id: 4,
       name: '客厅',
       category: 'room',
       color: 'coral',
@@ -50,7 +50,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-17T00:00:00Z',
     },
     {
-      id: 'room-5',
+      id: 5,
       name: '卫生间',
       category: 'room',
       color: 'cream',
@@ -60,7 +60,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-16T00:00:00Z',
     },
     {
-      id: 'room-6',
+      id: 6,
       name: '阳台',
       category: 'room',
       color: 'mint',
@@ -70,7 +70,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-15T00:00:00Z',
     },
     {
-      id: 'type-1',
+      id: 7,
       name: '零食',
       category: 'type',
       color: 'lemon',
@@ -80,7 +80,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-20T00:00:00Z',
     },
     {
-      id: 'type-2',
+      id: 8,
       name: '玩具',
       category: 'type',
       color: 'coral',
@@ -90,7 +90,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-19T00:00:00Z',
     },
     {
-      id: 'type-3',
+      id: 9,
       name: '主食',
       category: 'type',
       color: 'honey',
@@ -100,7 +100,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-18T00:00:00Z',
     },
     {
-      id: 'type-4',
+      id: 10,
       name: '饮品',
       category: 'type',
       color: 'lavender',
@@ -110,7 +110,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-17T00:00:00Z',
     },
     {
-      id: 'type-5',
+      id: 11,
       name: '文具',
       category: 'type',
       color: 'cream',
@@ -120,7 +120,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-16T00:00:00Z',
     },
     {
-      id: 'type-6',
+      id: 12,
       name: '数码',
       category: 'type',
       color: 'pink',
@@ -130,7 +130,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-15T00:00:00Z',
     },
     {
-      id: 'type-7',
+      id: 13,
       name: '化妆品',
       category: 'type',
       color: 'coral',
@@ -140,7 +140,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-14T00:00:00Z',
     },
     {
-      id: 'type-8',
+      id: 14,
       name: '书籍',
       category: 'type',
       color: 'lavender',
@@ -150,7 +150,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-13T00:00:00Z',
     },
     {
-      id: 'functional-1',
+      id: 15,
       name: '待办事项',
       category: 'functional',
       color: 'coral',
@@ -160,7 +160,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-12T00:00:00Z',
     },
     {
-      id: 'functional-2',
+      id: 16,
       name: '购物清单',
       category: 'functional',
       color: 'lemon',
@@ -170,7 +170,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-11T00:00:00Z',
     },
     {
-      id: 'functional-3',
+      id: 17,
       name: '备忘录',
       category: 'functional',
       color: 'lavender',
@@ -180,7 +180,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-10T00:00:00Z',
     },
     {
-      id: 'functional-4',
+      id: 18,
       name: '生日提醒',
       category: 'functional',
       color: 'honey',
@@ -190,7 +190,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-09T00:00:00Z',
     },
     {
-      id: 'functional-5',
+      id: 19,
       name: '常用地址',
       category: 'functional',
       color: 'cream',
@@ -200,7 +200,7 @@ const useMockData = async () => {
       updatedAt: '2024-12-08T00:00:00Z',
     },
     {
-      id: 'functional-6',
+      id: 20,
       name: '保修信息',
       category: 'functional',
       color: 'pink',
@@ -288,7 +288,7 @@ export default function Tags() {
     setTags(prev => [tag, ...prev])
   }
 
-  const handleDeleteTag = (tagId: string) => {
+  const handleDeleteTag = (tagId: number) => {
     setTags(prev => prev.filter(tag => tag.id !== tagId))
   }
 

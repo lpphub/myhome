@@ -5,7 +5,7 @@ export type TagColor = 'lemon' | 'coral' | 'lavender' | 'honey' | 'cream' | 'pin
 export type SortByType = 'name-asc' | 'name-desc' | 'count-asc' | 'count-desc' | 'date-desc'
 
 export interface Tag {
-  id: string
+  id: number
   name: string
   category: TagCategory
   color: TagColor

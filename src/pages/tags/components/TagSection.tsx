@@ -6,7 +6,7 @@ interface TagSectionProps {
   title: string
   category: TagCategory
   tags: Tag[]
-  onDeleteTag?: (tagId: string) => void
+  onDeleteTag?: (tagId: number) => void
   onEditTag?: (tag: Tag) => void
 }
 

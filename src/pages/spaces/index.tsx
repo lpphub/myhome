@@ -19,9 +19,8 @@ interface SpaceStat {
 const useMockData = async () => {
   const mockStorages: StorageSchema[] = [
     {
-      id: '1',
+      id: 1,
       name: '衣柜',
-      type: 'closet',
       capacity: 60,
       itemCount: 45,
       utilization: 75,
@@ -31,12 +30,10 @@ const useMockData = async () => {
       createdAt: '2024-12-01T00:00:00Z',
       updatedAt: '2024-12-01T00:00:00Z',
       description: '卧室主衣柜，分三层',
-      location: '卧室',
     },
     {
-      id: '2',
+      id: 2,
       name: '床头柜',
-      type: 'cabinet',
       capacity: 20,
       itemCount: 18,
       utilization: 90,
@@ -46,12 +43,10 @@ const useMockData = async () => {
       createdAt: '2024-12-01T00:00:00Z',
       updatedAt: '2024-12-01T00:00:00Z',
       description: '双人床头柜',
-      location: '卧室',
     },
     {
-      id: '3',
+      id: 3,
       name: '电视柜',
-      type: 'cabinet',
       capacity: 40,
       itemCount: 20,
       utilization: 50,
@@ -61,12 +56,10 @@ const useMockData = async () => {
       createdAt: '2024-12-01T00:00:00Z',
       updatedAt: '2024-12-01T00:00:00Z',
       description: '客厅电视收纳柜',
-      location: '客厅',
     },
     {
-      id: '4',
+      id: 4,
       name: '橱柜',
-      type: 'cabinet',
       capacity: 80,
       itemCount: 65,
       utilization: 81,
@@ -76,12 +69,10 @@ const useMockData = async () => {
       createdAt: '2024-12-01T00:00:00Z',
       updatedAt: '2024-12-01T00:00:00Z',
       description: '整体厨房橱柜',
-      location: '厨房',
     },
     {
-      id: '5',
+      id: 5,
       name: '冰箱',
-      type: 'other',
       capacity: 50,
       itemCount: 40,
       utilization: 80,
@@ -91,7 +82,6 @@ const useMockData = async () => {
       createdAt: '2024-12-01T00:00:00Z',
       updatedAt: '2024-12-01T00:00:00Z',
       description: '双开门冰箱',
-      location: '厨房',
     },
   ]
 
@@ -169,10 +159,7 @@ export default function Spaces() {
 
     if (searchTerm) {
       const term = searchTerm.toLowerCase()
-      filtered = filtered.filter(
-        storage =>
-          storage.name.toLowerCase().includes(term) || storage.type.toLowerCase().includes(term)
-      )
+      filtered = filtered.filter(storage => storage.name.toLowerCase().includes(term))
     }
 
     if (selectedTags.length > 0) {

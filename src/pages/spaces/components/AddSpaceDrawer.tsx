@@ -4,6 +4,8 @@ import { Archive, FileText, Image as ImageIcon, Ruler, Tag as TagIcon, X } from 
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { z } from 'zod'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -13,13 +15,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import {
   Sheet,
   SheetContent,
@@ -31,14 +26,12 @@ import {
 } from '@/components/ui/sheet'
 import { Textarea } from '@/components/ui/textarea'
 import type { StorageSchema } from '@/types/spaces'
-import { STORAGE_TYPE_LABELS, storageFormSchema, type StorageFormValues } from '@/types/spaces'
 import type { Tag } from '@/types/tags'
 import { TAG_COLOR_CLASSES } from '@/types/tags'
-import { Badge } from '@/components/ui/badge'
 
 const MOCK_TAGS: Tag[] = [
   {
-    id: '1',
+    id: 1,
     name: '衣物',
     category: 'type',
     color: 'honey',
@@ -47,7 +40,7 @@ const MOCK_TAGS: Tag[] = [
     updatedAt: '2024-12-01T00:00:00Z',
   },
   {
-    id: '2',
+    id: 2,
     name: '家具',
     category: 'type',
     color: 'lemon',
@@ -56,7 +49,7 @@ const MOCK_TAGS: Tag[] = [
     updatedAt: '2024-12-01T00:00:00Z',
   },
   {
-    id: '3',
+    id: 3,
     name: '卧室',
     category: 'room',
     color: 'coral',
@@ -65,7 +58,7 @@ const MOCK_TAGS: Tag[] = [
     updatedAt: '2024-12-01T00:00:00Z',
   },
   {
-    id: '4',
+    id: 4,
     name: '厨房',
     category: 'room',
     color: 'lavender',
@@ -74,7 +67,7 @@ const MOCK_TAGS: Tag[] = [
     updatedAt: '2024-12-01T00:00:00Z',
   },
   {
-    id: '5',
+    id: 5,
     name: '客厅',
     category: 'room',
     color: 'cream',
@@ -83,7 +76,7 @@ const MOCK_TAGS: Tag[] = [
     updatedAt: '2024-12-01T00:00:00Z',
   },
   {
-    id: '6',
+    id: 6,
     name: '电器',
     category: 'type',
     color: 'pink',
@@ -92,7 +85,7 @@ const MOCK_TAGS: Tag[] = [
     updatedAt: '2024-12-01T00:00:00Z',
   },
   {
-    id: '7',
+    id: 7,
     name: '厨具',
     category: 'type',
     color: 'mint',
@@ -101,7 +94,7 @@ const MOCK_TAGS: Tag[] = [
     updatedAt: '2024-12-01T00:00:00Z',
   },
   {
-    id: '8',
+    id: 8,
     name: '日常',
     category: 'functional',
     color: 'honey',
@@ -111,6 +104,19 @@ const MOCK_TAGS: Tag[] = [
   },
 ]
 
+const storageFormSchema = z.object({
+  name: z.string().min(1, '请输入收纳点名称'),
+  capacity: z.number().min(1, '请输入容量'),
+  description: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  image: z
+    .string()
+    .optional()
+    .refine(val => !val || /^https?:\/\/|^data:image\//.test(val), '请输入有效的图片URL'),
+})
+
+type StorageFormValues = z.infer<typeof storageFormSchema>
+
 interface AddSpaceDrawerProps {
   onAddStorage: (storage: StorageSchema) => void
 }
@@ -119,18 +125,15 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [imagePreview, setImagePreview] = useState<string>('')
-  const [imageUrlInput, setImageUrlInput] = useState<string>('')
 
   const storageForm = useForm<StorageFormValues>({
     resolver: zodResolver(storageFormSchema),
     defaultValues: {
       name: '',
-      type: 'cabinet',
       capacity: 20,
       description: '',
       tags: [],
       image: '',
-      location: '',
     },
   })
 
@@ -142,7 +145,7 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
         image: imagePreview || data.image,
       }
       return Promise.resolve({
-        id: Date.now().toString(),
+        id: Date.now(),
         ...formDataWithTags,
         itemCount: 0,
         utilization: 0,
@@ -171,7 +174,6 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
     storageForm.reset()
     setSelectedTags([])
     setImagePreview('')
-    setImageUrlInput('')
   }
 
   const handleTagToggle = (tagName: string) => {
@@ -195,15 +197,7 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
 
   const handleRemoveImage = () => {
     setImagePreview('')
-    setImageUrlInput('')
     storageForm.setValue('image', '')
-  }
-
-  const handleUrlInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const url = e.target.value
-    setImageUrlInput(url)
-    setImagePreview(url)
-    storageForm.setValue('image', url)
   }
 
   const handleOpenChange = (open: boolean) => {
@@ -223,7 +217,7 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
       </SheetTrigger>
       <SheetContent
         side='right'
-        className='w-full sm:w-130 bg-linear-to-br from-white via-cream-50/90 to-honey-50/60 border-l-honey-200!'
+        className='flex flex-col overflow-hidden w-full sm:w-130 bg-linear-to-br from-white via-cream-50/90 to-honey-50/60 border-l-honey-200!'
       >
         <SheetHeader className='border-b border-cream-200 pb-4'>
           <div className='flex items-center gap-3'>
@@ -237,7 +231,10 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
           </div>
         </SheetHeader>
 
-        <form onSubmit={storageForm.handleSubmit(onStorageSubmit)} className='grid gap-5 py-2 px-2'>
+        <form
+          onSubmit={storageForm.handleSubmit(onStorageSubmit)}
+          className='flex-1 overflow-y-auto grid gap-5 px-2'
+        >
           <div className='grid gap-3'>
             <Label htmlFor='storage-name' className='flex items-center gap-2'>
               <Archive className='w-4 h-4 text-warmGray-500' />
@@ -255,33 +252,6 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
             />
             {storageForm.formState.errors.name && (
               <p className='text-sm text-coral-500'>{storageForm.formState.errors.name.message}</p>
-            )}
-          </div>
-
-          <div className='grid gap-3'>
-            <Label htmlFor='storage-type' className='flex items-center gap-2'>
-              <TagIcon className='w-4 h-4 text-warmGray-500' />
-              收纳类型
-            </Label>
-            <Select
-              value={storageForm.watch('type')}
-              onValueChange={value =>
-                storageForm.setValue('type', value as StorageFormValues['type'])
-              }
-            >
-              <SelectTrigger className='w-full border-warmGray-300 focus:border-honey-400'>
-                <SelectValue placeholder='选择收纳类型' />
-              </SelectTrigger>
-              <SelectContent className='bg-white border-honey-200 shadow-warm-sm min-w-(--radix-select-trigger-width)'>
-                {Object.entries(STORAGE_TYPE_LABELS).map(([value, label]) => (
-                  <SelectItem key={value} value={value}>
-                    {label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {storageForm.formState.errors.type && (
-              <p className='text-sm text-coral-500'>{storageForm.formState.errors.type.message}</p>
             )}
           </div>
 
@@ -346,7 +316,7 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
                   <TagIcon className='w-4 h-4 opacity-50' />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className='bg-white border-honey-200 shadow-warm-sm min-w-(--radix-dropdown-menu-content-available-width)'>
+              <DropdownMenuContent className='bg-white border-honey-200 shadow-warm-sm w-64'>
                 {MOCK_TAGS.map(tag => (
                   <DropdownMenuCheckboxItem
                     key={tag.id}
@@ -412,7 +382,7 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
                 <div className='flex flex-col items-center gap-4'>
                   <ImageIcon className='w-12 h-12 text-warmGray-400' />
                   <div className='text-center'>
-                    <p className='text-sm text-warmGray-600 mb-2'>上传图片或输入图片 URL</p>
+                    <p className='text-sm text-warmGray-600 mb-2'>上传图片</p>
                     <Input
                       type='file'
                       accept='image/*'
@@ -420,22 +390,12 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
                       className='max-w-xs mx-auto'
                     />
                   </div>
-                  <div className='w-full flex items-center gap-2'>
-                    <span className='text-sm text-warmGray-400'>或</span>
-                  </div>
-                  <Input
-                    type='text'
-                    placeholder='输入图片 URL'
-                    value={imageUrlInput}
-                    onChange={handleUrlInputChange}
-                    className='w-full'
-                  />
                 </div>
               </div>
             )}
           </div>
 
-          <SheetFooter className='pt-4'>
+          <SheetFooter className='mt-auto pt-4'>
             <Button
               type='submit'
               className='w-full bg-linear-to-r from-honey-400 to-honey-600 text-white hover:from-honey-500 hover:to-honey-700 shadow-warm-sm'

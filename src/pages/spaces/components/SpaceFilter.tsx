@@ -67,7 +67,7 @@ export function SpaceFilter({
       </div>
 
       {/* Tag Filters */}
-      <div className='mt-4 pt-4 border-t border-gray-200'>
+      <div className='mt-4 pt-4'>
         <p className='text-sm text-gray-600 mb-3 flex items-center'>
           <Tag className='w-4 h-4 mr-2' />
           按便签筛选:

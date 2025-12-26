@@ -56,7 +56,7 @@ export function ItemFilter({
             <SelectTrigger className='w-32 border-warmGray-300 focus:border-honey-400'>
               <SelectValue placeholder='状态' />
             </SelectTrigger>
-            <SelectContent className='bg-white border-honey-200 shadow-warm-sm min-w-(--radix-select-trigger-width)'>
+            <SelectContent className='bg-white border-honey-200 shadow-warm-sm w-64'>
               <SelectItem value='all'>全部状态</SelectItem>
               <SelectItem value='active'>使用中</SelectItem>
               <SelectItem value='inactive'>闲置</SelectItem>
@@ -69,7 +69,7 @@ export function ItemFilter({
             <SelectTrigger className='w-40 border-warmGray-300 focus:border-honey-400'>
               <SelectValue placeholder='排序' />
             </SelectTrigger>
-            <SelectContent className='bg-white border-honey-200 shadow-warm-sm min-w-(--radix-select-trigger-width)'>
+            <SelectContent className='bg-white border-honey-200 shadow-warm-sm w-64'>
               {SORT_OPTIONS.map(option => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}

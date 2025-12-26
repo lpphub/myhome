@@ -6,7 +6,7 @@ import { TAG_COLOR_CLASSES } from '@/types/tags'
 
 interface TagNoteProps {
   tag: Tag
-  onDelete?: (tagId: string) => void
+  onDelete?: (tagId: number) => void
   onEdit?: (tag: Tag) => void
 }
 
@@ -14,7 +14,7 @@ const ROTATIONS = ['-rotate-1', 'rotate-1', 'rotate-2', '-rotate-2', 'rotate-0']
 
 export function TagNote({ tag, onDelete, onEdit }: TagNoteProps) {
   const [isHovered, setIsHovered] = useState(false)
-  const rotationClass = ROTATIONS[Number.parseInt(tag.id.slice(-1), 10) % ROTATIONS.length]
+  const rotationClass = ROTATIONS[tag.id % ROTATIONS.length]
   const colorClasses = TAG_COLOR_CLASSES[tag.color]
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {

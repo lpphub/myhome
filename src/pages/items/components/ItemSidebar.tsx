@@ -1,94 +1,12 @@
 import { Sparkles } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type { ItemCategory, RecentActivity } from '@/types/items'
-import { CATEGORY_ICONS, ITEM_CATEGORY_LABELS } from '@/types/items'
-
-interface Category {
-  id: string
-  name: string
-  type: ItemCategory
-  count: number
-  icon: React.ReactNode
-}
+import type { RecentActivity } from '@/types/items'
 
 interface ItemSidebarProps {
-  categories: Category[]
-  selectedCategory: string | null
-  onSelectCategory: (categoryId: string | null) => void
   activities: RecentActivity[]
 }
 
-export function ItemSidebar({
-  categories,
-  selectedCategory,
-  onSelectCategory,
-  activities,
-}: ItemSidebarProps) {
-  const getCategoryBgColor = (category: ItemCategory) => {
-    switch (category) {
-      case 'clothing':
-        return 'bg-cream-50 text-warmGray-800'
-      case 'electronics':
-        return 'bg-cream-50 text-warmGray-800'
-      case 'books':
-        return 'bg-cream-50 text-warmGray-800'
-      case 'kitchen':
-        return 'bg-cream-50 text-warmGray-800'
-      case 'decor':
-        return 'bg-cream-50 text-warmGray-800'
-      default:
-        return 'bg-cream-50 text-warmGray-800'
-    }
-  }
-
-  const CategorySection = () => {
-    return (
-      <Card className='border-cream-200 gap-3'>
-        <CardHeader className='pb-0'>
-          <CardTitle className='text-lg font-semibold text-warmGray-800'>物品分类</CardTitle>
-        </CardHeader>
-        <CardContent className='pt-0'>
-          <div className='space-y-2'>
-            <button
-              type='button'
-              onClick={() => onSelectCategory(null)}
-              className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${selectedCategory === null ? 'bg-honey-100 border-2 border-honey-300' : 'bg-white hover:bg-cream-50 border-2 border-transparent'}`}
-            >
-              <div className='flex items-center space-x-3'>
-                <span className='text-xl'>📦</span>
-                <span className='font-medium text-warmGray-800'>全部</span>
-              </div>
-              <span className='text-sm text-warmGray-600'>
-                {categories.reduce((sum, cat) => sum + cat.count, 0)}
-              </span>
-            </button>
-
-            {categories.map(category => (
-              <button
-                key={category.id}
-                type='button'
-                onClick={() => onSelectCategory(category.id)}
-                className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${selectedCategory === category.id ? 'bg-honey-100 border-2 border-honey-300' : 'bg-white hover:bg-cream-50 border-2 border-transparent'}`}
-              >
-                <div className='flex items-center space-x-3'>
-                  <span
-                    className={`text-xl ${getCategoryBgColor(category.type)} rounded-full w-8 h-8 flex items-center justify-center`}
-                  >
-                    {CATEGORY_ICONS[category.type]}
-                  </span>
-                  <span className='font-medium text-warmGray-800'>
-                    {ITEM_CATEGORY_LABELS[category.type]}
-                  </span>
-                </div>
-                <span className='text-sm text-warmGray-600'>{category.count}</span>
-              </button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
-
+export function ItemSidebar({ activities }: ItemSidebarProps) {
   const ActivitySection = () => {
     const formatTime = (timestamp: string) => {
       const date = new Date(timestamp)
@@ -145,7 +63,6 @@ export function ItemSidebar({
 
   return (
     <div className='lg:col-span-1 space-y-6'>
-      <CategorySection />
       <ActivitySection />
     </div>
   )

@@ -1,12 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { MapPin, Package, Tag, Wallet } from 'lucide-react'
+import { MapPin, Package, Tag, X } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -27,14 +33,88 @@ import {
 } from '@/components/ui/sheet'
 import { Textarea as TextareaInput } from '@/components/ui/textarea'
 import type { Item } from '@/types/items'
-import { ITEM_CATEGORY_LABELS, ITEM_STATUS_LABELS } from '@/types/items'
+import { ITEM_STATUS_LABELS } from '@/types/items'
+import type { Tag as TagType } from '@/types/tags'
+import { TAG_COLOR_CLASSES } from '@/types/tags'
+
+const MOCK_TAGS: TagType[] = [
+  {
+    id: 1,
+    name: '衣物',
+    category: 'type',
+    color: 'honey',
+    itemCount: 10,
+    createdAt: '2024-12-01T00:00:00Z',
+    updatedAt: '2024-12-01T00:00:00Z',
+  },
+  {
+    id: 2,
+    name: '家具',
+    category: 'type',
+    color: 'lemon',
+    itemCount: 5,
+    createdAt: '2024-12-01T00:00:00Z',
+    updatedAt: '2024-12-01T00:00:00Z',
+  },
+  {
+    id: 3,
+    name: '卧室',
+    category: 'room',
+    color: 'coral',
+    itemCount: 8,
+    createdAt: '2024-12-01T00:00:00Z',
+    updatedAt: '2024-12-01T00:00:00Z',
+  },
+  {
+    id: 4,
+    name: '厨房',
+    category: 'room',
+    color: 'lavender',
+    itemCount: 6,
+    createdAt: '2024-12-01T00:00:00Z',
+    updatedAt: '2024-12-01T00:00:00Z',
+  },
+  {
+    id: 5,
+    name: '客厅',
+    category: 'room',
+    color: 'cream',
+    itemCount: 4,
+    createdAt: '2024-12-01T00:00:00Z',
+    updatedAt: '2024-12-01T00:00:00Z',
+  },
+  {
+    id: 6,
+    name: '电器',
+    category: 'type',
+    color: 'pink',
+    itemCount: 3,
+    createdAt: '2024-12-01T00:00:00Z',
+    updatedAt: '2024-12-01T00:00:00Z',
+  },
+  {
+    id: 7,
+    name: '厨具',
+    category: 'type',
+    color: 'mint',
+    itemCount: 7,
+    createdAt: '2024-12-01T00:00:00Z',
+    updatedAt: '2024-12-01T00:00:00Z',
+  },
+  {
+    id: 8,
+    name: '日常',
+    category: 'functional',
+    color: 'honey',
+    itemCount: 9,
+    createdAt: '2024-12-01T00:00:00Z',
+    updatedAt: '2024-12-01T00:00:00Z',
+  },
+]
 
 const itemSchema = z.object({
   name: z.string().min(1, '请输入物品名称'),
-  category: z.enum(['clothing', 'electronics', 'books', 'kitchen', 'decor', 'other']),
-  type: z.string().min(1, '请输入物品类型'),
   quantity: z.number().min(1, '请输入数量'),
-  price: z.number().optional(),
   description: z.string().optional(),
   status: z.enum(['active', 'inactive', 'lost', 'donated']),
   location: z.string().optional(),
@@ -48,15 +128,13 @@ interface AddItemDrawerProps {
 
 export function AddItemDrawer({ onAddItem }: AddItemDrawerProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
 
   const form = useForm<ItemFormData>({
     resolver: zodResolver(itemSchema),
     defaultValues: {
       name: '',
-      category: 'other',
-      type: '',
       quantity: 1,
-      price: undefined,
       description: '',
       status: 'active',
       location: '',
@@ -65,11 +143,16 @@ export function AddItemDrawer({ onAddItem }: AddItemDrawerProps) {
 
   const { mutate, isPending } = useMutation({
     mutationFn: (data: ItemFormData) => {
-      return Promise.resolve({
-        id: Date.now().toString(),
-        storagePointId: '',
+      const formDataWithTags = {
         ...data,
-        tags: [],
+        tags: selectedTags,
+      }
+      return Promise.resolve({
+        id: Date.now(),
+        storageId: 0,
+        ...formDataWithTags,
+        image: undefined,
+        purchaseDate: undefined,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       } as Item)
@@ -97,6 +180,12 @@ export function AddItemDrawer({ onAddItem }: AddItemDrawerProps) {
     }
   }
 
+  const handleTagToggle = (tagName: string) => {
+    setSelectedTags(prev =>
+      prev.includes(tagName) ? prev.filter(t => t !== tagName) : [...prev, tagName]
+    )
+  }
+
   return (
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>
@@ -107,7 +196,7 @@ export function AddItemDrawer({ onAddItem }: AddItemDrawerProps) {
       </SheetTrigger>
       <SheetContent
         side='right'
-        className='w-full sm:w-130 bg-linear-to-br from-white via-cream-50/90 to-honey-50/60 border-l-honey-200!'
+        className='flex flex-col overflow-hidden w-full sm:w-130 bg-linear-to-br from-white via-cream-50/90 to-honey-50/60 border-l-honey-200!'
       >
         <SheetHeader className='border-b border-cream-200 pb-4'>
           <div className='flex items-center gap-3'>
@@ -121,7 +210,10 @@ export function AddItemDrawer({ onAddItem }: AddItemDrawerProps) {
           </div>
         </SheetHeader>
 
-        <form onSubmit={form.handleSubmit(onSubmit)} className='grid gap-5 py-4 px-2'>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className='flex-1 overflow-y-auto grid gap-5 px-2'
+        >
           <div className='grid gap-3'>
             <Label htmlFor='item-name' className='flex items-center gap-2'>
               <Package className='w-4 h-4 text-warmGray-500' />
@@ -143,85 +235,57 @@ export function AddItemDrawer({ onAddItem }: AddItemDrawerProps) {
           </div>
 
           <div className='grid gap-3'>
-            <Label htmlFor='item-category' className='flex items-center gap-2'>
+            <Label className='flex items-center gap-2'>
               <Tag className='w-4 h-4 text-warmGray-500' />
-              物品分类
+              标签
             </Label>
-            <Select
-              value={form.watch('category')}
-              onValueChange={value => form.setValue('category', value as ItemFormData['category'])}
-            >
-              <SelectTrigger className='w-full border-warmGray-300 focus:border-honey-400'>
-                <SelectValue placeholder='选择物品分类' />
-              </SelectTrigger>
-              <SelectContent className='bg-white border-honey-200 shadow-warm-sm min-w-(--radix-select-trigger-width)'>
-                {Object.entries(ITEM_CATEGORY_LABELS).map(([value, label]) => (
-                  <SelectItem key={value} value={value}>
-                    {label}
-                  </SelectItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  type='button'
+                  variant='outline'
+                  className='w-full justify-between border-warmGray-300 focus:border-honey-400'
+                >
+                  {selectedTags.length > 0 ? `已选择 ${selectedTags.length} 个标签` : '选择标签'}
+                  <Tag className='w-4 h-4 opacity-50' />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className='bg-white border-honey-200 shadow-warm-sm w-64'>
+                {MOCK_TAGS.map(tag => (
+                  <DropdownMenuCheckboxItem
+                    key={tag.id}
+                    checked={selectedTags.includes(tag.name)}
+                    onCheckedChange={() => handleTagToggle(tag.name)}
+                  >
+                    <div
+                      className={`flex items-center gap-2 ${TAG_COLOR_CLASSES[tag.color].bg} px-2 py-1 rounded`}
+                    >
+                      <span className={TAG_COLOR_CLASSES[tag.color].text}>{tag.name}</span>
+                    </div>
+                  </DropdownMenuCheckboxItem>
                 ))}
-              </SelectContent>
-            </Select>
-            {form.formState.errors.category && (
-              <p className='text-sm text-coral-500'>{form.formState.errors.category.message}</p>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            {selectedTags.length > 0 && (
+              <div className='flex flex-wrap gap-2 mt-2'>
+                {selectedTags.map(tag => (
+                  <Badge
+                    key={tag}
+                    variant='outline'
+                    className='flex items-center gap-1 bg-honey-100 text-honey-700 border-honey-200'
+                  >
+                    #{tag}
+                    <button
+                      type='button'
+                      onClick={() => handleTagToggle(tag)}
+                      className='ml-1 hover:text-red-500'
+                    >
+                      <X className='w-3 h-3' />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
             )}
-          </div>
-
-          <div className='grid gap-3'>
-            <Label htmlFor='item-type' className='flex items-center gap-2'>
-              <Tag className='w-4 h-4 text-warmGray-500' />
-              物品类型
-            </Label>
-            <Input
-              id='item-type'
-              placeholder='例如：上衣、iPhone 15...'
-              {...form.register('type')}
-              className={
-                form.formState.errors.type
-                  ? 'border-red-500 ring-1 ring-red-500'
-                  : 'border-warmGray-300 focus:border-honey-400'
-              }
-            />
-            {form.formState.errors.type && (
-              <p className='text-sm text-coral-500'>{form.formState.errors.type.message}</p>
-            )}
-          </div>
-
-          <div className='grid grid-cols-2 gap-4'>
-            <div className='grid gap-3'>
-              <Label htmlFor='item-quantity' className='flex items-center gap-2'>
-                <Package className='w-4 h-4 text-warmGray-500' />
-                数量
-              </Label>
-              <Input
-                id='item-quantity'
-                type='number'
-                placeholder='1'
-                {...form.register('quantity', { valueAsNumber: true })}
-                className={
-                  form.formState.errors.quantity
-                    ? 'border-red-500 ring-1 ring-red-500'
-                    : 'border-warmGray-300 focus:border-honey-400'
-                }
-              />
-              {form.formState.errors.quantity && (
-                <p className='text-sm text-coral-500'>{form.formState.errors.quantity.message}</p>
-              )}
-            </div>
-
-            <div className='grid gap-3'>
-              <Label htmlFor='item-price' className='flex items-center gap-2'>
-                <Wallet className='w-4 h-4 text-warmGray-500' />
-                价格（元）
-              </Label>
-              <Input
-                id='item-price'
-                type='number'
-                placeholder='0'
-                {...form.register('price', { valueAsNumber: true })}
-                className='border-warmGray-300 focus:border-honey-400'
-              />
-            </div>
           </div>
 
           <div className='grid gap-3'>
@@ -236,7 +300,7 @@ export function AddItemDrawer({ onAddItem }: AddItemDrawerProps) {
               <SelectTrigger className='w-full border-warmGray-300 focus:border-honey-400'>
                 <SelectValue placeholder='选择状态' />
               </SelectTrigger>
-              <SelectContent className='bg-white border-honey-200 shadow-warm-sm min-w-(--radix-select-trigger-width)'>
+              <SelectContent className='bg-white border-honey-200 shadow-warm-sm w-64'>
                 {Object.entries(ITEM_STATUS_LABELS).map(([value, label]) => (
                   <SelectItem key={value} value={value}>
                     <div className='flex items-center gap-2'>
@@ -281,7 +345,7 @@ export function AddItemDrawer({ onAddItem }: AddItemDrawerProps) {
             />
           </div>
 
-          <SheetFooter className='pt-4'>
+          <SheetFooter className='mt-auto pt-4'>
             <Button
               type='submit'
               className='w-full bg-linear-to-r from-honey-400 to-honey-600 text-white hover:from-honey-500 hover:to-honey-700 shadow-warm-sm'

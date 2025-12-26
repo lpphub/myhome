@@ -41,7 +41,7 @@ export function AddTagDialog({ open, onOpenChange, onAddTag }: AddTagDialogProps
     if (!name.trim()) return
 
     const newTag: Tag = {
-      id: `${category}-${Date.now()}`,
+      id: Date.now(),
       name: name.trim(),
       category,
       color,
@@ -97,7 +97,7 @@ export function AddTagDialog({ open, onOpenChange, onAddTag }: AddTagDialogProps
               <SelectTrigger id='category' className='border-warmGray-300 focus:border-honey-400'>
                 <SelectValue placeholder='选择分类' />
               </SelectTrigger>
-              <SelectContent className='bg-white border-honey-200 shadow-warm-sm min-w-(--radix-select-trigger-width)'>
+              <SelectContent className='bg-white border-honey-200 shadow-warm-sm w-64'>
                 <SelectItem value='room'>房间</SelectItem>
                 <SelectItem value='type'>类型</SelectItem>
               </SelectContent>

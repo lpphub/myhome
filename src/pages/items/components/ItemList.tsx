@@ -2,7 +2,7 @@ import { Camera, MapPin, Package } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import type { Item, ViewMode } from '@/types/items'
-import { CATEGORY_ICONS, ITEM_STATUS_LABELS } from '@/types/items'
+import { ITEM_STATUS_LABELS } from '@/types/items'
 
 interface ItemListProps {
   items: Item[]
@@ -32,7 +32,7 @@ export function ItemList({ items, viewMode }: ItemListProps) {
           <CardContent className='p-4'>
             <div className='flex items-center space-x-4'>
               <div className='w-14 h-14 rounded-lg flex items-center justify-center text-3xl bg-cream-50'>
-                {CATEGORY_ICONS[item.category]}
+                📦
               </div>
               <div className='flex-1 min-w-0'>
                 <div className='flex items-center space-x-2 mb-1'>
@@ -42,7 +42,7 @@ export function ItemList({ items, viewMode }: ItemListProps) {
                   </Badge>
                 </div>
                 <p className='text-sm text-warmGray-600 truncate'>
-                  {item.description || item.type}
+                  {item.description || '暂无描述'}
                 </p>
                 <div className='flex items-center space-x-4 mt-2 text-xs text-warmGray-500'>
                   <span className='flex items-center'>
@@ -53,7 +53,6 @@ export function ItemList({ items, viewMode }: ItemListProps) {
                     <MapPin className='w-3 h-3 mr-1' />
                     {item.location || '未设置位置'}
                   </span>
-                  {item.price && <span className='text-honey-600 font-medium'>¥{item.price}</span>}
                 </div>
               </div>
             </div>
@@ -68,7 +67,7 @@ export function ItemList({ items, viewMode }: ItemListProps) {
           <div className='flex flex-col h-full'>
             <div className='flex items-start justify-between mb-3'>
               <div className='w-14 h-14 rounded-lg flex items-center justify-center text-3xl bg-cream-50'>
-                {CATEGORY_ICONS[item.category]}
+                📦
               </div>
               <Badge className={`text-xs border ${getStatusColor(item.status)}`}>
                 {ITEM_STATUS_LABELS[item.status]}
@@ -78,7 +77,7 @@ export function ItemList({ items, viewMode }: ItemListProps) {
             <h3 className='font-semibold text-warmGray-800 mb-2 line-clamp-2'>{item.name}</h3>
 
             <p className='text-sm text-warmGray-600 mb-3 line-clamp-2 flex-1'>
-              {item.description || item.type}
+              {item.description || '暂无描述'}
             </p>
 
             <div className='flex items-center justify-between text-xs text-warmGray-500 pt-2 border-t border-cream-200'>
@@ -90,7 +89,6 @@ export function ItemList({ items, viewMode }: ItemListProps) {
                 <MapPin className='w-3 h-3 mr-1' />
                 {item.location || '未设置位置'}
               </span>
-              {item.price && <span className='text-honey-600 font-medium'>¥{item.price}</span>}
             </div>
           </div>
         </CardContent>
