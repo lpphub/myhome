@@ -40,9 +40,11 @@ export default function TagsPage() {
       <TagDragPanel
         tags={tags}
         categories={categories}
-        onReorder={mutations.onReorder}
-        onEditTag={setEditingTag}
-        onDeleteTag={mutations.onDelete}
+        tagActions={{
+          onReorder: mutations.onReorder,
+          onEdit: setEditingTag,
+          onDelete: mutations.onDelete,
+        }}
       />
       <AddTagDialog
         open={isAddDialogOpen}

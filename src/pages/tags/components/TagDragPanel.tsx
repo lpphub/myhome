@@ -22,18 +22,19 @@ interface TagDragItem extends Tag {
 interface TagDragProps {
   tags: Tag[]
   categories: Array<{ code: string; name: string }>
-  onReorder: (params: { fromId: number; toId: number; toCategory: string; toIndex: number }) => void
-  onEditTag: (tag: Tag) => void
-  onDeleteTag: (tagId: number) => void
+  tagActions: {
+    onReorder: (params: {
+      fromId: number
+      toId: number
+      toCategory: string
+      toIndex: number
+    }) => void
+    onEdit: (tag: Tag) => void
+    onDelete: (tagId: number) => void
+  }
 }
 
-export function TagDragPanel({
-  tags,
-  categories,
-  onReorder,
-  onEditTag,
-  onDeleteTag,
-}: TagDragProps) {
+export function TagDragPanel({ tags, categories, tagActions }: TagDragProps) {
   const [sortBy, setSortBy] = useState<SortByType>('date-desc')
   const [localTags, setLocalTags] = useState<Tag[]>(tags)
   const [activeId, setActiveId] = useState<string | null>(null)
@@ -122,7 +123,7 @@ export function TagDragPanel({
         const newItems = arrayMove(filteredTags, activeIndex, overIndex)
         setLocalTags(newItems)
         const targetTag = newItems[overIndex]
-        onReorder({
+        tagActions?.onReorder({
           fromId: activeTagId,
           toId: targetTag.id,
           toCategory: overCategory,
@@ -143,7 +144,7 @@ export function TagDragPanel({
         ]
         setLocalTags(newItems)
         const targetTag = filteredTags[overIndex]
-        onReorder({
+        tagActions?.onReorder({
           fromId: activeTagId,
           toId: targetTag.id,
           toCategory: overCategory,
@@ -188,8 +189,10 @@ export function TagDragPanel({
             category={cat.code}
             tags={categoryItems[cat.code]}
             isDragOver={dragOverCategory === cat.code}
-            onDeleteTag={onDeleteTag}
-            onEditTag={onEditTag}
+            tagActions={{
+              onDelete: tagActions?.onDelete,
+              onEdit: tagActions?.onEdit,
+            }}
           />
         </SortableContext>
       ))}

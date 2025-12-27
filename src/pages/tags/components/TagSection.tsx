@@ -145,15 +145,16 @@ export function TagSection({
   category,
   tags,
   isDragOver = false,
-  onDeleteTag,
-  onEditTag,
+  tagActions,
 }: {
   title: string
   category: string
-  tags: (Tag & { sortableId?: string })[]
+  tags: Tag[]
   isDragOver?: boolean
-  onDeleteTag?: (tagId: number) => void
-  onEditTag?: (tag: Tag) => void
+  tagActions?: {
+    onDelete: (tagId: number) => void
+    onEdit: (tag: Tag) => void
+  }
 }) {
   const Icon = ICON_MAP[category]
 
@@ -178,7 +179,7 @@ export function TagSection({
 
       <div className='flex flex-wrap gap-4'>
         {tags.map(tag => (
-          <TagNote key={tag.id} tag={tag} onDelete={onDeleteTag} onEdit={onEditTag} />
+          <TagNote key={tag.id} tag={tag} {...tagActions} />
         ))}
 
         {tags.length === 0 && (
