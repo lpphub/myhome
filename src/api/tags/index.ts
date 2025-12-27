@@ -1,5 +1,5 @@
 import httpClient from '@/utils/request'
-import type { CategoryInfo, ReorderRequest, Tag, TagFormData } from '@/types/tags'
+import type { CategoryInfo, ReorderRequest, TagFormData, Tag } from '@/types/tags'
 
 enum TagsApi {
   GetTags = '/tags',

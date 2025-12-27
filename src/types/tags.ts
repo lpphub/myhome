@@ -1,6 +1,6 @@
-export type TagCategory = 'room' | 'type' | 'functional'
-
 export type TagColor = 'lemon' | 'coral' | 'lavender' | 'honey' | 'cream' | 'pink' | 'mint'
+
+export type TagCategoryCode = 'storage' | 'todo' | 'other'
 
 export type SortByType =
   | 'custom'
@@ -12,8 +12,8 @@ export type SortByType =
 
 export interface Tag {
   id: number
-  name: string
-  category: TagCategory
+  label: string
+  category: TagCategoryCode
   color: TagColor
   itemCount: number
   description?: string
@@ -22,40 +22,28 @@ export interface Tag {
   sortOrder?: number
 }
 
-export const SORT_OPTIONS: { value: SortByType; label: string }[] = [
-  { value: 'custom', label: '自定义' },
-  { value: 'name-asc', label: '名称 A-Z' },
-  { value: 'name-desc', label: '名称 Z-A' },
-  { value: 'count-asc', label: '物品数 少-多' },
-  { value: 'count-desc', label: '物品数 多-少' },
-  { value: 'date-desc', label: '创建时间 最新' },
-]
-
-export interface TagFormData {
-  name: string
-  category: TagCategory
-  color: TagColor
-  description?: string
-}
-
-export interface CategoryInfo {
-  id: TagCategory
+export interface TagCategory {
+  id: number
+  code: TagCategoryCode
   name: string
   icon: string
   description: string
 }
 
+export interface TagFormData {
+  label: string
+  category: TagCategoryCode
+  color: TagColor
+  description?: string
+}
+
+export interface CategoryInfo extends TagCategory {}
+
 export interface ReorderRequest {
   fromId: number
   toId?: number
-  toCategory: TagCategory
+  toCategory: TagCategoryCode
   toIndex?: number
-}
-
-export const TAG_CATEGORY_LABELS: Record<TagCategory, string> = {
-  room: '房间便签',
-  type: '类型便签',
-  functional: '功能便签',
 }
 
 export const TAG_COLOR_LABELS: Record<TagColor, string> = {
@@ -105,3 +93,12 @@ export const TAG_COLOR_CLASSES: Record<TagColor, { bg: string; border: string; t
     text: 'text-teal-900',
   },
 }
+
+export const SORT_OPTIONS: { value: SortByType; label: string }[] = [
+  { value: 'custom', label: '自定义' },
+  { value: 'name-asc', label: '名称 A-Z' },
+  { value: 'name-desc', label: '名称 Z-A' },
+  { value: 'count-asc', label: '物品数 少-多' },
+  { value: 'count-desc', label: '物品数 多-少' },
+  { value: 'date-desc', label: '创建时间 最新' },
+]

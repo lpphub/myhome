@@ -75,6 +75,7 @@ export function TagNote({ tag, sortableId, onDelete, onEdit }: TagNoteProps) {
         'hover:shadow-xl hover:-translate-y-1.5 hover:scale-105',
         'border text-left overflow-hidden',
         'cursor-grab active:cursor-grabbing',
+        'w-52 flex-shrink-0',
         colorClasses.bg,
         colorClasses.border,
         rotationClass
@@ -108,7 +109,7 @@ export function TagNote({ tag, sortableId, onDelete, onEdit }: TagNoteProps) {
       </div>
 
       <div className='mt-5'>
-        <h3 className={cn('font-bold text-sm mb-1', colorClasses.text)}>{tag.name}</h3>
+        <h3 className={cn('font-bold text-sm mb-1', colorClasses.text)}>{tag.label}</h3>
         {tag.description && (
           <p className={cn('text-xs mb-1.5 line-clamp-2 opacity-80', colorClasses.text)}>
             {tag.description}

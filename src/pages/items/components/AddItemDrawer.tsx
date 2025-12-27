@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { MapPin, Package, Tag, X } from 'lucide-react'
+import { MapPin, Package, Tag as TagIcon, X } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -34,14 +34,14 @@ import {
 import { Textarea as TextareaInput } from '@/components/ui/textarea'
 import type { Item } from '@/types/items'
 import { ITEM_STATUS_LABELS } from '@/types/items'
-import type { Tag as TagType } from '@/types/tags'
+import type { Tag } from '@/types/tags'
 import { TAG_COLOR_CLASSES } from '@/types/tags'
 
-const MOCK_TAGS: TagType[] = [
+const MOCK_TAGS: Tag[] = [
   {
     id: 1,
-    name: '衣物',
-    category: 'type',
+    label: '衣物',
+    category: 'todo',
     color: 'honey',
     itemCount: 10,
     createdAt: '2024-12-01T00:00:00Z',
@@ -49,8 +49,8 @@ const MOCK_TAGS: TagType[] = [
   },
   {
     id: 2,
-    name: '家具',
-    category: 'type',
+    label: '家具',
+    category: 'todo',
     color: 'lemon',
     itemCount: 5,
     createdAt: '2024-12-01T00:00:00Z',
@@ -58,8 +58,8 @@ const MOCK_TAGS: TagType[] = [
   },
   {
     id: 3,
-    name: '卧室',
-    category: 'room',
+    label: '卧室',
+    category: 'storage',
     color: 'coral',
     itemCount: 8,
     createdAt: '2024-12-01T00:00:00Z',
@@ -67,8 +67,8 @@ const MOCK_TAGS: TagType[] = [
   },
   {
     id: 4,
-    name: '厨房',
-    category: 'room',
+    label: '厨房',
+    category: 'storage',
     color: 'lavender',
     itemCount: 6,
     createdAt: '2024-12-01T00:00:00Z',
@@ -76,8 +76,8 @@ const MOCK_TAGS: TagType[] = [
   },
   {
     id: 5,
-    name: '客厅',
-    category: 'room',
+    label: '客厅',
+    category: 'storage',
     color: 'cream',
     itemCount: 4,
     createdAt: '2024-12-01T00:00:00Z',
@@ -85,8 +85,8 @@ const MOCK_TAGS: TagType[] = [
   },
   {
     id: 6,
-    name: '电器',
-    category: 'type',
+    label: '电器',
+    category: 'todo',
     color: 'pink',
     itemCount: 3,
     createdAt: '2024-12-01T00:00:00Z',
@@ -94,8 +94,8 @@ const MOCK_TAGS: TagType[] = [
   },
   {
     id: 7,
-    name: '厨具',
-    category: 'type',
+    label: '厨具',
+    category: 'todo',
     color: 'mint',
     itemCount: 7,
     createdAt: '2024-12-01T00:00:00Z',
@@ -103,8 +103,8 @@ const MOCK_TAGS: TagType[] = [
   },
   {
     id: 8,
-    name: '日常',
-    category: 'functional',
+    label: '日常',
+    category: 'other',
     color: 'honey',
     itemCount: 9,
     createdAt: '2024-12-01T00:00:00Z',
@@ -236,7 +236,7 @@ export function AddItemDrawer({ onAddItem }: AddItemDrawerProps) {
 
           <div className='grid gap-3'>
             <Label className='flex items-center gap-2'>
-              <Tag className='w-4 h-4 text-warmGray-500' />
+              <TagIcon className='w-4 h-4 text-warmGray-500' />
               标签
             </Label>
             <DropdownMenu>
@@ -247,20 +247,20 @@ export function AddItemDrawer({ onAddItem }: AddItemDrawerProps) {
                   className='w-full justify-between border-warmGray-300 focus:border-honey-400'
                 >
                   {selectedTags.length > 0 ? `已选择 ${selectedTags.length} 个标签` : '选择标签'}
-                  <Tag className='w-4 h-4 opacity-50' />
+                  <TagIcon className='w-4 h-4 opacity-50' />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className='bg-white border-honey-200 shadow-warm-sm w-64'>
                 {MOCK_TAGS.map(tag => (
                   <DropdownMenuCheckboxItem
                     key={tag.id}
-                    checked={selectedTags.includes(tag.name)}
-                    onCheckedChange={() => handleTagToggle(tag.name)}
+                    checked={selectedTags.includes(tag.label)}
+                    onCheckedChange={() => handleTagToggle(tag.label)}
                   >
                     <div
                       className={`flex items-center gap-2 ${TAG_COLOR_CLASSES[tag.color].bg} px-2 py-1 rounded`}
                     >
-                      <span className={TAG_COLOR_CLASSES[tag.color].text}>{tag.name}</span>
+                      <span className={TAG_COLOR_CLASSES[tag.color].text}>{tag.label}</span>
                     </div>
                   </DropdownMenuCheckboxItem>
                 ))}
@@ -333,7 +333,7 @@ export function AddItemDrawer({ onAddItem }: AddItemDrawerProps) {
 
           <div className='grid gap-3'>
             <Label htmlFor='item-description' className='flex items-center gap-2'>
-              <Tag className='w-4 h-4 text-warmGray-500' />
+              <TagIcon className='w-4 h-4 text-warmGray-500' />
               描述
             </Label>
             <TextareaInput
