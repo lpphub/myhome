@@ -1,7 +1,5 @@
 export type TagColor = 'lemon' | 'coral' | 'lavender' | 'honey' | 'cream' | 'pink' | 'mint'
 
-export type TagCategoryCode = 'storage' | 'todo' | 'other'
-
 export type SortByType =
   | 'custom'
   | 'name-asc'
@@ -13,7 +11,7 @@ export type SortByType =
 export interface Tag {
   id: number
   label: string
-  category: TagCategoryCode
+  category: string
   color: TagColor
   itemCount: number
   description?: string
@@ -24,7 +22,7 @@ export interface Tag {
 
 export interface TagCategory {
   id: number
-  code: TagCategoryCode
+  code: string
   name: string
   icon: string
   description: string
@@ -32,28 +30,16 @@ export interface TagCategory {
 
 export interface TagFormData {
   label: string
-  category: TagCategoryCode
+  category: string
   color: TagColor
   description?: string
 }
 
-export interface CategoryInfo extends TagCategory {}
-
 export interface ReorderRequest {
   fromId: number
   toId?: number
-  toCategory: TagCategoryCode
+  toCategory: string
   toIndex?: number
-}
-
-export const TAG_COLOR_LABELS: Record<TagColor, string> = {
-  lemon: '柠檬黄',
-  coral: '珊瑚粉',
-  lavender: '薰衣草',
-  honey: '奶茶色',
-  cream: '奶油白',
-  pink: '樱花粉',
-  mint: '薄荷绿',
 }
 
 export const TAG_COLOR_CLASSES: Record<TagColor, { bg: string; border: string; text: string }> = {

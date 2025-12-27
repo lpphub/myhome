@@ -1,5 +1,5 @@
+import type { ReorderRequest, Tag, TagCategory, TagFormData } from '@/types/tags'
 import httpClient from '@/utils/request'
-import type { CategoryInfo, ReorderRequest, TagFormData, Tag } from '@/types/tags'
 
 enum TagsApi {
   GetTags = '/tags',
@@ -17,7 +17,7 @@ export const getTags = () =>
   })
 
 export const getCategories = () =>
-  httpClient.get<CategoryInfo[]>({
+  httpClient.get<TagCategory[]>({
     url: TagsApi.GetCategories,
     mock: true,
   })

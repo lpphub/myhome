@@ -1,4 +1,5 @@
 import { Search } from 'lucide-react'
+import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -7,26 +8,35 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import type { SortByType, TagCategoryCode } from '@/types/tags'
+import type { SortByType } from '@/types/tags'
 import { SORT_OPTIONS } from '@/types/tags'
 
 interface TagFilterProps {
-  searchTerm: string
-  onSearchChange: (term: string) => void
-  selectedCategory: TagCategoryCode | 'all'
-  onSelectCategory: (category: TagCategoryCode | 'all') => void
-  sortBy: SortByType
-  onSortChange: (sortBy: SortByType) => void
+  onSearchChange?: (term: string) => void
+  onSelectCategory?: (category: 'all' | string) => void
+  onSortChange?: (sortBy: SortByType) => void
 }
 
-export function TagFilter({
-  searchTerm,
-  onSearchChange,
-  selectedCategory,
-  onSelectCategory,
-  sortBy,
-  onSortChange,
-}: TagFilterProps) {
+export function TagFilter({ onSearchChange, onSelectCategory, onSortChange }: TagFilterProps) {
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState<'all' | string>('all')
+  const [sortBy, setSortBy] = useState<SortByType>('date-desc')
+
+  const handleSearchChange = (term: string) => {
+    setSearchTerm(term)
+    onSearchChange?.(term)
+  }
+
+  const handleSelectCategory = (category: 'all' | string) => {
+    setSelectedCategory(category)
+    onSelectCategory?.(category)
+  }
+
+  const handleSortChange = (newSortBy: SortByType) => {
+    setSortBy(newSortBy)
+    onSortChange?.(newSortBy)
+  }
+
   return (
     <div className='border-cream-200 mb-6 p-4'>
       <div className='flex flex-col md:flex-row gap-4 items-center justify-between'>
@@ -35,7 +45,7 @@ export function TagFilter({
           <Input
             placeholder='搜索便签...'
             value={searchTerm}
-            onChange={e => onSearchChange(e.target.value)}
+            onChange={e => handleSearchChange(e.target.value)}
             className='pl-10 border-warmGray-300 focus:border-honey-400'
           />
         </div>
@@ -43,7 +53,7 @@ export function TagFilter({
         <div className='flex gap-4 w-full md:w-auto'>
           <Select
             value={selectedCategory}
-            onValueChange={value => onSelectCategory(value as TagCategoryCode | 'all')}
+            onValueChange={value => handleSelectCategory(value as 'all' | string)}
           >
             <SelectTrigger className='w-32 border-warmGray-300 focus:border-honey-400'>
               <SelectValue placeholder='分类' />
@@ -56,7 +66,7 @@ export function TagFilter({
             </SelectContent>
           </Select>
 
-          <Select value={sortBy} onValueChange={value => onSortChange(value as SortByType)}>
+          <Select value={sortBy} onValueChange={value => handleSortChange(value as SortByType)}>
             <SelectTrigger className='w-40 border-warmGray-300 focus:border-honey-400'>
               <SelectValue placeholder='排序' />
             </SelectTrigger>

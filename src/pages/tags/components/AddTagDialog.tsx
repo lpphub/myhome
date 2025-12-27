@@ -18,8 +18,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import type { Tag, TagCategoryCode, TagColor } from '@/types/tags'
-import { TAG_COLOR_CLASSES, TAG_COLOR_LABELS } from '@/types/tags'
+import type { Tag, TagColor } from '@/types/tags'
+import { TAG_COLOR_CLASSES } from '@/types/tags'
 
 interface AddTagDialogProps {
   open: boolean
@@ -27,7 +27,7 @@ interface AddTagDialogProps {
   onAddTag: (tag: Tag) => void
   onUpdateTag?: (tag: Tag) => void
   editingTag?: Tag | null
-  defaultCategory?: TagCategoryCode
+  defaultCategory?: string
 }
 
 const PRESET_COLORS: TagColor[] = ['lemon', 'coral', 'lavender', 'honey', 'cream', 'pink', 'mint']
@@ -42,7 +42,7 @@ export function AddTagDialog({
 }: AddTagDialogProps) {
   const isEditing = !!editingTag
   const [label, setLabel] = useState('')
-  const [category, setCategory] = useState<TagCategoryCode>('storage')
+  const [category, setCategory] = useState<string>('storage')
   const [color, setColor] = useState<TagColor>('lemon')
   const [description, setDescription] = useState('')
 
@@ -127,7 +127,7 @@ export function AddTagDialog({
               <TagIcon className='w-4 h-4 text-warmGray-500' />
               分类 *
             </Label>
-            <Select value={category} onValueChange={value => setCategory(value as TagCategoryCode)}>
+            <Select value={category} onValueChange={value => setCategory(value)}>
               <SelectTrigger id='category' className='border-warmGray-300 focus:border-honey-400'>
                 <SelectValue placeholder='选择分类' />
               </SelectTrigger>
@@ -155,7 +155,6 @@ export function AddTagDialog({
                       ? 'border-honey-400 ring-2 ring-honey-200 ring-offset-1'
                       : 'border-transparent hover:border-honey-300'
                   } ${TAG_COLOR_CLASSES[presetColor].bg}`}
-                  title={TAG_COLOR_LABELS[presetColor]}
                 >
                   {color === presetColor && (
                     <svg
@@ -177,7 +176,6 @@ export function AddTagDialog({
                 </button>
               ))}
             </div>
-            <p className='text-xs text-warmGray-500 mt-1'>已选择: {TAG_COLOR_LABELS[color]}</p>
           </div>
 
           <div className='space-y-2'>
