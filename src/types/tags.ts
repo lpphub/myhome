@@ -2,7 +2,13 @@ export type TagCategory = 'room' | 'type' | 'functional'
 
 export type TagColor = 'lemon' | 'coral' | 'lavender' | 'honey' | 'cream' | 'pink' | 'mint'
 
-export type SortByType = 'name-asc' | 'name-desc' | 'count-asc' | 'count-desc' | 'date-desc'
+export type SortByType =
+  | 'custom'
+  | 'name-asc'
+  | 'name-desc'
+  | 'count-asc'
+  | 'count-desc'
+  | 'date-desc'
 
 export interface Tag {
   id: number
@@ -13,6 +19,37 @@ export interface Tag {
   description?: string
   createdAt: string
   updatedAt: string
+  sortOrder?: number
+}
+
+export const SORT_OPTIONS: { value: SortByType; label: string }[] = [
+  { value: 'custom', label: '自定义' },
+  { value: 'name-asc', label: '名称 A-Z' },
+  { value: 'name-desc', label: '名称 Z-A' },
+  { value: 'count-asc', label: '物品数 少-多' },
+  { value: 'count-desc', label: '物品数 多-少' },
+  { value: 'date-desc', label: '创建时间 最新' },
+]
+
+export interface TagFormData {
+  name: string
+  category: TagCategory
+  color: TagColor
+  description?: string
+}
+
+export interface CategoryInfo {
+  id: TagCategory
+  name: string
+  icon: string
+  description: string
+}
+
+export interface ReorderRequest {
+  fromId: number
+  toId?: number
+  toCategory: TagCategory
+  toIndex?: number
 }
 
 export const TAG_CATEGORY_LABELS: Record<TagCategory, string> = {
@@ -68,11 +105,3 @@ export const TAG_COLOR_CLASSES: Record<TagColor, { bg: string; border: string; t
     text: 'text-teal-900',
   },
 }
-
-export const SORT_OPTIONS: { value: SortByType; label: string }[] = [
-  { value: 'name-asc', label: '名称 A-Z' },
-  { value: 'name-desc', label: '名称 Z-A' },
-  { value: 'count-asc', label: '物品数 少-多' },
-  { value: 'count-desc', label: '物品数 多-少' },
-  { value: 'date-desc', label: '创建时间 最新' },
-]

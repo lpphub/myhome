@@ -1,11 +1,26 @@
 import { useQuery } from '@tanstack/react-query'
+import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useMemo, useState } from 'react'
 
 import { LoadingState } from '@/components/LoadingState'
 import type { SortByType, Tag, TagCategory } from '@/types/tags'
+import { AddTagDialog } from './components/AddTagDialog'
 import { TagFilter } from './components/TagFilter'
 import { TagHeader } from './components/TagHeader'
 import { TagSection } from './components/TagSection'
+import { TagNote } from './components/TagNote'
+import {
+  DndContext,
+  closestCenter,
+  DragOverlay,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragOverEvent,
+  type DragStartEvent,
+} from '@dnd-kit/core'
+import { SortableContext, arrayMove, rectSortingStrategy } from '@dnd-kit/sortable'
 
 const useMockData = async () => {
   const mockTags: Tag[] = [
@@ -246,12 +261,20 @@ export default function Tags() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<TagCategory | 'all'>('all')
   const [sortBy, setSortBy] = useState<SortByType>('date-desc')
+  const [activeId, setActiveId] = useState<string | null>(null)
+  const [dragOverCategory, setDragOverCategory] = useState<TagCategory | null>(null)
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
 
   useEffect(() => {
     if (mockData?.data) {
       setTags(mockData.data)
     }
   }, [mockData])
+
+  const tagItems = useMemo(
+    () => tags.map(tag => ({ ...tag, sortableId: `${tag.category}-${tag.id}` })),
+    [tags]
+  )
 
   const filteredTags = useMemo(() => {
     let filtered = tags
@@ -271,21 +294,125 @@ export default function Tags() {
     return sortTags(filtered, sortBy)
   }, [tags, searchTerm, selectedCategory, sortBy])
 
-  const roomTags = useMemo(
-    () => filteredTags.filter(tag => tag.category === 'room'),
-    [filteredTags]
-  )
-  const typeTags = useMemo(
-    () => filteredTags.filter(tag => tag.category === 'type'),
-    [filteredTags]
-  )
-  const functionalTags = useMemo(
-    () => filteredTags.filter(tag => tag.category === 'functional'),
+  const filteredTagItems = useMemo(
+    () => filteredTags.map(tag => ({ ...tag, sortableId: `${tag.category}-${tag.id}` })),
     [filteredTags]
   )
 
+  const roomItems = useMemo(
+    () => filteredTagItems.filter(t => t.category === 'room'),
+    [filteredTagItems]
+  )
+  const typeItems = useMemo(
+    () => filteredTagItems.filter(t => t.category === 'type'),
+    [filteredTagItems]
+  )
+  const functionalItems = useMemo(
+    () => filteredTagItems.filter(t => t.category === 'functional'),
+    [filteredTagItems]
+  )
+
+  const roomItemIds = useMemo(() => roomItems.map(t => t.sortableId), [roomItems])
+  const typeItemIds = useMemo(() => typeItems.map(t => t.sortableId), [typeItems])
+  const functionalItemIds = useMemo(() => functionalItems.map(t => t.sortableId), [functionalItems])
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  )
+
+  const activeTag = useMemo(
+    () => (activeId ? tagItems.find(t => t.sortableId === activeId) : null),
+    [activeId, tagItems]
+  )
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event
+    setActiveId(active.id as string)
+  }
+
+  const handleDragOver = (event: DragOverEvent) => {
+    const { over } = event
+    if (!over) {
+      setDragOverCategory(null)
+      return
+    }
+
+    const overId = over.id as string
+    const overCategory = overId.split('-')[0] as TagCategory
+    setDragOverCategory(overCategory)
+  }
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+
+    setActiveId(null)
+    setDragOverCategory(null)
+
+    if (!over) return
+
+    const activeId = active.id as string
+    const overId = over.id as string
+
+    const activeSortableId = activeId
+    const overSortableId = overId
+
+    const activeCategoryTag = activeSortableId.split('-')[0] as TagCategory
+    const overCategoryTag = overSortableId.split('-')[0] as TagCategory
+
+    const activeTagId = parseInt(activeSortableId.split('-')[1], 10)
+
+    if (activeCategoryTag === overCategoryTag) {
+      const activeIndex = tagItems.findIndex(t => t.sortableId === activeSortableId)
+      const overIndex = tagItems.findIndex(t => t.sortableId === overSortableId)
+
+      if (activeIndex !== -1 && overIndex !== -1) {
+        const newItems = arrayMove(tagItems, activeIndex, overIndex)
+        const newTags = newItems.map(({ sortableId: _sortableId, ...tag }) => tag)
+        setTags(newTags)
+
+        if (sortBy !== 'custom') {
+          setSortBy('custom')
+        }
+      }
+    } else {
+      const overIndex = tagItems.findIndex(t => t.sortableId === overSortableId)
+      const activeIndex = tagItems.findIndex(t => t.sortableId === activeSortableId)
+
+      if (activeIndex !== -1 && overIndex !== -1) {
+        const updatedItem = {
+          ...tagItems[activeIndex],
+          category: overCategoryTag,
+          sortableId: `${overCategoryTag}-${activeTagId}`,
+        }
+
+        const withoutActive = tagItems.filter(t => t.sortableId !== activeSortableId)
+
+        const newItems = [
+          ...withoutActive.slice(0, overIndex),
+          updatedItem,
+          ...withoutActive.slice(overIndex),
+        ]
+
+        const newTags = newItems.map(({ sortableId: _sortableId, ...tag }) => tag)
+        setTags(newTags)
+
+        if (sortBy !== 'custom') {
+          setSortBy('custom')
+        }
+      }
+    }
+  }
+
   const handleAddTag = (tag: Tag) => {
     setTags(prev => [tag, ...prev])
+  }
+
+  const handleOpenAddDialog = () => {
+    setIsAddDialogOpen(true)
   }
 
   const handleDeleteTag = (tagId: number) => {
@@ -302,48 +429,85 @@ export default function Tags() {
 
   return (
     <div className='min-h-screen'>
-      <main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6'>
-        <TagHeader onAddTag={handleAddTag} />
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+      >
+        <DragOverlay>
+          <AnimatePresence>
+            {activeTag && (
+              <motion.div
+                initial={{ scale: 1 }}
+                animate={{ scale: 1.05, rotate: 2 }}
+                className='opacity-80'
+              >
+                <TagNote tag={activeTag} sortableId={activeTag.sortableId} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </DragOverlay>
 
-        <TagFilter
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          selectedCategory={selectedCategory}
-          onSelectCategory={setSelectedCategory}
-          sortBy={sortBy}
-          onSortChange={setSortBy}
-        />
+        <main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6'>
+          <TagHeader onAddTag={handleOpenAddDialog} />
 
-        {selectedCategory === 'all' || selectedCategory === 'room' ? (
-          <TagSection
-            title='房间 便签区'
-            category='room'
-            tags={selectedCategory === 'all' ? roomTags : filteredTags}
-            onDeleteTag={handleDeleteTag}
-            onEditTag={handleEditTag}
+          <TagFilter
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            selectedCategory={selectedCategory}
+            onSelectCategory={setSelectedCategory}
+            sortBy={sortBy}
+            onSortChange={setSortBy}
           />
-        ) : null}
 
-        {selectedCategory === 'all' || selectedCategory === 'type' ? (
-          <TagSection
-            title='类型 便签区'
-            category='type'
-            tags={selectedCategory === 'all' ? typeTags : filteredTags}
-            onDeleteTag={handleDeleteTag}
-            onEditTag={handleEditTag}
-          />
-        ) : null}
+          {selectedCategory === 'all' || selectedCategory === 'room' ? (
+            <SortableContext items={roomItemIds} strategy={rectSortingStrategy}>
+              <TagSection
+                title='房间 便签区'
+                category='room'
+                tags={selectedCategory === 'all' ? roomItems : filteredTagItems}
+                isDragOver={dragOverCategory === 'room'}
+                onDeleteTag={handleDeleteTag}
+                onEditTag={handleEditTag}
+              />
+            </SortableContext>
+          ) : null}
 
-        {selectedCategory === 'all' || selectedCategory === 'functional' ? (
-          <TagSection
-            title='功能 便签区'
-            category='functional'
-            tags={selectedCategory === 'all' ? functionalTags : filteredTags}
-            onDeleteTag={handleDeleteTag}
-            onEditTag={handleEditTag}
-          />
-        ) : null}
-      </main>
+          {selectedCategory === 'all' || selectedCategory === 'type' ? (
+            <SortableContext items={typeItemIds} strategy={rectSortingStrategy}>
+              <TagSection
+                title='类型 便签区'
+                category='type'
+                tags={selectedCategory === 'all' ? typeItems : filteredTagItems}
+                isDragOver={dragOverCategory === 'type'}
+                onDeleteTag={handleDeleteTag}
+                onEditTag={handleEditTag}
+              />
+            </SortableContext>
+          ) : null}
+
+          {selectedCategory === 'all' || selectedCategory === 'functional' ? (
+            <SortableContext items={functionalItemIds} strategy={rectSortingStrategy}>
+              <TagSection
+                title='功能 便签区'
+                category='functional'
+                tags={selectedCategory === 'all' ? functionalItems : filteredTagItems}
+                isDragOver={dragOverCategory === 'functional'}
+                onDeleteTag={handleDeleteTag}
+                onEditTag={handleEditTag}
+              />
+            </SortableContext>
+          ) : null}
+        </main>
+      </DndContext>
+
+      <AddTagDialog
+        open={isAddDialogOpen}
+        onOpenChange={setIsAddDialogOpen}
+        onAddTag={handleAddTag}
+      />
     </div>
   )
 }

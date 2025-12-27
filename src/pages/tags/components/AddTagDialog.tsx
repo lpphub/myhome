@@ -1,5 +1,5 @@
 import { Tag as TagIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {
@@ -26,15 +26,22 @@ interface AddTagDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onAddTag: (tag: Tag) => void
+  defaultCategory?: TagCategory
 }
 
 const PRESET_COLORS: TagColor[] = ['lemon', 'coral', 'lavender', 'honey', 'cream', 'pink', 'mint']
 
-export function AddTagDialog({ open, onOpenChange, onAddTag }: AddTagDialogProps) {
+export function AddTagDialog({ open, onOpenChange, onAddTag, defaultCategory }: AddTagDialogProps) {
   const [name, setName] = useState('')
-  const [category, setCategory] = useState<TagCategory>('room')
+  const [category, setCategory] = useState<TagCategory>(defaultCategory || 'room')
   const [color, setColor] = useState<TagColor>('lemon')
   const [description, setDescription] = useState('')
+
+  useEffect(() => {
+    if (defaultCategory) {
+      setCategory(defaultCategory)
+    }
+  }, [defaultCategory])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()

@@ -1,38 +1,24 @@
-import { Plus, Tag as TagIcon } from 'lucide-react'
-import { useState } from 'react'
+import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import type { Tag } from '@/types/tags'
-import { AddTagDialog } from './AddTagDialog'
 
 interface TagHeaderProps {
-  onAddTag: (tag: Tag) => void
+  onAddTag: () => void
 }
 
 export function TagHeader({ onAddTag }: TagHeaderProps) {
-  const [isOpen, setIsOpen] = useState(false)
-
   return (
-    <div className='flex items-center justify-between mb-8'>
-      <div className='flex items-center space-x-4'>
-        <div className='w-16 h-16 bg-lavender-100 rounded-2xl flex items-center justify-center'>
-          <TagIcon className='w-8 h-8 text-lavender-600' />
-        </div>
-        <div>
-          <h1 className='text-3xl font-bold text-warmGray-600 mb-2'>便签墙</h1>
-          <p className='text-warmGray-400'>让收纳更加井井有条</p>
-        </div>
+    <div className='flex items-center justify-between mb-6'>
+      <div>
+        <h1 className='text-3xl font-bold text-warmGray-800 mb-1'>标签管理</h1>
+        <p className='text-warmGray-500'>整理和分类你的所有便签</p>
       </div>
-
-      <div className='flex items-center gap-3'>
-        <Button
-          onClick={() => setIsOpen(true)}
-          className='bg-linear-to-r from-honey-400 to-honey-600 text-white hover:from-honey-500 hover:to-honey-700 shadow-warm-sm'
-        >
-          <Plus className='w-4 h-4 mr-1' />
-          添加便签
-        </Button>
-        <AddTagDialog open={isOpen} onOpenChange={setIsOpen} onAddTag={onAddTag} />
-      </div>
+      <Button
+        onClick={onAddTag}
+        className='bg-linear-to-r from-honey-400 to-honey-500 hover:from-honey-500 hover:to-honey-600 text-white shadow-warm-md hover:shadow-warm-lg transition-all duration-300 flex items-center gap-2'
+      >
+        <Plus className='w-5 h-5' />
+        添加便签
+      </Button>
     </div>
   )
 }

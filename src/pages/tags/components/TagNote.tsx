@@ -1,21 +1,34 @@
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import { Edit2, Pin, Trash2 } from 'lucide-react'
-import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import type { Tag } from '@/types/tags'
 import { TAG_COLOR_CLASSES } from '@/types/tags'
 
 interface TagNoteProps {
   tag: Tag
+  sortableId?: string
   onDelete?: (tagId: number) => void
   onEdit?: (tag: Tag) => void
 }
 
 const ROTATIONS = ['-rotate-1', 'rotate-1', 'rotate-2', '-rotate-2', 'rotate-0']
 
-export function TagNote({ tag, onDelete, onEdit }: TagNoteProps) {
-  const [isHovered, setIsHovered] = useState(false)
+export function TagNote({ tag, sortableId, onDelete, onEdit }: TagNoteProps) {
   const rotationClass = ROTATIONS[tag.id % ROTATIONS.length]
   const colorClasses = TAG_COLOR_CLASSES[tag.color]
+
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: sortableId || `${tag.category}-${tag.id}`,
+  })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    scale: isDragging ? 1.05 : 1,
+    zIndex: isDragging ? 1000 : undefined,
+  }
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
@@ -26,11 +39,13 @@ export function TagNote({ tag, onDelete, onEdit }: TagNoteProps) {
 
   const handleEditClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
-    handleClick()
+    if (onEdit) {
+      onEdit(tag)
+    }
   }
 
   const handleClick = () => {
-    if (onEdit) {
+    if (!isDragging && onEdit) {
       onEdit(tag)
     }
   }
@@ -38,31 +53,36 @@ export function TagNote({ tag, onDelete, onEdit }: TagNoteProps) {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
-      handleClick()
+      if (onEdit) {
+        onEdit(tag)
+      }
     }
   }
 
   return (
     <div
-      role='button'
-      tabIndex={0}
+      ref={setNodeRef}
+      style={style}
+      data-testid='tag-note'
+      {...attributes}
+      {...listeners}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
+      role='button'
+      tabIndex={0}
       className={cn(
         'relative group p-3 rounded-lg shadow-md transition-all duration-300',
         'hover:shadow-xl hover:-translate-y-1.5 hover:scale-105',
-        'border cursor-pointer text-left overflow-hidden',
+        'border text-left overflow-hidden',
+        'cursor-grab active:cursor-grabbing',
         colorClasses.bg,
         colorClasses.border,
         rotationClass
       )}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       <div
         className={cn(
-          'absolute top-2 right-2 flex gap-1 transition-opacity',
-          isHovered ? 'opacity-100' : 'opacity-0'
+          'absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity'
         )}
       >
         <button
