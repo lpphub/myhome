@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { LoadingState } from '@/components/LoadingState'
-import type { Tag } from '@/types/tags'
+import type { SortByType, Tag } from '@/types/tags'
 import { AddTagDialog } from './components/AddTagDialog'
 import { TagDragPanel } from './components/TagDragPanel'
 import { TagFilter } from './components/TagFilter'
@@ -10,6 +10,7 @@ export default function TagsPage() {
   const { tags, categories, isLoading, mutations } = useTags()
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [editingTag, setEditingTag] = useState<Tag | null>(null)
+  const [sortBy, setSortBy] = useState<SortByType>('date-desc')
 
   const handleAddTag = (tag: Tag) => {
     mutations.onAdd({
@@ -36,10 +37,12 @@ export default function TagsPage() {
 
   return (
     <div className='max-w-7xl mx-auto px-4 py-6'>
-      <TagFilter />
+      <TagFilter sortBy={sortBy} onSortChange={setSortBy} />
       <TagDragPanel
         tags={tags}
         categories={categories}
+        sortBy={sortBy}
+        onSortChange={setSortBy}
         tagActions={{
           onReorder: mutations.onReorder,
           onEdit: setEditingTag,

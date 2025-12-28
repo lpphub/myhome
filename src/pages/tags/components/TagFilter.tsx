@@ -13,28 +13,16 @@ import { SORT_OPTIONS } from '@/types/tags'
 
 interface TagFilterProps {
   onSearchChange?: (term: string) => void
-  onSelectCategory?: (category: 'all' | string) => void
-  onSortChange?: (sortBy: SortByType) => void
+  sortBy: SortByType
+  onSortChange: (sortBy: SortByType) => void
 }
 
-export function TagFilter({ onSearchChange, onSelectCategory, onSortChange }: TagFilterProps) {
+export function TagFilter({ onSearchChange, sortBy, onSortChange }: TagFilterProps) {
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<'all' | string>('all')
-  const [sortBy, setSortBy] = useState<SortByType>('date-desc')
 
   const handleSearchChange = (term: string) => {
     setSearchTerm(term)
     onSearchChange?.(term)
-  }
-
-  const handleSelectCategory = (category: 'all' | string) => {
-    setSelectedCategory(category)
-    onSelectCategory?.(category)
-  }
-
-  const handleSortChange = (newSortBy: SortByType) => {
-    setSortBy(newSortBy)
-    onSortChange?.(newSortBy)
   }
 
   return (
@@ -51,22 +39,7 @@ export function TagFilter({ onSearchChange, onSelectCategory, onSortChange }: Ta
         </div>
 
         <div className='flex gap-4 w-full md:w-auto'>
-          <Select
-            value={selectedCategory}
-            onValueChange={value => handleSelectCategory(value as 'all' | string)}
-          >
-            <SelectTrigger className='w-32 border-warmGray-300 focus:border-honey-400'>
-              <SelectValue placeholder='分类' />
-            </SelectTrigger>
-            <SelectContent className='bg-white border-honey-200 shadow-warm-sm min-w-(--radix-select-trigger-width)'>
-              <SelectItem value='all'>全部</SelectItem>
-              <SelectItem value='storage'>收纳分类</SelectItem>
-              <SelectItem value='todo'>待办事项</SelectItem>
-              <SelectItem value='other'>其他</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select value={sortBy} onValueChange={value => handleSortChange(value as SortByType)}>
+          <Select value={sortBy} onValueChange={value => onSortChange(value as SortByType)}>
             <SelectTrigger className='w-40 border-warmGray-300 focus:border-honey-400'>
               <SelectValue placeholder='排序' />
             </SelectTrigger>

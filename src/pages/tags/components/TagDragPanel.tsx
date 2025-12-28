@@ -22,6 +22,8 @@ interface TagDragItem extends Tag {
 interface TagDragProps {
   tags: Tag[]
   categories: Array<{ code: string; name: string }>
+  sortBy: SortByType
+  onSortChange: (sortBy: SortByType) => void
   tagActions: {
     onReorder: (params: {
       fromId: number
@@ -34,8 +36,7 @@ interface TagDragProps {
   }
 }
 
-export function TagDragPanel({ tags, categories, tagActions }: TagDragProps) {
-  const [sortBy, setSortBy] = useState<SortByType>('date-desc')
+export function TagDragPanel({ tags, categories, sortBy, onSortChange, tagActions }: TagDragProps) {
   const [localTags, setLocalTags] = useState<Tag[]>(tags)
   const [activeId, setActiveId] = useState<string | null>(null)
   const [dragOverCategory, setDragOverCategory] = useState<string | null>(null)
@@ -129,7 +130,7 @@ export function TagDragPanel({ tags, categories, tagActions }: TagDragProps) {
           toCategory: overCategory,
           toIndex: overIndex,
         })
-        if (sortBy !== 'custom') setSortBy('custom')
+        onSortChange('custom')
       }
     } else {
       const activeIndex = filteredTags.findIndex(t => `${t.category}-${t.id}` === activeSortableId)
@@ -149,7 +150,7 @@ export function TagDragPanel({ tags, categories, tagActions }: TagDragProps) {
           toCategory: overCategory,
           toIndex: overCategoryTags.length,
         })
-        if (sortBy !== 'custom') setSortBy('custom')
+        onSortChange('custom')
       }
     }
   }
