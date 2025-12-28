@@ -25,9 +25,9 @@ interface TagDragProps {
   tagActions: {
     onReorder: (params: {
       fromId: number
-      toId: number
+      toId?: number
       toCategory: string
-      toIndex: number
+      toIndex?: number
     }) => void
     onEdit: (tag: Tag) => void
     onDelete: (tagId: number) => void
@@ -132,23 +132,22 @@ export function TagDragPanel({ tags, categories, tagActions }: TagDragProps) {
         if (sortBy !== 'custom') setSortBy('custom')
       }
     } else {
-      const overIndex = filteredTags.findIndex(t => `${t.category}-${t.id}` === overSortableId)
       const activeIndex = filteredTags.findIndex(t => `${t.category}-${t.id}` === activeSortableId)
-      if (activeIndex !== -1 && overIndex !== -1) {
+      const activeCategoryTags = filteredTags.filter(t => t.category === activeCategory)
+      const overCategoryTags = filteredTags.filter(t => t.category === overCategory)
+      if (activeIndex !== -1) {
         const updatedItem = { ...filteredTags[activeIndex], category: overCategory }
-        const withoutActive = filteredTags.filter((_, i) => i !== activeIndex)
-        const newItems = [
-          ...withoutActive.slice(0, overIndex),
-          updatedItem,
-          ...withoutActive.slice(overIndex),
-        ]
+        const newOverCategoryTags = [...overCategoryTags, updatedItem]
+        const newActiveCategoryTags = activeCategoryTags.filter(t => t.id !== activeTagId)
+        const otherCategoriesTags = filteredTags.filter(
+          t => t.category !== activeCategory && t.category !== overCategory
+        )
+        const newItems = [...otherCategoriesTags, ...newActiveCategoryTags, ...newOverCategoryTags]
         setLocalTags(newItems)
-        const targetTag = filteredTags[overIndex]
         tagActions?.onReorder({
           fromId: activeTagId,
-          toId: targetTag.id,
           toCategory: overCategory,
-          toIndex: overIndex,
+          toIndex: overCategoryTags.length,
         })
         if (sortBy !== 'custom') setSortBy('custom')
       }

@@ -13,9 +13,9 @@ interface UseTagsHook {
     onDelete: (id: number) => void
     onReorder: (params: {
       fromId: number
-      toId: number
+      toId?: number
       toCategory: string
-      toIndex: number
+      toIndex?: number
     }) => void
   }
 }
