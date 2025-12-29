@@ -1,5 +1,4 @@
 // utils/dnd-utils.ts
-
 import { arrayMove } from '@dnd-kit/sortable'
 import type { Label, ReorderRequest } from '@/types/labels'
 
@@ -54,8 +53,8 @@ export function handleDragEnd(
 
       // 更新 order
       reordered.forEach((label, index) => {
-        const originalLabel = updatedLabels.find(l => l.id === label.id)!
-        if (originalLabel.order !== index) {
+        const originalLabel = updatedLabels.find(l => l.id === label.id)
+        if (originalLabel && originalLabel.order !== index) {
           originalLabel.order = index
           items.push({
             id: label.id,
@@ -70,8 +69,8 @@ export function handleDragEnd(
     // 1. 从源分类移除
     const filteredSource = sourceCategoryLabels.filter(l => l.id !== activeId)
     filteredSource.forEach((label, index) => {
-      const originalLabel = updatedLabels.find(l => l.id === label.id)!
-      if (originalLabel.order !== index) {
+      const originalLabel = updatedLabels.find(l => l.id === label.id)
+      if (originalLabel && originalLabel.order !== index) {
         originalLabel.order = index
         items.push({
           id: label.id,
@@ -88,15 +87,17 @@ export function handleDragEnd(
         : targetCategoryLabels.length
 
     const newTargetLabels = [...targetCategoryLabels]
-    const movedLabel = updatedLabels.find(l => l.id === activeId)!
-    movedLabel.category = overCategory
-    newTargetLabels.splice(insertIndex, 0, movedLabel)
+    const movedLabel = updatedLabels.find(l => l.id === activeId)
+    if (movedLabel) {
+      movedLabel.category = overCategory
+      newTargetLabels.splice(insertIndex, 0, movedLabel)
+    }
 
     // 更新目标分类的 order
     newTargetLabels.forEach((label, index) => {
-      const originalLabel = updatedLabels.find(l => l.id === label.id)!
-      originalLabel.order = index
-      if (label.id === activeId || originalLabel.order !== index) {
+      const originalLabel = updatedLabels.find(l => l.id === label.id)
+      if (originalLabel && originalLabel.order !== index) {
+        originalLabel.order = index
         items.push({
           id: label.id,
           category: overCategory,

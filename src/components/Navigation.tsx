@@ -44,11 +44,11 @@ const navItems: NavItem[] = [
     description: '收纳物品展示',
   },
   {
-    id: 'tags',
+    id: 'labels',
     label: '便签墙',
     icon: Tag,
-    path: '/tags',
-    description: '便签墙管理',
+    path: '/labels',
+    description: '便签管理',
   },
 ]
 

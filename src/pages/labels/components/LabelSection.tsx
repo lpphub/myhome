@@ -2,14 +2,14 @@ import { Plus } from 'lucide-react'
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { LabelCard } from '@/pages/labels/components/LabelCard'
-import type { Label, LabelCategory } from '@/types/labels'
+import type { LabelCategory, LabelFormData } from '@/types/labels'
 
 interface LabelSectionProps {
   category: LabelCategory
   isDragOver?: boolean
   labelActions?: {
     onDelete: (labelId: number) => void
-    onEdit: (label: Label) => void
+    onEdit: (labelId: number, label: LabelFormData) => void
   }
   onAddClick?: (category: string) => void
 }
@@ -47,7 +47,7 @@ export function LabelSection({
         {category.labels.length > 0 && onAddClick && (
           <motion.button
             type='button'
-            onClick={() => onAddClick(category.id)}
+            onClick={() => onAddClick(category.code)}
             className={cn(
               'relative w-52 shrink-0 p-3 rounded-lg border-2 border-dashed',
               'bg-cream-100 border-cream-200',
@@ -68,7 +68,7 @@ export function LabelSection({
         {category.labels.length === 0 && onAddClick && (
           <motion.button
             type='button'
-            onClick={() => onAddClick(category.id)}
+            onClick={() => onAddClick(category.code)}
             className={cn(
               'w-52 shrink-0 p-4 rounded-lg border-2 border-dashed',
               'bg-cream-100 border-cream-200',

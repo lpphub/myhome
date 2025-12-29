@@ -18,10 +18,11 @@ export function groupByCategory(labels: Label[]): LabelCategory[] {
     })
 
   return Array.from(categoryMap.entries()).map(([name, labels]) => ({
-    id: name,
+    id: 0,
     name,
     labels,
     icon: '',
+    code: '',
   }))
 }
 
@@ -49,8 +50,7 @@ export function useUpdateLabel() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<LabelFormData> }) =>
-      updateLabel(id, data),
+    mutationFn: ({ id, data }: { id: number; data: LabelFormData }) => updateLabel(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEY })
     },

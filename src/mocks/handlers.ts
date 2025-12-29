@@ -1,10 +1,10 @@
 import { delay, HttpResponse, http } from 'msw'
 import type { AuthForm } from '@/api/auth'
-import type { Tag, TagCategory, TagFormData } from '@/types/tags'
+import type { Label, LabelCategory } from '@/types/labels'
 
-async function loadTagsData(): Promise<{ categories: TagCategory[]; tags: Tag[] }> {
-  const res = await fetch('/data/tags.json')
-  if (!res.ok) throw new Error('Failed to load tags.json')
+async function loadLabelsData(): Promise<{ categories: LabelCategory[]; labels: Label[] }> {
+  const res = await fetch('/data/labels.json')
+  if (!res.ok) throw new Error('Failed to load labels.json')
   return res.json()
 }
 
@@ -103,66 +103,21 @@ export const handlers = [
     })
   }),
 
-  http.get('/api/tags', async () => {
-    await delay(200)
-    const data = await loadTagsData()
+  http.get('/api/labels', async () => {
+    const data = await loadLabelsData()
     return HttpResponse.json({
       code: 200,
       message: '获取标签成功',
-      data: data.tags,
+      data: data.labels,
     })
   }),
 
-  http.get('/api/tags/categories', async () => {
-    await delay(100)
-    const data = await loadTagsData()
+  http.get('/api/labels/categories', async () => {
+    const data = await loadLabelsData()
     return HttpResponse.json({
       code: 200,
       message: '获取分类成功',
       data: data.categories,
-    })
-  }),
-
-  http.post('/api/tags', async ({ request }) => {
-    await delay(200)
-    const body = (await request.json()) as TagFormData
-    console.log('[Mock] Create tag:', body)
-    return HttpResponse.json({
-      code: 200,
-      message: '标签创建成功',
-      data: { id: Date.now(), ...body, itemCount: 0 },
-    })
-  }),
-
-  http.patch('/api/tags/:id', async ({ params, request }) => {
-    await delay(200)
-    const id = Number(params.id)
-    const body = await request.json()
-    console.log(`[Mock] Update tag ${id}:`, body)
-    return HttpResponse.json({
-      code: 200,
-      message: '标签更新成功',
-      data: { id, ...(body as object) },
-    })
-  }),
-
-  http.delete('/api/tags/:id', async ({ params }) => {
-    await delay(200)
-    const id = Number(params.id)
-    console.log(`[Mock] Delete tag ${id}`)
-    return HttpResponse.json({
-      code: 200,
-      message: '标签删除成功',
-    })
-  }),
-
-  http.post('/api/tags/reorder', async ({ request }) => {
-    await delay(200)
-    const body = await request.json()
-    console.log('[Mock] Reorder tags:', body)
-    return HttpResponse.json({
-      code: 200,
-      message: '排序更新成功',
     })
   }),
 

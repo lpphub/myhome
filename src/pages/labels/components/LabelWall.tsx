@@ -15,13 +15,13 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useCallback, useMemo, useState } from 'react'
 import { groupByCategory, useReorderLabels } from '@/pages/labels/hooks/useLabels'
 import { handleDragEnd as processDragEnd } from '@/pages/labels/utils/dnd-utils'
-import type { Label } from '@/types/labels'
+import type { Label, LabelFormData } from '@/types/labels'
 import { LabelCard } from './LabelCard'
 import { LabelSection } from './LabelSection'
 
 interface LabelWallProps {
   labels: Label[]
-  onEditLabel?: (label: Label) => void
+  onEditLabel?: (labelId: number, label: LabelFormData) => void
   onDeleteLabel?: (labelId: number) => void
 }
 
@@ -41,7 +41,7 @@ export function LabelWall({ labels, onEditLabel, onDeleteLabel }: LabelWallProps
 
   const labelActions = useMemo(
     () => ({
-      onEdit: (label: Label) => onEditLabel?.(label),
+      onEdit: (id: number, label: LabelFormData) => onEditLabel?.(id, label),
       onDelete: (id: number) => onDeleteLabel?.(id),
     }),
     [onEditLabel, onDeleteLabel]

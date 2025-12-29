@@ -2,7 +2,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Edit2, Pin, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { Label } from '@/types/labels'
+import type { Label, LabelFormData } from '@/types/labels'
 
 const ROTATIONS = ['-rotate-1', 'rotate-1', 'rotate-2', '-rotate-2', 'rotate-0']
 const CARD_COLOR_CLASSES: Record<string, { bg: string; border: string; text: string }> = {
@@ -46,15 +46,15 @@ const CARD_COLOR_CLASSES: Record<string, { bg: string; border: string; text: str
 interface LabelCardProps {
   label: Label
   onDelete?: (labelId: number) => void
-  onEdit?: (label: Label) => void
+  onEdit?: (labelId: number, label: LabelFormData) => void
 }
 
-export function LabelCard({ label, onDelete, onEdit }: LabelCardProps) {
+export function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
   const rotationClass = ROTATIONS[label.id % ROTATIONS.length]
   const colorClasses = CARD_COLOR_CLASSES[label.color]
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: `${label.category}-${label.id}`,
+    id: `label-${label.id}`,
   })
 
   const style = {
@@ -75,13 +75,13 @@ export function LabelCard({ label, onDelete, onEdit }: LabelCardProps) {
   const handleEditClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     if (onEdit) {
-      onEdit(label)
+      onEdit(label.id, label)
     }
   }
 
   const handleClick = () => {
     if (!isDragging && onEdit) {
-      onEdit(label)
+      onEdit(label.id, label)
     }
   }
 
@@ -89,7 +89,7 @@ export function LabelCard({ label, onDelete, onEdit }: LabelCardProps) {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
       if (onEdit) {
-        onEdit(label)
+        onEdit(label.id, label)
       }
     }
   }

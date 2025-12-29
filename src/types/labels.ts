@@ -10,7 +10,8 @@ export interface Label {
 }
 
 export interface LabelCategory {
-  id: string
+  id: number
+  code: string
   name: string
   icon: string
   labels: Label[]
@@ -19,6 +20,7 @@ export interface LabelCategory {
 export interface LabelFormData {
   name: string
   category: string
+  description?: string
   color?: string
 }
 
