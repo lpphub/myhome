@@ -33,6 +33,7 @@ interface TagDragProps {
     }) => void
     onEdit: (tag: Tag) => void
     onDelete: (tagId: number) => void
+    onAddTagClick?: (category: string) => void
   }
 }
 
@@ -193,6 +194,7 @@ export function TagDragPanel({ tags, categories, sortBy, onSortChange, tagAction
               onDelete: tagActions?.onDelete,
               onEdit: tagActions?.onEdit,
             }}
+            onAddClick={tagActions?.onAddTagClick}
           />
         </SortableContext>
       ))}

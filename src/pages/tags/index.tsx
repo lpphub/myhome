@@ -10,6 +10,7 @@ export default function TagsPage() {
   const { tags, categories, isLoading, mutations } = useTags()
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [editingTag, setEditingTag] = useState<Tag | null>(null)
+  const [defaultCategory, setDefaultCategory] = useState<string>('')
   const [sortBy, setSortBy] = useState<SortByType>('date-desc')
 
   const handleAddTag = (tag: Tag) => {
@@ -33,6 +34,11 @@ export default function TagsPage() {
     setEditingTag(null)
   }
 
+  const handleAddTagClick = (category: string) => {
+    setDefaultCategory(category)
+    setIsAddDialogOpen(true)
+  }
+
   if (isLoading) return <LoadingState type='loading' />
 
   return (
@@ -47,6 +53,7 @@ export default function TagsPage() {
           onReorder: mutations.onReorder,
           onEdit: setEditingTag,
           onDelete: mutations.onDelete,
+          onAddTagClick: handleAddTagClick,
         }}
       />
       <AddTagDialog
@@ -55,6 +62,7 @@ export default function TagsPage() {
         onAddTag={handleAddTag}
         onUpdateTag={handleUpdateTag}
         editingTag={editingTag}
+        defaultCategory={defaultCategory}
       />
     </div>
   )

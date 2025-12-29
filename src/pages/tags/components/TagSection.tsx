@@ -1,6 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Box, CheckSquare, Edit2, MoreHorizontal, Pin, Trash2 } from 'lucide-react'
+import { Box, CheckSquare, Edit2, MoreHorizontal, Pin, Plus, Trash2 } from 'lucide-react'
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
 import type { Tag } from '@/types/tags'
@@ -146,6 +146,7 @@ export function TagSection({
   tags,
   isDragOver = false,
   tagActions,
+  onAddClick,
 }: {
   title: string
   category: string
@@ -155,6 +156,7 @@ export function TagSection({
     onDelete: (tagId: number) => void
     onEdit: (tag: Tag) => void
   }
+  onAddClick?: (category: string) => void
 }) {
   const Icon = ICON_MAP[category]
 
@@ -182,12 +184,46 @@ export function TagSection({
           <TagNote key={tag.id} tag={tag} {...tagActions} />
         ))}
 
-        {tags.length === 0 && (
-          <div className='w-full py-12 text-center text-warmGray-400 bg-white/50 rounded-2xl border-2 border-dashed border-cream-300'>
-            <Box className='w-12 h-12 mx-auto mb-3 opacity-50' aria-hidden='true' />
-            <p className='font-medium'>暂无便签</p>
-            <p className='text-sm mt-1'>点击右上角按钮添加第一个便签</p>
-          </div>
+        {tags.length > 0 && onAddClick && (
+          <motion.button
+            type='button'
+            onClick={() => onAddClick(category)}
+            className={cn(
+              'relative w-52 shrink-0 p-3 rounded-lg border-2 border-dashed',
+              'bg-cream-100 border-cream-200',
+              'hover:border-honey-300 hover:bg-honey-50 transition-all duration-300',
+              'group flex flex-col items-center justify-center',
+              'text-cream-900 hover:text-honey-600'
+            )}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className='mt-5 mb-1.5'>
+              <Plus className='w-8 h-8 transition-transform group-hover:rotate-90 mx-auto' />
+            </div>
+            <span className='text-sm font-medium'>添加标签</span>
+          </motion.button>
+        )}
+
+        {tags.length === 0 && onAddClick && (
+          <motion.button
+            type='button'
+            onClick={() => onAddClick(category)}
+            className={cn(
+              'w-52 shrink-0 p-4 rounded-lg border-2 border-dashed',
+              'bg-cream-100 border-cream-200',
+              'hover:border-honey-300 hover:bg-honey-50 transition-all duration-300',
+              'group flex flex-col items-center justify-center',
+              'text-cream-900 hover:text-honey-600'
+            )}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className='mt-5 mb-1.5'>
+              <Plus className='w-8 h-8 transition-transform group-hover:rotate-90 mx-auto' />
+            </div>
+            <span className='text-sm font-medium'>添加标签</span>
+          </motion.button>
         )}
       </div>
     </motion.div>
