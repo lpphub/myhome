@@ -1,0 +1,91 @@
+import { Plus } from 'lucide-react'
+import { motion } from 'motion/react'
+import { cn } from '@/lib/utils'
+import { LabelCard } from '@/pages/labels/components/LabelCard'
+import type { Label, LabelCategory } from '@/types/labels'
+
+interface LabelSectionProps {
+  category: LabelCategory
+  isDragOver?: boolean
+  labelActions?: {
+    onDelete: (labelId: number) => void
+    onEdit: (label: Label) => void
+  }
+  onAddClick?: (category: string) => void
+}
+
+export function LabelSection({
+  category,
+  labelActions,
+  isDragOver = false,
+  onAddClick,
+}: LabelSectionProps) {
+  return (
+    <motion.div
+      className='mb-8'
+      animate={{ scale: isDragOver ? 1.02 : 1 }}
+      style={{ backgroundColor: isDragOver ? 'rgba(255, 243, 224, 0.3)' : 'transparent' }}
+      transition={{ duration: 0.2 }}
+    >
+      <div className='flex items-center mb-4 px-1'>
+        <div className='flex items-center gap-2'>
+          <div className='w-10 h-10 rounded-xl bg-linear-to-br from-honey-100 to-honey-200 flex items-center justify-center'>
+            {/* <Icon className='w-5 h-5 text-honey-600' /> */}
+          </div>
+          <div>
+            <h2 className='text-lg font-bold text-warmGray-800'>{category.name}</h2>
+            <p className='text-sm text-warmGray-500'>{category.labels.length} 个便签</p>
+          </div>
+        </div>
+      </div>
+
+      <div className='flex flex-wrap gap-4'>
+        {category.labels.map(label => (
+          <LabelCard key={label.id} label={label} {...labelActions} />
+        ))}
+
+        {category.labels.length > 0 && onAddClick && (
+          <motion.button
+            type='button'
+            onClick={() => onAddClick(category.id)}
+            className={cn(
+              'relative w-52 shrink-0 p-3 rounded-lg border-2 border-dashed',
+              'bg-cream-100 border-cream-200',
+              'hover:border-honey-300 hover:bg-honey-50 transition-all duration-300',
+              'group flex flex-col items-center justify-center',
+              'text-cream-900 hover:text-honey-600'
+            )}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className='mt-5 mb-1.5'>
+              <Plus className='w-8 h-8 transition-transform group-hover:rotate-90 mx-auto' />
+            </div>
+            <span className='text-sm font-medium'>添加标签</span>
+          </motion.button>
+        )}
+
+        {category.labels.length === 0 && onAddClick && (
+          <motion.button
+            type='button'
+            onClick={() => onAddClick(category.id)}
+            className={cn(
+              'w-52 shrink-0 p-4 rounded-lg border-2 border-dashed',
+              'bg-cream-100 border-cream-200',
+              'hover:border-honey-300 hover:bg-honey-50 transition-all duration-300',
+              'group flex flex-col items-center justify-center',
+              'text-cream-900 hover:text-honey-600'
+            )}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className='mt-5 mb-1.5'>
+              <Plus className='w-8 h-8 transition-transform group-hover:rotate-90 mx-auto' />
+            </div>
+            <span className='text-sm font-medium'>添加标签</span>
+          </motion.button>
+        )}
+      </div>
+    </motion.div>
+  )
+}
