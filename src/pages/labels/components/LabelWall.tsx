@@ -1,5 +1,3 @@
-// components/labels/LabelWall.tsx
-
 import {
   closestCenter,
   DndContext,
@@ -11,33 +9,39 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
-import { useQueryClient } from '@tanstack/react-query'
-import { useCallback, useMemo, useState } from 'react'
-import { groupByCategory, useReorderLabels } from '@/pages/labels/hooks/useLabels'
-import { handleDragEnd as processDragEnd } from '@/pages/labels/utils/dnd-utils'
-import type { Label, LabelFormData } from '@/types/labels'
+import { arrayMove, rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
+import { AnimatePresence, motion } from 'motion/react'
+import { useEffect, useMemo, useState } from 'react'
+import type { Label, LabelCategory, LabelFormData } from '@/types/labels'
 import { LabelCard } from './LabelCard'
 import { LabelSection } from './LabelSection'
 
 interface LabelWallProps {
-  labels: Label[]
+  categories: LabelCategory[]
   onEditLabel?: (labelId: number, label: LabelFormData) => void
   onDeleteLabel?: (labelId: number) => void
+  onReorderLabel?: (data: {
+    fromId: number
+    toId?: number
+    toCategory: string
+    toIndex: number
+  }) => void
 }
 
-export function LabelWall({ labels, onEditLabel, onDeleteLabel }: LabelWallProps) {
-  const queryClient = useQueryClient()
-  const { mutate: reorderLabels } = useReorderLabels()
+export function LabelWall({
+  categories: externalCategories,
+  onEditLabel,
+  onDeleteLabel,
+  onReorderLabel,
+}: LabelWallProps) {
+  const [localLabels, setLocalLabels] = useState<Label[]>([])
+  const [activeId, setActiveId] = useState<string | null>(null)
+  const [dragOverCategory, setDragOverCategory] = useState<string | null>(null)
 
-  const [activeLabel, setActiveLabel] = useState<Label | null>(null)
-  const [localLabels, setLocalLabels] = useState<Label[]>(labels)
-
-  // 同步外部数据
-  useMemo(() => {
-    setLocalLabels(labels)
-  }, [labels])
-
-  const categories = useMemo(() => groupByCategory(localLabels), [localLabels])
+  useEffect(() => {
+    const allLabels = externalCategories.flatMap(cat => cat.labels)
+    setLocalLabels(allLabels)
+  }, [externalCategories])
 
   const labelActions = useMemo(
     () => ({
@@ -47,102 +51,113 @@ export function LabelWall({ labels, onEditLabel, onDeleteLabel }: LabelWallProps
     [onEditLabel, onDeleteLabel]
   )
 
-  // 配置拖拽传感器
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8, // 拖动8px后激活
-      },
+  const categoryItemIds = useMemo(() => {
+    const ids: Record<string, string[]> = {}
+    externalCategories.forEach(cat => {
+      ids[cat.code] = cat.labels.map(l => `label-${l.id}`)
     })
-  )
+    return ids
+  }, [externalCategories])
 
-  // 拖拽开始
-  const handleDragStart = useCallback(
-    (event: DragStartEvent) => {
-      const { active } = event
-      const label = localLabels.find(l => l.id === active.id)
-      setActiveLabel(label || null)
-    },
-    [localLabels]
-  )
+  const activeLabel = useMemo<Label | null>(() => {
+    if (!activeId) return null
+    const allLabels = externalCategories.flatMap(cat => cat.labels)
+    return allLabels.find(l => `label-${l.id}` === activeId) || null
+  }, [activeId, externalCategories])
 
-  // 拖拽经过（用于跨分类实时预览）
-  const handleDragOver = useCallback(
-    (event: DragOverEvent) => {
-      const { active, over } = event
-      if (!over) return
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string)
+  }
 
-      const activeId = active.id as number
-      const overId = over.id
+  const handleDragOver = (event: DragOverEvent) => {
+    if (!event.over) {
+      setDragOverCategory(null)
+      return
+    }
+    const overCategory = event.over.id as string
+    setDragOverCategory(overCategory.replace('category-', ''))
+  }
 
-      // 检查是否拖到分类容器上
-      if (typeof overId === 'string' && overId.startsWith('category-')) {
-        const targetCategory = overId.replace('category-', '')
-        const activeLabel = localLabels.find(l => l.id === activeId)
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+    setActiveId(null)
+    setDragOverCategory(null)
+    if (!over) return
 
-        if (activeLabel && activeLabel.category !== targetCategory) {
-          // 实时更新预览
-          setLocalLabels(prev =>
-            prev.map(l => (l.id === activeId ? { ...l, category: targetCategory } : l))
-          )
-        }
+    const activeSortableId = active.id as string
+    const overSortableId = over.id as string
+
+    const activeLabelId = parseInt(activeSortableId.replace('label-', ''), 10)
+    const activeLabel = externalCategories
+      .flatMap(cat => cat.labels)
+      .find(l => l.id === activeLabelId)
+    if (!activeLabel) return
+
+    const activeCategory = activeLabel.category
+    let overCategory: string
+    let overLabelId: number | undefined
+
+    if (overSortableId.startsWith('category-')) {
+      overCategory = overSortableId.replace('category-', '')
+      overLabelId = undefined
+    } else if (overSortableId.startsWith('label-')) {
+      overLabelId = parseInt(overSortableId.replace('label-', ''), 10)
+      const overLabel = externalCategories
+        .flatMap(cat => cat.labels)
+        .find(l => l.id === overLabelId)
+      overCategory = overLabel?.category || ''
+    } else {
+      return
+    }
+
+    if (activeCategory === overCategory) {
+      const currentCategory = externalCategories.find(cat => cat.code === activeCategory)
+      if (!currentCategory) return
+
+      const activeIndex = currentCategory.labels.findIndex(l => l.id === activeLabelId)
+      const overIndex =
+        overLabelId !== undefined
+          ? currentCategory.labels.findIndex(l => l.id === overLabelId)
+          : currentCategory.labels.length - 1
+
+      if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
+        const newLabels = arrayMove(currentCategory.labels, activeIndex, overIndex)
+        const updatedLocalLabels = localLabels.map(l =>
+          l.id === activeLabelId ? { ...l, order: overIndex } : l
+        )
+        setLocalLabels(updatedLocalLabels)
+
+        onReorderLabel?.({
+          fromId: activeLabelId,
+          toId: newLabels[overIndex].id,
+          toCategory: activeCategory,
+          toIndex: overIndex,
+        })
       }
-    },
-    [localLabels]
-  )
+    } else {
+      const activeCategoryData = externalCategories.find(cat => cat.code === activeCategory)
+      const overCategoryData = externalCategories.find(cat => cat.code === overCategory)
+      if (!activeCategoryData || !overCategoryData) return
 
-  // 拖拽结束
-  const handleDragEnd = useCallback(
-    (event: DragEndEvent) => {
-      const { active, over } = event
-      setActiveLabel(null)
+      const toIndex =
+        overLabelId !== undefined
+          ? overCategoryData.labels.findIndex(l => l.id === overLabelId)
+          : overCategoryData.labels.length
 
-      if (!over) {
-        // 取消拖拽，恢复原数据
-        setLocalLabels(labels)
-        return
-      }
-
-      const activeId = active.id as number
-      let overId = over.id
-      let overCategory: string
-
-      // 判断放置目标
-      if (typeof overId === 'string' && overId.startsWith('category-')) {
-        overCategory = overId.replace('category-', '')
-        overId = -1 // 放在分类末尾
-      } else {
-        const overLabel = localLabels.find(l => l.id === overId)
-        overCategory = overLabel?.category || ''
-      }
-
-      if (!overCategory) {
-        setLocalLabels(labels)
-        return
-      }
-
-      // 处理拖拽结果
-      const { updatedLabels, reorderRequest } = processDragEnd(
-        localLabels,
-        activeId,
-        overId as number,
-        overCategory
+      const updatedLocalLabels = localLabels.map(l =>
+        l.id === activeLabelId ? { ...l, category: overCategory } : l
       )
+      setLocalLabels(updatedLocalLabels)
 
-      // Optimistic update
-      setLocalLabels(updatedLabels)
+      onReorderLabel?.({
+        fromId: activeLabelId,
+        toCategory: overCategory,
+        toIndex,
+      })
+    }
+  }
 
-      // 持久化到后端
-      if (reorderRequest.items.length > 0) {
-        // 同时更新 React Query 缓存
-        queryClient.setQueryData(['labels'], updatedLabels)
-
-        // 调用后端 API
-        reorderLabels(reorderRequest)
-      }
-    },
-    [labels, localLabels, queryClient, reorderLabels]
-  )
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
 
   return (
     <DndContext
@@ -152,26 +167,40 @@ export function LabelWall({ labels, onEditLabel, onDeleteLabel }: LabelWallProps
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className='flex gap-4 overflow-x-auto p-4'>
-        {categories.map(category => (
-          <LabelSection key={category.id} category={category} labelActions={labelActions} />
-        ))}
-
-        {categories.length === 0 && (
-          <div className='flex h-64 w-full items-center justify-center text-muted-foreground'>
-            暂无标签，点击上方按钮添加
-          </div>
-        )}
-      </div>
-
-      {/* 拖拽覆盖层 */}
       <DragOverlay>
-        {activeLabel && (
-          <div className='rotate-3 scale-105'>
-            <LabelCard label={activeLabel} />
-          </div>
-        )}
+        <AnimatePresence>
+          {activeLabel && (
+            <motion.div
+              initial={{ scale: 1 }}
+              animate={{ scale: 1.05, rotate: 2 }}
+              className='opacity-80'
+            >
+              <LabelCard label={activeLabel} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </DragOverlay>
+
+      {externalCategories.map(cat => (
+        <SortableContext
+          key={cat.code}
+          id={`category-${cat.code}`}
+          items={categoryItemIds[cat.code]}
+          strategy={rectSortingStrategy}
+        >
+          <LabelSection
+            category={cat}
+            labelActions={labelActions}
+            isDragOver={dragOverCategory === cat.code}
+          />
+        </SortableContext>
+      ))}
+
+      {externalCategories.length === 0 && (
+        <div className='flex h-64 w-full items-center justify-center text-muted-foreground'>
+          暂无标签，点击上方按钮添加
+        </div>
+      )}
     </DndContext>
   )
 }

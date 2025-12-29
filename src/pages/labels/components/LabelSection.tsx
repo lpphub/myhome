@@ -1,8 +1,14 @@
-import { Plus } from 'lucide-react'
+import { Box, CheckSquare, MoreHorizontal, Plus } from 'lucide-react'
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { LabelCard } from '@/pages/labels/components/LabelCard'
 import type { LabelCategory, LabelFormData } from '@/types/labels'
+
+const ICON_MAP: Record<string, typeof Box> = {
+  box: Box,
+  check: CheckSquare,
+  more: MoreHorizontal,
+}
 
 interface LabelSectionProps {
   category: LabelCategory
@@ -20,6 +26,8 @@ export function LabelSection({
   isDragOver = false,
   onAddClick,
 }: LabelSectionProps) {
+  const Icon = ICON_MAP[category.icon] || Box
+
   return (
     <motion.div
       className='mb-8'
@@ -30,7 +38,7 @@ export function LabelSection({
       <div className='flex items-center mb-4 px-1'>
         <div className='flex items-center gap-2'>
           <div className='w-10 h-10 rounded-xl bg-linear-to-br from-honey-100 to-honey-200 flex items-center justify-center'>
-            {/* <Icon className='w-5 h-5 text-honey-600' /> */}
+            <Icon className='w-5 h-5 text-honey-600' />
           </div>
           <div>
             <h2 className='text-lg font-bold text-warmGray-800'>{category.name}</h2>

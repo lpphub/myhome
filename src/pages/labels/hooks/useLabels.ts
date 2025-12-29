@@ -1,28 +1,32 @@
 // hooks/useLabels.ts
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { createLabel, deleteLabel, getLabels, reorderLabels, updateLabel } from '@/api/labels'
+import {
+  createLabel,
+  deleteLabel,
+  getCategories,
+  getLabels,
+  reorderLabels,
+  updateLabel,
+} from '@/api/labels'
 import type { Label, LabelCategory, LabelFormData } from '@/types/labels'
 
 const QUERY_KEY = ['labels']
 
 // 将扁平数据转换为分类结构
-export function groupByCategory(labels: Label[]): LabelCategory[] {
-  const categoryMap = new Map<string, Label[]>()
+export function groupByCategory(labels: Label[], categories: LabelCategory[]): LabelCategory[] {
+  const categoryLabelsMap = new Map<string, Label[]>()
 
   labels
     .sort((a, b) => a.order - b.order)
     .forEach(label => {
-      const existing = categoryMap.get(label.category) || []
-      categoryMap.set(label.category, [...existing, label])
+      const existing = categoryLabelsMap.get(label.category) || []
+      categoryLabelsMap.set(label.category, [...existing, label])
     })
 
-  return Array.from(categoryMap.entries()).map(([name, labels]) => ({
-    id: 0,
-    name,
-    labels,
-    icon: '',
-    code: '',
+  return categories.map(category => ({
+    ...category,
+    labels: categoryLabelsMap.get(category.code) || [],
   }))
 }
 
@@ -30,6 +34,14 @@ export function useLabels() {
   return useQuery({
     queryKey: QUERY_KEY,
     queryFn: getLabels,
+    staleTime: 1000 * 60 * 5, // 5分钟
+  })
+}
+
+export function useCategories() {
+  return useQuery({
+    queryKey: ['categories'],
+    queryFn: getCategories,
     staleTime: 1000 * 60 * 5, // 5分钟
   })
 }
