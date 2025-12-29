@@ -53,7 +53,7 @@ export function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
   const rotationClass = ROTATIONS[label.id % ROTATIONS.length]
   const colorClasses = CARD_COLOR_CLASSES[label.color]
 
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  const { attributes, listeners, transform, transition, isDragging, setNodeRef } = useSortable({
     id: `${label.category}-${label.id}`,
   })
 

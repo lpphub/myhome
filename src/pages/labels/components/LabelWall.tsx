@@ -35,12 +35,15 @@ export function LabelWall({
   onReorderLabel,
 }: LabelWallProps) {
   const [localCategories, setLocalCategories] = useState<LabelCategory[]>(categories)
-  const [dragOverCategory, setDragOverCategory] = useState<string | null>(null)
-  const [activeLabel, setActiveLabel] = useState<Label | null>(null)
 
   useEffect(() => {
-    if (categories.length > 0) setLocalCategories(categories)
+    setLocalCategories(categories)
   }, [categories])
+
+  const [activeLabel, setActiveLabel] = useState<Label | null>(null)
+  const [dragOverCategory, setDragOverCategory] = useState<string | null>(null)
+
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
 
   const labelActions = useMemo(
     () => ({
@@ -50,28 +53,91 @@ export function LabelWall({
     [onEditLabel, onDeleteLabel]
   )
 
-  const categoryItemIds = useMemo(() => {
-    const ids: Record<string, string[]> = {}
-    localCategories.forEach(cat => {
-      ids[cat.code] = cat.labels.map(l => `${l.category}-${l.id}`)
-    })
-    return ids
-  }, [localCategories])
+  const parseSortableId = (id: string) => {
+    const [category, labelId] = id.split('-')
+    return { category, labelId: Number(labelId) }
+  }
+
+  const findLabel = (id: number) => localCategories.flatMap(c => c.labels).find(l => l.id === id)
 
   const handleDragStart = (event: DragStartEvent) => {
-    const activeIdValue = event.active.id as string
-    const activeLabelId = parseInt(activeIdValue.split('-')[1], 10)
-    const label = localCategories.flatMap(cat => cat.labels).find(l => l.id === activeLabelId)
+    const { labelId } = parseSortableId(event.active.id as string)
+    const label = findLabel(labelId)
     setActiveLabel(label ? { ...label } : null)
   }
 
   const handleDragOver = (event: DragOverEvent) => {
-    if (!event.over) {
+    const { active, over } = event
+    if (!over) {
       setDragOverCategory(null)
       return
     }
-    const overCategory = event.over.id as string
-    setDragOverCategory(overCategory.split('-')[0])
+
+    const activeId = active.id as string
+    const overId = over.id as string
+    const { category: fromCategory, labelId } = parseSortableId(activeId)
+    const toCategory = overId.includes('-') ? parseSortableId(overId).category : overId
+
+    setDragOverCategory(toCategory)
+
+    // 拖到空分类
+    if (overId === toCategory) {
+      setLocalCategories(prev => {
+        const fromCat = prev.find(c => c.code === fromCategory)
+        const toCat = prev.find(c => c.code === toCategory)
+        if (!fromCat || !toCat) return prev
+
+        const moving = fromCat.labels.find(l => l.id === labelId)
+        if (!moving) return prev
+
+        return prev.map(cat => {
+          if (cat.code === fromCategory)
+            return { ...cat, labels: cat.labels.filter(l => l.id !== labelId) }
+          if (cat.code === toCategory)
+            return { ...cat, labels: [{ ...moving, category: toCategory }] }
+          return cat
+        })
+      })
+      return
+    }
+
+    // 同分类拖拽
+    if (fromCategory === toCategory) {
+      setLocalCategories(prev =>
+        prev.map(cat => {
+          if (cat.code !== fromCategory) return cat
+          const oldIndex = cat.labels.findIndex(l => l.id === labelId)
+          const newIndex = cat.labels.findIndex(l => `${l.category}-${l.id}` === overId)
+          if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return cat
+          return { ...cat, labels: arrayMove(cat.labels, oldIndex, newIndex) }
+        })
+      )
+      return
+    }
+
+    // 跨分类拖拽到 label 上
+    setLocalCategories(prev => {
+      const fromCat = prev.find(c => c.code === fromCategory)
+      const toCat = prev.find(c => c.code === toCategory)
+      if (!fromCat || !toCat) return prev
+
+      const moving = fromCat.labels.find(l => l.id === labelId)
+      if (!moving) return prev
+
+      const newFrom = fromCat.labels.filter(l => l.id !== labelId)
+      const overIndex = toCat.labels.findIndex(l => `${l.category}-${l.id}` === overId)
+      const newTo = [
+        ...toCat.labels.slice(0, overIndex),
+        { ...moving, category: toCategory },
+        ...toCat.labels.slice(overIndex),
+      ]
+
+      return prev.map(cat => {
+        if (cat.code === fromCategory) return { ...cat, labels: newFrom }
+        if (cat.code === toCategory) return { ...cat, labels: newTo }
+        return cat
+      })
+    })
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -80,79 +146,20 @@ export function LabelWall({
     setDragOverCategory(null)
     if (!over) return
 
-    const activeSortableId = active.id as string
-    const overSortableId = over.id as string
-    const activeCategory = activeSortableId.split('-')[0]
-    const overCategory = overSortableId.split('-')[0]
-    const activeLabelId = parseInt(activeSortableId.split('-')[1], 10)
+    const { labelId } = parseSortableId(active.id as string)
+    const overId = over.id as string
+    const toCategory = overId.includes('-') ? parseSortableId(overId).category : overId
+    const targetCategory = localCategories.find(c => c.code === toCategory)
+    if (!targetCategory) return
 
-    const activeLabel = localCategories.flatMap(cat => cat.labels).find(l => l.id === activeLabelId)
-    if (!activeLabel) return
-
-    setLocalCategories(prevCategories => {
-      const newCategories = prevCategories.map(cat => ({ ...cat, labels: [...cat.labels] }))
-
-      if (activeCategory === overCategory) {
-        const currentCategory = newCategories.find(cat => cat.code === activeCategory)
-        if (!currentCategory) return prevCategories
-
-        const activeIndex = currentCategory.labels.findIndex(
-          l => `${l.category}-${l.id}` === activeSortableId
-        )
-        const overIndex = currentCategory.labels.findIndex(
-          l => `${l.category}-${l.id}` === overSortableId
-        )
-
-        if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
-          currentCategory.labels = arrayMove(currentCategory.labels, activeIndex, overIndex)
-          onReorderLabel?.({
-            fromId: activeLabelId,
-            toId: currentCategory.labels[overIndex].id,
-            toCategory: activeCategory,
-            toIndex: overIndex,
-          })
-        }
-      } else {
-        const activeCategoryData = newCategories.find(cat => cat.code === activeCategory)
-        const overCategoryData = newCategories.find(cat => cat.code === overCategory)
-        if (!activeCategoryData || !overCategoryData) return prevCategories
-
-        const labelToMove = activeCategoryData.labels.find(l => l.id === activeLabelId)
-        if (!labelToMove) return prevCategories
-
-        const newActiveCategoryLabels = activeCategoryData.labels.filter(
-          l => l.id !== activeLabelId
-        )
-
-        let toIndex = overCategoryData.labels.length
-        if (overSortableId.startsWith(overCategory)) {
-          const overLabelId = parseInt(overSortableId.split('-')[1], 10)
-          const overIndex = overCategoryData.labels.findIndex(l => l.id === overLabelId)
-          if (overIndex !== -1) toIndex = overIndex
-        }
-
-        const updatedLabel = { ...labelToMove, category: overCategory }
-        const newOverCategoryLabels = [
-          ...overCategoryData.labels.slice(0, toIndex),
-          updatedLabel,
-          ...overCategoryData.labels.slice(toIndex),
-        ]
-
-        activeCategoryData.labels = newActiveCategoryLabels
-        overCategoryData.labels = newOverCategoryLabels
-
-        onReorderLabel?.({
-          fromId: activeLabelId,
-          toCategory: overCategory,
-          toIndex,
-        })
-      }
-
-      return newCategories
-    })
+    const toIndex = targetCategory.labels.findIndex(l => l.id === labelId)
+    onReorderLabel?.({ fromId: labelId, toCategory, toIndex: toIndex === -1 ? 0 : toIndex })
   }
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
+  const handleDragCancel = () => {
+    setActiveLabel(null)
+    setDragOverCategory(null)
+  }
 
   return (
     <DndContext
@@ -161,15 +168,12 @@ export function LabelWall({
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
     >
       <DragOverlay>
         <AnimatePresence>
           {activeLabel && (
-            <motion.div
-              initial={{ scale: 1 }}
-              animate={{ scale: 1.05, rotate: 2 }}
-              className='opacity-80'
-            >
+            <motion.div initial={{ scale: 1 }} animate={{ scale: 1.05 }} className='opacity-80'>
               <LabelCard label={activeLabel} />
             </motion.div>
           )}
@@ -179,7 +183,7 @@ export function LabelWall({
       {localCategories.map(cat => (
         <SortableContext
           key={cat.code}
-          items={categoryItemIds[cat.code]}
+          items={cat.labels.map(l => `${l.category}-${l.id}`)}
           strategy={rectSortingStrategy}
         >
           <LabelSection
@@ -191,9 +195,7 @@ export function LabelWall({
       ))}
 
       {localCategories.length === 0 && (
-        <div className='flex h-64 w-full items-center justify-center text-muted-foreground'>
-          暂无标签，点击上方按钮添加
-        </div>
+        <div className='flex h-64 items-center justify-center text-muted-foreground'>暂无标签</div>
       )}
     </DndContext>
   )

@@ -1,3 +1,4 @@
+import { useDroppable } from '@dnd-kit/core'
 import { Box, CheckSquare, MoreHorizontal, Plus } from 'lucide-react'
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
@@ -26,10 +27,15 @@ export function LabelSection({
   isDragOver = false,
   onAddClick,
 }: LabelSectionProps) {
+  const { setNodeRef } = useDroppable({
+    id: category.code, // 👈 关键：容器自己的 id
+  })
+
   const Icon = ICON_MAP[category.icon] || Box
 
   return (
     <motion.div
+      ref={setNodeRef}
       className='mb-8'
       animate={{ scale: isDragOver ? 1.02 : 1 }}
       style={{ backgroundColor: isDragOver ? 'rgba(255, 243, 224, 0.3)' : 'transparent' }}
