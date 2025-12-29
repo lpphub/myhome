@@ -12,7 +12,7 @@ import {
 import { arrayMove, rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 import { AnimatePresence, motion } from 'motion/react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import type { SortByType, Tag } from '@/types/tags'
+import type { SortByType, Tag, TagActions } from '@/types/tags'
 import { TagNote, TagSection } from './TagSection'
 
 interface TagDragItem extends Tag {
@@ -24,17 +24,7 @@ interface TagDragProps {
   categories: Array<{ code: string; name: string }>
   sortBy: SortByType
   onSortChange: (sortBy: SortByType) => void
-  tagActions: {
-    onReorder: (params: {
-      fromId: number
-      toId?: number
-      toCategory: string
-      toIndex?: number
-    }) => void
-    onEdit: (tag: Tag) => void
-    onDelete: (tagId: number) => void
-    onAddTagClick?: (category: string) => void
-  }
+  tagActions: TagActions
 }
 
 export function TagDragPanel({ tags, categories, sortBy, onSortChange, tagActions }: TagDragProps) {

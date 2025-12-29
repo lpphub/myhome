@@ -1,22 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useCallback, useMemo } from 'react'
 import { toast } from 'sonner'
 import { createTag, deleteTag, getCategories, getTags, reorderTags, updateTag } from '@/api/tags'
-import type { Tag } from '@/types/tags'
+import type { ReorderRequest, Tag, TagFormData } from '@/types/tags'
 
 interface UseTagsHook {
   tags: Tag[]
   categories: Array<{ code: string; name: string }>
   isLoading: boolean
   mutations: {
-    onAdd: (tag: Omit<Tag, 'id' | 'createdAt' | 'updatedAt' | 'itemCount'>) => void
+    onAdd: (data: TagFormData) => void
     onUpdate: (id: number, data: Partial<Tag>) => void
     onDelete: (id: number) => void
-    onReorder: (params: {
-      fromId: number
-      toId?: number
-      toCategory: string
-      toIndex?: number
-    }) => void
+    onReorder: (params: ReorderRequest) => void
   }
 }
 
@@ -67,15 +63,48 @@ export function useTags(): UseTagsHook {
     onError: () => toast.error('排序保存失败'),
   })
 
+  const onAdd = useCallback(
+    (data: TagFormData) => {
+      createTagMutation.mutate(data)
+    },
+    [createTagMutation.mutate]
+  )
+
+  const onUpdate = useCallback(
+    (id: number, data: Partial<Tag>) => {
+      updateTagMutation.mutate({ id, data })
+    },
+    [updateTagMutation.mutate]
+  )
+
+  const onDelete = useCallback(
+    (id: number) => {
+      deleteTagMutation.mutate(id)
+    },
+    [deleteTagMutation.mutate]
+  )
+
+  const onReorder = useCallback(
+    (params: ReorderRequest) => {
+      reorderTagsMutation.mutate(params)
+    },
+    [reorderTagsMutation.mutate]
+  )
+
+  const mutations = useMemo(
+    () => ({
+      onAdd,
+      onUpdate,
+      onDelete,
+      onReorder,
+    }),
+    [onAdd, onUpdate, onDelete, onReorder]
+  )
+
   return {
     tags: tagsData || [],
     categories: categoriesData || [],
     isLoading,
-    mutations: {
-      onAdd: createTagMutation.mutate,
-      onUpdate: (id, data) => updateTagMutation.mutate({ id, data }),
-      onDelete: deleteTagMutation.mutate,
-      onReorder: reorderTagsMutation.mutate,
-    },
+    mutations,
   }
 }

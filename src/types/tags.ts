@@ -88,3 +88,10 @@ export const SORT_OPTIONS: { value: SortByType; label: string }[] = [
   { value: 'count-desc', label: '物品数 多-少' },
   { value: 'date-desc', label: '创建时间 最新' },
 ]
+
+export interface TagActions {
+  onReorder: (params: ReorderRequest) => void
+  onEdit: (tag: Tag) => void
+  onDelete: (tagId: number) => void
+  onAddTagClick?: (category: string) => void
+}

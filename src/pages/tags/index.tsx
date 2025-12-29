@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { LoadingState } from '@/components/LoadingState'
-import type { SortByType, Tag } from '@/types/tags'
+import type { SortByType, Tag, TagActions } from '@/types/tags'
 import { AddTagDialog } from './components/AddTagDialog'
 import { TagDragPanel } from './components/TagDragPanel'
 import { TagFilter } from './components/TagFilter'
@@ -8,36 +8,58 @@ import { useTags } from './hooks/useTags'
 
 export default function TagsPage() {
   const { tags, categories, isLoading, mutations } = useTags()
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [editingTag, setEditingTag] = useState<Tag | null>(null)
   const [defaultCategory, setDefaultCategory] = useState<string>('')
   const [sortBy, setSortBy] = useState<SortByType>('date-desc')
+  const isAddDialogOpen = editingTag !== null || defaultCategory !== ''
 
-  const handleAddTag = (tag: Tag) => {
-    mutations.onAdd({
-      label: tag.label,
-      category: tag.category,
-      color: tag.color,
-      description: tag.description,
-    })
-    setIsAddDialogOpen(false)
-  }
+  const handleAddTag = useCallback(
+    (tag: Tag) => {
+      mutations.onAdd({
+        label: tag.label,
+        category: tag.category,
+        color: tag.color,
+        description: tag.description,
+      })
+      setDefaultCategory('')
+      setEditingTag(null)
+    },
+    [mutations.onAdd]
+  )
 
-  const handleUpdateTag = (tag: Tag) => {
-    mutations.onUpdate(tag.id, {
-      label: tag.label,
-      category: tag.category,
-      color: tag.color,
-      description: tag.description,
-    })
-    setIsAddDialogOpen(false)
-    setEditingTag(null)
-  }
+  const handleUpdateTag = useCallback(
+    (tag: Tag) => {
+      mutations.onUpdate(tag.id, {
+        label: tag.label,
+        category: tag.category,
+        color: tag.color,
+        description: tag.description,
+      })
+      setDefaultCategory('')
+      setEditingTag(null)
+    },
+    [mutations.onUpdate]
+  )
 
-  const handleAddTagClick = (category: string) => {
+  const handleAddTagClick = useCallback((category: string) => {
     setDefaultCategory(category)
-    setIsAddDialogOpen(true)
-  }
+    setEditingTag(null)
+  }, [])
+
+  const handleDialogClose = useCallback(() => {
+    setDefaultCategory('')
+    setEditingTag(null)
+  }, [])
+
+  const tagActions = useMemo<TagActions>(
+    () => ({
+      onReorder: mutations.onReorder,
+      onEdit: setEditingTag,
+      onDelete: mutations.onDelete,
+      onAddTagClick: handleAddTagClick,
+    }),
+    [mutations.onReorder, mutations.onDelete, handleAddTagClick]
+  )
 
   if (isLoading) return <LoadingState type='loading' />
 
@@ -49,16 +71,11 @@ export default function TagsPage() {
         categories={categories}
         sortBy={sortBy}
         onSortChange={setSortBy}
-        tagActions={{
-          onReorder: mutations.onReorder,
-          onEdit: setEditingTag,
-          onDelete: mutations.onDelete,
-          onAddTagClick: handleAddTagClick,
-        }}
+        tagActions={tagActions}
       />
       <AddTagDialog
         open={isAddDialogOpen}
-        onOpenChange={setIsAddDialogOpen}
+        onOpenChange={handleDialogClose}
         onAddTag={handleAddTag}
         onUpdateTag={handleUpdateTag}
         editingTag={editingTag}
