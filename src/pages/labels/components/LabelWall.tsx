@@ -11,31 +11,25 @@ import {
 } from '@dnd-kit/core'
 import { arrayMove, rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 import { AnimatePresence, motion } from 'motion/react'
-import { useEffect, useMemo, useState } from 'react'
-import type { Label, LabelCategory, LabelFormData } from '@/types/labels'
+import { useEffect, useState } from 'react'
+import type { Label, LabelCategory } from '@/types/labels'
 import { LabelCard } from './LabelCard'
-import { LabelSection } from './LabelSection'
+import { type LabelActions, LabelSection } from './LabelSection'
 
 interface LabelWallProps {
   categories: LabelCategory[]
-  onEditLabel?: (labelId: number, label: LabelFormData) => void
-  onDeleteLabel?: (labelId: number) => void
-  onReorderLabel?: (data: {
-    fromId: number
-    toId?: number
-    toCategory: string
-    toIndex: number
-  }) => void
+  labelActions: LabelActions & {
+    onReorder?: (data: {
+      fromId: number
+      toId?: number
+      toCategory: string
+      toIndex: number
+    }) => void
+  }
   onAddLabelClick?: (category: string) => void
 }
 
-export function LabelWall({
-  categories,
-  onEditLabel,
-  onDeleteLabel,
-  onReorderLabel,
-  onAddLabelClick,
-}: LabelWallProps) {
+export function LabelWall({ categories, labelActions, onAddLabelClick }: LabelWallProps) {
   const [localCategories, setLocalCategories] = useState<LabelCategory[]>(categories)
 
   useEffect(() => {
@@ -46,21 +40,6 @@ export function LabelWall({
   const [dragOverCategory, setDragOverCategory] = useState<string | null>(null)
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
-
-  const labelActions = useMemo(
-    () => ({
-      onEdit: (id: number, label: LabelFormData) => onEditLabel?.(id, label),
-      onDelete: (id: number) => onDeleteLabel?.(id),
-    }),
-    [onEditLabel, onDeleteLabel]
-  )
-
-  const handleAddLabelClick = useMemo(
-    () => (category: string) => {
-      onAddLabelClick?.(category)
-    },
-    [onAddLabelClick]
-  )
 
   const parseSortableId = (id: string) => {
     const [category, labelId] = id.split('-')
@@ -162,7 +141,7 @@ export function LabelWall({
     if (!targetCategory) return
 
     const toIndex = targetCategory.labels.findIndex(l => l.id === labelId)
-    onReorderLabel?.({ fromId: labelId, toCategory, toIndex: toIndex === -1 ? 0 : toIndex })
+    labelActions.onReorder?.({ fromId: labelId, toCategory, toIndex: toIndex === -1 ? 0 : toIndex })
   }
 
   const handleDragCancel = () => {
@@ -199,7 +178,7 @@ export function LabelWall({
             category={cat}
             labelActions={labelActions}
             isDragOver={dragOverCategory === cat.code}
-            onAddLabelClick={handleAddLabelClick}
+            onAddLabelClick={onAddLabelClick}
           />
         </SortableContext>
       ))}

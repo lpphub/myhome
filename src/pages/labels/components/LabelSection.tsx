@@ -11,13 +11,15 @@ const ICON_MAP: Record<string, typeof Box> = {
   more: MoreHorizontal,
 }
 
+export interface LabelActions {
+  onDelete: (labelId: number) => void
+  onEdit: (labelId: number, label: LabelFormData) => void
+}
+
 interface LabelSectionProps {
   category: LabelCategory
   isDragOver?: boolean
-  labelActions?: {
-    onDelete: (labelId: number) => void
-    onEdit: (labelId: number, label: LabelFormData) => void
-  }
+  labelActions?: LabelActions
   onAddLabelClick?: (category: string) => void
 }
 
