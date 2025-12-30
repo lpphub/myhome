@@ -18,6 +18,7 @@ export interface LabelCategory {
 }
 
 export interface LabelFormData {
+  id?: number
   name: string
   category: string
   description?: string

@@ -1,40 +1,19 @@
 import { useCallback, useMemo, useState } from 'react'
 import { LoadingState } from '@/components/LoadingState'
 import { LabelFormDialog } from '@/pages/labels/components/LabelFormDialog'
-import { LabelWall } from '@/pages/labels/components/LabelWall'
-import { useLabels } from '@/pages/labels/hooks/useLabels'
-import type { LabelFormData } from '@/types/labels'
 import { LabelToolbar } from '@/pages/labels/components/LabelToolbar'
+import { LabelWall } from '@/pages/labels/components/LabelWall'
+import { useCreateCategory, useLabels } from '@/pages/labels/hooks/useLabels'
+import type { LabelFormData } from '@/types/labels'
 
 export default function LabelsPage() {
-  const { data: labels, isLoading } = useLabels()
-
-  const handleAddLabelClick = useCallback((category: string) => {
-    setEditingLabel(null)
-    setCategory(category)
-    setDialogOpen(true)
-  }, [])
-
-  const handleEditLabelClick = useCallback((label: LabelFormData) => {
-    setEditingLabel(label)
-    setCategory(undefined)
-    setDialogOpen(true)
-  }, [])
-
-  const labelActions = useMemo(
-    () => ({
-      onEdit: handleEditLabelClick,
-      onDelete: (id: number) => console.log('delete', id),
-      onReorder: (data: { fromId: number; toId?: number; toCategory: string; toIndex: number }) =>
-        console.log('reorder', data),
-    }),
-    [handleEditLabelClick]
-  )
-
   // 弹窗状态
   const [isDialogOpen, setDialogOpen] = useState(false)
-  const [editingLabel, setEditingLabel] = useState<LabelFormData | null>(null)
-  const [category, setCategory] = useState<string | undefined>(undefined)
+  const [dialogLabel, setDialogLabel] = useState<LabelFormData | null>(null)
+
+  const { data: labels, isLoading } = useLabels()
+  const createCategory = useCreateCategory()
+
   // 弹窗动作
   const dialogActions = useMemo(
     () => ({
@@ -50,14 +29,47 @@ export default function LabelsPage() {
     []
   )
 
+  // 新增分类
+  const handleAddCategory = useCallback(
+    (categoryName: string) => {
+      createCategory.mutate(categoryName)
+    },
+    [createCategory]
+  )
+
+  // 新增便签
+  const handleAddLabelClick = useCallback((category: string) => {
+    setDialogLabel({ name: '', category, color: 'lemon' })
+    setDialogOpen(true)
+  }, [])
+
+  // 编辑便签
+  const handleEditLabelClick = useCallback((label: LabelFormData) => {
+    setDialogLabel(label)
+    setDialogOpen(true)
+  }, [])
+
+  // 便签操作
+  const labelActions = useMemo(
+    () => ({
+      onEdit: handleEditLabelClick,
+      onDelete: (id: number) => console.log('delete', id),
+      onReorder: (data: { fromId: number; toId?: number; toCategory: string; toIndex: number }) =>
+        console.log('reorder', data),
+    }),
+    [handleEditLabelClick]
+  )
+
   if (isLoading) return <LoadingState type='loading' />
 
   if (!labels) return <LoadingState type='error' />
 
   return (
     <div className='max-w-7xl mx-auto px-4 py-6'>
-      <LabelToolbar onAddCategory={handleAddLabelClick} />
+      {/* 工具栏 */}
+      <LabelToolbar onAddCategory={handleAddCategory} />
 
+      {/* 便签墙 */}
       <LabelWall
         labels={labels}
         labelActions={labelActions}
@@ -68,10 +80,7 @@ export default function LabelsPage() {
       <LabelFormDialog
         isOpen={isDialogOpen}
         onClose={() => setDialogOpen(false)}
-        initialData={{
-          label: editingLabel,
-          category,
-        }}
+        initialData={dialogLabel}
         actions={dialogActions}
       />
     </div>

@@ -23,10 +23,7 @@ import { LABEL_COLOR_CLASSES, type LabelFormData } from '@/types/labels'
 interface LabelFormDialogProps {
   isOpen: boolean
   onClose: () => void
-  initialData?: {
-    label?: LabelFormData | null
-    category?: string
-  }
+  initialData: LabelFormData | null
   actions: {
     addLabel: (label: LabelFormData) => void
     updateLabel?: (label: LabelFormData) => void
@@ -36,21 +33,21 @@ interface LabelFormDialogProps {
 export function LabelFormDialog({ isOpen, onClose, initialData, actions }: LabelFormDialogProps) {
   const resetForm = useCallback(
     (): LabelFormData => ({
+      id: initialData?.id || 0,
       name: '',
       category: initialData?.category || 'storage',
-      color: 'lemon',
+      color: initialData?.color || 'lemon',
       description: '',
     }),
-    [initialData?.category]
+    [initialData]
   )
-
-  const isEditing = Boolean(initialData?.label)
+  const isEditing = Boolean(initialData?.id && initialData.id > 0)
   const [formData, setFormData] = useState<LabelFormData>(resetForm())
 
   useEffect(() => {
     if (!isOpen) return
-    if (initialData?.label) {
-      setFormData({ ...initialData.label })
+    if (initialData?.name) {
+      setFormData({ ...initialData })
     } else {
       setFormData(resetForm())
     }

@@ -2,6 +2,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import {
+  createCategory,
   createLabel,
   deleteLabel,
   getLabels,
@@ -66,5 +67,17 @@ export function useReorderLabels() {
       // 失败时回滚
       queryClient.invalidateQueries({ queryKey: QUERY_KEY })
     },
+  })
+}
+
+export function useCreateCategory() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: createCategory,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEY })
+    },
+    onError: () => toast.error('创建分类失败'),
   })
 }

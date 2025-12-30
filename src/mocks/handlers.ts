@@ -112,6 +112,36 @@ export const handlers = [
     })
   }),
 
+  http.post('/api/labels/categories', async ({ request }) => {
+    const body = (await request.json()) as { name: string }
+    const name = body.name?.trim()
+
+    if (!name) {
+      return HttpResponse.json({ code: 400, message: '分类名称不能为空' }, { status: 400 })
+    }
+
+    const data = await loadLabelsData()
+    const existingCategory = data.labels.find(cat => cat.name === name)
+
+    if (existingCategory) {
+      return HttpResponse.json({ code: 409, message: '分类已存在' }, { status: 409 })
+    }
+
+    const maxId = Math.max(...data.labels.map(cat => cat.id))
+    const newCategory: LabelCategory = {
+      id: maxId + 1,
+      name,
+      code: name.toLowerCase().replace(/\s+/g, '-'),
+      icon: '📁',
+      labels: [],
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: '创建分类成功',
+      data: newCategory,
+    })
+  }),
 
   http.get('/api/dashboard', async () => {
     await delay(200)

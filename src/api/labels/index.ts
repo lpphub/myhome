@@ -47,3 +47,11 @@ export const reorderLabels = (data: ReorderRequest) =>
     data,
     mock: true,
   })
+
+// 创建分类
+export const createCategory = (name: string) =>
+  httpClient.post<LabelCategory>({
+    url: '/labels/categories',
+    data: { name },
+    mock: true,
+  })
