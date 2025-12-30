@@ -25,6 +25,7 @@ export function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
     opacity: isDragging ? 0.5 : 1,
     scale: isDragging ? 1.05 : 1,
     zIndex: isDragging ? 1000 : undefined,
+    touchAction: 'none',
   }
 
   const handleDeleteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -72,7 +73,7 @@ export function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
         'hover:shadow-xl hover:-translate-y-1.5 hover:scale-105',
         'border text-left overflow-hidden',
         'cursor-grab active:cursor-grabbing',
-        'w-52 shrink-0',
+        'w-full sm:w-52 shrink-0',
         colorClasses.bg,
         colorClasses.border,
         rotationClass

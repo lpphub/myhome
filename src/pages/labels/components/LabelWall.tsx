@@ -6,6 +6,7 @@ import {
   DragOverlay,
   type DragStartEvent,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
@@ -51,8 +52,10 @@ export function LabelWall({ categories, labelActions, onAddLabelClick }: LabelWa
   const [overDroppable, setOverDroppable] = useState<string | null>(null)
 
   // 初始化传感器
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
-
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 5 } })
+  )
   // 处理拖拽开始事件
   const handleDragStart = useCallback(
     (event: DragStartEvent) => {
@@ -205,25 +208,28 @@ export function LabelWall({ categories, labelActions, onAddLabelClick }: LabelWa
           )}
         </AnimatePresence>
       </DragOverlay>
+      <div className='overflow-auto touch-pan-y'>
+        {localCategories.map(cat => (
+          <SortableContext
+            key={cat.code}
+            items={cat.labels.map(l => `label-${l.id}`)}
+            strategy={rectSortingStrategy}
+          >
+            <LabelSection
+              category={cat}
+              labelActions={labelActions}
+              isDragOver={overDroppable === cat.code}
+              onAddLabelClick={onAddLabelClick}
+            />
+          </SortableContext>
+        ))}
 
-      {localCategories.map(cat => (
-        <SortableContext
-          key={cat.code}
-          items={cat.labels.map(l => `label-${l.id}`)}
-          strategy={rectSortingStrategy}
-        >
-          <LabelSection
-            category={cat}
-            labelActions={labelActions}
-            isDragOver={overDroppable === cat.code}
-            onAddLabelClick={onAddLabelClick}
-          />
-        </SortableContext>
-      ))}
-
-      {localCategories.length === 0 && (
-        <div className='flex h-64 items-center justify-center text-muted-foreground'>暂无标签</div>
-      )}
+        {localCategories.length === 0 && (
+          <div className='flex h-64 items-center justify-center text-muted-foreground'>
+            暂无标签
+          </div>
+        )}
+      </div>
     </DndContext>
   )
 }
