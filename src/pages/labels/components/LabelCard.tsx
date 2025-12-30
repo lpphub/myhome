@@ -81,7 +81,8 @@ export function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
     >
       <div
         className={cn(
-          'absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity'
+          'absolute top-2 right-2 flex gap-1 transition-opacity z-20',
+          'opacity-100 sm:opacity-0 sm:group-hover:opacity-100'
         )}
       >
         <button

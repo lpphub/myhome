@@ -1,4 +1,4 @@
-import { Tag as TagIcon } from 'lucide-react'
+import { Tag } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
@@ -81,7 +81,7 @@ export function LabelFormDialog({ isOpen, onClose, initialData, actions }: Label
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className='sm:max-w-md bg-white border-honey-200 rounded-2xl'>
+      <DialogContent className='sm:max-w-md bg-white border-honey-200 rounded-2xl max-h-[90vh] overflow-y-auto'>
         <DialogHeader>
           <DialogTitle className='text-2xl font-bold text-warmGray-800'>
             {isEditing ? '编辑便签' : '添加新便签'}
@@ -95,7 +95,7 @@ export function LabelFormDialog({ isOpen, onClose, initialData, actions }: Label
           {/* 便签名称 */}
           <div className='space-y-2'>
             <Label htmlFor='label' className='flex items-center gap-2'>
-              <TagIcon className='w-4 h-4 text-warmGray-500' />
+              <Tag className='w-4 h-4 text-warmGray-500' />
               便签名称 *
             </Label>
             <Input
@@ -111,7 +111,7 @@ export function LabelFormDialog({ isOpen, onClose, initialData, actions }: Label
           {/* 分类选择 */}
           <div className='space-y-2'>
             <Label htmlFor='category' className='flex items-center gap-2'>
-              <TagIcon className='w-4 h-4 text-warmGray-500' />
+              <Tag className='w-4 h-4 text-warmGray-500' />
               分类 *
             </Label>
             <Select
@@ -132,7 +132,7 @@ export function LabelFormDialog({ isOpen, onClose, initialData, actions }: Label
           {/* 便签颜色 */}
           <div className='space-y-2'>
             <Label className='flex items-center gap-2'>
-              <TagIcon className='w-4 h-4 text-warmGray-500' />
+              <Tag className='w-4 h-4 text-warmGray-500' />
               便签颜色
             </Label>
             <div className='grid grid-cols-4 gap-2'>
@@ -171,7 +171,7 @@ export function LabelFormDialog({ isOpen, onClose, initialData, actions }: Label
           {/* 描述 */}
           <div className='space-y-2'>
             <Label htmlFor='description' className='flex items-center gap-2'>
-              <TagIcon className='w-4 h-4 text-warmGray-500' />
+              <Tag className='w-4 h-4 text-warmGray-500' />
               描述
             </Label>
             <Textarea

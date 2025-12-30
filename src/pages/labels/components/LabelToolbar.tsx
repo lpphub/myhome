@@ -1,54 +1,95 @@
-// components/NodeWallToolbar.tsx
-import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Check, Plus, Search, X } from 'lucide-react'
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 interface LabelToolbarProps {
-  onAddCategory: (categoryName: string) => void;
+  onAddCategory: (categoryName: string) => void
+  onSearch?: (keyword: string) => void
 }
 
-export const LabelToolbar = ({ onAddCategory }: LabelToolbarProps) => {
-  const [inputVisible, setInputVisible] = useState(false);
-  const [categoryName, setCategoryName] = useState('');
+export const LabelToolbar = ({ onAddCategory, onSearch }: LabelToolbarProps) => {
+  const [isAdding, setIsAdding] = useState(false)
+  const [categoryName, setCategoryName] = useState('')
+  const [searchValue, setSearchValue] = useState('')
 
   const handleAddCategory = () => {
-    const name = categoryName.trim();
-    if (!name) return;
-    onAddCategory(name);
-    setCategoryName('');
-    setInputVisible(false);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleAddCategory();
-    } else if (e.key === 'Escape') {
-      setInputVisible(false);
-      setCategoryName('');
+    const name = categoryName.trim()
+    if (!name) {
+      setIsAdding(false)
+      setCategoryName('')
+      return
     }
-  };
+    onAddCategory(name)
+    setCategoryName('')
+    setIsAdding(false)
+  }
+
+  const handleCancel = () => {
+    setCategoryName('')
+    setIsAdding(false)
+  }
+
+  const handleSearchChange = (value: string) => {
+    setSearchValue(value)
+    onSearch?.(value)
+  }
 
   return (
-    <div className="flex items-center gap-2 p-2 border-gray-200 bg-white">
-      {inputVisible ? (
-        <input
-          autoFocus
-          type="text"
-          className="border border-gray-300 rounded px-2 py-1 w-40"
-          placeholder="输入分类名称"
-          value={categoryName}
-          onChange={(e) => setCategoryName(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onBlur={() => setInputVisible(false)}
+    <div className='flex items-center justify-between rounded-xl px-4 py-3 shadow-warm-sm mb-6'>
+      <div className='flex items-center gap-3 flex-1 max-w-md'>
+        <Search className='w-4 h-4 text-warmGray-400 shrink-0' />
+        <Input
+          className='border-0 shadow-none focus-visible:ring-0 h-auto text-sm placeholder:text-warmGray-400'
+          placeholder='搜索便签名称'
+          value={searchValue}
+          onChange={e => handleSearchChange(e.target.value)}
         />
-      ) : (
-        <button
-          className="flex items-center gap-1 text-sm text-gray-700 hover:text-gray-900 px-2 py-1 rounded hover:bg-gray-100"
-          onClick={() => setInputVisible(true)}
-        >
-          <Plus size={16} />
-          新建分类
-        </button>
-      )}
+      </div>
+
+      <div className='flex items-center gap-2'>
+        {isAdding ? (
+          <>
+            <Input
+              autoFocus
+              className='w-40 h-8 text-sm'
+              placeholder='请输入分类名称'
+              value={categoryName}
+              onChange={e => setCategoryName(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') handleAddCategory()
+                if (e.key === 'Escape') handleCancel()
+              }}
+            />
+            <Button
+              variant='ghost'
+              size='icon'
+              className='h-8 w-8 hover:bg-honey-200 hover:text-lemon-700'
+              onClick={handleAddCategory}
+            >
+              <Check className='w-4 h-4' />
+            </Button>
+            <Button
+              variant='ghost'
+              size='icon'
+              className='h-8 w-8 hover:bg-coral-100 hover:text-coral-600'
+              onClick={handleCancel}
+            >
+              <X className='w-4 h-4' />
+            </Button>
+          </>
+        ) : (
+          <Button
+            variant='default'
+            size='sm'
+            className='bg-linear-to-r from-honey-400 to-honey-600 text-white hover:from-honey-500 hover:to-honey-700 shadow-warm-sm'
+            onClick={() => setIsAdding(true)}
+          >
+            <Plus className='w-4 h-4 mr-1' />
+            新建分类
+          </Button>
+        )}
+      </div>
     </div>
-  );
-};
+  )
+}
