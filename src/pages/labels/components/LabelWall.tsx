@@ -26,6 +26,7 @@ interface LabelWallProps {
     toCategory: string
     toIndex: number
   }) => void
+  onAddLabelClick?: (category: string) => void
 }
 
 export function LabelWall({
@@ -33,6 +34,7 @@ export function LabelWall({
   onEditLabel,
   onDeleteLabel,
   onReorderLabel,
+  onAddLabelClick,
 }: LabelWallProps) {
   const [localCategories, setLocalCategories] = useState<LabelCategory[]>(categories)
 
@@ -51,6 +53,13 @@ export function LabelWall({
       onDelete: (id: number) => onDeleteLabel?.(id),
     }),
     [onEditLabel, onDeleteLabel]
+  )
+
+  const handleAddLabelClick = useMemo(
+    () => (category: string) => {
+      onAddLabelClick?.(category)
+    },
+    [onAddLabelClick]
   )
 
   const parseSortableId = (id: string) => {
@@ -190,6 +199,7 @@ export function LabelWall({
             category={cat}
             labelActions={labelActions}
             isDragOver={dragOverCategory === cat.code}
+            onAddLabelClick={handleAddLabelClick}
           />
         </SortableContext>
       ))}

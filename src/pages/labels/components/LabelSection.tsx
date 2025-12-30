@@ -18,14 +18,14 @@ interface LabelSectionProps {
     onDelete: (labelId: number) => void
     onEdit: (labelId: number, label: LabelFormData) => void
   }
-  onAddClick?: (category: string) => void
+  onAddLabelClick?: (category: string) => void
 }
 
 export function LabelSection({
   category,
   labelActions,
   isDragOver = false,
-  onAddClick,
+  onAddLabelClick,
 }: LabelSectionProps) {
   const { setNodeRef } = useDroppable({
     id: category.code, // 👈 关键：容器自己的 id
@@ -54,35 +54,16 @@ export function LabelSection({
       </div>
 
       <div className='flex flex-wrap gap-4'>
+        {/** 标签卡片 */}
         {category.labels.map(label => (
           <LabelCard key={label.id} label={label} {...labelActions} />
         ))}
 
-        {category.labels.length > 0 && onAddClick && (
+        {/** 添加标签按钮 */}
+        {onAddLabelClick && (
           <motion.button
             type='button'
-            onClick={() => onAddClick(category.code)}
-            className={cn(
-              'relative w-52 shrink-0 p-3 rounded-lg border-2 border-dashed',
-              'bg-cream-100 border-cream-200',
-              'hover:border-honey-300 hover:bg-honey-50 transition-all duration-300',
-              'group flex flex-col items-center justify-center',
-              'text-cream-900 hover:text-honey-600'
-            )}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <div className='mt-5 mb-1.5'>
-              <Plus className='w-8 h-8 transition-transform group-hover:rotate-90 mx-auto' />
-            </div>
-            <span className='text-sm font-medium'>添加标签</span>
-          </motion.button>
-        )}
-
-        {category.labels.length === 0 && onAddClick && (
-          <motion.button
-            type='button'
-            onClick={() => onAddClick(category.code)}
+            onClick={() => onAddLabelClick(category.code)}
             className={cn(
               'w-52 shrink-0 p-4 rounded-lg border-2 border-dashed',
               'bg-cream-100 border-cream-200',
@@ -99,7 +80,16 @@ export function LabelSection({
             <span className='text-sm font-medium'>添加标签</span>
           </motion.button>
         )}
+
+        {/* 空状态下的拖拽区域 */}
+        {category.labels.length === 0 && <EmptyDroppable id={category.code} />}
       </div>
     </motion.div>
   )
+}
+
+function EmptyDroppable({ id }: { id: string }) {
+  const { setNodeRef } = useDroppable({ id })
+
+  return <div ref={setNodeRef} className='w-52 h-24 shrink-0 pointer-events-none' />
 }

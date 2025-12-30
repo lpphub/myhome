@@ -29,13 +29,24 @@ export default function LabelsPage() {
     []
   )
 
+  const handleAddLabelClick = useMemo(
+    () => (category: string) => {
+      console.log('add', category)
+    },
+    []
+  )
+
   if (isLoading) return <LoadingState type='loading' />
 
   console.log(groupedCategories)
 
   return (
     <div className='max-w-7xl mx-auto px-4 py-6'>
-      <LabelWall categories={groupedCategories} {...labelActions} />
+      <LabelWall
+        categories={groupedCategories}
+        {...labelActions}
+        onAddLabelClick={handleAddLabelClick}
+      />
     </div>
   )
 }
