@@ -31,8 +31,6 @@ export default function LabelsPage() {
 
   if (isLoading) return <LoadingState type='loading' />
 
-  console.log(groupedCategories)
-
   return (
     <div className='max-w-7xl mx-auto px-4 py-6'>
       <LabelWall

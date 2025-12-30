@@ -11,7 +11,7 @@ import {
 } from '@dnd-kit/core'
 import { arrayMove, rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 import { AnimatePresence, motion } from 'motion/react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { Label, LabelCategory } from '@/types/labels'
 import { LabelCard } from './LabelCard'
 import { type LabelActions, LabelSection } from './LabelSection'
@@ -29,6 +29,17 @@ interface LabelWallProps {
   onAddLabelClick?: (category: string) => void
 }
 
+// 拖拽相关辅助函数
+const parseSortableId = (id: string) => {
+  return Number(id.replace('label-', ''))
+}
+const findCategoryByLabelId = (categories: LabelCategory[], labelId: number) => {
+  return categories.find(cat => cat.labels.some(l => l.id === labelId))
+}
+const findLabelIndex = (cat: LabelCategory, labelId: number) => {
+  return cat.labels.findIndex(l => l.id === labelId)
+}
+
 export function LabelWall({ categories, labelActions, onAddLabelClick }: LabelWallProps) {
   const [localCategories, setLocalCategories] = useState<LabelCategory[]>(categories)
 
@@ -37,117 +48,144 @@ export function LabelWall({ categories, labelActions, onAddLabelClick }: LabelWa
   }, [categories])
 
   const [activeLabel, setActiveLabel] = useState<Label | null>(null)
-  const [dragOverCategory, setDragOverCategory] = useState<string | null>(null)
+  const [overDroppable, setOverDroppable] = useState<string | null>(null)
 
+  // 初始化传感器
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
 
-  const parseSortableId = (id: string) => {
-    const [category, labelId] = id.split('-')
-    return { category, labelId: Number(labelId) }
-  }
+  // 处理拖拽开始事件
+  const handleDragStart = useCallback(
+    (event: DragStartEvent) => {
+      const labelId = parseSortableId(event.active.id as string)
+      const label = localCategories.flatMap(c => c.labels).find(l => l.id === labelId)
+      setActiveLabel(label ? { ...label } : null)
+    },
+    [localCategories]
+  )
 
-  const findLabel = (id: number) => localCategories.flatMap(c => c.labels).find(l => l.id === id)
+  // 处理拖拽悬停事件
+  const handleDragOver = useCallback(
+    (event: DragOverEvent) => {
+      const { active, over } = event
+      if (!over) {
+        setOverDroppable(null)
+        return
+      }
 
-  const handleDragStart = (event: DragStartEvent) => {
-    const { labelId } = parseSortableId(event.active.id as string)
-    const label = findLabel(labelId)
-    setActiveLabel(label ? { ...label } : null)
-  }
+      const activeId = parseSortableId(active.id as string)
+      const overId =
+        typeof over.id === 'string' && over.id.startsWith('label-')
+          ? parseSortableId(over.id)
+          : over.id // 可能是 droppable 容器 id
 
-  const handleDragOver = (event: DragOverEvent) => {
-    const { active, over } = event
-    if (!over) {
-      setDragOverCategory(null)
-      return
-    }
+      const fromCategory = findCategoryByLabelId(localCategories, activeId)
+      if (!fromCategory) return
 
-    const activeId = active.id as string
-    const overId = over.id as string
-    const { category: fromCategory, labelId } = parseSortableId(activeId)
-    const toCategory = overId.includes('-') ? parseSortableId(overId).category : overId
+      const toCategory =
+        typeof overId === 'number'
+          ? findCategoryByLabelId(localCategories, overId)
+          : localCategories.find(c => c.code === overId)
+      if (!toCategory) return
 
-    setDragOverCategory(toCategory)
+      // 检查是否在不同分类之间移动
+      setOverDroppable(toCategory.code)
 
-    // 拖到空分类
-    if (overId === toCategory) {
-      setLocalCategories(prev => {
-        const fromCat = prev.find(c => c.code === fromCategory)
-        const toCat = prev.find(c => c.code === toCategory)
-        if (!fromCat || !toCat) return prev
+      // —— 同分类排序预览 ——
+      if (fromCategory.code === toCategory.code && typeof overId === 'number') {
+        const oldIndex = findLabelIndex(fromCategory, activeId)
+        const newIndex = findLabelIndex(fromCategory, overId)
+        if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return
 
-        const moving = fromCat.labels.find(l => l.id === labelId)
-        if (!moving) return prev
+        setLocalCategories(prev =>
+          prev.map(cat =>
+            cat.code === fromCategory.code
+              ? { ...cat, labels: arrayMove(cat.labels, oldIndex, newIndex) }
+              : cat
+          )
+        )
+        return
+      }
 
-        return prev.map(cat => {
-          if (cat.code === fromCategory)
-            return { ...cat, labels: cat.labels.filter(l => l.id !== labelId) }
-          if (cat.code === toCategory)
-            return { ...cat, labels: [{ ...moving, category: toCategory }] }
-          return cat
+      // —— 跨分类预览（不改 category） ——
+      if (fromCategory.code !== toCategory.code) {
+        setLocalCategories(prev => {
+          // 找到源分类、目标分类以及正拖拽的label
+          const source = prev.find(c => c.code === fromCategory.code)
+          const target = prev.find(c => c.code === toCategory.code)
+          if (!source || !target) return prev
+          const moving = source.labels.find(l => l.id === activeId)
+          if (!moving) return prev
+
+          // 从源分类移除
+          const newSource = source.labels.filter(l => l.id !== activeId)
+
+          // 确定插入位置
+          const targetIndex =
+            typeof overId === 'number' ? findLabelIndex(target, overId) : target.labels.length
+
+          const insertIndex = targetIndex === -1 ? target.labels.length : targetIndex
+
+          const newTarget = [
+            ...target.labels.slice(0, insertIndex),
+            moving, // ⚠️ 不改 category
+            ...target.labels.slice(insertIndex),
+          ]
+
+          return prev.map(cat => {
+            if (cat.code === source.code) return { ...cat, labels: newSource }
+            if (cat.code === target.code) return { ...cat, labels: newTarget }
+            return cat
+          })
         })
+      }
+    },
+    [localCategories]
+  )
+
+  // 处理拖拽结束事件
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event
+      setActiveLabel(null)
+      setOverDroppable(null)
+      if (!over) return
+
+      const activeId = parseSortableId(active.id as string)
+      const overId =
+        typeof over.id === 'string' && over.id.startsWith('label-')
+          ? parseSortableId(over.id)
+          : over.id // 可能是 droppable 容器 id
+
+      const fromCategory = findCategoryByLabelId(localCategories, activeId)
+      if (!fromCategory) return
+
+      const toCategory =
+        typeof overId === 'number'
+          ? findCategoryByLabelId(localCategories, overId)
+          : localCategories.find(c => c.code === overId)
+      if (!toCategory) return
+
+      // const fromIndex = findLabelIndex(fromCategory, activeId)
+      const toIndex =
+        typeof overId === 'number'
+          ? findLabelIndex(toCategory, overId)
+          : toCategory.labels.length - 1
+
+      // 提交给外部（onReorder）
+      labelActions.onReorder?.({
+        fromId: activeId,
+        toCategory: toCategory.code,
+        toIndex: Math.max(toIndex, 0),
       })
-      return
-    }
+    },
+    [localCategories, labelActions.onReorder]
+  )
 
-    // 同分类拖拽
-    if (fromCategory === toCategory) {
-      setLocalCategories(prev =>
-        prev.map(cat => {
-          if (cat.code !== fromCategory) return cat
-          const oldIndex = cat.labels.findIndex(l => l.id === labelId)
-          const newIndex = cat.labels.findIndex(l => `${l.category}-${l.id}` === overId)
-          if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return cat
-          return { ...cat, labels: arrayMove(cat.labels, oldIndex, newIndex) }
-        })
-      )
-      return
-    }
-
-    // 跨分类拖拽到 label 上
-    setLocalCategories(prev => {
-      const fromCat = prev.find(c => c.code === fromCategory)
-      const toCat = prev.find(c => c.code === toCategory)
-      if (!fromCat || !toCat) return prev
-
-      const moving = fromCat.labels.find(l => l.id === labelId)
-      if (!moving) return prev
-
-      const newFrom = fromCat.labels.filter(l => l.id !== labelId)
-      const overIndex = toCat.labels.findIndex(l => `${l.category}-${l.id}` === overId)
-      const newTo = [
-        ...toCat.labels.slice(0, overIndex),
-        { ...moving, category: toCategory },
-        ...toCat.labels.slice(overIndex),
-      ]
-
-      return prev.map(cat => {
-        if (cat.code === fromCategory) return { ...cat, labels: newFrom }
-        if (cat.code === toCategory) return { ...cat, labels: newTo }
-        return cat
-      })
-    })
-  }
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event
+  // 处理拖拽取消事件
+  const handleDragCancel = useCallback(() => {
     setActiveLabel(null)
-    setDragOverCategory(null)
-    if (!over) return
-
-    const { labelId } = parseSortableId(active.id as string)
-    const overId = over.id as string
-    const toCategory = overId.includes('-') ? parseSortableId(overId).category : overId
-    const targetCategory = localCategories.find(c => c.code === toCategory)
-    if (!targetCategory) return
-
-    const toIndex = targetCategory.labels.findIndex(l => l.id === labelId)
-    labelActions.onReorder?.({ fromId: labelId, toCategory, toIndex: toIndex === -1 ? 0 : toIndex })
-  }
-
-  const handleDragCancel = () => {
-    setActiveLabel(null)
-    setDragOverCategory(null)
-  }
+    setOverDroppable(null)
+  }, [])
 
   return (
     <DndContext
@@ -171,13 +209,13 @@ export function LabelWall({ categories, labelActions, onAddLabelClick }: LabelWa
       {localCategories.map(cat => (
         <SortableContext
           key={cat.code}
-          items={cat.labels.map(l => `${l.category}-${l.id}`)}
+          items={cat.labels.map(l => `label-${l.id}`)}
           strategy={rectSortingStrategy}
         >
           <LabelSection
             category={cat}
             labelActions={labelActions}
-            isDragOver={dragOverCategory === cat.code}
+            isDragOver={overDroppable === cat.code}
             onAddLabelClick={onAddLabelClick}
           />
         </SortableContext>

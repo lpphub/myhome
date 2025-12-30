@@ -54,7 +54,7 @@ export function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
   const colorClasses = CARD_COLOR_CLASSES[label.color]
 
   const { attributes, listeners, transform, transition, isDragging, setNodeRef } = useSortable({
-    id: `${label.category}-${label.id}`,
+    id: `label-${label.id}`,
   })
 
   const style = {

@@ -91,7 +91,7 @@ export function LabelSection({
 }
 
 function EmptyDroppable({ id }: { id: string }) {
-  const { setNodeRef } = useDroppable({ id })
+  const { setNodeRef } = useDroppable({ id: `${id}-container` })
 
   return <div ref={setNodeRef} className='w-52 h-24 shrink-0 pointer-events-none' />
 }
