@@ -18,7 +18,7 @@ import { LabelCard } from './LabelCard'
 import { type LabelActions, LabelSection } from './LabelSection'
 
 interface LabelWallProps {
-  categories: LabelCategory[]
+  labels: LabelCategory[]
   labelActions: LabelActions & {
     onReorder?: (data: {
       fromId: number
@@ -41,12 +41,12 @@ const findLabelIndex = (cat: LabelCategory, labelId: number) => {
   return cat.labels.findIndex(l => l.id === labelId)
 }
 
-export function LabelWall({ categories, labelActions, onAddLabelClick }: LabelWallProps) {
-  const [localCategories, setLocalCategories] = useState<LabelCategory[]>(categories)
+export function LabelWall({ labels, labelActions, onAddLabelClick }: LabelWallProps) {
+  const [localLabels, setLocalLabels] = useState<LabelCategory[]>(labels)
 
   useEffect(() => {
-    setLocalCategories(categories)
-  }, [categories])
+    setLocalLabels(labels)
+  }, [labels])
 
   const [activeLabel, setActiveLabel] = useState<Label | null>(null)
   const [overDroppable, setOverDroppable] = useState<string | null>(null)
@@ -60,10 +60,10 @@ export function LabelWall({ categories, labelActions, onAddLabelClick }: LabelWa
   const handleDragStart = useCallback(
     (event: DragStartEvent) => {
       const labelId = parseSortableId(event.active.id as string)
-      const label = localCategories.flatMap(c => c.labels).find(l => l.id === labelId)
+      const label = localLabels.flatMap(c => c.labels).find(l => l.id === labelId)
       setActiveLabel(label ? { ...label } : null)
     },
-    [localCategories]
+    [localLabels]
   )
 
   // 处理拖拽悬停事件
@@ -81,13 +81,13 @@ export function LabelWall({ categories, labelActions, onAddLabelClick }: LabelWa
           ? parseSortableId(over.id)
           : over.id // 可能是 droppable 容器 id
 
-      const fromCategory = findCategoryByLabelId(localCategories, activeId)
+      const fromCategory = findCategoryByLabelId(localLabels, activeId)
       if (!fromCategory) return
 
       const toCategory =
         typeof overId === 'number'
-          ? findCategoryByLabelId(localCategories, overId)
-          : localCategories.find(c => c.code === overId)
+          ? findCategoryByLabelId(localLabels, overId)
+          : localLabels.find(c => c.code === overId)
       if (!toCategory) return
 
       // 检查是否在不同分类之间移动
@@ -99,7 +99,7 @@ export function LabelWall({ categories, labelActions, onAddLabelClick }: LabelWa
         const newIndex = findLabelIndex(fromCategory, overId)
         if (oldIndex === -1 || newIndex === -1 || oldIndex === newIndex) return
 
-        setLocalCategories(prev =>
+        setLocalLabels(prev =>
           prev.map(cat =>
             cat.code === fromCategory.code
               ? { ...cat, labels: arrayMove(cat.labels, oldIndex, newIndex) }
@@ -111,7 +111,7 @@ export function LabelWall({ categories, labelActions, onAddLabelClick }: LabelWa
 
       // —— 跨分类预览（不改 category） ——
       if (fromCategory.code !== toCategory.code) {
-        setLocalCategories(prev => {
+        setLocalLabels(prev => {
           // 找到源分类、目标分类以及正拖拽的label
           const source = prev.find(c => c.code === fromCategory.code)
           const target = prev.find(c => c.code === toCategory.code)
@@ -142,7 +142,7 @@ export function LabelWall({ categories, labelActions, onAddLabelClick }: LabelWa
         })
       }
     },
-    [localCategories]
+    [localLabels]
   )
 
   // 处理拖拽结束事件
@@ -159,13 +159,13 @@ export function LabelWall({ categories, labelActions, onAddLabelClick }: LabelWa
           ? parseSortableId(over.id)
           : over.id // 可能是 droppable 容器 id
 
-      const fromCategory = findCategoryByLabelId(localCategories, activeId)
+      const fromCategory = findCategoryByLabelId(localLabels, activeId)
       if (!fromCategory) return
 
       const toCategory =
         typeof overId === 'number'
-          ? findCategoryByLabelId(localCategories, overId)
-          : localCategories.find(c => c.code === overId)
+          ? findCategoryByLabelId(localLabels, overId)
+          : localLabels.find(c => c.code === overId)
       if (!toCategory) return
 
       // const fromIndex = findLabelIndex(fromCategory, activeId)
@@ -181,7 +181,7 @@ export function LabelWall({ categories, labelActions, onAddLabelClick }: LabelWa
         toIndex: Math.max(toIndex, 0),
       })
     },
-    [localCategories, labelActions.onReorder]
+    [localLabels, labelActions.onReorder]
   )
 
   // 处理拖拽取消事件
@@ -209,14 +209,14 @@ export function LabelWall({ categories, labelActions, onAddLabelClick }: LabelWa
         </AnimatePresence>
       </DragOverlay>
       <div className='overflow-auto touch-pan-y'>
-        {localCategories.map(cat => (
+        {localLabels.map(cat => (
           <SortableContext
             key={cat.code}
             items={cat.labels.map(l => `label-${l.id}`)}
             strategy={rectSortingStrategy}
           >
             <LabelSection
-              category={cat}
+              labelCategory={cat}
               labelActions={labelActions}
               isDragOver={overDroppable === cat.code}
               onAddLabelClick={onAddLabelClick}

@@ -4,7 +4,6 @@ import httpClient from '@/utils/request'
 
 enum LabelsApi {
   GetLabels = '/labels',
-  GetCategories = '/labels/categories',
   CreateLabel = '/labels',
   UpdateLabel = '/labels/:id',
   DeleteLabel = '/labels/:id',
@@ -13,15 +12,8 @@ enum LabelsApi {
 
 // 获取所有标签
 export const getLabels = () =>
-  httpClient.get<Label[]>({
-    url: LabelsApi.GetLabels,
-    mock: true,
-  })
-
-// 获取所有分类
-export const getCategories = () =>
   httpClient.get<LabelCategory[]>({
-    url: LabelsApi.GetCategories,
+    url: LabelsApi.GetLabels,
     mock: true,
   })
 

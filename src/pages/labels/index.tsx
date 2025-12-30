@@ -2,19 +2,11 @@ import { useCallback, useMemo, useState } from 'react'
 import { LoadingState } from '@/components/LoadingState'
 import { LabelFormDialog } from '@/pages/labels/components/LabelFormDialog'
 import { LabelWall } from '@/pages/labels/components/LabelWall'
-import { groupByCategory, useCategories, useLabels } from '@/pages/labels/hooks/useLabels'
-import type { LabelCategory, LabelFormData } from '@/types/labels'
+import { useLabels } from '@/pages/labels/hooks/useLabels'
+import type { LabelFormData } from '@/types/labels'
 
 export default function LabelsPage() {
-  const { data: labels, isLoading: labelsLoading } = useLabels()
-  const { data: categories, isLoading: categoriesLoading } = useCategories()
-
-  const isLoading = labelsLoading || categoriesLoading
-
-  const groupedCategories = useMemo<LabelCategory[]>(
-    () => groupByCategory(labels || [], categories || []),
-    [labels, categories]
-  )
+  const { data: labels, isLoading } = useLabels()
 
   const handleAddLabelClick = useCallback((category: string) => {
     setEditingLabel(null)
@@ -64,7 +56,7 @@ export default function LabelsPage() {
   return (
     <div className='max-w-7xl mx-auto px-4 py-6'>
       <LabelWall
-        categories={groupedCategories}
+        labels={labels}
         labelActions={labelActions}
         onAddLabelClick={handleAddLabelClick}
       />

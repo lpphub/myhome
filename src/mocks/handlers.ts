@@ -1,5 +1,5 @@
 import { delay, HttpResponse, http } from 'msw'
-import type { AuthForm } from '@/api/auth'
+import type { AuthForm } from '@/types/auth'
 import type { Label, LabelCategory } from '@/types/labels'
 
 async function loadLabelsData(): Promise<{ categories: LabelCategory[]; labels: Label[] }> {
@@ -112,14 +112,6 @@ export const handlers = [
     })
   }),
 
-  http.get('/api/labels/categories', async () => {
-    const data = await loadLabelsData()
-    return HttpResponse.json({
-      code: 200,
-      message: '获取分类成功',
-      data: data.categories,
-    })
-  }),
 
   http.get('/api/dashboard', async () => {
     await delay(200)

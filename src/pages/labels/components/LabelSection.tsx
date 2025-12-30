@@ -17,23 +17,23 @@ export interface LabelActions {
 }
 
 interface LabelSectionProps {
-  category: LabelCategory
-  isDragOver?: boolean
+  labelCategory: LabelCategory
   labelActions?: LabelActions
+  isDragOver?: boolean
   onAddLabelClick?: (category: string) => void
 }
 
 export function LabelSection({
-  category,
+  labelCategory,
   labelActions,
   isDragOver = false,
   onAddLabelClick,
 }: LabelSectionProps) {
   const { setNodeRef } = useDroppable({
-    id: category.code, // 👈 关键：容器自己的 id
+    id: labelCategory.code, // 👈 关键：容器自己的 id
   })
 
-  const Icon = ICON_MAP[category.icon] || Box
+  const Icon = ICON_MAP[labelCategory.icon] || Box
 
   return (
     <motion.div
@@ -49,15 +49,15 @@ export function LabelSection({
             <Icon className='w-5 h-5 text-honey-600' />
           </div>
           <div>
-            <h2 className='text-lg font-bold text-warmGray-800'>{category.name}</h2>
-            <p className='text-sm text-warmGray-500'>{category.labels.length} 个便签</p>
+            <h2 className='text-lg font-bold text-warmGray-800'>{labelCategory.name}</h2>
+            <p className='text-sm text-warmGray-500'>{labelCategory.labels.length} 个便签</p>
           </div>
         </div>
       </div>
 
       <div className='flex flex-wrap gap-4'>
         {/** 标签卡片 */}
-        {category.labels.map(label => (
+        {labelCategory.labels.map(label => (
           <LabelCard key={label.id} label={label} {...labelActions} />
         ))}
 
@@ -65,7 +65,7 @@ export function LabelSection({
         {onAddLabelClick && (
           <motion.button
             type='button'
-            onClick={() => onAddLabelClick(category.code)}
+            onClick={() => onAddLabelClick(labelCategory.code)}
             className={cn(
               'w-52 shrink-0 p-4 rounded-lg border-2 border-dashed',
               'bg-cream-100 border-cream-200',
@@ -84,7 +84,7 @@ export function LabelSection({
         )}
 
         {/* 空状态下的拖拽区域 */}
-        {category.labels.length === 0 && <EmptyDroppable id={category.code} />}
+        {labelCategory.labels.length === 0 && <EmptyDroppable id={labelCategory.code} />}
       </div>
     </motion.div>
   )

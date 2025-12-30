@@ -1,232 +1,248 @@
 {
-  "categories": [
-    { "id": 1, "code": "storage", "name": "收纳分类", "icon": "box" },
-    { "id": 2, "code": "todo", "name": "待办事项", "icon": "check"},
-    { "id": 3, "code": "other", "name": "其他", "icon": "more"}
-  ],
   "labels": [
     {
       "id": 1,
-      "name": "卧室",
-      "category": "storage",
-      "color": "honey",
-      "itemCount": 25,
-      "description": "主卧和次卧的物品",
-      "createdAt": "2024-12-20T00:00:00Z",
-      "updatedAt": "2024-12-20T00:00:00Z",
-      "order": 0
+      "name": "提醒",
+      "code": "todo",
+      "icon": "check",
+      "labels": [
+        {
+          "id": 15,
+          "name": "待办事项",
+          "category": "todo",
+          "color": "coral",
+          "itemCount": 12,
+          "description": "记录需要完成的任务",
+          "createdAt": "2024-12-12T00:00:00Z",
+          "updatedAt": "2024-12-12T00:00:00Z",
+          "order": 14
+        },
+        {
+          "id": 16,
+          "name": "购物清单",
+          "category": "todo",
+          "color": "lemon",
+          "itemCount": 28,
+          "description": "需要购买的物品列表",
+          "createdAt": "2024-12-11T00:00:00Z",
+          "updatedAt": "2024-12-11T00:00:00Z",
+          "order": 15
+        },
+        {
+          "id": 17,
+          "name": "备忘录",
+          "category": "todo",
+          "color": "lavender",
+          "itemCount": 8,
+          "description": "记录重要的提醒信息",
+          "createdAt": "2024-12-10T00:00:00Z",
+          "updatedAt": "2024-12-10T00:00:00Z",
+          "order": 16
+        },
+        {
+          "id": 18,
+          "name": "生日提醒",
+          "category": "todo",
+          "color": "honey",
+          "itemCount": 15,
+          "description": "亲友的生日和纪念日",
+          "createdAt": "2024-12-09T00:00:00Z",
+          "updatedAt": "2024-12-09T00:00:00Z",
+          "order": 17
+        },
+        {
+          "id": 19,
+          "name": "常用地址",
+          "category": "todo",
+          "color": "cream",
+          "itemCount": 6,
+          "description": "记录常用的家庭地址",
+          "createdAt": "2024-12-08T00:00:00Z",
+          "updatedAt": "2024-12-08T00:00:00Z",
+          "order": 18
+        },
+        {
+          "id": 20,
+          "name": "保修信息",
+          "category": "todo",
+          "color": "pink",
+          "itemCount": 10,
+          "description": "家电和产品的保修期记录",
+          "createdAt": "2024-12-07T00:00:00Z",
+          "updatedAt": "2024-12-07T00:00:00Z",
+          "order": 19
+        }
+      ]
     },
     {
       "id": 2,
-      "name": "厨房",
-      "category": "storage",
-      "color": "lemon",
-      "itemCount": 42,
-      "description": "厨具、餐具和食材",
-      "createdAt": "2024-12-19T00:00:00Z",
-      "updatedAt": "2024-12-19T00:00:00Z",
-      "order": 1
+      "name": "收纳",
+      "code": "storage",
+      "icon": "box",
+      "labels": [
+        {
+          "id": 1,
+          "name": "卧室",
+          "category": "storage",
+          "color": "honey",
+          "itemCount": 25,
+          "description": "主卧和次卧的物品",
+          "createdAt": "2024-12-20T00:00:00Z",
+          "updatedAt": "2024-12-20T00:00:00Z",
+          "order": 0
+        },
+        {
+          "id": 2,
+          "name": "厨房",
+          "category": "storage",
+          "color": "lemon",
+          "itemCount": 42,
+          "description": "厨具、餐具和食材",
+          "createdAt": "2024-12-19T00:00:00Z",
+          "updatedAt": "2024-12-19T00:00:00Z",
+          "order": 1
+        },
+        {
+          "id": 3,
+          "name": "书房",
+          "category": "storage",
+          "color": "lavender",
+          "itemCount": 18,
+          "description": "书籍、文具和办公用品",
+          "createdAt": "2024-12-18T00:00:00Z",
+          "updatedAt": "2024-12-18T00:00:00Z",
+          "order": 2
+        },
+        {
+          "id": 4,
+          "name": "客厅",
+          "category": "storage",
+          "color": "coral",
+          "itemCount": 35,
+          "description": "客厅家具和装饰品",
+          "createdAt": "2024-12-17T00:00:00Z",
+          "updatedAt": "2024-12-17T00:00:00Z",
+          "order": 3
+        },
+        {
+          "id": 5,
+          "name": "卫生间",
+          "category": "storage",
+          "color": "cream",
+          "itemCount": 15,
+          "description": "洗漱用品和毛巾",
+          "createdAt": "2024-12-16T00:00:00Z",
+          "updatedAt": "2024-12-16T00:00:00Z",
+          "order": 4
+        },
+        {
+          "id": 6,
+          "name": "阳台",
+          "category": "storage",
+          "color": "mint",
+          "itemCount": 8,
+          "description": "植物和园艺用品",
+          "createdAt": "2024-12-15T00:00:00Z",
+          "updatedAt": "2024-12-15T00:00:00Z",
+          "order": 5
+        }
+      ]
     },
     {
       "id": 3,
-      "name": "书房",
-      "category": "storage",
-      "color": "lavender",
-      "itemCount": 18,
-      "description": "书籍、文具和办公用品",
-      "createdAt": "2024-12-18T00:00:00Z",
-      "updatedAt": "2024-12-18T00:00:00Z",
-      "order": 2
-    },
-    {
-      "id": 4,
-      "name": "客厅",
-      "category": "storage",
-      "color": "coral",
-      "itemCount": 35,
-      "description": "客厅家具和装饰品",
-      "createdAt": "2024-12-17T00:00:00Z",
-      "updatedAt": "2024-12-17T00:00:00Z",
-      "order": 3
-    },
-    {
-      "id": 5,
-      "name": "卫生间",
-      "category": "storage",
-      "color": "cream",
-      "itemCount": 15,
-      "description": "洗漱用品和毛巾",
-      "createdAt": "2024-12-16T00:00:00Z",
-      "updatedAt": "2024-12-16T00:00:00Z",
-      "order": 4
-    },
-    {
-      "id": 6,
-      "name": "阳台",
-      "category": "storage",
-      "color": "mint",
-      "itemCount": 8,
-      "description": "植物和园艺用品",
-      "createdAt": "2024-12-15T00:00:00Z",
-      "updatedAt": "2024-12-15T00:00:00Z",
-      "order": 5
-    },
-    {
-      "id": 7,
-      "name": "零食",
-      "category": "todo",
-      "color": "lemon",
-      "itemCount": 28,
-      "description": "各种零食和零食包装",
-      "createdAt": "2024-12-20T00:00:00Z",
-      "updatedAt": "2024-12-20T00:00:00Z",
-      "order": 6
-    },
-    {
-      "id": 8,
-      "name": "玩具",
-      "category": "todo",
-      "color": "coral",
-      "itemCount": 12,
-      "description": "儿童玩具和游戏",
-      "createdAt": "2024-12-19T00:00:00Z",
-      "updatedAt": "2024-12-19T00:00:00Z",
-      "order": 7
-    },
-    {
-      "id": 9,
-      "name": "主食",
-      "category": "todo",
-      "color": "honey",
-      "itemCount": 33,
-      "description": "米、面、油等主食",
-      "createdAt": "2024-12-18T00:00:00Z",
-      "updatedAt": "2024-12-18T00:00:00Z",
-      "order": 8
-    },
-    {
-      "id": 10,
-      "name": "饮品",
-      "category": "todo",
-      "color": "lavender",
-      "itemCount": 20,
-      "description": "饮料、茶和咖啡",
-      "createdAt": "2024-12-17T00:00:00Z",
-      "updatedAt": "2024-12-17T00:00:00Z",
-      "order": 9
-    },
-    {
-      "id": 11,
-      "name": "文具",
-      "category": "todo",
-      "color": "cream",
-      "itemCount": 16,
-      "description": "笔、本子和办公用品",
-      "createdAt": "2024-12-16T00:00:00Z",
-      "updatedAt": "2024-12-16T00:00:00Z",
-      "order": 10
-    },
-    {
-      "id": 12,
-      "name": "数码",
-      "category": "todo",
-      "color": "pink",
-      "itemCount": 8,
-      "description": "电子产品和配件",
-      "createdAt": "2024-12-15T00:00:00Z",
-      "updatedAt": "2024-12-15T00:00:00Z",
-      "order": 11
-    },
-    {
-      "id": 13,
-      "name": "化妆品",
-      "category": "todo",
-      "color": "coral",
-      "itemCount": 22,
-      "description": "护肤品和彩妆",
-      "createdAt": "2024-12-14T00:00:00Z",
-      "updatedAt": "2024-12-14T00:00:00Z",
-      "order": 12
-    },
-    {
-      "id": 14,
-      "name": "书籍",
-      "category": "todo",
-      "color": "lavender",
-      "itemCount": 45,
-      "description": "各类书籍和杂志",
-      "createdAt": "2024-12-13T00:00:00Z",
-      "updatedAt": "2024-12-13T00:00:00Z",
-      "order": 13
-    },
-    {
-      "id": 15,
-      "name": "待办事项",
-      "category": "other",
-      "color": "coral",
-      "itemCount": 12,
-      "description": "记录需要完成的任务",
-      "createdAt": "2024-12-12T00:00:00Z",
-      "updatedAt": "2024-12-12T00:00:00Z",
-      "order": 14
-    },
-    {
-      "id": 16,
-      "name": "购物清单",
-      "category": "other",
-      "color": "lemon",
-      "itemCount": 28,
-      "description": "需要购买的物品列表",
-      "createdAt": "2024-12-11T00:00:00Z",
-      "updatedAt": "2024-12-11T00:00:00Z",
-      "order": 15
-    },
-    {
-      "id": 17,
-      "name": "备忘录",
-      "category": "other",
-      "color": "lavender",
-      "itemCount": 8,
-      "description": "记录重要的提醒信息",
-      "createdAt": "2024-12-10T00:00:00Z",
-      "updatedAt": "2024-12-10T00:00:00Z",
-      "order": 16
-    },
-    {
-      "id": 18,
-      "name": "生日提醒",
-      "category": "other",
-      "color": "honey",
-      "itemCount": 15,
-      "description": "亲友的生日和纪念日",
-      "createdAt": "2024-12-09T00:00:00Z",
-      "updatedAt": "2024-12-09T00:00:00Z",
-      "order": 17
-    },
-    {
-      "id": 19,
-      "name": "常用地址",
-      "category": "other",
-      "color": "cream",
-      "itemCount": 6,
-      "description": "记录常用的家庭地址",
-      "createdAt": "2024-12-08T00:00:00Z",
-      "updatedAt": "2024-12-08T00:00:00Z",
-      "order": 18
-    },
-    {
-      "id": 20,
-      "name": "保修信息",
-      "category": "other",
-      "color": "pink",
-      "itemCount": 10,
-      "description": "家电和产品的保修期记录",
-      "createdAt": "2024-12-07T00:00:00Z",
-      "updatedAt": "2024-12-07T00:00:00Z",
-      "order": 19
+      "name": "其他",
+      "code": "other",
+      "icon": "more",
+      "labels": [
+        {
+          "id": 7,
+          "name": "零食",
+          "category": "other",
+          "color": "lemon",
+          "itemCount": 28,
+          "description": "各种零食和零食包装",
+          "createdAt": "2024-12-20T00:00:00Z",
+          "updatedAt": "2024-12-20T00:00:00Z",
+          "order": 6
+        },
+        {
+          "id": 8,
+          "name": "玩具",
+          "category": "other",
+          "color": "coral",
+          "itemCount": 12,
+          "description": "儿童玩具和游戏",
+          "createdAt": "2024-12-19T00:00:00Z",
+          "updatedAt": "2024-12-19T00:00:00Z",
+          "order": 7
+        },
+        {
+          "id": 9,
+          "name": "主食",
+          "category": "other",
+          "color": "honey",
+          "itemCount": 33,
+          "description": "米、面、油等主食",
+          "createdAt": "2024-12-18T00:00:00Z",
+          "updatedAt": "2024-12-18T00:00:00Z",
+          "order": 8
+        },
+        {
+          "id": 10,
+          "name": "饮品",
+          "category": "other",
+          "color": "lavender",
+          "itemCount": 20,
+          "description": "饮料、茶和咖啡",
+          "createdAt": "2024-12-17T00:00:00Z",
+          "updatedAt": "2024-12-17T00:00:00Z",
+          "order": 9
+        },
+        {
+          "id": 11,
+          "name": "文具",
+          "category": "other",
+          "color": "cream",
+          "itemCount": 16,
+          "description": "笔、本子和办公用品",
+          "createdAt": "2024-12-16T00:00:00Z",
+          "updatedAt": "2024-12-16T00:00:00Z",
+          "order": 10
+        },
+        {
+          "id": 12,
+          "name": "数码",
+          "category": "other",
+          "color": "pink",
+          "itemCount": 8,
+          "description": "电子产品和配件",
+          "createdAt": "2024-12-15T00:00:00Z",
+          "updatedAt": "2024-12-15T00:00:00Z",
+          "order": 11
+        },
+        {
+          "id": 13,
+          "name": "化妆品",
+          "category": "other",
+          "color": "coral",
+          "itemCount": 22,
+          "description": "护肤品和彩妆",
+          "createdAt": "2024-12-14T00:00:00Z",
+          "updatedAt": "2024-12-14T00:00:00Z",
+          "order": 12
+        },
+        {
+          "id": 14,
+          "name": "书籍",
+          "category": "other",
+          "color": "lavender",
+          "itemCount": 45,
+          "description": "各类书籍和杂志",
+          "createdAt": "2024-12-13T00:00:00Z",
+          "updatedAt": "2024-12-13T00:00:00Z",
+          "order": 13
+        }
+      ]
     }
-  ],
-  "labels2": [
-
   ]
 }
