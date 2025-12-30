@@ -13,7 +13,7 @@ const ICON_MAP: Record<string, typeof Box> = {
 
 export interface LabelActions {
   onDelete: (labelId: number) => void
-  onEdit: (labelId: number, label: LabelFormData) => void
+  onEdit: (label: LabelFormData) => void
 }
 
 interface LabelSectionProps {

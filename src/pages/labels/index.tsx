@@ -1,5 +1,6 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { LoadingState } from '@/components/LoadingState'
+import { LabelFormDialog } from '@/pages/labels/components/LabelFormDialog'
 import { LabelWall } from '@/pages/labels/components/LabelWall'
 import { groupByCategory, useCategories, useLabels } from '@/pages/labels/hooks/useLabels'
 import type { LabelCategory, LabelFormData } from '@/types/labels'
@@ -15,19 +16,46 @@ export default function LabelsPage() {
     [labels, categories]
   )
 
+  const handleAddLabelClick = useCallback((category: string) => {
+    setEditingLabel(null)
+    setCategory(category)
+    setDialogOpen(true)
+  }, [])
+
+  const handleEditLabelClick = useCallback((label: LabelFormData) => {
+    setEditingLabel(label)
+    setCategory(undefined)
+    setDialogOpen(true)
+  }, [])
+
   const labelActions = useMemo(
     () => ({
-      onEdit: (id: number, label: LabelFormData) => console.log('edit', id, label),
+      onEdit: handleEditLabelClick,
       onDelete: (id: number) => console.log('delete', id),
       onReorder: (data: { fromId: number; toId?: number; toCategory: string; toIndex: number }) =>
         console.log('reorder', data),
     }),
-    []
+    [handleEditLabelClick]
   )
 
-  const handleAddLabelClick = useCallback((category: string) => {
-    console.log('add', category)
-  }, [])
+  // 弹窗状态
+  const [isDialogOpen, setDialogOpen] = useState(false)
+  const [editingLabel, setEditingLabel] = useState<LabelFormData | null>(null)
+  const [category, setCategory] = useState<string | undefined>(undefined)
+  // 弹窗动作
+  const dialogActions = useMemo(
+    () => ({
+      addLabel: (data: LabelFormData) => {
+        console.log('add', data)
+        setDialogOpen(false)
+      },
+      updateLabel: (data: LabelFormData) => {
+        console.log('update', data)
+        setDialogOpen(false)
+      },
+    }),
+    []
+  )
 
   if (isLoading) return <LoadingState type='loading' />
 
@@ -37,6 +65,17 @@ export default function LabelsPage() {
         categories={groupedCategories}
         labelActions={labelActions}
         onAddLabelClick={handleAddLabelClick}
+      />
+
+      {/* 弹窗 */}
+      <LabelFormDialog
+        isOpen={isDialogOpen}
+        onClose={() => setDialogOpen(false)}
+        initialData={{
+          label: editingLabel,
+          category,
+        }}
+        actions={dialogActions}
       />
     </div>
   )
