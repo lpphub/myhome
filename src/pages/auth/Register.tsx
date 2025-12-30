@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { useAuth } from '@/hooks/useAuth'
+import type { AuthForm } from '@/types/auth'
 
 const registerSchema = z
   .object({
@@ -51,7 +52,7 @@ export default function Register() {
   })
 
   const { isPending, mutate } = useMutation({
-    mutationFn: (credentials: { email: string; password: string }) => signUp(credentials),
+    mutationFn: (credentials: AuthForm) => signUp(credentials),
     onSuccess: res => {
       login({ ...res })
       toast.success('注册成功！')

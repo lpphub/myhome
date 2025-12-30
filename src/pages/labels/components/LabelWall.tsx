@@ -223,12 +223,6 @@ export function LabelWall({ categories, labelActions, onAddLabelClick }: LabelWa
             />
           </SortableContext>
         ))}
-
-        {localCategories.length === 0 && (
-          <div className='flex h-64 items-center justify-center text-muted-foreground'>
-            暂无标签
-          </div>
-        )}
       </div>
     </DndContext>
   )

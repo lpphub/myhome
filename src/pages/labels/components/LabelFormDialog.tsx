@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { LABEL_COLOR_CLASSES, type LabelFormData, type Label as LabelType } from '@/types/labels'
+import { LABEL_COLOR_CLASSES, type LabelFormData } from '@/types/labels'
 
 interface LabelFormDialogProps {
   isOpen: boolean

@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { useAuth } from '@/hooks/useAuth'
+import type { AuthForm } from '@/types/auth'
 
 const loginSchema = z.object({
   email: z.email('请输入有效的邮箱地址').min(1, '请输入邮箱地址'),
@@ -43,7 +44,7 @@ export default function Login() {
   })
 
   const { isPending, mutate } = useMutation({
-    mutationFn: (credentials: { email: string; password: string }) => signIn(credentials),
+    mutationFn: (credentials: AuthForm) => signIn(credentials),
     onSuccess: res => {
       login({ ...res })
       toast.success('登录成功！')

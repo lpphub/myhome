@@ -1,14 +1,7 @@
 import { create } from 'zustand'
 import { createJSONStorage, devtools, persist } from 'zustand/middleware'
-import { refreshToken as apiRefreshToken } from '@/api/auth'
-
-export interface User {
-  id: number
-  name: string
-  email?: string
-  avatar?: string
-  role?: string
-}
+import { refreshToken as fetchRefreshToken } from '@/api/auth'
+import type { User } from '@/types/auth'
 
 interface AuthState {
   user: User | null
@@ -42,7 +35,7 @@ export const useAuthStore = create<AuthState>()(
           if (!refreshToken) return null
 
           try {
-            const res = await apiRefreshToken(refreshToken)
+            const res = await fetchRefreshToken(refreshToken)
 
             set({
               accessToken: res.accessToken,
