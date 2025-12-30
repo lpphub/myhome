@@ -65,7 +65,7 @@ export function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
     zIndex: isDragging ? 1000 : undefined,
   }
 
-  const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleDeleteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     if (onDelete) {
       onDelete(label.id)
@@ -131,7 +131,7 @@ export function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
         </button>
         <button
           type='button'
-          onClick={handleDelete}
+          onClick={handleDeleteClick}
           className='p-1 rounded-full bg-white/80 hover:bg-white shadow-sm transition-colors'
           title='删除'
         >
