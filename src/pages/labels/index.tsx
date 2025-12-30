@@ -4,6 +4,7 @@ import { LabelFormDialog } from '@/pages/labels/components/LabelFormDialog'
 import { LabelWall } from '@/pages/labels/components/LabelWall'
 import { useLabels } from '@/pages/labels/hooks/useLabels'
 import type { LabelFormData } from '@/types/labels'
+import { LabelToolbar } from '@/pages/labels/components/LabelToolbar'
 
 export default function LabelsPage() {
   const { data: labels, isLoading } = useLabels()
@@ -55,6 +56,8 @@ export default function LabelsPage() {
 
   return (
     <div className='max-w-7xl mx-auto px-4 py-6'>
+      <LabelToolbar onAddCategory={handleAddLabelClick} />
+
       <LabelWall
         labels={labels}
         labelActions={labelActions}
