@@ -93,7 +93,7 @@ export const TagCard = memo(({ tag, onEdit, onDelete }: TagCardProps) => {
         <button
           type='button'
           onClick={handleEditClick}
-          className='p-1 rounded-full bg-white/80 hover:bg-white shadow-sm transition-colors'
+          className='p-1 rounded-full bg-white/50 hover:bg-white hover:scale-110 shadow-sm transition-all duration-200'
           title='编辑'
         >
           <Edit2 className='w-3 h-3 text-warmGray-600' />
@@ -101,7 +101,7 @@ export const TagCard = memo(({ tag, onEdit, onDelete }: TagCardProps) => {
         <button
           type='button'
           onClick={handleDeleteClick}
-          className='p-1 rounded-full bg-white/80 hover:bg-white shadow-sm transition-colors'
+          className='p-1 rounded-full bg-white/50 hover:bg-white hover:scale-110 shadow-sm transition-all duration-200'
           title='删除'
         >
           <Trash2 className='w-3 h-3 text-red-500' />
