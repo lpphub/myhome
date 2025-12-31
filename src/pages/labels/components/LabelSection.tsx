@@ -1,15 +1,9 @@
 import { useDroppable } from '@dnd-kit/core'
-import { Box, CheckSquare, MoreHorizontal, Plus, Tag } from 'lucide-react'
+import { Plus, Tag } from 'lucide-react'
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { LabelCard } from '@/pages/labels/components/LabelCard'
 import type { LabelCategory, LabelFormData } from '@/types/labels'
-
-const ICON_MAP: Record<string, typeof Tag> = {
-  box: Box,
-  check: CheckSquare,
-  more: MoreHorizontal,
-}
 
 export interface LabelActions {
   onDelete: (labelId: number) => void
@@ -33,8 +27,6 @@ export function LabelSection({
     id: labelCategory.code, // 👈 关键：容器自己的 id
   })
 
-  const Icon = ICON_MAP[labelCategory.icon] || Tag
-
   return (
     <motion.div
       ref={setNodeRef}
@@ -46,7 +38,7 @@ export function LabelSection({
       <div className='flex items-center mb-4 px-1'>
         <div className='flex items-center gap-2'>
           <div className='w-10 h-10 rounded-xl bg-linear-to-br from-honey-100 to-honey-200 flex items-center justify-center'>
-            <Icon className='w-5 h-5 text-honey-600' />
+            <Tag className='w-5 h-5 text-honey-600' />
           </div>
           <div>
             <h2 className='text-lg font-bold text-warmGray-800'>{labelCategory.name}</h2>

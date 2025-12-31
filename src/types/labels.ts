@@ -13,7 +13,6 @@ export interface LabelCategory {
   id: number
   code: string
   name: string
-  icon: string
   labels: Label[]
 }
 
