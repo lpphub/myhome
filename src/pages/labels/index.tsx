@@ -4,16 +4,20 @@ import { LabelFormDialog } from '@/pages/labels/components/LabelFormDialog'
 import { LabelToolbar } from '@/pages/labels/components/LabelToolbar'
 import { LabelWall } from '@/pages/labels/components/LabelWall'
 import { useCreateCategory, useLabels } from '@/pages/labels/hooks/useLabels'
-import type { LabelFormData } from '@/types/labels'
+import type { Category, LabelFormData } from '@/types/labels'
 
 export default function LabelsPage() {
-  // 弹窗状态
-  const [isDialogOpen, setDialogOpen] = useState(false)
-  const [dialogLabel, setDialogLabel] = useState<LabelFormData | null>(null)
-
   const { data: labels, isLoading } = useLabels()
   const createCategory = useCreateCategory()
 
+  const categories = useMemo<Category[]>(
+    () => labels?.map(cat => ({ id: cat.id, code: cat.code, name: cat.name })) || [],
+    [labels]
+  )
+
+  // 弹窗状态
+  const [isDialogOpen, setDialogOpen] = useState(false)
+  const [dialogLabel, setDialogLabel] = useState<LabelFormData | null>(null)
   // 弹窗动作
   const dialogActions = useMemo(
     () => ({
@@ -81,6 +85,7 @@ export default function LabelsPage() {
         isOpen={isDialogOpen}
         onClose={() => setDialogOpen(false)}
         initialData={dialogLabel}
+        categories={categories}
         actions={dialogActions}
       />
     </div>

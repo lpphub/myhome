@@ -4,7 +4,6 @@
       "id": 1,
       "name": "默认",
       "code": "default",
-      "icon": "📌",
       "labels": [
         {
           "id": 19,
@@ -45,7 +44,6 @@
       "id": 2,
       "name": "收纳",
       "code": "storage",
-      "icon": "📦",
       "labels": [
         {
           "id": 3,
@@ -141,7 +139,6 @@
       "id": 3,
       "name": "提醒",
       "code": "reminder",
-      "icon": "⏰",
       "labels": [
         {
           "id": 18,
@@ -215,7 +212,6 @@
       "id": 4,
       "name": "日常",
       "code": "daily",
-      "icon": "📝",
       "labels": [
         {
           "id": 15,

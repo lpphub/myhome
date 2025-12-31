@@ -18,19 +18,26 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { LABEL_COLOR_CLASSES, type LabelFormData } from '@/types/labels'
+import { LABEL_COLOR_CLASSES, type Category, type LabelFormData } from '@/types/labels'
 
 interface LabelFormDialogProps {
   isOpen: boolean
   onClose: () => void
   initialData: LabelFormData | null
+  categories: Category[]
   actions: {
     addLabel: (label: LabelFormData) => void
     updateLabel?: (label: LabelFormData) => void
   }
 }
 
-export function LabelFormDialog({ isOpen, onClose, initialData, actions }: LabelFormDialogProps) {
+export function LabelFormDialog({
+  isOpen,
+  onClose,
+  initialData,
+  categories,
+  actions,
+}: LabelFormDialogProps) {
   const resetForm = useCallback(
     (): LabelFormData => ({
       id: initialData?.id || 0,
@@ -119,9 +126,11 @@ export function LabelFormDialog({ isOpen, onClose, initialData, actions }: Label
                 <SelectValue placeholder='选择分类' />
               </SelectTrigger>
               <SelectContent className='bg-white border-honey-200 shadow-warm-sm w-64'>
-                <SelectItem value='storage'>收纳分类</SelectItem>
-                <SelectItem value='todo'>待办事项</SelectItem>
-                <SelectItem value='other'>其他</SelectItem>
+                {categories.map(category => (
+                  <SelectItem key={category.code} value={category.code}>
+                    {category.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

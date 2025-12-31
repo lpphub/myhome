@@ -2,8 +2,8 @@ import { useDroppable } from '@dnd-kit/core'
 import { Plus, Tag } from 'lucide-react'
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
-import { LabelCard } from '@/pages/labels/components/LabelCard'
 import type { LabelCategory, LabelFormData } from '@/types/labels'
+import { LabelCard } from './LabelCard'
 
 export interface LabelActions {
   onDelete: (labelId: number) => void
@@ -30,13 +30,13 @@ export function LabelSection({
   return (
     <motion.div
       ref={setNodeRef}
-      className='mb-6 rounded-lg'
+      className='mb-4 rounded-lg'
       animate={{ scale: isDragOver ? 1.01 : 1 }}
       style={{ backgroundColor: isDragOver ? 'rgba(255, 243, 224, 0.3)' : 'transparent' }}
       transition={{ duration: 0.15 }}
     >
       {/* title */}
-      <div className='flex items-center mb-4 px-2'>
+      <div className='flex items-center px-4 pb-2'>
         <div className='flex items-center gap-2'>
           <div className='w-10 h-10 rounded-xl bg-linear-to-br from-honey-100 to-honey-200 flex items-center justify-center'>
             <Tag className='w-5 h-5 text-honey-600' />
@@ -48,7 +48,7 @@ export function LabelSection({
         </div>
       </div>
 
-      <div className='flex flex-wrap gap-4 pb-4 px-2'>
+      <div className='flex flex-wrap gap-4 px-4 pb-4'>
         {/** card */}
         {labelCategory.labels.map(label => (
           <LabelCard key={label.id} label={label} {...labelActions} />

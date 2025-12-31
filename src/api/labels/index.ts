@@ -1,5 +1,5 @@
 // api/labels.ts
-import type { Label, LabelCategory, LabelFormData, ReorderRequest } from '@/types/labels'
+import type { Category, Label, LabelCategory, LabelFormData, ReorderRequest } from '@/types/labels'
 import httpClient from '@/utils/request'
 
 enum LabelsApi {
@@ -8,6 +8,8 @@ enum LabelsApi {
   UpdateLabel = '/labels/:id',
   DeleteLabel = '/labels/:id',
   ReorderLabels = '/labels/reorder',
+  CreateCategory = '/labels/categories',
+  GetCategories = '/labels/categories',
 }
 
 // 获取所有标签
@@ -50,8 +52,15 @@ export const reorderLabels = (data: ReorderRequest) =>
 
 // 创建分类
 export const createCategory = (name: string) =>
-  httpClient.post<LabelCategory>({
-    url: '/labels/categories',
+  httpClient.post<void>({
+    url: LabelsApi.CreateCategory,
     data: { name },
+    mock: true,
+  })
+
+// 获取所有分类
+export const getCategories = () =>
+  httpClient.get<Category[]>({
+    url: LabelsApi.GetCategories,
     mock: true,
   })
