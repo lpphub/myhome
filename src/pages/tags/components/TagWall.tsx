@@ -10,7 +10,6 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
-import { rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 import { AnimatePresence, motion } from 'motion/react'
 import { useCallback, useEffect, useState } from 'react'
 import type { Tag, TagCategory } from '@/types/tags'
@@ -72,13 +71,15 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
       if (!over) return setOverCategory(null)
 
       const overId = over.id as string
-      const overCategory = overId.startsWith('tag-')
+      const nextCategory = overId.startsWith('tag-')
         ? findTagAndCategory(localTags, parseSortableId(overId))?.category
         : localTags.find(c => c.code === overId)
 
-      setOverCategory(overCategory?.code ?? null)
+      if (nextCategory?.code !== overCategory) {
+        setOverCategory(nextCategory?.code ?? null)
+      }
     },
-    [localTags]
+    [localTags, overCategory]
   )
 
   const handleDragEnd = useCallback(
