@@ -52,15 +52,15 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
   }, [localTags])
 
   const [activeTag, setActiveTag] = useState<Tag | null>(null)
-  const [overCategory, setOverCategory] = useState<string | null>(null)
+  const [overId, setOverId] = useState<string | null>(null)
 
+  /* ---------------- drag sensors ---------------- */
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 5 } })
   )
 
   /* ---------------- drag handlers ---------------- */
-
   const handleDragStart = useCallback(
     ({ active }: DragStartEvent) => {
       const tagId = parseTagId(active.id as string)
@@ -70,28 +70,15 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
     [tagLookup]
   )
 
-  const handleDragOver = useCallback(
-    ({ over }: DragOverEvent) => {
-      if (!over) return setOverCategory(null)
-
-      const overId = over.id as string
-      const overTagId = parseTagId(overId)
-      const nextCategory =
-        overTagId === -1
-          ? localTags.find(c => c.code === overId)
-          : tagLookup.get(overTagId)?.category
-
-      if (nextCategory?.code !== overCategory) {
-        setOverCategory(nextCategory?.code ?? null)
-      }
-    },
-    [tagLookup, localTags, overCategory]
-  )
+  const handleDragOver = useCallback(({ over }: DragOverEvent) => {
+    if (!over) return
+    setOverId(over.id as string)
+  }, [])
 
   const handleDragEnd = useCallback(
     ({ active, over }: DragEndEvent) => {
       setActiveTag(null)
-      setOverCategory(null)
+      setOverId(null)
       if (!over) return
 
       const activeId = parseTagId(active.id as string)
@@ -139,7 +126,7 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
 
   const handleDragCancel = useCallback(() => {
     setActiveTag(null)
-    setOverCategory(null)
+    setOverId(null)
   }, [])
 
   /* ---------------- render ---------------- */
@@ -172,7 +159,7 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
         {localTags.map(cat => (
           <TagSection
             key={cat.code}
-            isDragOver={overCategory === cat.code}
+            dragOverId={overId}
             tagCategory={cat}
             tagActions={tagActions}
             onAddTagClick={onAddTagClick}

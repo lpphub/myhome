@@ -12,17 +12,20 @@ export interface TagActions {
 }
 
 interface TagSectionProps {
-  isDragOver?: boolean
+  dragOverId?: string | null
   tagCategory: TagCategory
   tagActions?: TagActions
   onAddTagClick?: (category: string) => void
 }
 
 export const TagSection = memo(
-  ({ isDragOver = false, tagCategory, tagActions, onAddTagClick }: TagSectionProps) => {
-    const { setNodeRef } = useDroppable({
+  ({ dragOverId, tagCategory, tagActions, onAddTagClick }: TagSectionProps) => {
+    const { setNodeRef, isOver } = useDroppable({
       id: tagCategory.code,
     })
+
+    const isDragOver =
+      isOver || (dragOverId && tagCategory.tags.some(tag => dragOverId === `tag-${tag.id}`))
 
     const tagItems = tagCategory.tags.map(t => `tag-${t.id}`)
 
