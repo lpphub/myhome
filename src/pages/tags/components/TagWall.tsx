@@ -10,9 +10,10 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
-import { arrayMove, rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
+import { rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 import { AnimatePresence, motion } from 'motion/react'
 import { useCallback, useEffect, useState } from 'react'
+import { cn } from '@/lib/utils'
 import type { Tag, TagCategory } from '@/types/tags'
 import { TagCard } from './TagCard'
 import { type TagActions, TagSection } from './TagSection'
@@ -162,13 +163,15 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
 
         <div className='flex flex-col gap-4 overflow-y-auto overflow-x-hidden touch-pan-y'>
           {localTags.map(cat => (
-            <TagSection
+            <div
               key={cat.code}
-              tagCategory={cat}
-              tagActions={tagActions}
-              isDragOver={overCategoryCode === cat.code}
-              onAddTagClick={onAddTagClick}
-            />
+              className={cn(
+                'rounded-lg transition-transform duration-150',
+                overCategoryCode === cat.code && 'scale-[1.01] bg-[rgba(255,243,224,0.3)]'
+              )}
+            >
+              <TagSection tagCategory={cat} tagActions={tagActions} onAddTagClick={onAddTagClick} />
+            </div>
           ))}
         </div>
       </SortableContext>

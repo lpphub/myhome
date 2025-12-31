@@ -12,24 +12,16 @@ export interface TagActions {
 interface TagSectionProps {
   tagCategory: TagCategory
   tagActions?: TagActions
-  isDragOver?: boolean
   onAddTagClick?: (category: string) => void
 }
 
 export const TagSection = memo(function TagSection({
   tagCategory,
   tagActions,
-  isDragOver = false,
   onAddTagClick,
 }: TagSectionProps) {
   return (
-    <div
-      className='mb-2 rounded-lg transition-transform duration-150'
-      style={{
-        transform: isDragOver ? 'scale(1.01)' : 'scale(1)',
-        backgroundColor: isDragOver ? 'rgba(255,243,224,0.3)' : 'rgba(0,0,0,0)',
-      }}
-    >
+    <div className='mb-2 rounded-lg'>
       {/* 头部 */}
       <div className='flex items-center px-4 pb-2'>
         <div className='flex items-center gap-2'>
