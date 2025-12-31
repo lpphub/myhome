@@ -11,26 +11,18 @@ import {
   useSensors,
 } from '@dnd-kit/core'
 import { AnimatePresence, motion } from 'motion/react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { Tag, TagCategory } from '@/types/tags'
 import { TagCard } from './TagCard'
 import { type TagActions, TagSection } from './TagSection'
 
 /* ---------------- utils ---------------- */
 
-const parseSortableId = (id: string) => Number(id.replace('tag-', ''))
-
-const findTagAndCategory = (
-  categories: TagCategory[],
-  tagId: number
-): { tag: Tag; category: TagCategory; index: number } | null => {
-  for (const cat of categories) {
-    const index = cat.tags.findIndex(t => t.id === tagId)
-    if (index !== -1) return { tag: cat.tags[index], category: cat, index }
-  }
-  return null
+const parseTagId = (id: string) => {
+  if (!id.startsWith('tag-')) return -1
+  const num = Number(id.replace('tag-', ''))
+  return Number.isNaN(num) ? -1 : num
 }
-
 /* ---------------- props ---------------- */
 
 interface TagWallProps {
@@ -45,7 +37,19 @@ interface TagWallProps {
 
 export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
   const [localTags, setLocalTags] = useState<TagCategory[]>(tags)
-  useEffect(() => setLocalTags(tags), [tags])
+  useEffect(() => {
+    setLocalTags(tags)
+  }, [tags])
+
+  const tagLookup = useMemo(() => {
+    const map = new Map<number, { tag: Tag; category: TagCategory; index: number }>()
+    localTags.forEach(cat => {
+      cat.tags.forEach((tag, index) => {
+        map.set(tag.id, { tag, category: cat, index })
+      })
+    })
+    return map
+  }, [localTags])
 
   const [activeTag, setActiveTag] = useState<Tag | null>(null)
   const [overCategory, setOverCategory] = useState<string | null>(null)
@@ -59,11 +63,11 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
 
   const handleDragStart = useCallback(
     ({ active }: DragStartEvent) => {
-      const tagId = parseSortableId(active.id as string)
-      const result = findTagAndCategory(localTags, tagId)
+      const tagId = parseTagId(active.id as string)
+      const result = tagLookup.get(tagId)
       if (result) setActiveTag({ ...result.tag })
     },
-    [localTags]
+    [tagLookup]
   )
 
   const handleDragOver = useCallback(
@@ -71,15 +75,17 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
       if (!over) return setOverCategory(null)
 
       const overId = over.id as string
-      const nextCategory = overId.startsWith('tag-')
-        ? findTagAndCategory(localTags, parseSortableId(overId))?.category
-        : localTags.find(c => c.code === overId)
+      const overTagId = parseTagId(overId)
+      const nextCategory =
+        overTagId === -1
+          ? localTags.find(c => c.code === overId)
+          : tagLookup.get(overTagId)?.category
 
       if (nextCategory?.code !== overCategory) {
         setOverCategory(nextCategory?.code ?? null)
       }
     },
-    [localTags, overCategory]
+    [tagLookup, localTags, overCategory]
   )
 
   const handleDragEnd = useCallback(
@@ -88,15 +94,15 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
       setOverCategory(null)
       if (!over) return
 
-      const activeId = parseSortableId(active.id as string)
-      const moving = findTagAndCategory(localTags, activeId)
+      const activeId = parseTagId(active.id as string)
+      const moving = tagLookup.get(activeId)
       if (!moving) return
 
       let toCategoryCode: string
       let toIndex: number
 
       if (typeof over.id === 'string' && over.id.startsWith('tag-')) {
-        const overResult = findTagAndCategory(localTags, parseSortableId(over.id))
+        const overResult = tagLookup.get(parseTagId(over.id))
         if (!overResult) return
         toCategoryCode = overResult.category.code
         toIndex = overResult.index
@@ -112,7 +118,11 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
       setLocalTags(prev =>
         prev.map(cat => {
           let newTags = cat.tags
-          if (cat.code === moving.category.code) newTags = newTags.filter(t => t.id !== activeId)
+          // 如果是源列表，移除旧项
+          if (cat.code === moving.category.code) {
+            newTags = newTags.filter(t => t.id !== activeId)
+          }
+          // 如果是目标列表，插入新项
           if (cat.code === toCategoryCode) {
             const temp = [...newTags]
             temp.splice(toIndex, 0, moving.tag)
@@ -124,7 +134,7 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
 
       tagActions.onReorder?.({ fromId: activeId, toCategory: toCategoryCode, toIndex })
     },
-    [localTags, tagActions]
+    [localTags, tagLookup, tagActions.onReorder]
   )
 
   const handleDragCancel = useCallback(() => {
