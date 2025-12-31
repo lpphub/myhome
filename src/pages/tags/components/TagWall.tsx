@@ -88,8 +88,9 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
       let toCategoryCode: string
       let toIndex: number
 
-      if (typeof over.id === 'string' && over.id.startsWith('tag-')) {
-        const overResult = tagLookup.get(parseTagId(over.id))
+      const overTagId = parseTagId(over.id as string)
+      if (overTagId !== -1) {
+        const overResult = tagLookup.get(overTagId)
         if (!overResult) return
         toCategoryCode = overResult.category.code
         toIndex = overResult.index
