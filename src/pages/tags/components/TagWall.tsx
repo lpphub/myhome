@@ -17,40 +17,22 @@ import type { Tag, TagCategory } from '@/types/tags'
 import { TagCard } from './TagCard'
 import { type TagActions, TagSection } from './TagSection'
 
-/* -------------------------------- utils -------------------------------- */
+/* ---------------- utils ---------------- */
 
 const parseSortableId = (id: string) => Number(id.replace('tag-', ''))
 
-const findCategoryByTagId = (categories: TagCategory[], tagId: number) =>
-  categories.find(cat => cat.tags.some(t => t.id === tagId))
-
-const findTagIndex = (cat: TagCategory, tagId: number) => cat.tags.findIndex(t => t.id === tagId)
-
-/** 核心：统一解析拖拽位置 */
-function resolveDragPosition(categories: TagCategory[], activeId: number, overId: number | string) {
-  const fromCategory = findCategoryByTagId(categories, activeId)
-  if (!fromCategory) return null
-
-  const toCategory =
-    typeof overId === 'number'
-      ? findCategoryByTagId(categories, overId)
-      : categories.find(c => c.code === overId)
-
-  if (!toCategory) return null
-
-  const fromIndex = findTagIndex(fromCategory, activeId)
-  const toIndex =
-    typeof overId === 'number' ? findTagIndex(toCategory, overId) : toCategory.tags.length
-
-  return {
-    fromCategory,
-    toCategory,
-    fromIndex,
-    toIndex,
+const findTagAndCategory = (
+  categories: TagCategory[],
+  tagId: number
+): { tag: Tag; category: TagCategory; index: number } | null => {
+  for (const cat of categories) {
+    const index = cat.tags.findIndex(t => t.id === tagId)
+    if (index !== -1) return { tag: cat.tags[index], category: cat, index }
   }
+  return null
 }
 
-/* -------------------------------- props -------------------------------- */
+/* ---------------- props ---------------- */
 
 interface TagWallProps {
   tags: TagCategory[]
@@ -60,17 +42,12 @@ interface TagWallProps {
   onAddTagClick?: (category: string) => void
 }
 
-/* -------------------------------- component -------------------------------- */
+/* ---------------- component ---------------- */
 
 export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
-  /** 本地顺序（仅 dragEnd 更新） */
   const [localTags, setLocalTags] = useState<TagCategory[]>(tags)
+  useEffect(() => setLocalTags(tags), [tags])
 
-  useEffect(() => {
-    setLocalTags(tags)
-  }, [tags])
-
-  /** 拖拽 UI 状态 */
   const [activeTag, setActiveTag] = useState<Tag | null>(null)
   const [overCategoryCode, setOverCategoryCode] = useState<string | null>(null)
 
@@ -79,41 +56,30 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
     useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 5 } })
   )
 
-  /* ----------------------------- drag start ----------------------------- */
+  /* ---------------- drag handlers ---------------- */
 
   const handleDragStart = useCallback(
-    (event: DragStartEvent) => {
-      const tagId = parseSortableId(event.active.id as string)
-      const tag = localTags.flatMap(c => c.tags).find(t => t.id === tagId)
-      setActiveTag(tag ? { ...tag } : null)
+    ({ active }: DragStartEvent) => {
+      const tagId = parseSortableId(active.id as string)
+      const result = findTagAndCategory(localTags, tagId)
+      if (result) setActiveTag({ ...result.tag })
     },
     [localTags]
   )
 
-  /* ----------------------------- drag over ----------------------------- */
-
   const handleDragOver = useCallback(
     ({ over }: DragOverEvent) => {
-      if (!over) {
-        setOverCategoryCode(null)
-        return
-      }
+      if (!over) return setOverCategoryCode(null)
 
-      let overCategory: TagCategory | undefined
-      if (typeof over.id === 'string' && over.id.startsWith('tag-')) {
-        // tag 上方 → 找到它所在的分类
-        const tagId = parseSortableId(over.id)
-        overCategory = localTags.find(cat => cat.tags.some(t => t.id === tagId))
-      } else {
-        // 分类容器上方
-        overCategory = localTags.find(cat => cat.code === over.id)
-      }
+      const overId = over.id as string
+      const overCategory = overId.startsWith('tag-')
+        ? findTagAndCategory(localTags, parseSortableId(overId))?.category
+        : localTags.find(c => c.code === overId)
+
       setOverCategoryCode(overCategory?.code ?? null)
     },
     [localTags]
   )
-
-  /* ----------------------------- drag end ----------------------------- */
 
   const handleDragEnd = useCallback(
     ({ active, over }: DragEndEvent) => {
@@ -122,55 +88,42 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
       if (!over) return
 
       const activeId = parseSortableId(active.id as string)
-      const overId =
-        typeof over.id === 'string' && over.id.startsWith('tag-')
-          ? parseSortableId(over.id)
-          : over.id
+      const moving = findTagAndCategory(localTags, activeId)
+      if (!moving) return
 
-      let finalToCategory: TagCategory | undefined
-      let finalToIndex = 0
+      let toCategoryCode: string
+      let toIndex: number
 
-      setLocalTags(prev => {
-        const resolved = resolveDragPosition(prev, activeId, overId)
-        if (!resolved || resolved.fromIndex === -1) return prev
-
-        const { fromCategory, toCategory, fromIndex, toIndex } = resolved
-        finalToCategory = toCategory
-        finalToIndex = Math.max(toIndex, 0)
-
-        // 同分类
-        if (fromCategory.code === toCategory.code) {
-          if (fromIndex === toIndex) return prev
-          return prev.map(cat =>
-            cat.code === fromCategory.code
-              ? { ...cat, tags: arrayMove(cat.tags, fromIndex, toIndex) }
-              : cat
-          )
-        }
-
-        // 跨分类
-        const moving = fromCategory.tags[fromIndex]
-        return prev.map(cat => {
-          if (cat.code === fromCategory.code)
-            return { ...cat, tags: cat.tags.filter(t => t.id !== activeId) }
-          if (cat.code === toCategory.code) {
-            const next = [...cat.tags]
-            next.splice(finalToIndex, 0, moving)
-            return { ...cat, tags: next }
-          }
-          return cat
-        })
-      })
-
-      if (finalToCategory) {
-        tagActions.onReorder?.({
-          fromId: activeId,
-          toCategory: finalToCategory.code,
-          toIndex: finalToIndex,
-        })
+      if (typeof over.id === 'string' && over.id.startsWith('tag-')) {
+        const overResult = findTagAndCategory(localTags, parseSortableId(over.id))
+        if (!overResult) return
+        toCategoryCode = overResult.category.code
+        toIndex = overResult.index
+      } else {
+        const cat = localTags.find(c => c.code === over.id)
+        if (!cat) return
+        toCategoryCode = cat.code
+        toIndex = cat.tags.length
       }
+
+      if (moving.category.code === toCategoryCode && moving.index === toIndex) return // 无变化
+
+      setLocalTags(prev =>
+        prev.map(cat => {
+          let newTags = cat.tags
+          if (cat.code === moving.category.code) newTags = newTags.filter(t => t.id !== activeId)
+          if (cat.code === toCategoryCode) {
+            const temp = [...newTags]
+            temp.splice(toIndex, 0, moving.tag)
+            newTags = temp
+          }
+          return { ...cat, tags: newTags }
+        })
+      )
+
+      tagActions.onReorder?.({ fromId: activeId, toCategory: toCategoryCode, toIndex })
     },
-    [tagActions]
+    [localTags, tagActions]
   )
 
   const handleDragCancel = useCallback(() => {
@@ -178,7 +131,9 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
     setOverCategoryCode(null)
   }, [])
 
-  /* -------------------------------- render -------------------------------- */
+  /* ---------------- render ---------------- */
+
+  const allItems = localTags.flatMap(cat => cat.tags.map(t => `tag-${t.id}`))
 
   return (
     <DndContext
@@ -189,38 +144,34 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      {/* 拖拽预览 */}
-      <DragOverlay>
-        <AnimatePresence>
-          {activeTag && (
-            <motion.div
-              initial={{ scale: 1 }}
-              animate={{ scale: 1.05 }}
-              exit={{ scale: 1 }}
-              className='opacity-80'
-            >
-              <TagCard tag={activeTag} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </DragOverlay>
+      <SortableContext items={allItems} strategy={rectSortingStrategy}>
+        <DragOverlay>
+          <AnimatePresence>
+            {activeTag && (
+              <motion.div
+                initial={{ scale: 1 }}
+                animate={{ scale: 1.05 }}
+                exit={{ scale: 1 }}
+                className='opacity-80'
+              >
+                <TagCard tag={activeTag} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </DragOverlay>
 
-      <div className='overflow-y-auto overflow-x-hidden touch-pan-y'>
-        {localTags.map(cat => (
-          <SortableContext
-            key={cat.code}
-            strategy={rectSortingStrategy}
-            items={cat.tags.map(t => `tag-${t.id}`)}
-          >
+        <div className='flex flex-col gap-4 overflow-y-auto overflow-x-hidden touch-pan-y'>
+          {localTags.map(cat => (
             <TagSection
+              key={cat.code}
               tagCategory={cat}
               tagActions={tagActions}
               isDragOver={overCategoryCode === cat.code}
               onAddTagClick={onAddTagClick}
             />
-          </SortableContext>
-        ))}
-      </div>
+          ))}
+        </div>
+      </SortableContext>
     </DndContext>
   )
 }
