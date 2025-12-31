@@ -73,7 +73,7 @@ export function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
         'hover:shadow-xl hover:-translate-y-1.5 hover:scale-105',
         'border text-left overflow-hidden',
         'cursor-grab active:cursor-grabbing',
-        'w-full sm:w-52 shrink-0',
+        'w-full sm:w-52 shrink-0 box-border',
         colorClasses.bg,
         colorClasses.border,
         rotationClass

@@ -208,7 +208,7 @@ export function LabelWall({ labels, labelActions, onAddLabelClick }: LabelWallPr
           )}
         </AnimatePresence>
       </DragOverlay>
-      <div className='overflow-auto touch-pan-y'>
+      <div className='overflow-y-auto overflow-x-hidden touch-pan-y'>
         {localLabels.map(cat => (
           <SortableContext
             key={cat.code}

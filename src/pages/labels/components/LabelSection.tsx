@@ -24,18 +24,19 @@ export function LabelSection({
   onAddLabelClick,
 }: LabelSectionProps) {
   const { setNodeRef } = useDroppable({
-    id: labelCategory.code, // 👈 关键：容器自己的 id
+    id: labelCategory.code, // 容器唯一 id
   })
 
   return (
     <motion.div
       ref={setNodeRef}
-      className='mb-8'
-      animate={{ scale: isDragOver ? 1.02 : 1 }}
+      className='mb-6 rounded-lg'
+      animate={{ scale: isDragOver ? 1.01 : 1 }}
       style={{ backgroundColor: isDragOver ? 'rgba(255, 243, 224, 0.3)' : 'transparent' }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: 0.15 }}
     >
-      <div className='flex items-center mb-4 px-1'>
+      {/* title */}
+      <div className='flex items-center mb-4 px-2'>
         <div className='flex items-center gap-2'>
           <div className='w-10 h-10 rounded-xl bg-linear-to-br from-honey-100 to-honey-200 flex items-center justify-center'>
             <Tag className='w-5 h-5 text-honey-600' />
@@ -47,19 +48,19 @@ export function LabelSection({
         </div>
       </div>
 
-      <div className='flex flex-wrap gap-4'>
-        {/** 标签卡片 */}
+      <div className='flex flex-wrap gap-4 pb-4 px-2'>
+        {/** card */}
         {labelCategory.labels.map(label => (
           <LabelCard key={label.id} label={label} {...labelActions} />
         ))}
 
-        {/** 添加标签按钮 */}
+        {/* 添加标签按钮 */}
         {onAddLabelClick && (
           <motion.button
             type='button'
             onClick={() => onAddLabelClick(labelCategory.code)}
             className={cn(
-              'w-52 shrink-0 p-4 rounded-lg border-2 border-dashed border-warmGray-200',
+              'w-52 p-4 rounded-lg border-2 border-dashed border-warmGray-200',
               'hover:border-honey-300 hover:bg-honey-50 transition-all duration-300',
               'group flex flex-col items-center justify-center',
               'text-cream-900 hover:text-honey-600'
@@ -74,7 +75,7 @@ export function LabelSection({
           </motion.button>
         )}
 
-        {/* 空状态下的拖拽区域 */}
+        {/* 空状态拖拽 */}
         {labelCategory.labels.length === 0 && <EmptyDroppable id={labelCategory.code} />}
       </div>
     </motion.div>
@@ -83,6 +84,5 @@ export function LabelSection({
 
 function EmptyDroppable({ id }: { id: string }) {
   const { setNodeRef } = useDroppable({ id: `${id}-container` })
-
   return <div ref={setNodeRef} className='w-52 h-24 shrink-0 pointer-events-none' />
 }
