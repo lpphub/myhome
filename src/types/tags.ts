@@ -1,5 +1,5 @@
-// types/label.ts
-export interface Label {
+// types/tags.ts
+export interface Tag {
   id: number
   name: string
   category: string
@@ -15,11 +15,11 @@ export interface Category {
   name: string
 }
 
-export interface LabelCategory extends Category {
-  labels: Label[]
+export interface TagCategory extends Category {
+  tags: Tag[]
 }
 
-export interface LabelFormData {
+export interface TagFormData {
   id?: number
   name: string
   category: string
@@ -35,7 +35,7 @@ export interface ReorderRequest {
   }[]
 }
 
-export const LABEL_COLOR_CLASSES: Record<string, { bg: string; border: string; text: string }> = {
+export const TAG_COLOR_CLASSES: Record<string, { bg: string; border: string; text: string }> = {
   lemon: {
     bg: 'bg-lemon-100',
     border: 'border-lemon-200',

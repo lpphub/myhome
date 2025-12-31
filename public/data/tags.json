@@ -1,10 +1,10 @@
 {
-  "labels": [
+  "tags": [
     {
       "id": 1,
       "name": "默认",
       "code": "default",
-      "labels": [
+      "tags": [
         {
           "id": 19,
           "name": "常用地址",
@@ -44,7 +44,7 @@
       "id": 2,
       "name": "收纳",
       "code": "storage",
-      "labels": [
+      "tags": [
         {
           "id": 3,
           "name": "书房",
@@ -139,7 +139,7 @@
       "id": 3,
       "name": "提醒",
       "code": "reminder",
-      "labels": [
+      "tags": [
         {
           "id": 18,
           "name": "生日提醒",
@@ -212,7 +212,7 @@
       "id": 4,
       "name": "日常",
       "code": "daily",
-      "labels": [
+      "tags": [
         {
           "id": 15,
           "name": "待办事项",

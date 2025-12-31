@@ -1,10 +1,10 @@
 import { delay, HttpResponse, http } from 'msw'
 import type { AuthForm } from '@/types/auth'
-import type { Label, LabelCategory } from '@/types/labels'
+import type { Tag, TagCategory } from '@/types/tags'
 
-async function loadLabelsData(): Promise<{ categories: LabelCategory[]; labels: Label[] }> {
-  const res = await fetch('/data/labels.json')
-  if (!res.ok) throw new Error('Failed to load labels.json')
+async function loadTagsData(): Promise<{ categories: TagCategory[]; tags: Tag[] }> {
+  const res = await fetch('/data/tags.json')
+  if (!res.ok) throw new Error('Failed to load tags.json')
   return res.json()
 }
 
@@ -103,16 +103,16 @@ export const handlers = [
     })
   }),
 
-  http.get('/api/labels', async () => {
-    const data = await loadLabelsData()
+  http.get('/api/tags', async () => {
+    const data = await loadTagsData()
     return HttpResponse.json({
       code: 200,
       message: '获取标签成功',
-      data: data.labels,
+      data: data.tags,
     })
   }),
 
-  http.post('/api/labels/categories', async ({ request }) => {
+  http.post('/api/tags/categories', async ({ request }) => {
     const body = (await request.json()) as { name: string }
     const name = body.name?.trim()
 
@@ -120,20 +120,19 @@ export const handlers = [
       return HttpResponse.json({ code: 400, message: '分类名称不能为空' }, { status: 400 })
     }
 
-    const data = await loadLabelsData()
-    const existingCategory = data.labels.find(cat => cat.name === name)
+    const data = await loadTagsData()
+    const existingCategory = data.tags.find(cat => cat.name === name)
 
     if (existingCategory) {
       return HttpResponse.json({ code: 409, message: '分类已存在' }, { status: 409 })
     }
 
-    const maxId = Math.max(...data.labels.map(cat => cat.id))
-    const newCategory: LabelCategory = {
+    const maxId = Math.max(...data.tags.map(cat => cat.id))
+    const newCategory: TagCategory = {
       id: maxId + 1,
       name,
       code: name.toLowerCase().replace(/\s+/g, '-'),
-      icon: '📁',
-      labels: [],
+      tags: [],
     }
 
     return HttpResponse.json({

@@ -2,21 +2,21 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Edit2, Pin, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { LABEL_COLOR_CLASSES, type Label, type LabelFormData } from '@/types/labels'
+import { TAG_COLOR_CLASSES, type Tag, type TagFormData } from '@/types/tags'
 
-interface LabelCardProps {
-  label: Label
-  onDelete?: (labelId: number) => void
-  onEdit?: (label: LabelFormData) => void
+interface TagCardProps {
+  tag: Tag
+  onDelete?: (tagId: number) => void
+  onEdit?: (tag: TagFormData) => void
 }
 
-export function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
+export function TagCard({ tag, onEdit, onDelete }: TagCardProps) {
   const ROTATIONS = ['-rotate-1', 'rotate-1', 'rotate-2', '-rotate-2', 'rotate-0']
-  const rotationClass = ROTATIONS[label.id % ROTATIONS.length]
-  const colorClasses = LABEL_COLOR_CLASSES[label.color]
+  const rotationClass = ROTATIONS[tag.id % ROTATIONS.length]
+  const colorClasses = TAG_COLOR_CLASSES[tag.color]
 
   const { attributes, listeners, transform, transition, isDragging, setNodeRef } = useSortable({
-    id: `label-${label.id}`,
+    id: `tag-${tag.id}`,
   })
 
   const style = {
@@ -31,20 +31,20 @@ export function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
   const handleDeleteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     if (onDelete) {
-      onDelete(label.id)
+      onDelete(tag.id)
     }
   }
 
   const handleEditClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     if (onEdit) {
-      onEdit(label)
+      onEdit(tag)
     }
   }
 
   const handleClick = () => {
     if (!isDragging && onEdit) {
-      // onEdit(label)
+      // onEdit(tag)
     }
   }
 
@@ -52,7 +52,7 @@ export function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
       if (onEdit) {
-        onEdit(label)
+        onEdit(tag)
       }
     }
   }
@@ -108,10 +108,10 @@ export function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
       </div>
 
       <div className='mt-5'>
-        <h3 className={cn('font-bold text-sm mb-1', colorClasses.text)}>{label.name}</h3>
-        {label.description && (
+        <h3 className={cn('font-bold text-sm mb-1', colorClasses.text)}>{tag.name}</h3>
+        {tag.description && (
           <p className={cn('text-xs mb-1.5 line-clamp-2 opacity-80', colorClasses.text)}>
-            {label.description}
+            {tag.description}
           </p>
         )}
         <div
@@ -122,7 +122,7 @@ export function LabelCard({ label, onEdit, onDelete }: LabelCardProps) {
           )}
         >
           <span className='w-1.5 h-1.5 rounded-full bg-current opacity-60' />
-          <span>{label.itemCount} 个物品</span>
+          <span>{tag.itemCount} 个物品</span>
         </div>
       </div>
 

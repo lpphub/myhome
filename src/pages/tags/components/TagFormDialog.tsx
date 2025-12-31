@@ -18,28 +18,28 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { LABEL_COLOR_CLASSES, type Category, type LabelFormData } from '@/types/labels'
+import { TAG_COLOR_CLASSES, type Category, type TagFormData } from '@/types/tags'
 
-interface LabelFormDialogProps {
+interface TagFormDialogProps {
   isOpen: boolean
   onClose: () => void
-  initialData: LabelFormData | null
+  initialData: TagFormData | null
   categories: Category[]
   actions: {
-    addLabel: (label: LabelFormData) => void
-    updateLabel?: (label: LabelFormData) => void
+    addTag: (tag: TagFormData) => void
+    updateTag?: (tag: TagFormData) => void
   }
 }
 
-export function LabelFormDialog({
+export function TagFormDialog({
   isOpen,
   onClose,
   initialData,
   categories,
   actions,
-}: LabelFormDialogProps) {
+}: TagFormDialogProps) {
   const resetForm = useCallback(
-    (): LabelFormData => ({
+    (): TagFormData => ({
       id: initialData?.id || 0,
       name: '',
       category: initialData?.category || 'storage',
@@ -49,7 +49,7 @@ export function LabelFormDialog({
     [initialData]
   )
   const isEditing = Boolean(initialData?.id && initialData.id > 0)
-  const [formData, setFormData] = useState<LabelFormData>(resetForm())
+  const [formData, setFormData] = useState<TagFormData>(resetForm())
 
   useEffect(() => {
     if (!isOpen) return
@@ -64,16 +64,16 @@ export function LabelFormDialog({
     e.preventDefault()
     if (!formData.name.trim()) return
 
-    const payload: LabelFormData = {
+    const payload: TagFormData = {
       ...formData,
       name: formData.name.trim(),
       description: formData.description?.trim(),
     }
 
-    if (isEditing && actions.updateLabel) {
-      actions.updateLabel(payload)
+    if (isEditing && actions.updateTag) {
+      actions.updateTag(payload)
     } else {
-      actions.addLabel(payload)
+      actions.addTag(payload)
     }
     handleClose()
   }
@@ -96,14 +96,13 @@ export function LabelFormDialog({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className='space-y-4 mt-4'>
-          {/* 便签名称 */}
           <div className='space-y-2'>
-            <Label htmlFor='label' className='flex items-center gap-2'>
+            <Label htmlFor='tag' className='flex items-center gap-2'>
               <Tag className='w-4 h-4 text-warmGray-500' />
               便签名称 *
             </Label>
             <Input
-              id='label'
+              id='tag'
               value={formData.name}
               onChange={e => setFormData({ ...formData, name: e.target.value })}
               placeholder='例如：卧室、零食等'
@@ -112,7 +111,6 @@ export function LabelFormDialog({
             />
           </div>
 
-          {/* 分类选择 */}
           <div className='space-y-2'>
             <Label htmlFor='category' className='flex items-center gap-2'>
               <Tag className='w-4 h-4 text-warmGray-500' />
@@ -135,14 +133,13 @@ export function LabelFormDialog({
             </Select>
           </div>
 
-          {/* 便签颜色 */}
           <div className='space-y-2'>
             <Label className='flex items-center gap-2'>
               <Tag className='w-4 h-4 text-warmGray-500' />
               便签颜色
             </Label>
             <div className='grid grid-cols-4 gap-2'>
-              {Object.keys(LABEL_COLOR_CLASSES).map(color => (
+              {Object.keys(TAG_COLOR_CLASSES).map(color => (
                 <button
                   key={color}
                   type='button'
@@ -151,7 +148,7 @@ export function LabelFormDialog({
                     formData.color === color
                       ? 'border-honey-400 ring-2 ring-honey-200 ring-offset-1'
                       : 'border-transparent hover:border-honey-300'
-                  } ${LABEL_COLOR_CLASSES[color].bg}`}
+                  } ${TAG_COLOR_CLASSES[color].bg}`}
                 >
                   {formData.color === color && (
                     <svg
@@ -174,7 +171,6 @@ export function LabelFormDialog({
             </div>
           </div>
 
-          {/* 描述 */}
           <div className='space-y-2'>
             <Label htmlFor='description' className='flex items-center gap-2'>
               <Tag className='w-4 h-4 text-warmGray-500' />
@@ -190,7 +186,6 @@ export function LabelFormDialog({
             />
           </div>
 
-          {/* 按钮 */}
           <div className='flex gap-2 pt-2'>
             <Button
               type='button'

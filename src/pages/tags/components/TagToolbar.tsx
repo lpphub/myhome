@@ -3,12 +3,12 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-interface LabelToolbarProps {
+interface TagToolbarProps {
   onAddCategory: (categoryName: string) => void
   onSearch?: (keyword: string) => void
 }
 
-export const LabelToolbar = ({ onAddCategory, onSearch }: LabelToolbarProps) => {
+export const TagToolbar = ({ onAddCategory, onSearch }: TagToolbarProps) => {
   const [isAdding, setIsAdding] = useState(false)
   const [categoryName, setCategoryName] = useState('')
   const [searchValue, setSearchValue] = useState('')
@@ -36,7 +36,7 @@ export const LabelToolbar = ({ onAddCategory, onSearch }: LabelToolbarProps) => 
   }
 
   return (
-    <div className='flex items-center justify-between rounded-xl px-4 py-3 shadow-warm-sm mb-6'>
+    <div className='flex items-center justify-between rounded-xl px-4 py-4 shadow-warm-sm mb-6'>
       <div className='flex items-center gap-3 flex-1 max-w-md'>
         <Search className='w-4 h-4 text-warmGray-400 shrink-0' />
         <Input
@@ -80,8 +80,6 @@ export const LabelToolbar = ({ onAddCategory, onSearch }: LabelToolbarProps) => 
           </>
         ) : (
           <Button
-            variant='default'
-            size='sm'
             className='bg-linear-to-r from-honey-400 to-honey-600 text-white hover:from-honey-500 hover:to-honey-700 shadow-warm-sm'
             onClick={() => setIsAdding(true)}
           >

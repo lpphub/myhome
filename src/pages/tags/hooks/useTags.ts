@@ -1,31 +1,24 @@
-// hooks/useLabels.ts
+// hooks/useTags.ts
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import {
-  createCategory,
-  createLabel,
-  deleteLabel,
-  getLabels,
-  reorderLabels,
-  updateLabel,
-} from '@/api/labels'
-import type { LabelFormData } from '@/types/labels'
+import { createCategory, createTag, deleteTag, getTags, reorderTags, updateTag } from '@/api/tags'
+import type { TagFormData } from '@/types/tags'
 
-const QUERY_KEY = ['labels']
+const QUERY_KEY = ['tags']
 
-export function useLabels() {
+export function useTags() {
   return useQuery({
     queryKey: QUERY_KEY,
-    queryFn: getLabels,
-    staleTime: 1000 * 60 * 5, // 5分钟
+    queryFn: getTags,
+    staleTime: 1000 * 60 * 5,
   })
 }
 
-export function useCreateLabel() {
+export function useCreateTag() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: createLabel,
+    mutationFn: createTag,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEY })
     },
@@ -33,11 +26,11 @@ export function useCreateLabel() {
   })
 }
 
-export function useUpdateLabel() {
+export function useUpdateTag() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: LabelFormData }) => updateLabel(id, data),
+    mutationFn: ({ id, data }: { id: number; data: TagFormData }) => updateTag(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEY })
     },
@@ -45,11 +38,11 @@ export function useUpdateLabel() {
   })
 }
 
-export function useDeleteLabel() {
+export function useDeleteTag() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: deleteLabel,
+    mutationFn: deleteTag,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEY })
     },
@@ -57,14 +50,12 @@ export function useDeleteLabel() {
   })
 }
 
-export function useReorderLabels() {
+export function useReorderTags() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: reorderLabels,
-    // Optimistic update 在组件层处理
+    mutationFn: reorderTags,
     onError: () => {
-      // 失败时回滚
       queryClient.invalidateQueries({ queryKey: QUERY_KEY })
     },
   })

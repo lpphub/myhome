@@ -5,7 +5,7 @@ import Register from '@/pages/auth/Register'
 import Dashboard from '@/pages/dashboard'
 import NotFound from '@/pages/errors/NotFound'
 import Items from '@/pages/items'
-import Labels from '@/pages/labels'
+import Tags from '@/pages/tags'
 import Spaces from '@/pages/spaces'
 import TestComponents from '@/pages/TestUI'
 import { AuthGuard } from './guard'
@@ -32,8 +32,8 @@ export const router = createBrowserRouter([
         element: <Items />,
       },
       {
-        path: 'labels',
-        element: <Labels />,
+        path: 'tags',
+        element: <Tags />,
       },
     ],
   },
