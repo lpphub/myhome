@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { TAG_COLOR_CLASSES, type Category, type TagFormData } from '@/types/tags'
+import { type Category, TAG_COLOR_CLASSES, type TagFormData } from '@/types/tags'
 
 interface TagFormDialogProps {
   isOpen: boolean
@@ -41,12 +41,18 @@ export function TagFormDialog({
   const resetForm = useCallback(
     (): TagFormData => ({
       id: initialData?.id || 0,
-      name: '',
+      name: initialData?.name || '',
       category: initialData?.category || 'storage',
       color: initialData?.color || 'lemon',
-      description: '',
+      description: initialData?.description || '',
     }),
-    [initialData]
+    [
+      initialData?.id,
+      initialData?.name,
+      initialData?.category,
+      initialData?.color,
+      initialData?.description,
+    ]
   )
   const isEditing = Boolean(initialData?.id && initialData.id > 0)
   const [formData, setFormData] = useState<TagFormData>(resetForm())
@@ -60,28 +66,31 @@ export function TagFormDialog({
     }
   }, [isOpen, initialData, resetForm])
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!formData.name.trim()) return
-
-    const payload: TagFormData = {
-      ...formData,
-      name: formData.name.trim(),
-      description: formData.description?.trim(),
-    }
-
-    if (isEditing && actions.updateTag) {
-      actions.updateTag(payload)
-    } else {
-      actions.addTag(payload)
-    }
-    handleClose()
-  }
-
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setFormData(resetForm())
     onClose()
-  }
+  }, [onClose, resetForm])
+
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault()
+      if (!formData.name.trim()) return
+
+      const payload: TagFormData = {
+        ...formData,
+        name: formData.name.trim(),
+        description: formData.description?.trim(),
+      }
+
+      if (isEditing && actions.updateTag) {
+        actions.updateTag(payload)
+      } else {
+        actions.addTag(payload)
+      }
+      handleClose()
+    },
+    [formData, isEditing, actions.updateTag, actions.addTag, handleClose]
+  )
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>

@@ -1,8 +1,11 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Edit2, Pin, Trash2 } from 'lucide-react'
+import { memo, useCallback } from 'react'
 import { cn } from '@/lib/utils'
 import { TAG_COLOR_CLASSES, type Tag, type TagFormData } from '@/types/tags'
+
+const ROTATIONS = ['-rotate-1', 'rotate-1', 'rotate-2', '-rotate-2', 'rotate-0']
 
 interface TagCardProps {
   tag: Tag
@@ -10,8 +13,7 @@ interface TagCardProps {
   onEdit?: (tag: TagFormData) => void
 }
 
-export function TagCard({ tag, onEdit, onDelete }: TagCardProps) {
-  const ROTATIONS = ['-rotate-1', 'rotate-1', 'rotate-2', '-rotate-2', 'rotate-0']
+export const TagCard = memo(function TagCard({ tag, onEdit, onDelete }: TagCardProps) {
   const rotationClass = ROTATIONS[tag.id % ROTATIONS.length]
   const colorClasses = TAG_COLOR_CLASSES[tag.color]
 
@@ -28,34 +30,37 @@ export function TagCard({ tag, onEdit, onDelete }: TagCardProps) {
     touchAction: 'none',
   }
 
-  const handleDeleteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
-    if (onDelete) {
-      onDelete(tag.id)
-    }
-  }
+  const handleDeleteClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
+      onDelete?.(tag.id)
+    },
+    [onDelete, tag.id]
+  )
 
-  const handleEditClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
-    if (onEdit) {
-      onEdit(tag)
-    }
-  }
+  const handleEditClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
+      onEdit?.(tag)
+    },
+    [onEdit, tag]
+  )
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (!isDragging && onEdit) {
       // onEdit(tag)
     }
-  }
+  }, [isDragging, onEdit])
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault()
-      if (onEdit) {
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if ((e.key === 'Enter' || e.key === ' ') && onEdit) {
+        e.preventDefault()
         onEdit(tag)
       }
-    }
-  }
+    },
+    [onEdit, tag]
+  )
 
   return (
     <div
@@ -129,4 +134,4 @@ export function TagCard({ tag, onEdit, onDelete }: TagCardProps) {
       <div className='absolute bottom-0 left-0 right-0 h-0.5 bg-linear-to-r from-transparent via-white/30 to-transparent' />
     </div>
   )
-}
+})
