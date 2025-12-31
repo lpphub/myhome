@@ -31,13 +31,13 @@ interface TagFormDialogProps {
   }
 }
 
-export function TagFormDialog({
+export const TagFormDialog = ({
   isOpen,
   onClose,
   initialData,
   categories,
   actions,
-}: TagFormDialogProps) {
+}: TagFormDialogProps) => {
   const resetForm = useCallback(
     (): TagFormData => ({
       id: initialData?.id || 0,

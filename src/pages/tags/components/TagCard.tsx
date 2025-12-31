@@ -13,7 +13,7 @@ interface TagCardProps {
   onEdit?: (tag: TagFormData) => void
 }
 
-export const TagCard = memo(function TagCard({ tag, onEdit, onDelete }: TagCardProps) {
+export const TagCard = memo(({ tag, onEdit, onDelete }: TagCardProps) => {
   const rotationClass = ROTATIONS[tag.id % ROTATIONS.length]
   const colorClasses = TAG_COLOR_CLASSES[tag.color]
 

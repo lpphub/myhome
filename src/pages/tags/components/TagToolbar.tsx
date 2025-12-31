@@ -36,7 +36,7 @@ export const TagToolbar = ({ onAddCategory, onSearch }: TagToolbarProps) => {
   }
 
   return (
-    <div className='flex items-center justify-between rounded-xl px-4 py-4 shadow-warm-sm mb-6'>
+    <div className='flex items-center justify-between rounded-xl px-4 min-h-18 shadow-warm-sm mb-6'>
       <div className='flex items-center gap-3 flex-1 max-w-md'>
         <Search className='w-4 h-4 text-warmGray-400 shrink-0' />
         <Input

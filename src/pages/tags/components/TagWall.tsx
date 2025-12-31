@@ -13,7 +13,6 @@ import {
 import { rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 import { AnimatePresence, motion } from 'motion/react'
 import { useCallback, useEffect, useState } from 'react'
-import { cn } from '@/lib/utils'
 import type { Tag, TagCategory } from '@/types/tags'
 import { TagCard } from './TagCard'
 import { type TagActions, TagSection } from './TagSection'
@@ -50,7 +49,7 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
   useEffect(() => setLocalTags(tags), [tags])
 
   const [activeTag, setActiveTag] = useState<Tag | null>(null)
-  const [overCategoryCode, setOverCategoryCode] = useState<string | null>(null)
+  const [overCategory, setOverCategory] = useState<string | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -70,14 +69,14 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
 
   const handleDragOver = useCallback(
     ({ over }: DragOverEvent) => {
-      if (!over) return setOverCategoryCode(null)
+      if (!over) return setOverCategory(null)
 
       const overId = over.id as string
       const overCategory = overId.startsWith('tag-')
         ? findTagAndCategory(localTags, parseSortableId(overId))?.category
         : localTags.find(c => c.code === overId)
 
-      setOverCategoryCode(overCategory?.code ?? null)
+      setOverCategory(overCategory?.code ?? null)
     },
     [localTags]
   )
@@ -85,7 +84,7 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
   const handleDragEnd = useCallback(
     ({ active, over }: DragEndEvent) => {
       setActiveTag(null)
-      setOverCategoryCode(null)
+      setOverCategory(null)
       if (!over) return
 
       const activeId = parseSortableId(active.id as string)
@@ -129,12 +128,10 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
 
   const handleDragCancel = useCallback(() => {
     setActiveTag(null)
-    setOverCategoryCode(null)
+    setOverCategory(null)
   }, [])
 
   /* ---------------- render ---------------- */
-
-  const allItems = localTags.flatMap(cat => cat.tags.map(t => `tag-${t.id}`))
 
   return (
     <DndContext
@@ -145,36 +142,32 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      <SortableContext items={allItems} strategy={rectSortingStrategy}>
-        <DragOverlay>
-          <AnimatePresence>
-            {activeTag && (
-              <motion.div
-                initial={{ scale: 1 }}
-                animate={{ scale: 1.05 }}
-                exit={{ scale: 1 }}
-                className='opacity-80'
-              >
-                <TagCard tag={activeTag} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </DragOverlay>
-
-        <div className='flex flex-col gap-4 overflow-y-auto overflow-x-hidden touch-pan-y'>
-          {localTags.map(cat => (
-            <div
-              key={cat.code}
-              className={cn(
-                'rounded-lg transition-transform duration-150',
-                overCategoryCode === cat.code && 'scale-[1.01] bg-[rgba(255,243,224,0.3)]'
-              )}
+      <DragOverlay>
+        <AnimatePresence>
+          {activeTag && (
+            <motion.div
+              initial={{ scale: 1 }}
+              animate={{ scale: 1.05 }}
+              exit={{ scale: 1 }}
+              className='opacity-80'
             >
-              <TagSection tagCategory={cat} tagActions={tagActions} onAddTagClick={onAddTagClick} />
-            </div>
-          ))}
-        </div>
-      </SortableContext>
+              <TagCard tag={activeTag} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </DragOverlay>
+
+      <div className='flex flex-col gap-4 overflow-y-auto overflow-x-hidden touch-pan-y'>
+        {localTags.map(cat => (
+          <TagSection
+            key={cat.code}
+            isDragOver={overCategory === cat.code}
+            tagCategory={cat}
+            tagActions={tagActions}
+            onAddTagClick={onAddTagClick}
+          />
+        ))}
+      </div>
     </DndContext>
   )
 }
