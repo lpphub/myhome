@@ -23,11 +23,9 @@ export const TagSection = memo(
     const { setNodeRef, isOver } = useDroppable({
       id: tagCategory.code,
     })
+    const isDragOver = isOver || dragOverId?.startsWith(`${tagCategory.code}-`)
 
-    const isDragOver =
-      isOver || (dragOverId && tagCategory.tags.some(tag => dragOverId === `tag-${tag.id}`))
-
-    const tagItems = tagCategory.tags.map(t => `tag-${t.id}`)
+    const tagItems = tagCategory.tags.map(t => `${t.category}-${t.id}`)
 
     return (
       <div

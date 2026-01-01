@@ -19,8 +19,9 @@ import { type TagActions, TagSection } from './TagSection'
 /* ---------------- utils ---------------- */
 
 const parseTagId = (id: string) => {
-  if (!id.startsWith('tag-')) return -1
-  const num = Number(id.replace('tag-', ''))
+  const parts = id.split('-')
+  if (parts.length < 2) return -1
+  const num = Number(parts[1])
   return Number.isNaN(num) ? -1 : num
 }
 /* ---------------- props ---------------- */
@@ -70,10 +71,14 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
     [tagLookup]
   )
 
-  const handleDragOver = useCallback(({ over }: DragOverEvent) => {
-    if (!over) return
-    setOverId(over.id as string)
-  }, [])
+  const handleDragOver = useCallback(
+    ({ over }: DragOverEvent) => {
+      if (!over) return
+      const dragOverId = over.id as string
+      if (dragOverId !== overId) setOverId(dragOverId)
+    },
+    [overId]
+  )
 
   const handleDragEnd = useCallback(
     ({ active, over }: DragEndEvent) => {

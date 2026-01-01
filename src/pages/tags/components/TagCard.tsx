@@ -18,7 +18,7 @@ export const TagCard = memo(({ tag, onEdit, onDelete }: TagCardProps) => {
   const colorClasses = TAG_COLOR_CLASSES[tag.color]
 
   const { attributes, listeners, transform, transition, isDragging, setNodeRef } = useSortable({
-    id: `tag-${tag.id}`,
+    id: `${tag.category}-${tag.id}`,
   })
 
   const style = {
