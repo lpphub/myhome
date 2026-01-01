@@ -3,21 +3,22 @@ import { LoadingState } from '@/components/LoadingState'
 import { TagFormDialog } from '@/pages/tags/components/TagFormDialog'
 import { TagToolbar } from '@/pages/tags/components/TagToolbar'
 import { TagWall } from '@/pages/tags/components/TagWall'
-import { useCreateCategory, useTags } from '@/pages/tags/hooks/useTags'
-import type { Category, TagFormData } from '@/types/tags'
+import { useCreateCategory, useReorderTags, useTags } from '@/pages/tags/hooks/useTags'
+import type { Category, ReorderParams, TagFormData } from '@/types/tags'
 
 export default function TagsPage() {
   const { data: tags, isLoading } = useTags()
   const createCategory = useCreateCategory()
+  const reorderTags = useReorderTags()
 
   const categories = useMemo<Category[]>(
     () => tags?.map(cat => ({ id: cat.id, code: cat.code, name: cat.name })) || [],
     [tags]
   )
 
+  /* ---------------- dialog state ---------------- */
   const [isDialogOpen, setDialogOpen] = useState(false)
   const [dialogTag, setDialogTag] = useState<TagFormData | null>(null)
-
   const dialogActions = useMemo(
     () => ({
       addTag: (data: TagFormData) => {
@@ -49,12 +50,18 @@ export default function TagsPage() {
     setDialogOpen(true)
   }, [])
 
+  const handleDraggingTag = useCallback(
+    (data: ReorderParams) => {
+      console.log('dragging', data)
+      reorderTags.mutate(data)
+    },
+    [reorderTags]
+  )
+
   const tagActions = useMemo(
     () => ({
       onEdit: handleEditTagClick,
       onDelete: (id: number) => console.log('delete', id),
-      onReorder: (data: { fromId: number; toId?: number; toCategory: string; toIndex: number }) =>
-        console.log('reorder', data),
     }),
     [handleEditTagClick]
   )
@@ -67,7 +74,12 @@ export default function TagsPage() {
     <div className='max-w-7xl mx-auto px-4 py-6'>
       <TagToolbar onAddCategory={handleAddCategory} />
 
-      <TagWall tags={tags} tagActions={tagActions} onAddTagClick={handleAddTagClick} />
+      <TagWall
+        tags={tags}
+        tagActions={tagActions}
+        onAddTagClick={handleAddTagClick}
+        onDraggingTag={handleDraggingTag}
+      />
 
       <TagFormDialog
         isOpen={isDialogOpen}

@@ -32,9 +32,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { Textarea as TextareaInput } from '@/components/ui/textarea'
-import type { Item } from '@/types/items'
-import { ITEM_STATUS_LABELS } from '@/types/items'
-
+import { ITEM_STATUS_LABELS, type Item } from '@/types/items'
 
 const itemSchema = z.object({
   name: z.string().min(1, '请输入物品名称'),
@@ -103,7 +101,6 @@ export function AddItemDrawer({ onAddItem }: AddItemDrawerProps) {
       form.reset()
     }
   }
-
 
   return (
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>

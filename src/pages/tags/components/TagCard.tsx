@@ -1,7 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Edit2, Pin, Trash2 } from 'lucide-react'
-import { memo, useCallback } from 'react'
+import { memo, useCallback, useMemo } from 'react'
 import { cn } from '@/lib/utils'
 import { TAG_COLOR_CLASSES, type Tag, type TagFormData } from '@/types/tags'
 
@@ -17,18 +17,22 @@ export const TagCard = memo(({ tag, onEdit, onDelete }: TagCardProps) => {
   const rotationClass = ROTATIONS[tag.id % ROTATIONS.length]
   const colorClasses = TAG_COLOR_CLASSES[tag.color]
 
+  const sortableId = useMemo(() => `${tag.category}-${tag.id}`, [tag.category, tag.id])
   const { attributes, listeners, transform, transition, isDragging, setNodeRef } = useSortable({
-    id: `${tag.category}-${tag.id}`,
+    id: sortableId,
   })
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-    scale: isDragging ? 1.05 : 1,
-    zIndex: isDragging ? 1000 : undefined,
-    touchAction: 'none',
-  }
+  const style = useMemo(
+    () => ({
+      transform: CSS.Transform.toString(transform),
+      transition,
+      opacity: isDragging ? 0.5 : 1,
+      scale: isDragging ? 1.05 : 1,
+      zIndex: isDragging ? 1000 : undefined,
+      touchAction: 'none',
+    }),
+    [isDragging, transform, transition]
+  )
 
   const handleDeleteClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {

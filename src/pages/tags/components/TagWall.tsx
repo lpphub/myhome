@@ -11,8 +11,8 @@ import {
   useSensors,
 } from '@dnd-kit/core'
 import { AnimatePresence, motion } from 'motion/react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import type { Tag, TagCategory } from '@/types/tags'
+import { useCallback, useMemo, useState } from 'react'
+import type { ReorderParams, Tag, TagCategory } from '@/types/tags'
 import { TagCard } from './TagCard'
 import { type TagActions, TagSection } from './TagSection'
 
@@ -28,29 +28,23 @@ const parseTagId = (id: string) => {
 
 interface TagWallProps {
   tags: TagCategory[]
-  tagActions: TagActions & {
-    onReorder?: (data: { fromId: number; toCategory: string; toIndex: number }) => void
-  }
+  tagActions: TagActions
   onAddTagClick?: (category: string) => void
+  onDraggingTag?: (data: ReorderParams) => void
 }
 
 /* ---------------- component ---------------- */
 
-export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
-  const [localTags, setLocalTags] = useState<TagCategory[]>(tags)
-  useEffect(() => {
-    setLocalTags(tags)
-  }, [tags])
-
+export function TagWall({ tags, tagActions, onAddTagClick, onDraggingTag }: TagWallProps) {
   const tagLookup = useMemo(() => {
     const map = new Map<number, { tag: Tag; category: TagCategory; index: number }>()
-    localTags.forEach(cat => {
+    tags.forEach(cat => {
       cat.tags.forEach((tag, index) => {
         map.set(tag.id, { tag, category: cat, index })
       })
     })
     return map
-  }, [localTags])
+  }, [tags])
 
   const [activeTag, setActiveTag] = useState<Tag | null>(null)
   const [overId, setOverId] = useState<string | null>(null)
@@ -71,14 +65,12 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
     [tagLookup]
   )
 
-  const handleDragOver = useCallback(
-    ({ over }: DragOverEvent) => {
-      if (!over) return
-      const dragOverId = over.id as string
-      if (dragOverId !== overId) setOverId(dragOverId)
-    },
-    [overId]
-  )
+  const handleDragOver = useCallback(({ over }: DragOverEvent) => {
+    const newOverId = over ? String(over.id) : null
+    setOverId(prev => {
+      return prev === newOverId ? prev : newOverId
+    })
+  }, [])
 
   const handleDragEnd = useCallback(
     ({ active, over }: DragEndEvent) => {
@@ -97,43 +89,30 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
       if (overTagId !== -1) {
         const overResult = tagLookup.get(overTagId)
         if (!overResult) return
+
         toCategoryCode = overResult.category.code
         toIndex = overResult.index
       } else {
-        const cat = localTags.find(c => c.code === over.id)
-        if (!cat) return
-        toCategoryCode = cat.code
-        toIndex = cat.tags.length
+        const targetCategory = tags.find(c => c.code === over.id)
+        if (!targetCategory) return
+
+        toCategoryCode = targetCategory.code
+        toIndex = targetCategory.tags.length
       }
 
-      if (moving.category.code === toCategoryCode && moving.index === toIndex) return // 无变化
+      // 检查是否真的有变化
+      const isSamePosition = moving.category.code === toCategoryCode && moving.index === toIndex
+      if (isSamePosition) return
 
-      setLocalTags(prev =>
-        prev.map(cat => {
-          let newTags = cat.tags
-          // 如果是源列表，移除旧项
-          if (cat.code === moving.category.code) {
-            newTags = newTags.filter(t => t.id !== activeId)
-          }
-          // 如果是目标列表，插入新项
-          if (cat.code === toCategoryCode) {
-            const temp = [...newTags]
-            temp.splice(toIndex, 0, moving.tag)
-            newTags = temp
-          }
-          return { ...cat, tags: newTags }
-        })
-      )
-
-      tagActions.onReorder?.({ fromId: activeId, toCategory: toCategoryCode, toIndex })
+      onDraggingTag?.({ fromId: activeId, toCategory: toCategoryCode, toIndex })
     },
-    [localTags, tagLookup, tagActions.onReorder]
+    [tags, tagLookup, onDraggingTag]
   )
 
-  const handleDragCancel = useCallback(() => {
+  const handleDragCancel = () => {
     setActiveTag(null)
     setOverId(null)
-  }, [])
+  }
 
   /* ---------------- render ---------------- */
 
@@ -162,7 +141,7 @@ export function TagWall({ tags, tagActions, onAddTagClick }: TagWallProps) {
       </DragOverlay>
 
       <div className='flex flex-col gap-4 overflow-y-auto overflow-x-hidden touch-pan-y'>
-        {localTags.map(cat => (
+        {tags.map(cat => (
           <TagSection
             key={cat.code}
             dragOverId={overId}

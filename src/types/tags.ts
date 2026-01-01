@@ -35,6 +35,12 @@ export interface ReorderRequest {
   }[]
 }
 
+export interface ReorderParams {
+  fromId: number
+  toCategory: string
+  toIndex: number
+}
+
 export const TAG_COLOR_CLASSES: Record<string, { bg: string; border: string; text: string }> = {
   lemon: {
     bg: 'bg-lemon-100',

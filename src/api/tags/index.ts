@@ -1,5 +1,5 @@
 // api/tags.ts
-import type { Category, ReorderRequest, Tag, TagCategory, TagFormData } from '@/types/tags'
+import type { Category, ReorderParams, Tag, TagCategory, TagFormData } from '@/types/tags'
 import httpClient from '@/utils/request'
 
 enum TagsApi {
@@ -38,7 +38,7 @@ export const deleteTag = (id: number) =>
     mock: true,
   })
 
-export const reorderTags = (data: ReorderRequest) =>
+export const reorderTags = (data: ReorderParams) =>
   httpClient.post({
     url: TagsApi.ReorderTags,
     data,
