@@ -4,49 +4,68 @@ import { toast } from 'sonner'
 import { createCategory, createTag, deleteTag, getTags, updateTag } from '@/api/tags'
 import type { ReorderParams, Tag, TagCategory, TagFormData } from '@/types/tags'
 
-const QUERY_KEY = ['tags']
-
+// useTags.ts 中的 optimisticReorder 优化
 function optimisticReorder(categories: TagCategory[], params: ReorderParams): TagCategory[] {
   const { fromId, toCategory, toIndex } = params
 
+  // 找到要移动的标签
   let movedTag: Tag | undefined
+  let fromCategoryCode: string | undefined
 
-  const afterRemove = categories.map(cat => {
-    const tagToMove = cat.tags.find(tag => tag.id === fromId)
-    if (tagToMove) {
-      movedTag = tagToMove
+  for (const cat of categories) {
+    const tag = cat.tags.find(t => t.id === fromId)
+    if (tag) {
+      movedTag = tag
+      fromCategoryCode = cat.code
+      break
     }
-    return {
-      ...cat,
-      tags: cat.tags.filter(tag => tag.id !== fromId).map((tag, idx) => ({ ...tag, order: idx })),
-    }
-  })
-
-  if (!movedTag) return categories
-
-  const updatedTag: Tag = {
-    id: movedTag.id,
-    name: movedTag.name,
-    category: toCategory,
-    order: movedTag.order,
-    color: movedTag.color,
-    description: movedTag.description,
-    itemCount: movedTag.itemCount,
   }
 
-  return afterRemove.map(cat => {
-    if (cat.code === toCategory) {
+  if (!movedTag || !fromCategoryCode) return categories
+
+  // ✅ 只更新受影响的分类
+  return categories.map(cat => {
+    // 源分类：移除标签
+    if (cat.code === fromCategoryCode && cat.code !== toCategory) {
+      return {
+        ...cat,
+        tags: cat.tags
+          .filter(t => t.id !== fromId)
+          .map((t, idx) => (t.order !== idx ? { ...t, order: idx } : t)),
+      }
+    }
+
+    // 目标分类：添加标签
+    if (cat.code === toCategory && cat.code !== fromCategoryCode) {
       const newTags = [...cat.tags]
-      newTags.splice(toIndex, 0, updatedTag)
+      newTags.splice(toIndex, 0, { ...movedTag!, category: toCategory })
+      return {
+        ...cat,
+        tags: newTags.map((t, idx) => (t.order !== idx ? { ...t, order: idx } : t)),
+      }
+    }
+
+    // 同一分类内移动
+    if (cat.code === fromCategoryCode && cat.code === toCategory) {
+      const currentIndex = cat.tags.findIndex(t => t.id === fromId)
+      if (currentIndex === toIndex) return cat // 位置没变
+
+      const newTags = [...cat.tags]
+      const [removed] = newTags.splice(currentIndex, 1)
+      newTags.splice(toIndex > currentIndex ? toIndex - 1 : toIndex, 0, removed)
 
       return {
         ...cat,
-        tags: newTags.map((tag, idx) => ({ ...tag, order: idx })),
+        tags: newTags.map((t, idx) => (t.order !== idx ? { ...t, order: idx } : t)),
       }
     }
+
+    // 其他分类不变
     return cat
   })
 }
+
+const QUERY_KEY = ['tags']
 
 export function useTags() {
   return useQuery({

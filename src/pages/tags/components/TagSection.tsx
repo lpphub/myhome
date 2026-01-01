@@ -1,7 +1,7 @@
 import { useDroppable } from '@dnd-kit/core'
 import { rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 import { Plus, Tag } from 'lucide-react'
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 import { cn } from '@/lib/utils'
 import type { TagCategory, TagFormData } from '@/types/tags'
 import { TagCard } from './TagCard'
@@ -25,8 +25,10 @@ export const TagSection = memo(
     })
     const isDragOver = isOver || dragOverId?.startsWith(`${tagCategory.code}-`)
 
-    const tagItems = tagCategory.tags.map(t => `${t.category}-${t.id}`)
-
+    const tagItems = useMemo(
+      () => tagCategory.tags.map(t => `${t.category}-${t.id}`),
+      [tagCategory.tags]
+    )
     return (
       <div
         ref={setNodeRef}
