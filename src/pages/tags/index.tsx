@@ -54,11 +54,14 @@ export default function TagsPage() {
     setDialogOpen(true)
   }, [])
 
-  const handleDraggingTag = useCallback((data: ReorderParams) => {
-    console.log('handleDraggingTag', data)
-    // 再同步到后端
-    // reorderTags.mutate(data)
-  }, [])
+  const handleDraggingTag = useCallback(
+    (data: ReorderParams) => {
+      console.log('handleDraggingTag', data)
+      // 再同步到后端
+      reorderTags.mutate(data)
+    },
+    [reorderTags]
+  )
 
   const tagActions = useMemo(
     () => ({

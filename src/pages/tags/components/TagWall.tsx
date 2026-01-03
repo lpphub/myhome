@@ -11,7 +11,7 @@ import {
   useSensors,
 } from '@dnd-kit/core'
 import { AnimatePresence, motion } from 'motion/react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { ReorderParams, Tag, TagCategory } from '@/types/tags'
 import { TagCard } from './TagCard'
 import { type TagActions, TagSection } from './TagSection'
@@ -24,6 +24,44 @@ const parseTagId = (id: string) => {
   const num = Number(parts[1])
   return Number.isNaN(num) ? -1 : num
 }
+
+// ⚡ OPT：重排序本地标签
+function reorderLocalTags(
+  prev: TagCategory[],
+  fromCategory: string,
+  fromIndex: number,
+  fromTag: Tag,
+  toCategory: string,
+  toIndex: number
+): TagCategory[] {
+  if (fromCategory === toCategory) {
+    // 同分类，仅调整顺序
+    return prev.map(cat => {
+      if (cat.code !== toCategory) return cat
+      const tags = [...cat.tags]
+      const [removed] = tags.splice(fromIndex, 1)
+      tags.splice(toIndex, 0, removed)
+      return { ...cat, tags }
+    })
+  }
+
+  // 跨分类移动
+  return prev.map(cat => {
+    if (cat.code === fromCategory) {
+      // 删除源 tag
+      return { ...cat, tags: cat.tags.filter((_, i) => i !== fromIndex) }
+    }
+    if (cat.code === toCategory) {
+      // 插入目标分类，更新 category
+      const tags = [...cat.tags]
+      const tagWithUpdatedCategory = { ...fromTag, category: toCategory }
+      tags.splice(toIndex, 0, tagWithUpdatedCategory)
+      return { ...cat, tags }
+    }
+    return cat
+  })
+}
+
 /* ---------------- props ---------------- */
 
 interface TagWallProps {
@@ -47,14 +85,13 @@ export function TagWall({ tags, tagActions, onClickAddTag, onDraggingTag }: TagW
     activeTag: null,
     overId: null,
   })
-
   // ✅ 1️⃣ 初始化本地状态
   const [localTags, setLocalTags] = useState<TagCategory[]>(tags)
 
   useEffect(() => {
-    if (!dragState.isDragging) return
+    // if (dragState.isDragging) return
     setLocalTags(tags)
-  }, [tags, dragState.isDragging])
+  }, [tags])
 
   const tagLookup = useMemo(() => {
     const map = new Map<number, { tag: Tag; category: TagCategory; index: number }>()
@@ -65,12 +102,6 @@ export function TagWall({ tags, tagActions, onClickAddTag, onDraggingTag }: TagW
     })
     return map
   }, [localTags])
-
-  // const [activeTag, setActiveTag] = useState<Tag | null>(null)
-  // const [overId, setOverId] = useState<string | null>(null)
-
-  // 🔑 关键：用 ref 存防抖定时器
-  const debounceTimer = useRef<NodeJS.Timeout | null>(null)
 
   /* ---------------- drag sensors ---------------- */
   const sensors = useSensors(
@@ -90,10 +121,11 @@ export function TagWall({ tags, tagActions, onClickAddTag, onDraggingTag }: TagW
 
   const handleDragOver = useCallback(({ over }: DragOverEvent) => {
     const newOverId = over ? String(over.id) : null
-    setDragState(prev => ({
-      ...prev,
-      overId: prev.overId === newOverId ? prev.overId : newOverId,
-    }))
+
+    setDragState(prev => {
+      if (prev.overId === newOverId) return prev
+      return { ...prev, overId: newOverId }
+    })
   }, [])
 
   const handleDragEnd = useCallback(
@@ -104,6 +136,8 @@ export function TagWall({ tags, tagActions, onClickAddTag, onDraggingTag }: TagW
       const activeId = parseTagId(active.id as string)
       const moving = tagLookup.get(activeId)
       if (!moving) return
+
+      const { category: fromCategory, index: fromIndex, tag: fromTag } = moving
 
       // 处理目标位置
       let toTarget: string
@@ -123,47 +157,19 @@ export function TagWall({ tags, tagActions, onClickAddTag, onDraggingTag }: TagW
         toIndex = targetCategory.tags.length
       }
       // 检查是否无变化
-      const isSamePosition = moving.category.code === toTarget && moving.index === toIndex
-      if (isSamePosition) return
+      if (fromCategory.code === toTarget && fromIndex === toIndex) return
 
       // ✅ 2️⃣ 触发拖拽回调（仅更新本地状态）
-      setLocalTags(prev => {
-        if (moving.category.code === toTarget) {
-          // 同分类内拖拽：直接重排
-          return prev.map(cat => {
-            if (cat.code === toTarget) {
-              const tags = [...cat.tags]
-              const [removed] = tags.splice(moving.index, 1)
-              tags.splice(toIndex, 0, removed)
-              return { ...cat, tags }
-            }
-            return cat
-          })
-        } else {
-          // 跨分类拖拽：删除 + 插入
-          return prev.map(cat => {
-            if (cat.code === moving.category.code) {
-              return {
-                ...cat,
-                tags: [...cat.tags.slice(0, moving.index), ...cat.tags.slice(moving.index + 1)],
-              }
-            }
-            if (cat.code === toTarget) {
-              return {
-                ...cat,
-                tags: [...cat.tags.slice(0, toIndex), moving.tag, ...cat.tags.slice(toIndex)],
-              }
-            }
-            return cat
-          })
-        }
-      })
+      setLocalTags(prev =>
+        reorderLocalTags(prev, fromCategory.code, fromIndex, fromTag, toTarget, toIndex)
+      )
 
-      // ✅ 3️⃣ 触发拖拽回调（防抖，同步后端）
-      if (debounceTimer.current) clearTimeout(debounceTimer.current)
-      debounceTimer.current = setTimeout(() => {
-        onDraggingTag({ fromId: activeId, toCategory: toTarget, toIndex })
-      }, 500) // 500ms 内不操作才发请求
+      // ✅ 3️⃣ 触发拖拽回调（同步后端）
+      onDraggingTag({
+        fromId: activeId,
+        toCategory: toTarget,
+        toIndex,
+      })
     },
     [localTags, tagLookup, onDraggingTag]
   )

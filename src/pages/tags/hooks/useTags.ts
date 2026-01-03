@@ -55,16 +55,12 @@ export function useReorderTags() {
 
   return useMutation({
     mutationFn: reorderTags,
-
     onSuccess: () => {
       // 操作成功后刷新缓存（确保数据一致性）
-      queryClient.invalidateQueries({ queryKey: QUERY_KEY })
+      // queryClient.invalidateQueries({ queryKey: QUERY_KEY })
     },
-
-    // 出错回滚
     onError: () => {
       toast.error('操作失败')
-
       const prev = queryClient.getQueryData<TagCategory[]>(QUERY_KEY)
       if (prev) {
         queryClient.setQueryData(QUERY_KEY, prev)
