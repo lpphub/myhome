@@ -1,8 +1,8 @@
 // hooks/useTags.ts
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { createCategory, createTag, deleteTag, getTags, updateTag } from '@/api/tags'
-import type { ReorderParams, Tag, TagCategory, TagFormData } from '@/types/tags'
+import { createCategory, createTag, deleteTag, getTags, reorderTags, updateTag } from '@/api/tags'
+import type { TagCategory, TagFormData } from '@/types/tags'
 
 const QUERY_KEY = ['tags']
 
@@ -54,17 +54,14 @@ export function useReorderTags() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (params: ReorderParams) => {
-      // 调api接口
-      return params
-    },
+    mutationFn: reorderTags,
 
     onSuccess: () => {
-      // ✅ 操作成功后刷新缓存（确保数据一致性）
+      // 操作成功后刷新缓存（确保数据一致性）
       queryClient.invalidateQueries({ queryKey: QUERY_KEY })
     },
 
-    // ❌ 2️⃣ 出错回滚
+    // 出错回滚
     onError: () => {
       toast.error('操作失败')
 

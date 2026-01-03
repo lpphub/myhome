@@ -27,14 +27,6 @@ export interface TagFormData {
   color?: string
 }
 
-export interface ReorderRequest {
-  items: {
-    id: number
-    category: string
-    order: number
-  }[]
-}
-
 export interface ReorderParams {
   fromId: number
   toCategory: string

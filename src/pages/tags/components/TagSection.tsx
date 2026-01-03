@@ -15,11 +15,11 @@ interface TagSectionProps {
   dragOverId?: string | null
   tagCategory: TagCategory
   tagActions?: TagActions
-  onAddTagClick?: (category: string) => void
+  onClickAddTag?: (category: string) => void
 }
 
 export const TagSection = memo(
-  ({ dragOverId, tagCategory, tagActions, onAddTagClick }: TagSectionProps) => {
+  ({ dragOverId, tagCategory, tagActions, onClickAddTag }: TagSectionProps) => {
     const { setNodeRef, isOver } = useDroppable({
       id: tagCategory.code,
     })
@@ -56,10 +56,10 @@ export const TagSection = memo(
             ))}
           </SortableContext>
 
-          {onAddTagClick && (
+          {onClickAddTag && (
             <button
               type='button'
-              onClick={() => onAddTagClick(tagCategory.code)}
+              onClick={() => onClickAddTag(tagCategory.code)}
               className={cn(
                 'w-52 p-4 rounded-lg border-2 border-dashed border-warmGray-200',
                 'hover:border-honey-300 hover:bg-honey-50 transition-all duration-300',
