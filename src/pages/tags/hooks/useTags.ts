@@ -74,9 +74,33 @@ export function useCreateCategory() {
 
   return useMutation({
     mutationFn: createCategory,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: QUERY_KEY })
+    onMutate: async (categoryName: string) => {
+      await queryClient.cancelQueries({ queryKey: QUERY_KEY })
+      const previousData = queryClient.getQueryData<TagCategory[]>(QUERY_KEY)
+
+      const newCategory: TagCategory = {
+        id: Date.now(),
+        code: `cat_${Date.now()}`,
+        name: categoryName,
+        tags: [],
+      }
+
+      queryClient.setQueryData<TagCategory[]>(QUERY_KEY, old => {
+        if (!old) return [newCategory]
+        return [...old, newCategory]
+      })
+
+      return { previousData }
     },
-    onError: () => toast.error('创建分类失败'),
+    onError: (_error, _variables, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(QUERY_KEY, context.previousData)
+      }
+      toast.error('创建分类失败')
+    },
+    onSuccess: () => {
+      toast.success('创建分类成功')
+      // queryClient.invalidateQueries({ queryKey: QUERY_KEY })
+    },
   })
 }

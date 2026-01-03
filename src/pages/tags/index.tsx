@@ -40,9 +40,12 @@ export default function TagsPage() {
     []
   )
 
-  const handleAddCategory = useCallback((categoryName: string) => {
-    console.log('createCategory', categoryName)
-  }, [])
+  const handleAddCategory = useCallback(
+    (categoryName: string) => {
+      createCategory.mutate(categoryName)
+    },
+    [createCategory]
+  )
 
   const handleAddTagClick = useCallback((category: string) => {
     setDialogTag({ name: '', category, color: 'lemon' })
