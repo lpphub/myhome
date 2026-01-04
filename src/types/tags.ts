@@ -6,7 +6,7 @@ export interface Tag {
   order: number
   color: string
   description?: string
-  itemCount: number
+  itemCount?: number
 }
 
 export interface Category {
@@ -24,7 +24,7 @@ export interface TagFormData {
   name: string
   category: string
   description?: string
-  color?: string
+  color: string
 }
 
 export interface ReorderParams {

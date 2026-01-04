@@ -131,7 +131,7 @@ export const TagCard = memo(({ tag, onEdit, onDelete }: TagCardProps) => {
           )}
         >
           <span className='w-1.5 h-1.5 rounded-full bg-current opacity-60' />
-          <span>{tag.itemCount} 个物品</span>
+          <span>{tag.itemCount ?? 0} 个物品</span>
         </div>
       </div>
 

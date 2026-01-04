@@ -1,77 +1,135 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { LoadingState } from '@/components/LoadingState'
 import { TagFormDialog } from '@/pages/tags/components/TagFormDialog'
 import { TagToolbar } from '@/pages/tags/components/TagToolbar'
 import { TagWall } from '@/pages/tags/components/TagWall'
-import { useCreateCategory, useReorderTags, useTags } from '@/pages/tags/hooks/useTags'
-import type { Category, ReorderParams, TagFormData } from '@/types/tags'
+import {
+  useCreateCategory,
+  useCreateTag,
+  useDeleteTag,
+  useReorderTags,
+  useTags,
+  useUpdateTag,
+} from '@/pages/tags/hooks/useTags'
+import type { Category, ReorderParams, TagCategory, TagFormData } from '@/types/tags'
 
 export default function TagsPage() {
   const { data: tagsData, isLoading } = useTags()
-  const createCategory = useCreateCategory()
+  /* ---------------- mutations ---------------- */
+  const createTag = useCreateTag()
+  const updateTag = useUpdateTag()
+  const deleteTag = useDeleteTag()
   const reorderTags = useReorderTags()
+  const createCategory = useCreateCategory()
 
-  /* ---------------- dialog state ---------------- */
+  /* ---------------- 页面 UI 状态 ---------------- */
+
+  // ⭐ 页面展示用的唯一数据源
+  const [localTags, setLocalTags] = useState<TagCategory[]>([])
+
+  // dialog
   const [isDialogOpen, setDialogOpen] = useState(false)
   const [dialogTag, setDialogTag] = useState<TagFormData | null>(null)
 
-  // 分类列表（用于弹窗）
-  const categories = useMemo<Category[]>(
+  /* ---------------- 初始化 / 同步 ---------------- */
+
+  useEffect(() => {
+    if (tagsData) {
+      setLocalTags(tagsData)
+    }
+  }, [tagsData])
+
+  /* ---------------- 派生数据 ---------------- */
+
+  const categoriesSelected = useMemo<Category[]>(
     () =>
-      tagsData?.map(cat => ({
+      localTags.map(cat => ({
         id: cat.id,
         code: cat.code,
         name: cat.name,
-      })) || [],
-    [tagsData]
+      })),
+    [localTags]
   )
 
-  const dialogActions = useMemo(
-    () => ({
-      addTag: (data: TagFormData) => {
-        console.log('add', data)
-        setDialogOpen(false)
-      },
-      updateTag: (data: TagFormData) => {
-        console.log('update', data)
-        setDialogOpen(false)
-      },
-    }),
-    []
-  )
+  /* ---------------- handlers ---------------- */
 
   const handleAddCategory = useCallback(
     (categoryName: string) => {
-      createCategory.mutate(categoryName)
+      createCategory.mutate(categoryName, {
+        onSuccess: category => {
+          setLocalTags(prev => [...prev, { ...category, tags: [] }])
+        },
+      })
     },
     [createCategory]
   )
 
-  const handleAddTagClick = useCallback((category: string) => {
-    setDialogTag({ name: '', category, color: 'lemon' })
-    setDialogOpen(true)
-  }, [])
+  const handleAddTag = useCallback(
+    (data: TagFormData) => {
+      createTag.mutate(data, {
+        onSuccess: tag => {
+          setLocalTags(prev =>
+            prev.map(cat =>
+              cat.code === data.category
+                ? {
+                    ...cat,
+                    tags: [...cat.tags, { ...tag }],
+                  }
+                : cat
+            )
+          )
+        },
+      })
 
-  const handleEditTagClick = useCallback((tag: TagFormData) => {
-    setDialogTag(tag)
-    setDialogOpen(true)
-  }, [])
-
-  const handleDraggingTag = useCallback(
-    (data: ReorderParams) => {
-      console.log('handleDraggingTag', data)
-      // 再同步到后端
-      reorderTags.mutate(data)
+      setDialogOpen(false)
     },
-    [reorderTags]
+    [createTag]
   )
 
-  const tagActions = useMemo(
-    () => ({
-      onEdit: handleEditTagClick,
-      onDelete: (id: number) => console.log('delete', id),
-    }),
-    [handleEditTagClick]
+  const handleUpdateTag = useCallback(
+    (data: TagFormData) => {
+      setDialogOpen(false)
+
+      setLocalTags(prev =>
+        prev.map(cat =>
+          cat.code === data.category
+            ? {
+                ...cat,
+                tags: cat.tags.map(tag => (tag.id === data.id ? { ...tag, ...data } : tag)),
+              }
+            : cat
+        )
+      )
+
+      updateTag.mutate(data)
+    },
+    [updateTag]
+  )
+
+  const handleDeleteTag = useCallback(
+    (id: number) => {
+      setLocalTags(prev =>
+        prev.map(cat => ({
+          ...cat,
+          tags: cat.tags.filter(tag => tag.id !== id),
+        }))
+      )
+
+      deleteTag.mutate(id)
+    },
+    [deleteTag]
+  )
+
+  /* ===== 拖拽排序 ===== */
+  const handleReorder = useCallback(
+    (params: ReorderParams, nextTags: TagCategory[]) => {
+      // 1️⃣ UI 立即变
+      setLocalTags(nextTags)
+
+      // 2️⃣ 后台同步
+      reorderTags.mutate(params)
+    },
+    [reorderTags]
   )
 
   if (isLoading) return <LoadingState type='loading' />
@@ -82,18 +140,30 @@ export default function TagsPage() {
       <TagToolbar onAddCategory={handleAddCategory} />
 
       <TagWall
-        tags={tagsData}
-        tagActions={tagActions}
-        onClickAddTag={handleAddTagClick}
-        onDraggingTag={handleDraggingTag}
+        tags={localTags}
+        tagActions={{
+          onEdit: tag => {
+            setDialogTag(tag)
+            setDialogOpen(true)
+          },
+          onDelete: handleDeleteTag,
+        }}
+        onClickAddTag={category => {
+          setDialogTag({ name: '', category, color: 'lemon' })
+          setDialogOpen(true)
+        }}
+        onReorder={handleReorder}
       />
 
       <TagFormDialog
         isOpen={isDialogOpen}
         onClose={() => setDialogOpen(false)}
         initialData={dialogTag}
-        categories={categories}
-        actions={dialogActions}
+        categories={categoriesSelected}
+        actions={{
+          addTag: handleAddTag,
+          updateTag: handleUpdateTag,
+        }}
       />
     </div>
   )

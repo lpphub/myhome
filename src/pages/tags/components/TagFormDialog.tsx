@@ -128,6 +128,7 @@ export const TagFormDialog = ({
             <Select
               value={formData.category}
               onValueChange={value => setFormData({ ...formData, category: value })}
+              disabled={isEditing}
             >
               <SelectTrigger id='category' className='border-warmGray-300 focus:border-honey-400'>
                 <SelectValue placeholder='选择分类' />

@@ -25,9 +25,9 @@ export const createTag = (data: TagFormData) =>
     mock: true,
   })
 
-export const updateTag = (id: number, data: Partial<TagFormData>) =>
+export const updateTag = (data: Partial<TagFormData>) =>
   httpClient.patch<Tag>({
-    url: TagsApi.UpdateTag.replace(':id', String(id)),
+    url: TagsApi.UpdateTag.replace(':id', String(data.id)),
     data,
     mock: true,
   })
@@ -47,7 +47,7 @@ export const reorderTags = (data: ReorderParams) =>
 
 // 创建分类
 export const createCategory = (name: string) =>
-  httpClient.post<void>({
+  httpClient.post<Category>({
     url: TagsApi.CreateCategory,
     data: { name },
     mock: true,

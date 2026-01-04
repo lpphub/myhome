@@ -2,7 +2,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { createCategory, createTag, deleteTag, getTags, reorderTags, updateTag } from '@/api/tags'
-import type { TagCategory, TagFormData } from '@/types/tags'
+import type { TagCategory } from '@/types/tags'
 
 const QUERY_KEY = ['tags']
 
@@ -20,7 +20,7 @@ export function useCreateTag() {
   return useMutation({
     mutationFn: createTag,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: QUERY_KEY })
+      // queryClient.invalidateQueries({ queryKey: QUERY_KEY })
     },
     onError: () => toast.error('添加失败'),
   })
@@ -30,9 +30,9 @@ export function useUpdateTag() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: TagFormData }) => updateTag(id, data),
+    mutationFn: updateTag,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: QUERY_KEY })
+      // queryClient.invalidateQueries({ queryKey: QUERY_KEY })
     },
     onError: () => toast.error('更新失败'),
   })
@@ -44,7 +44,7 @@ export function useDeleteTag() {
   return useMutation({
     mutationFn: deleteTag,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: QUERY_KEY })
+      // queryClient.invalidateQueries({ queryKey: QUERY_KEY })
     },
     onError: () => toast.error('删除失败'),
   })
@@ -70,37 +70,8 @@ export function useReorderTags() {
 }
 
 export function useCreateCategory() {
-  const queryClient = useQueryClient()
-
   return useMutation({
     mutationFn: createCategory,
-    onMutate: async (categoryName: string) => {
-      await queryClient.cancelQueries({ queryKey: QUERY_KEY })
-      const previousData = queryClient.getQueryData<TagCategory[]>(QUERY_KEY)
-
-      const newCategory: TagCategory = {
-        id: Date.now(),
-        code: `cat_${Date.now()}`,
-        name: categoryName,
-        tags: [],
-      }
-
-      queryClient.setQueryData<TagCategory[]>(QUERY_KEY, old => {
-        if (!old) return [newCategory]
-        return [...old, newCategory]
-      })
-
-      return { previousData }
-    },
-    onError: (_error, _variables, context) => {
-      if (context?.previousData) {
-        queryClient.setQueryData(QUERY_KEY, context.previousData)
-      }
-      toast.error('创建分类失败')
-    },
-    onSuccess: () => {
-      toast.success('创建分类成功')
-      // queryClient.invalidateQueries({ queryKey: QUERY_KEY })
-    },
+    onError: () => toast.error('添加失败'),
   })
 }
