@@ -1,8 +1,8 @@
 import { delay, HttpResponse, http } from 'msw'
 import type { AuthForm } from '@/types/auth'
-import type { Tag, TagCategory } from '@/types/tags'
+import type { ReorderParams, Tag, TagCategory, TagFormData } from '@/types/tags'
 
-async function loadTagsData(): Promise<{ categories: TagCategory[]; tags: Tag[] }> {
+async function loadTagsData(): Promise<{ categories: TagCategory[]; tags: TagCategory[] }> {
   const res = await fetch('/data/tags.json')
   if (!res.ok) throw new Error('Failed to load tags.json')
   return res.json()
@@ -112,7 +112,70 @@ export const handlers = [
     })
   }),
 
-  http.post('/api/tags/categories', async ({ request }) => {
+  http.post('/api/tags', async ({ request }) => {
+    const body = (await request.json()) as TagFormData
+    const data = await loadTagsData()
+
+    const allTags = data.tags.flatMap(cat => cat.tags)
+    const maxId = allTags.length > 0 ? Math.max(...allTags.map(t => t.id)) : 0
+    const newTag: Tag = {
+      id: maxId + 1,
+      name: body.name || '',
+      category: body.category || 'default',
+      color: body.color || 'lemon',
+      description: body.description || '',
+      itemCount: 0,
+      order: allTags.length,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: '创建便签成功',
+      data: newTag,
+    })
+  }),
+
+  http.patch<{ id: string }>('/api/tags/:id', async ({ params, request }) => {
+    const id = Number.parseInt(params.id, 10)
+    const body = (await request.json()) as Partial<TagFormData>
+
+    const updatedTag: Tag = {
+      id,
+      name: body.name || '',
+      category: body.category || 'default',
+      color: body.color || 'lemon',
+      description: body.description || '',
+      order: 0,
+      updatedAt: new Date().toISOString(),
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: '更新便签成功',
+      data: updatedTag,
+    })
+  }),
+
+  http.delete<{ id: string }>('/api/tags/:id', async () => {
+    return HttpResponse.json({
+      code: 200,
+      message: '删除便签成功',
+      data: { success: true },
+    })
+  }),
+
+  http.post('/api/tags/reorder', async ({ request }) => {
+    const body = (await request.json()) as ReorderParams
+    return HttpResponse.json({
+      code: 200,
+      message: '重新排序成功',
+      data: body,
+    })
+  }),
+
+  http.post('/api/tags/category', async ({ request }) => {
     const body = (await request.json()) as { name: string }
     const name = body.name?.trim()
 

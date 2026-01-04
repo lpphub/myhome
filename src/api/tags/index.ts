@@ -8,8 +8,7 @@ enum TagsApi {
   UpdateTag = '/tags/:id',
   DeleteTag = '/tags/:id',
   ReorderTags = '/tags/reorder',
-  CreateCategory = '/tags/categories',
-  GetCategories = '/tags/categories',
+  CreateCategory = '/tags/category',
 }
 
 export const getTags = () =>
@@ -50,12 +49,5 @@ export const createCategory = (name: string) =>
   httpClient.post<Category>({
     url: TagsApi.CreateCategory,
     data: { name },
-    mock: true,
-  })
-
-// 获取所有分类
-export const getCategories = () =>
-  httpClient.get<Category[]>({
-    url: TagsApi.GetCategories,
     mock: true,
   })

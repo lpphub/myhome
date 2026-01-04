@@ -26,6 +26,7 @@ export default function TagsPage() {
 
   // ⭐ 页面展示用的唯一数据源
   const [localTags, setLocalTags] = useState<TagCategory[]>([])
+  const [searchKeyword, setSearchKeyword] = useState('')
 
   // dialog
   const [isDialogOpen, setDialogOpen] = useState(false)
@@ -40,6 +41,23 @@ export default function TagsPage() {
   }, [tagsData])
 
   /* ---------------- 派生数据 ---------------- */
+
+  const filteredTags = useMemo(() => {
+    if (!searchKeyword.trim()) return localTags
+
+    const keyword = searchKeyword.toLowerCase()
+
+    return localTags
+      .map(cat => ({
+        ...cat,
+        tags: cat.tags.filter(
+          tag =>
+            tag.name.toLowerCase().includes(keyword) ||
+            tag.description?.toLowerCase().includes(keyword)
+        ),
+      }))
+      .filter(cat => cat.tags.length > 0)
+  }, [localTags, searchKeyword])
 
   const categoriesSelected = useMemo<Category[]>(
     () =>
@@ -137,10 +155,10 @@ export default function TagsPage() {
 
   return (
     <div className='max-w-7xl mx-auto px-4 py-6'>
-      <TagToolbar onAddCategory={handleAddCategory} />
+      <TagToolbar onAddCategory={handleAddCategory} onSearch={setSearchKeyword} />
 
       <TagWall
-        tags={localTags}
+        tags={filteredTags}
         tagActions={{
           onEdit: tag => {
             setDialogTag(tag)

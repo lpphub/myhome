@@ -39,12 +39,23 @@ export const TagToolbar = ({ onAddCategory, onSearch }: TagToolbarProps) => {
     <div className='flex items-center justify-between rounded-xl px-4 min-h-18 shadow-warm-sm mb-6'>
       <div className='flex items-center gap-3 flex-1 max-w-md'>
         <Search className='w-4 h-4 text-warmGray-400 shrink-0' />
-        <Input
-          className='border-0 shadow-none focus-visible:ring-0 h-auto text-sm placeholder:text-warmGray-400'
-          placeholder='搜索便签名称'
-          value={searchValue}
-          onChange={e => handleSearchChange(e.target.value)}
-        />
+        <div className='relative flex-1'>
+          <Input
+            className='border-0 shadow-none focus-visible:ring-0 h-auto text-sm placeholder:text-warmGray-400 pr-8'
+            placeholder='搜索便签名称'
+            value={searchValue}
+            onChange={e => handleSearchChange(e.target.value)}
+          />
+          {searchValue && (
+            <button
+              type='button'
+              className='absolute right-2 top-1/2 -translate-y-1/2 text-warmGray-400 hover:text-warmGray-600'
+              onClick={() => handleSearchChange('')}
+            >
+              <X className='w-4 h-4' />
+            </button>
+          )}
+        </div>
       </div>
 
       <div className='flex items-center gap-2'>

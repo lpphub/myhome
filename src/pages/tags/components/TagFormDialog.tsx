@@ -1,5 +1,8 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Tag } from 'lucide-react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -20,6 +23,15 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { type Category, TAG_COLOR_CLASSES, type TagFormData } from '@/types/tags'
 
+const tagFormSchema = z.object({
+  name: z.string().min(1, '请输入便签名称').max(20, '便签名称最多20个字符'),
+  category: z.string().min(1, '请选择分类'),
+  color: z.enum(['lemon', 'coral', 'lavender', 'honey', 'cream', 'pink', 'mint']),
+  description: z.string().optional(),
+})
+
+type TagFormValues = z.infer<typeof tagFormSchema>
+
 interface TagFormDialogProps {
   isOpen: boolean
   onClose: () => void
@@ -38,48 +50,45 @@ export const TagFormDialog = ({
   categories,
   actions,
 }: TagFormDialogProps) => {
-  const resetForm = useCallback(
-    (): TagFormData => ({
-      id: initialData?.id || 0,
-      name: initialData?.name || '',
-      category: initialData?.category || 'storage',
-      color: initialData?.color || 'lemon',
-      description: initialData?.description || '',
-    }),
-    [
-      initialData?.id,
-      initialData?.name,
-      initialData?.category,
-      initialData?.color,
-      initialData?.description,
-    ]
-  )
   const isEditing = Boolean(initialData?.id && initialData.id > 0)
-  const [formData, setFormData] = useState<TagFormData>(resetForm())
+
+  const form = useForm<TagFormValues>({
+    resolver: zodResolver(tagFormSchema),
+    defaultValues: {
+      name: '',
+      category: 'storage',
+      color: 'lemon',
+      description: '',
+    },
+  })
 
   useEffect(() => {
     if (!isOpen) return
-    if (initialData?.name) {
-      setFormData({ ...initialData })
+    if (initialData) {
+      form.reset({
+        name: initialData.name,
+        category: initialData.category,
+        color: (initialData.color as TagFormValues['color']) || 'lemon',
+        description: initialData.description || '',
+      })
     } else {
-      setFormData(resetForm())
+      form.reset()
     }
-  }, [isOpen, initialData, resetForm])
+  }, [isOpen, initialData, form])
 
   const handleClose = useCallback(() => {
-    setFormData(resetForm())
+    form.reset()
     onClose()
-  }, [onClose, resetForm])
+  }, [onClose, form])
 
   const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault()
-      if (!formData.name.trim()) return
-
+    (data: TagFormValues) => {
       const payload: TagFormData = {
-        ...formData,
-        name: formData.name.trim(),
-        description: formData.description?.trim(),
+        id: initialData?.id,
+        name: data.name.trim(),
+        category: data.category,
+        color: data.color,
+        description: data.description?.trim(),
       }
 
       if (isEditing && actions.updateTag) {
@@ -89,7 +98,7 @@ export const TagFormDialog = ({
       }
       handleClose()
     },
-    [formData, isEditing, actions.updateTag, actions.addTag, handleClose]
+    [initialData?.id, isEditing, actions.updateTag, actions.addTag, handleClose]
   )
 
   return (
@@ -104,7 +113,7 @@ export const TagFormDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className='space-y-4 mt-4'>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-4 mt-4'>
           <div className='space-y-2'>
             <Label htmlFor='tag' className='flex items-center gap-2'>
               <Tag className='w-4 h-4 text-warmGray-500' />
@@ -112,12 +121,17 @@ export const TagFormDialog = ({
             </Label>
             <Input
               id='tag'
-              value={formData.name}
-              onChange={e => setFormData({ ...formData, name: e.target.value })}
               placeholder='例如：卧室、零食等'
-              className='border-warmGray-300 focus:border-honey-400'
-              required
+              {...form.register('name')}
+              className={
+                form.formState.errors.name
+                  ? 'border-red-500 ring-1 ring-red-500'
+                  : 'border-warmGray-300 focus:border-honey-400'
+              }
             />
+            {form.formState.errors.name && (
+              <p className='text-sm text-coral-500'>{form.formState.errors.name.message}</p>
+            )}
           </div>
 
           <div className='space-y-2'>
@@ -126,11 +140,18 @@ export const TagFormDialog = ({
               分类 *
             </Label>
             <Select
-              value={formData.category}
-              onValueChange={value => setFormData({ ...formData, category: value })}
+              value={form.watch('category')}
+              onValueChange={value => form.setValue('category', value)}
               disabled={isEditing}
             >
-              <SelectTrigger id='category' className='border-warmGray-300 focus:border-honey-400'>
+              <SelectTrigger
+                id='category'
+                className={
+                  form.formState.errors.category
+                    ? 'border-red-500 ring-1 ring-red-500'
+                    : 'border-warmGray-300 focus:border-honey-400'
+                }
+              >
                 <SelectValue placeholder='选择分类' />
               </SelectTrigger>
               <SelectContent className='bg-white border-honey-200 shadow-warm-sm w-64'>
@@ -141,6 +162,9 @@ export const TagFormDialog = ({
                 ))}
               </SelectContent>
             </Select>
+            {form.formState.errors.category && (
+              <p className='text-sm text-coral-500'>{form.formState.errors.category.message}</p>
+            )}
           </div>
 
           <div className='space-y-2'>
@@ -153,14 +177,14 @@ export const TagFormDialog = ({
                 <button
                   key={color}
                   type='button'
-                  onClick={() => setFormData({ ...formData, color })}
-                  className={`h-12 rounded-lg border-2 transition-all ${
-                    formData.color === color
-                      ? 'border-honey-400 ring-2 ring-honey-200 ring-offset-1'
+                  onClick={() => form.setValue('color', color as TagFormValues['color'])}
+                  className={`h-12 rounded-lg border transition-all ${
+                    form.watch('color') === color
+                      ? 'border-honey-400 ring-1 ring-honey-200'
                       : 'border-transparent hover:border-honey-300'
                   } ${TAG_COLOR_CLASSES[color].bg}`}
                 >
-                  {formData.color === color && (
+                  {form.watch('color') === color && (
                     <svg
                       className='w-6 h-6 mx-auto text-current opacity-60'
                       fill='none'
@@ -188,12 +212,18 @@ export const TagFormDialog = ({
             </Label>
             <Textarea
               id='description'
-              value={formData.description || ''}
-              onChange={e => setFormData({ ...formData, description: e.target.value })}
               placeholder='可选：添加一些描述信息'
               rows={3}
-              className='border-warmGray-300 focus:border-honey-400 resize-none'
+              {...form.register('description')}
+              className={
+                form.formState.errors.description
+                  ? 'border-red-500 ring-1 ring-red-500'
+                  : 'border-warmGray-300 focus:border-honey-400 resize-none'
+              }
             />
+            {form.formState.errors.description && (
+              <p className='text-sm text-coral-500'>{form.formState.errors.description.message}</p>
+            )}
           </div>
 
           <div className='flex gap-2 pt-2'>
@@ -207,7 +237,7 @@ export const TagFormDialog = ({
             </Button>
             <Button
               type='submit'
-              disabled={!formData.name.trim()}
+              disabled={!form.formState.isValid}
               className='flex-1 bg-linear-to-r from-honey-400 to-honey-500 hover:from-honey-500 hover:to-honey-600 text-white'
             >
               {isEditing ? '保存修改' : '添加便签'}

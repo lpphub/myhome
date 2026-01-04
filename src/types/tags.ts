@@ -7,6 +7,8 @@ export interface Tag {
   color: string
   description?: string
   itemCount?: number
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface Category {
