@@ -39,7 +39,6 @@ export class ApiError extends Error {
 export interface RequestOptions<_T, _D = unknown> extends AxiosRequestConfig {
   retryCount?: number
   retryDelay?: number
-  mock?: boolean
 }
 
 /**

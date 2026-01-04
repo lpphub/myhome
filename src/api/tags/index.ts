@@ -14,34 +14,29 @@ enum TagsApi {
 export const getTags = () =>
   httpClient.get<TagCategory[]>({
     url: TagsApi.GetTags,
-    mock: true,
   })
 
 export const createTag = (data: TagFormData) =>
   httpClient.post<Tag>({
     url: TagsApi.CreateTag,
     data,
-    mock: true,
   })
 
 export const updateTag = (data: Partial<TagFormData>) =>
   httpClient.patch<Tag>({
     url: TagsApi.UpdateTag.replace(':id', String(data.id)),
     data,
-    mock: true,
   })
 
 export const deleteTag = (id: number) =>
   httpClient.delete({
     url: TagsApi.DeleteTag.replace(':id', String(id)),
-    mock: true,
   })
 
 export const reorderTags = (data: ReorderParams) =>
   httpClient.post({
     url: TagsApi.ReorderTags,
     data,
-    mock: true,
   })
 
 // 创建分类
@@ -49,5 +44,4 @@ export const createCategory = (name: string) =>
   httpClient.post<Category>({
     url: TagsApi.CreateCategory,
     data: { name },
-    mock: true,
   })
