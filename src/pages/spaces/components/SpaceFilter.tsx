@@ -40,7 +40,7 @@ export function SpaceFilter({
   onTagToggle,
 }: SpaceFilterProps) {
   return (
-    <div className='border-cream-200 mb-6 p-4'>
+    <div className='border-cream-200 mb-6 py-4'>
       <div className='flex flex-col md:flex-row gap-4 items-center'>
         <div className='flex-1 w-full md:w-auto relative'>
           <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-warmGray-400' />
