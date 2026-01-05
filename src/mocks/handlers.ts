@@ -1,11 +1,26 @@
 import { delay, HttpResponse, http } from 'msw'
 import type { AuthForm } from '@/types/auth'
 import type { ReorderParams, Tag, TagCategory, TagFormData } from '@/types/tags'
+import type { Item, RecentActivity } from '@/types/items'
 
 async function loadTagsData(): Promise<{ categories: TagCategory[]; tags: TagCategory[] }> {
   const res = await fetch('/data/tags.json')
   if (!res.ok) throw new Error('Failed to load tags.json')
   return res.json()
+}
+
+async function loadItemsData(): Promise<{ items: Item[] }> {
+  const res = await fetch('/data/items.json')
+  if (!res.ok) throw new Error('Failed to load items.json')
+  const data = await res.json()
+  return { items: data.items }
+}
+
+async function loadActivitiesData(): Promise<{ activities: RecentActivity[] }> {
+  const res = await fetch('/data/items.json')
+  if (!res.ok) throw new Error('Failed to load items.json')
+  const data = await res.json()
+  return { activities: data.activities }
 }
 
 async function loadDashboardData(): Promise<{
@@ -210,6 +225,26 @@ export const handlers = [
       code: 200,
       message: '删除分类成功',
       data: { success: true },
+    })
+  }),
+
+  http.get('/api/items', async () => {
+    await delay(200)
+    const data = await loadItemsData()
+    return HttpResponse.json({
+      code: 200,
+      message: '获取物品成功',
+      data: data.items,
+    })
+  }),
+
+  http.get('/api/items/activities', async () => {
+    await delay(200)
+    const data = await loadActivitiesData()
+    return HttpResponse.json({
+      code: 200,
+      message: '获取活动记录成功',
+      data: data.activities,
     })
   }),
 

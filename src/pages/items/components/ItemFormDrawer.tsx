@@ -1,18 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { MapPin, Package, Tag as TagIcon, X } from 'lucide-react'
-import { useState } from 'react'
+import { MapPin, Package, Tag as TagIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -29,7 +21,6 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from '@/components/ui/sheet'
 import { Textarea as TextareaInput } from '@/components/ui/textarea'
 import { ITEM_STATUS_LABELS, type Item } from '@/types/items'
@@ -44,14 +35,13 @@ const itemSchema = z.object({
 
 type ItemFormData = z.infer<typeof itemSchema>
 
-interface AddItemDrawerProps {
+interface ItemFormDrawerProps {
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
   onAddItem: (item: Item) => void
 }
 
-export function AddItemDrawer({ onAddItem }: AddItemDrawerProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
-
+export function ItemFormDrawer({ isOpen, onOpenChange, onAddItem }: ItemFormDrawerProps) {
   const form = useForm<ItemFormData>({
     resolver: zodResolver(itemSchema),
     defaultValues: {
@@ -65,14 +55,11 @@ export function AddItemDrawer({ onAddItem }: AddItemDrawerProps) {
 
   const { mutate, isPending } = useMutation({
     mutationFn: (data: ItemFormData) => {
-      const formDataWithTags = {
-        ...data,
-        tags: selectedTags,
-      }
       return Promise.resolve({
         id: Date.now(),
         storageId: 0,
-        ...formDataWithTags,
+        ...data,
+        tags: [],
         image: undefined,
         purchaseDate: undefined,
         createdAt: new Date().toISOString(),
@@ -82,7 +69,7 @@ export function AddItemDrawer({ onAddItem }: AddItemDrawerProps) {
     onSuccess: item => {
       onAddItem(item)
       toast.success('物品添加成功！')
-      setIsOpen(false)
+      onOpenChange(false)
       form.reset()
     },
     onError: error => {
@@ -96,20 +83,14 @@ export function AddItemDrawer({ onAddItem }: AddItemDrawerProps) {
   }
 
   const handleOpenChange = (open: boolean) => {
-    setIsOpen(open)
-    if (open) {
+    onOpenChange(open)
+    if (!open) {
       form.reset()
     }
   }
 
   return (
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
-      <SheetTrigger asChild>
-        <Button className='bg-linear-to-r from-honey-400 to-honey-600 text-white hover:from-honey-500 hover:to-honey-700 shadow-warm-sm'>
-          <Package className='w-4 h-4 mr-1' />
-          添加物品
-        </Button>
-      </SheetTrigger>
       <SheetContent
         side='right'
         className='flex flex-col overflow-hidden w-full sm:w-130 bg-linear-to-br from-white via-cream-50/90 to-honey-50/60 border-l-honey-200!'
@@ -208,13 +189,13 @@ export function AddItemDrawer({ onAddItem }: AddItemDrawerProps) {
           </div>
 
           <SheetFooter className='mt-auto pt-4'>
-            <Button
+            <button
               type='submit'
-              className='w-full bg-linear-to-r from-honey-400 to-honey-600 text-white hover:from-honey-500 hover:to-honey-700 shadow-warm-sm'
+              className='w-full bg-linear-to-r from-honey-400 to-honey-600 text-white hover:from-honey-500 hover:to-honey-700 shadow-warm-sm py-2 px-4 rounded-md'
               disabled={isPending}
             >
               {isPending ? '添加中...' : '确认添加'}
-            </Button>
+            </button>
           </SheetFooter>
         </form>
       </SheetContent>

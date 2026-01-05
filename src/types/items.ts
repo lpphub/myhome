@@ -32,7 +32,7 @@ export interface RecentActivity {
   action: string
   itemName: string
   timestamp: string
-  icon: React.ReactNode
+  icon: string
 }
 
 export const ITEM_STATUS_LABELS: Record<ItemStatus, string> = {
