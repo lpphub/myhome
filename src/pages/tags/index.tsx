@@ -6,6 +6,7 @@ import { TagWall } from '@/pages/tags/components/TagWall'
 import {
   useCreateCategory,
   useCreateTag,
+  useDeleteCategory,
   useDeleteTag,
   useReorderTags,
   useTags,
@@ -21,6 +22,7 @@ export default function TagsPage() {
   const deleteTag = useDeleteTag()
   const reorderTags = useReorderTags()
   const createCategory = useCreateCategory()
+  const deleteCategory = useDeleteCategory()
 
   /* ---------------- 页面 UI 状态 ---------------- */
 
@@ -126,16 +128,29 @@ export default function TagsPage() {
 
   const handleDeleteTag = useCallback(
     (id: number) => {
-      setLocalTags(prev =>
-        prev.map(cat => ({
-          ...cat,
-          tags: cat.tags.filter(tag => tag.id !== id),
-        }))
-      )
-
-      deleteTag.mutate(id)
+      deleteTag.mutate(id, {
+        onSuccess: () => {
+          setLocalTags(prev =>
+            prev.map(cat => ({
+              ...cat,
+              tags: cat.tags.filter(tag => tag.id !== id),
+            }))
+          )
+        },
+      })
     },
     [deleteTag]
+  )
+
+  const handleDeleteCategory = useCallback(
+    (categoryCode: string) => {
+      deleteCategory.mutate(categoryCode, {
+        onSuccess: () => {
+          setLocalTags(prev => prev.filter(cat => cat.code !== categoryCode))
+        },
+      })
+    },
+    [deleteCategory]
   )
 
   /* ===== 拖拽排序 ===== */
@@ -166,11 +181,12 @@ export default function TagsPage() {
           },
           onDelete: handleDeleteTag,
         }}
-        onClickAddTag={category => {
+        onAddTag={category => {
           setDialogTag({ name: '', category, color: 'lemon' })
           setDialogOpen(true)
         }}
         onReorder={handleReorder}
+        onDeleteCategory={handleDeleteCategory}
       />
 
       <TagFormDialog

@@ -61,8 +61,9 @@ function reorderTags(
 interface TagWallProps {
   tags: TagCategory[]
   tagActions: TagActions
-  onClickAddTag: (category: string) => void
+  onAddTag: (category: string) => void
   onReorder: (params: ReorderParams, next: TagCategory[]) => void
+  onDeleteCategory?: (code: string) => void
 }
 
 interface DragState {
@@ -72,7 +73,7 @@ interface DragState {
 
 /* ---------------- component ---------------- */
 
-export function TagWall({ tags, tagActions, onClickAddTag, onReorder }: TagWallProps) {
+export function TagWall({ tags, tagActions, onAddTag, onReorder, onDeleteCategory }: TagWallProps) {
   const [dragState, setDragState] = useState<DragState>({
     activeTag: null,
     overId: null,
@@ -191,7 +192,8 @@ export function TagWall({ tags, tagActions, onClickAddTag, onReorder }: TagWallP
             dragOverId={dragState.overId}
             tagCategory={cat}
             tagActions={tagActions}
-            onClickAddTag={onClickAddTag}
+            onAddTag={onAddTag}
+            onDeleteCategory={onDeleteCategory}
           />
         ))}
       </div>

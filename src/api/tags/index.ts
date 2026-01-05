@@ -9,6 +9,7 @@ enum TagsApi {
   DeleteTag = '/tags/:id',
   ReorderTags = '/tags/reorder',
   CreateCategory = '/tags/category',
+  DeleteCategory = '/tags/category/:code',
 }
 
 export const getTags = () =>
@@ -29,19 +30,23 @@ export const updateTag = (data: Partial<TagFormData>) =>
   })
 
 export const deleteTag = (id: number) =>
-  httpClient.delete({
+  httpClient.delete<void>({
     url: TagsApi.DeleteTag.replace(':id', String(id)),
   })
 
 export const reorderTags = (data: ReorderParams) =>
-  httpClient.post({
+  httpClient.post<void>({
     url: TagsApi.ReorderTags,
     data,
   })
 
-// 创建分类
 export const createCategory = (name: string) =>
   httpClient.post<Category>({
     url: TagsApi.CreateCategory,
     data: { name },
+  })
+
+export const deleteCategory = (code: string) =>
+  httpClient.delete<void>({
+    url: TagsApi.DeleteCategory.replace(':code', code),
   })

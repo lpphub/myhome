@@ -1,7 +1,15 @@
 // hooks/useTags.ts
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { createCategory, createTag, deleteTag, getTags, reorderTags, updateTag } from '@/api/tags'
+import {
+  createCategory,
+  createTag,
+  deleteCategory,
+  deleteTag,
+  getTags,
+  reorderTags,
+  updateTag,
+} from '@/api/tags'
 import type { TagCategory } from '@/types/tags'
 
 const QUERY_KEY = ['tags']
@@ -73,5 +81,12 @@ export function useCreateCategory() {
   return useMutation({
     mutationFn: createCategory,
     onError: () => toast.error('添加失败'),
+  })
+}
+
+export function useDeleteCategory() {
+  return useMutation({
+    mutationFn: deleteCategory,
+    onError: () => toast.error('删除失败'),
   })
 }

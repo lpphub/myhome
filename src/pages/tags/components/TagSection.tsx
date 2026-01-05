@@ -1,6 +1,6 @@
 import { useDroppable } from '@dnd-kit/core'
 import { rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
-import { Plus, Tag } from 'lucide-react'
+import { Plus, Tag, Trash2 } from 'lucide-react'
 import { memo, useMemo } from 'react'
 import { cn } from '@/lib/utils'
 import type { TagCategory, TagFormData } from '@/types/tags'
@@ -15,11 +15,12 @@ interface TagSectionProps {
   dragOverId?: string | null
   tagCategory: TagCategory
   tagActions?: TagActions
-  onClickAddTag?: (category: string) => void
+  onAddTag?: (category: string) => void
+  onDeleteCategory?: (code: string) => void
 }
 
 export const TagSection = memo(
-  ({ dragOverId, tagCategory, tagActions, onClickAddTag }: TagSectionProps) => {
+  ({ dragOverId, tagCategory, tagActions, onAddTag, onDeleteCategory }: TagSectionProps) => {
     const { setNodeRef, isOver } = useDroppable({
       id: tagCategory.code,
     })
@@ -44,7 +45,19 @@ export const TagSection = memo(
           </div>
           <div>
             <h2 className='text-lg font-bold text-warmGray-800'>{tagCategory.name}</h2>
-            <p className='text-sm text-warmGray-500'>{tagCategory.tags.length} 个便签</p>
+            <p className='text-sm text-warmGray-500'>
+              {tagCategory.tags.length} 个便签
+              {tagCategory.tags.length === 0 && onDeleteCategory && (
+                <button
+                  type='button'
+                  onClick={() => onDeleteCategory(tagCategory.code)}
+                  className='ml-2 p-0.5 rounded hover:bg-red-100 transition-all duration-200'
+                  title='删除分类'
+                >
+                  <Trash2 className='w-3.5 h-3.5 text-red-500' />
+                </button>
+              )}
+            </p>
           </div>
         </div>
 
@@ -56,10 +69,10 @@ export const TagSection = memo(
             ))}
           </SortableContext>
 
-          {onClickAddTag && (
+          {onAddTag && (
             <button
               type='button'
-              onClick={() => onClickAddTag(tagCategory.code)}
+              onClick={() => onAddTag(tagCategory.code)}
               className={cn(
                 'w-52 p-4 rounded-lg border-2 border-dashed border-warmGray-200',
                 'hover:border-honey-300 hover:bg-honey-50 transition-all duration-300',
@@ -70,7 +83,7 @@ export const TagSection = memo(
               <div className='mt-5 mb-1.5'>
                 <Plus className='w-8 h-8 transition-transform group-hover:rotate-90 mx-auto' />
               </div>
-              <span className='text-sm font-medium'>添加标签</span>
+              <span className='text-sm font-medium'>添加便签</span>
             </button>
           )}
         </div>

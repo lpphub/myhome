@@ -205,6 +205,14 @@ export const handlers = [
     })
   }),
 
+  http.delete<{ code: string }>('/api/tags/category/:code', async () => {
+    return HttpResponse.json({
+      code: 200,
+      message: '删除分类成功',
+      data: { success: true },
+    })
+  }),
+
   http.get('/api/dashboard', async () => {
     await delay(200)
     const data = await loadDashboardData()
