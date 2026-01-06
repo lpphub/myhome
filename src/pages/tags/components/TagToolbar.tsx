@@ -36,12 +36,12 @@ export const TagToolbar = ({ onAddGroup, onSearch }: TagToolbarProps) => {
   }
 
   return (
-    <div className='flex items-center justify-between rounded-xl px-4 min-h-18 shadow-warm-sm mb-6'>
+    <div className='flex items-center justify-between rounded-xl px-4 min-h-18 mb-6'>
       <div className='flex items-center gap-3 flex-1 max-w-md'>
-        <Search className='w-4 h-4 text-warmGray-400 shrink-0' />
+        <Search className='w-4 h-4 text-gray-400 shrink-0' />
         <div className='relative flex-1'>
           <Input
-            className='border-0 shadow-none focus-visible:ring-0 h-auto text-sm placeholder:text-warmGray-400 pr-8'
+            className='focus-visible:ring-0 h-auto text-sm placeholder:text-gray-400'
             placeholder='搜索便签名称'
             value={searchValue}
             onChange={e => handleSearchChange(e.target.value)}
@@ -49,7 +49,7 @@ export const TagToolbar = ({ onAddGroup, onSearch }: TagToolbarProps) => {
           {searchValue && (
             <button
               type='button'
-              className='absolute right-2 top-1/2 -translate-y-1/2 text-warmGray-400 hover:text-warmGray-600'
+              className='absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600'
               onClick={() => handleSearchChange('')}
             >
               <X className='w-4 h-4' />
@@ -91,7 +91,7 @@ export const TagToolbar = ({ onAddGroup, onSearch }: TagToolbarProps) => {
           </>
         ) : (
           <Button
-            className='bg-linear-to-r from-honey-400 to-honey-600 text-white hover:from-honey-500 hover:to-honey-700 shadow-warm-sm'
+            className='bg-linear-to-r from-pale-coral-200 to-pale-coral-400 text-white hover:from-pale-coral-500 hover:to-pale-coral-700 shadow-sm'
             onClick={() => setIsAdding(true)}
           >
             <Plus className='w-4 h-4 mr-1' />

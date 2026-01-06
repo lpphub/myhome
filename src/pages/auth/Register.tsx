@@ -55,7 +55,7 @@ export default function Register() {
     mutationFn: (credentials: AuthForm) => signUp(credentials),
     onSuccess: res => {
       login({ ...res })
-      toast.success('注册成功！')
+      toast.success('注册成功！🎉')
       navigate('/')
     },
     onError: () => {
@@ -73,39 +73,39 @@ export default function Register() {
   return (
     <div className='min-h-screen flex items-center justify-center p-4 relative overflow-hidden'>
       {/* 背景装饰 */}
-      <div className='absolute inset-0 bg-linear-to-br from-cream-100 via-honey-100 to-lavender-100' />
+      <div className='absolute inset-0 bg-linear-to-br from-soft-orange-50 via-macaron-pink-50 to-mint-green-50' />
       <div className='absolute inset-0'>
         {/* 浮动装饰元素 */}
-        <div className='absolute top-20 left-20 w-32 h-32 bg-honey-200 rounded-full opacity-30 animate-pulse duration-4000' />
+        <div className='absolute top-20 left-20 w-32 h-32 bg-primary rounded-full opacity-30 animate-pulse duration-4000' />
         <div
-          className='absolute top-40 right-32 w-24 h-24 bg-coral-200 rounded-full opacity-25 animate-pulse duration-3500'
+          className='absolute top-40 right-32 w-24 h-24 bg-macaron-pink-200 rounded-full opacity-25 animate-pulse duration-3500'
           style={{ animationDelay: '1s' }}
         />
         <div
-          className='absolute bottom-32 left-32 w-40 h-40 bg-lavender-200 rounded-full opacity-20 animate-pulse duration-5000'
+          className='absolute bottom-32 left-32 w-40 h-40 bg-mint-green-200 rounded-full opacity-20 animate-pulse duration-5000'
           style={{ animationDelay: '2s' }}
         />
       </div>
 
       {/* 注册卡片 */}
-      <Card className='w-96 z-10 shadow-2xl border border-honey-200/30 backdrop-blur-lg bg-white/60 py-8'>
+      <Card className='w-96 z-10 shadow-2xl border-border/30 backdrop-blur-lg bg-white/60 rounded-2xl py-8'>
         <CardHeader>
           <div className='text-center space-y-2'>
             {/* Logo 图标 */}
             <div className='flex items-center justify-center mb-2'>
-              <div className='w-16 h-16 bg-linear-to-br from-honey-400 to-coral-400 rounded-2xl flex items-center justify-center shadow-warm-md'>
+              <div className='w-16 h-16 bg-linear-to-br from-primary to-macaron-pink rounded-2xl flex items-center justify-center shadow-lg'>
                 <Home className='w-8 h-8 text-white' />
               </div>
             </div>
 
             {/* 标题 */}
-            <CardTitle>收纳宝</CardTitle>
+            <CardTitle className='text-2xl font-handwritten'>便签中心</CardTitle>
 
             {/* 欢迎语 */}
-            <CardDescription className='flex items-center justify-center gap-2'>
-              <UserPlus className='w-4 h-4 text-coral-400' />
+            <CardDescription className='flex items-center justify-center gap-2 text-muted'>
+              <UserPlus className='w-4 h-4 text-primary' />
               <span>创建新账号</span>
-              <UserPlus className='w-4 h-4 text-coral-400' />
+              <UserPlus className='w-4 h-4 text-primary' />
             </CardDescription>
           </div>
         </CardHeader>
@@ -114,30 +114,30 @@ export default function Register() {
           <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
             {/* 通用错误信息 */}
             {errors.root && (
-              <div className='bg-coral-50 border border-coral-200 text-coral-700 px-4 py-3 rounded-lg text-sm'>
+              <div className='bg-danger/10 border border-danger/30 text-danger px-4 py-3 rounded-xl text-sm'>
                 {errors.root.message}
               </div>
             )}
 
             {/* 邮箱输入 */}
             <div className='w-[95%] mx-auto space-y-1.5'>
-              <label htmlFor='email' className='block text-sm font-medium text-warmGray-700'>
+              <label htmlFor='email' className='block text-sm font-medium text-foreground'>
                 邮箱地址
               </label>
               <Input
                 id='email'
                 type='email'
                 placeholder='your@email.com'
-                className={errors.email ? 'border-coral-500' : 'border-warmGray-200'}
+                className={`rounded-xl ${errors.email ? 'border-danger' : 'border-border'}`}
                 disabled={isPending}
                 {...register('email')}
               />
-              {errors.email && <p className='text-coral-500 text-sm'>{errors.email.message}</p>}
+              {errors.email && <p className='text-danger text-sm mt-1'>{errors.email.message}</p>}
             </div>
 
             {/* 密码输入 */}
             <div className='w-[95%] mx-auto space-y-1.5'>
-              <label htmlFor='password' className='block text-sm font-medium text-warmGray-700'>
+              <label htmlFor='password' className='block text-sm font-medium text-foreground'>
                 密码
               </label>
               <div className='relative'>
@@ -145,23 +145,21 @@ export default function Register() {
                   id='password'
                   type={showPassword ? 'text' : 'password'}
                   placeholder='请输入密码（至少6位）'
-                  className={
-                    errors.password ? 'border-coral-500 pr-10' : 'border-warmGray-200 pr-10'
-                  }
+                  className={`rounded-xl pr-10 ${errors.password ? 'border-danger' : 'border-border'}`}
                   disabled={isPending}
                   {...register('password')}
                 />
                 <button
                   type='button'
                   onClick={() => setShowPassword(!showPassword)}
-                  className='absolute right-3 top-1/2 -translate-y-1/2 text-warmGray-500 hover:text-honey-500 transition-colors'
+                  className='absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-primary transition-colors'
                   disabled={isPending}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
               {errors.password && (
-                <p className='text-coral-500 text-sm'>{errors.password.message}</p>
+                <p className='text-danger text-sm mt-1'>{errors.password.message}</p>
               )}
             </div>
 
@@ -169,7 +167,7 @@ export default function Register() {
             <div className='w-[95%] mx-auto space-y-1.5'>
               <label
                 htmlFor='confirmPassword'
-                className='block text-sm font-medium text-warmGray-700'
+                className='block text-sm font-medium text-foreground'
               >
                 确认密码
               </label>
@@ -178,23 +176,21 @@ export default function Register() {
                   id='confirmPassword'
                   type={showConfirmPassword ? 'text' : 'password'}
                   placeholder='请再次输入密码'
-                  className={
-                    errors.confirmPassword ? 'border-coral-500 pr-10' : 'border-warmGray-200 pr-10'
-                  }
+                  className={`rounded-xl pr-10 ${errors.confirmPassword ? 'border-danger' : 'border-border'}`}
                   disabled={isPending}
                   {...register('confirmPassword')}
                 />
                 <button
                   type='button'
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className='absolute right-3 top-1/2 -translate-y-1/2 text-warmGray-500 hover:text-honey-500 transition-colors'
+                  className='absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-primary transition-colors'
                   disabled={isPending}
                 >
                   {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className='text-coral-500 text-sm'>{errors.confirmPassword.message}</p>
+                <p className='text-danger text-sm mt-1'>{errors.confirmPassword.message}</p>
               )}
             </div>
 
@@ -202,9 +198,8 @@ export default function Register() {
               {/* 注册按钮 */}
               <Button
                 type='submit'
-                className='w-full bg-linear-to-r from-honey-400 to-coral-400 hover:from-honey-500 hover:to-coral-500 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 justify-center'
+                className='w-full bg-linear-to-r from-primary to-macaron-pink hover:from-soft-orange-500 hover:to-macaron-pink-500 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 justify-center rounded-xl'
                 disabled={isPending}
-                loading={isPending}
               >
                 {isPending ? '注册中...' : '立即注册'}
               </Button>
@@ -212,18 +207,18 @@ export default function Register() {
           </form>
 
           {/* 登录链接 */}
-          <div className='mt-4 text-center text-sm text-warmGray-600'>
+          <div className='mt-4 text-center text-sm text-muted'>
             已有账号？{' '}
             <a
               href='/login'
-              className='font-medium text-honey-600 hover:text-honey-700 transition-colors'
+              className='font-medium text-primary hover:text-soft-orange-600 transition-colors'
             >
               立即登录
             </a>
           </div>
         </CardContent>
         <CardFooter className='flex justify-center px-4'>
-          <div className='text-warmGray-400 text-xs'>✨ 让收纳变得简单</div>
+          <div className='text-muted/60 text-xs font-handwritten'>✨ 让记录变得简单</div>
         </CardFooter>
       </Card>
     </div>

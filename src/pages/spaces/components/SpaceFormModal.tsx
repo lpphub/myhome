@@ -1,17 +1,17 @@
-import { useState } from 'react'
 import { X } from 'lucide-react'
-import { motion, AnimatePresence } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { SPACE_COLORS, SPACE_ICONS, type SpaceForm } from '@/types/space'
 
-interface CreateSpaceModalProps {
+interface SpaceFormModalProps {
   isOpen: boolean
   onClose: () => void
 }
 
-export function CreateSpaceModal({ isOpen, onClose }: CreateSpaceModalProps) {
+export function SpaceFormModal({ isOpen, onClose }: SpaceFormModalProps) {
   const [form, setForm] = useState<SpaceForm>({
     name: '',
     icon: '🏠',

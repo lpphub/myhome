@@ -1,8 +1,7 @@
 import { createBrowserRouter } from 'react-router'
-import MainLayout from '@/components/MainLayout'
+import Layout from '@/components/Layout'
 import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
-import Dashboard from '@/pages/dashboard'
 import NotFound from '@/pages/errors/NotFound'
 import Spaces from '@/pages/spaces'
 import TestComponents from '@/pages/TestUI'
@@ -14,16 +13,13 @@ export const router = createBrowserRouter([
     path: '/',
     element: (
       <AuthGuard>
-        <MainLayout />
+        <Layout />
       </AuthGuard>
     ),
     children: [
       {
-        index: true,
-        element: <Dashboard />,
-      },
-      {
         path: 'spaces',
+        index: true,
         element: <Spaces />,
       },
       {

@@ -1,15 +1,4 @@
-import {
-  Archive,
-  Heart,
-  Home,
-  LogOut,
-  Package,
-  Search,
-  Settings,
-  Sparkles,
-  Tag,
-  User,
-} from 'lucide-react'
+import { Archive, Heart, Home, LogOut, Search, Settings, Sparkles, Tag, User } from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 
@@ -23,18 +12,11 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   {
-    id: 'dashboard',
-    label: '首页',
-    icon: Home,
-    path: '/',
-    description: '首页',
-  },
-  {
     id: 'spaces',
-    label: '家庭空间',
+    label: '我的空间',
     icon: Archive,
-    path: '/spaces',
-    description: '家庭空间管理',
+    path: '/',
+    description: '空间管理',
   },
   {
     id: 'tags',
@@ -208,7 +190,7 @@ function Navigation() {
 
   const getCurrentPage = () => {
     const path = location.pathname
-    if (path === '/' || path === '') return 'dashboard'
+    if (path === '/' || path === '') return 'spaces'
     return path.slice(1)
   }
 

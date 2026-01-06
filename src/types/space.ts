@@ -5,6 +5,7 @@ export interface Space {
   color: string
   description?: string
   coverImage?: string
+  noteCount?: number
   createdAt: string
   updatedAt: string
 }
