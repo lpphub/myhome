@@ -3,7 +3,7 @@ import { rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 import { Plus, Tag, Trash2 } from 'lucide-react'
 import { memo, useMemo } from 'react'
 import { cn } from '@/lib/utils'
-import type { TagGroup, TagFormData } from '@/types/tags'
+import type { TagFormData, TagGroup } from '@/types/tags'
 import { TagCard } from './TagCard'
 
 export interface TagActions {
