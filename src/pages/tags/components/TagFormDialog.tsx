@@ -21,11 +21,11 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { type Category, TAG_COLOR_CLASSES, type TagFormData } from '@/types/tags'
+import { type Group, TAG_COLOR_CLASSES, type TagFormData } from '@/types/tags'
 
 const tagFormSchema = z.object({
   name: z.string().min(1, '请输入便签名称').max(20, '便签名称最多20个字符'),
-  category: z.string().min(1, '请选择分类'),
+  group: z.string().min(1, '请选择分组'),
   color: z.enum(['lemon', 'coral', 'lavender', 'honey', 'cream', 'pink', 'mint']),
   description: z.string().optional(),
 })
@@ -36,7 +36,7 @@ interface TagFormDialogProps {
   isOpen: boolean
   onClose: () => void
   initialData: TagFormData | null
-  categories: Category[]
+  groups: Group[]
   actions: {
     addTag: (tag: TagFormData) => void
     updateTag?: (tag: TagFormData) => void
@@ -47,7 +47,7 @@ export const TagFormDialog = ({
   isOpen,
   onClose,
   initialData,
-  categories,
+  groups,
   actions,
 }: TagFormDialogProps) => {
   const isEditing = Boolean(initialData?.id && initialData.id > 0)
@@ -56,7 +56,7 @@ export const TagFormDialog = ({
     resolver: zodResolver(tagFormSchema),
     defaultValues: {
       name: '',
-      category: 'storage',
+      group: 'storage',
       color: 'lemon',
       description: '',
     },
@@ -67,7 +67,7 @@ export const TagFormDialog = ({
     if (initialData) {
       form.reset({
         name: initialData.name,
-        category: initialData.category,
+        group: initialData.group,
         color: (initialData.color as TagFormValues['color']) || 'lemon',
         description: initialData.description || '',
       })
@@ -86,7 +86,7 @@ export const TagFormDialog = ({
       const payload: TagFormData = {
         id: initialData?.id,
         name: data.name.trim(),
-        category: data.category,
+        group: data.group,
         color: data.color,
         description: data.description?.trim(),
       }
@@ -135,35 +135,35 @@ export const TagFormDialog = ({
           </div>
 
           <div className='space-y-2'>
-            <Label htmlFor='category' className='flex items-center gap-2'>
+            <Label htmlFor='group' className='flex items-center gap-2'>
               <Tag className='w-4 h-4 text-warmGray-500' />
-              分类 *
+              分组 *
             </Label>
             <Select
-              value={form.watch('category')}
-              onValueChange={value => form.setValue('category', value)}
+              value={form.watch('group')}
+              onValueChange={value => form.setValue('group', value)}
               disabled={isEditing}
             >
               <SelectTrigger
-                id='category'
+                id='group'
                 className={
-                  form.formState.errors.category
+                  form.formState.errors.group
                     ? 'border-red-500 ring-1 ring-red-500'
                     : 'border-warmGray-300 focus:border-honey-400'
                 }
               >
-                <SelectValue placeholder='选择分类' />
+                <SelectValue placeholder='选择分组' />
               </SelectTrigger>
               <SelectContent className='bg-white border-honey-200 shadow-warm-sm w-64'>
-                {categories.map(category => (
-                  <SelectItem key={category.code} value={category.code}>
-                    {category.name}
+                {groups.map(group => (
+                  <SelectItem key={group.code} value={group.code}>
+                    {group.name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            {form.formState.errors.category && (
-              <p className='text-sm text-coral-500'>{form.formState.errors.category.message}</p>
+            {form.formState.errors.group && (
+              <p className='text-sm text-coral-500'>{form.formState.errors.group.message}</p>
             )}
           </div>
 

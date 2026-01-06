@@ -3,7 +3,7 @@ import { rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 import { Plus, Tag, Trash2 } from 'lucide-react'
 import { memo, useMemo } from 'react'
 import { cn } from '@/lib/utils'
-import type { TagCategory, TagFormData } from '@/types/tags'
+import type { TagGroup, TagFormData } from '@/types/tags'
 import { TagCard } from './TagCard'
 
 export interface TagActions {
@@ -13,23 +13,20 @@ export interface TagActions {
 
 interface TagSectionProps {
   dragOverId?: string | null
-  tagCategory: TagCategory
+  tagGroup: TagGroup
   tagActions?: TagActions
-  onAddTag?: (category: string) => void
-  onDeleteCategory?: (code: string) => void
+  onAddTag?: (group: string) => void
+  onDeleteGroup?: (code: string) => void
 }
 
 export const TagSection = memo(
-  ({ dragOverId, tagCategory, tagActions, onAddTag, onDeleteCategory }: TagSectionProps) => {
+  ({ dragOverId, tagGroup, tagActions, onAddTag, onDeleteGroup }: TagSectionProps) => {
     const { setNodeRef, isOver } = useDroppable({
-      id: tagCategory.code,
+      id: tagGroup.code,
     })
-    const isDragOver = isOver || dragOverId?.startsWith(`${tagCategory.code}-`)
+    const isDragOver = isOver || dragOverId?.startsWith(`${tagGroup.code}-`)
 
-    const tagItems = useMemo(
-      () => tagCategory.tags.map(t => `${t.category}-${t.id}`),
-      [tagCategory.tags]
-    )
+    const tagItems = useMemo(() => tagGroup.tags.map(t => `${t.group}-${t.id}`), [tagGroup.tags])
     return (
       <div
         ref={setNodeRef}
@@ -44,15 +41,15 @@ export const TagSection = memo(
             <Tag className='w-5 h-5 text-honey-600' />
           </div>
           <div>
-            <h2 className='text-lg font-bold text-warmGray-800'>{tagCategory.name}</h2>
+            <h2 className='text-lg font-bold text-warmGray-800'>{tagGroup.name}</h2>
             <p className='text-sm text-warmGray-500'>
-              {tagCategory.tags.length} 个便签
-              {tagCategory.tags.length === 0 && onDeleteCategory && (
+              {tagGroup.tags.length} 个便签
+              {tagGroup.tags.length === 0 && onDeleteGroup && (
                 <button
                   type='button'
-                  onClick={() => onDeleteCategory(tagCategory.code)}
+                  onClick={() => onDeleteGroup(tagGroup.code)}
                   className='ml-2 p-0.5 rounded hover:bg-red-100 transition-all duration-200'
-                  title='删除分类'
+                  title='删除分组'
                 >
                   <Trash2 className='w-3.5 h-3.5 text-red-500' />
                 </button>
@@ -64,7 +61,7 @@ export const TagSection = memo(
         {/* 卡片区域 */}
         <div className='flex flex-row gap-4 flex-wrap py-4 px-4'>
           <SortableContext items={tagItems} strategy={rectSortingStrategy}>
-            {tagCategory.tags.map(tag => (
+            {tagGroup.tags.map(tag => (
               <TagCard key={tag.id} tag={tag} {...tagActions} />
             ))}
           </SortableContext>
@@ -72,7 +69,7 @@ export const TagSection = memo(
           {onAddTag && (
             <button
               type='button'
-              onClick={() => onAddTag(tagCategory.code)}
+              onClick={() => onAddTag(tagGroup.code)}
               className={cn(
                 'w-52 p-4 rounded-lg border-2 border-dashed border-warmGray-200',
                 'hover:border-honey-300 hover:bg-honey-50 transition-all duration-300',

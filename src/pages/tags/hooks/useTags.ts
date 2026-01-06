@@ -2,15 +2,15 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import {
-  createCategory,
+  createGroup,
   createTag,
-  deleteCategory,
+  deleteGroup,
   deleteTag,
   getTags,
   reorderTags,
   updateTag,
 } from '@/api/tags'
-import type { TagCategory } from '@/types/tags'
+import type { TagGroup } from '@/types/tags'
 
 const QUERY_KEY = ['tags']
 
@@ -23,8 +23,6 @@ export function useTags() {
 }
 
 export function useCreateTag() {
-  const queryClient = useQueryClient()
-
   return useMutation({
     mutationFn: createTag,
     onSuccess: () => {
@@ -42,13 +40,17 @@ export function useUpdateTag() {
     onSuccess: () => {
       // queryClient.invalidateQueries({ queryKey: QUERY_KEY })
     },
-    onError: () => toast.error('更新失败'),
+    onError: () => {
+      toast.error('操作失败')
+      const prev = queryClient.getQueryData<TagGroup[]>(QUERY_KEY)
+      if (prev) {
+        queryClient.setQueryData(QUERY_KEY, prev)
+      }
+    },
   })
 }
 
 export function useDeleteTag() {
-  const queryClient = useQueryClient()
-
   return useMutation({
     mutationFn: deleteTag,
     onSuccess: () => {
@@ -69,7 +71,7 @@ export function useReorderTags() {
     },
     onError: () => {
       toast.error('操作失败')
-      const prev = queryClient.getQueryData<TagCategory[]>(QUERY_KEY)
+      const prev = queryClient.getQueryData<TagGroup[]>(QUERY_KEY)
       if (prev) {
         queryClient.setQueryData(QUERY_KEY, prev)
       }
@@ -77,16 +79,16 @@ export function useReorderTags() {
   })
 }
 
-export function useCreateCategory() {
+export function useCreateGroup() {
   return useMutation({
-    mutationFn: createCategory,
+    mutationFn: createGroup,
     onError: () => toast.error('添加失败'),
   })
 }
 
-export function useDeleteCategory() {
+export function useDeleteGroup() {
   return useMutation({
-    mutationFn: deleteCategory,
+    mutationFn: deleteGroup,
     onError: () => toast.error('删除失败'),
   })
 }

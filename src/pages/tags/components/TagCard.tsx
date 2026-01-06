@@ -17,7 +17,7 @@ export const TagCard = memo(({ tag, onEdit, onDelete }: TagCardProps) => {
   const rotationClass = ROTATIONS[tag.id % ROTATIONS.length]
   const colorClasses = TAG_COLOR_CLASSES[tag.color]
 
-  const sortableId = useMemo(() => `${tag.category}-${tag.id}`, [tag.category, tag.id])
+  const sortableId = useMemo(() => `${tag.group}-${tag.id}`, [tag.group, tag.id])
   const { attributes, listeners, transform, transition, isDragging, setNodeRef } = useSortable({
     id: sortableId,
   })

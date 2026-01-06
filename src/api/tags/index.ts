@@ -1,5 +1,5 @@
 // api/tags.ts
-import type { Category, ReorderParams, Tag, TagCategory, TagFormData } from '@/types/tags'
+import type { Group, ReorderParams, Tag, TagFormData, TagGroup } from '@/types/tags'
 import httpClient from '@/utils/request'
 
 enum TagsApi {
@@ -8,12 +8,12 @@ enum TagsApi {
   UpdateTag = '/tags/:id',
   DeleteTag = '/tags/:id',
   ReorderTags = '/tags/reorder',
-  CreateCategory = '/tags/category',
-  DeleteCategory = '/tags/category/:code',
+  CreateGroup = '/tags/group',
+  DeleteGroup = '/tags/group/:code',
 }
 
 export const getTags = () =>
-  httpClient.get<TagCategory[]>({
+  httpClient.get<TagGroup[]>({
     url: TagsApi.GetTags,
   })
 
@@ -40,13 +40,13 @@ export const reorderTags = (data: ReorderParams) =>
     data,
   })
 
-export const createCategory = (name: string) =>
-  httpClient.post<Category>({
-    url: TagsApi.CreateCategory,
+export const createGroup = (name: string) =>
+  httpClient.post<Group>({
+    url: TagsApi.CreateGroup,
     data: { name },
   })
 
-export const deleteCategory = (code: string) =>
+export const deleteGroup = (code: string) =>
   httpClient.delete<void>({
-    url: TagsApi.DeleteCategory.replace(':code', code),
+    url: TagsApi.DeleteGroup.replace(':code', code),
   })

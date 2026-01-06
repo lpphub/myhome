@@ -2,7 +2,7 @@
 export interface Tag {
   id: number
   name: string
-  category: string
+  group: string
   order: number
   color: string
   description?: string
@@ -11,27 +11,27 @@ export interface Tag {
   updatedAt?: string
 }
 
-export interface Category {
+export interface Group {
   id: number
   code: string
   name: string
 }
 
-export interface TagCategory extends Category {
+export interface TagGroup extends Group {
   tags: Tag[]
 }
 
 export interface TagFormData {
   id?: number
   name: string
-  category: string
+  group: string
   description?: string
   color: string
 }
 
 export interface ReorderParams {
   fromId: number
-  toCategory: string
+  toGroup: string
   toIndex: number
 }
 

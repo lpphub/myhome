@@ -4,15 +4,15 @@ import { TagFormDialog } from '@/pages/tags/components/TagFormDialog'
 import { TagToolbar } from '@/pages/tags/components/TagToolbar'
 import { TagWall } from '@/pages/tags/components/TagWall'
 import {
-  useCreateCategory,
+  useCreateGroup,
   useCreateTag,
-  useDeleteCategory,
+  useDeleteGroup,
   useDeleteTag,
   useReorderTags,
   useTags,
   useUpdateTag,
 } from '@/pages/tags/hooks/useTags'
-import type { Category, ReorderParams, TagCategory, TagFormData } from '@/types/tags'
+import type { Group, ReorderParams, TagFormData, TagGroup } from '@/types/tags'
 
 export default function TagsPage() {
   const { data: tagsData, isLoading } = useTags()
@@ -21,13 +21,13 @@ export default function TagsPage() {
   const updateTag = useUpdateTag()
   const deleteTag = useDeleteTag()
   const reorderTags = useReorderTags()
-  const createCategory = useCreateCategory()
-  const deleteCategory = useDeleteCategory()
+  const createGroup = useCreateGroup()
+  const deleteGroup = useDeleteGroup()
 
   /* ---------------- 页面 UI 状态 ---------------- */
 
   // ⭐ 页面展示用的唯一数据源
-  const [localTags, setLocalTags] = useState<TagCategory[]>([])
+  const [localTags, setLocalTags] = useState<TagGroup[]>([])
   const [searchKeyword, setSearchKeyword] = useState('')
 
   // dialog
@@ -61,27 +61,27 @@ export default function TagsPage() {
       .filter(cat => cat.tags.length > 0)
   }, [localTags, searchKeyword])
 
-  const categoriesSelected = useMemo<Category[]>(
+  const groupsSelected = useMemo<Group[]>(
     () =>
-      localTags.map(cat => ({
-        id: cat.id,
-        code: cat.code,
-        name: cat.name,
+      localTags.map(group => ({
+        id: group.id,
+        code: group.code,
+        name: group.name,
       })),
     [localTags]
   )
 
   /* ---------------- handlers ---------------- */
 
-  const handleAddCategory = useCallback(
-    (categoryName: string) => {
-      createCategory.mutate(categoryName, {
-        onSuccess: category => {
-          setLocalTags(prev => [...prev, { ...category, tags: [] }])
+  const handleAddGroup = useCallback(
+    (groupName: string) => {
+      createGroup.mutate(groupName, {
+        onSuccess: group => {
+          setLocalTags(prev => [...prev, { ...group, tags: [] }])
         },
       })
     },
-    [createCategory]
+    [createGroup]
   )
 
   const handleAddTag = useCallback(
@@ -89,13 +89,13 @@ export default function TagsPage() {
       createTag.mutate(data, {
         onSuccess: tag => {
           setLocalTags(prev =>
-            prev.map(cat =>
-              cat.code === data.category
+            prev.map(group =>
+              group.code === data.group
                 ? {
-                    ...cat,
-                    tags: [...cat.tags, { ...tag }],
+                    ...group,
+                    tags: [...group.tags, { ...tag }],
                   }
-                : cat
+                : group
             )
           )
         },
@@ -111,13 +111,13 @@ export default function TagsPage() {
       setDialogOpen(false)
 
       setLocalTags(prev =>
-        prev.map(cat =>
-          cat.code === data.category
+        prev.map(group =>
+          group.code === data.group
             ? {
-                ...cat,
-                tags: cat.tags.map(tag => (tag.id === data.id ? { ...tag, ...data } : tag)),
+                ...group,
+                tags: group.tags.map(tag => (tag.id === data.id ? { ...tag, ...data } : tag)),
               }
-            : cat
+            : group
         )
       )
 
@@ -142,20 +142,20 @@ export default function TagsPage() {
     [deleteTag]
   )
 
-  const handleDeleteCategory = useCallback(
-    (categoryCode: string) => {
-      deleteCategory.mutate(categoryCode, {
+  const handleDeleteGroup = useCallback(
+    (groupCode: string) => {
+      deleteGroup.mutate(groupCode, {
         onSuccess: () => {
-          setLocalTags(prev => prev.filter(cat => cat.code !== categoryCode))
+          setLocalTags(prev => prev.filter(group => group.code !== groupCode))
         },
       })
     },
-    [deleteCategory]
+    [deleteGroup]
   )
 
   /* ===== 拖拽排序 ===== */
   const handleReorder = useCallback(
-    (params: ReorderParams, nextTags: TagCategory[]) => {
+    (params: ReorderParams, nextTags: TagGroup[]) => {
       // 1️⃣ UI 立即变
       setLocalTags(nextTags)
 
@@ -170,30 +170,30 @@ export default function TagsPage() {
 
   return (
     <div className='max-w-7xl mx-auto px-4 py-6'>
-      <TagToolbar onAddCategory={handleAddCategory} onSearch={setSearchKeyword} />
+      <TagToolbar onAddGroup={handleAddGroup} onSearch={setSearchKeyword} />
 
       <TagWall
         tags={filteredTags}
         tagActions={{
           onEdit: tag => {
-            setDialogTag(tag)
+            setDialogTag({ ...tag })
             setDialogOpen(true)
           },
           onDelete: handleDeleteTag,
         }}
-        onAddTag={category => {
-          setDialogTag({ name: '', category, color: 'lemon' })
+        onAddTag={group => {
+          setDialogTag({ name: '', group, color: 'lemon' })
           setDialogOpen(true)
         }}
         onReorder={handleReorder}
-        onDeleteCategory={handleDeleteCategory}
+        onDeleteGroup={handleDeleteGroup}
       />
 
       <TagFormDialog
         isOpen={isDialogOpen}
         onClose={() => setDialogOpen(false)}
         initialData={dialogTag}
-        categories={categoriesSelected}
+        groups={groupsSelected}
         actions={{
           addTag: handleAddTag,
           updateTag: handleUpdateTag,

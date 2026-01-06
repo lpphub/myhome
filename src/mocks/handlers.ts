@@ -1,9 +1,9 @@
 import { delay, HttpResponse, http } from 'msw'
 import type { AuthForm } from '@/types/auth'
-import type { ReorderParams, Tag, TagCategory, TagFormData } from '@/types/tags'
 import type { Item, RecentActivity } from '@/types/items'
+import type { ReorderParams, Tag, TagFormData, TagGroup } from '@/types/tags'
 
-async function loadTagsData(): Promise<{ categories: TagCategory[]; tags: TagCategory[] }> {
+async function loadTagsData(): Promise<{ groups: TagGroup[]; tags: TagGroup[] }> {
   const res = await fetch('/data/tags.json')
   if (!res.ok) throw new Error('Failed to load tags.json')
   return res.json()
@@ -136,7 +136,7 @@ export const handlers = [
     const newTag: Tag = {
       id: maxId + 1,
       name: body.name || '',
-      category: body.category || 'default',
+      group: body.group || 'default',
       color: body.color || 'lemon',
       description: body.description || '',
       itemCount: 0,
@@ -159,7 +159,7 @@ export const handlers = [
     const updatedTag: Tag = {
       id,
       name: body.name || '',
-      category: body.category || 'default',
+      group: body.group || 'default',
       color: body.color || 'lemon',
       description: body.description || '',
       order: 0,
@@ -199,14 +199,14 @@ export const handlers = [
     }
 
     const data = await loadTagsData()
-    const existingCategory = data.tags.find(cat => cat.name === name)
+    const existingGroup = data.tags.find(group => group.name === name)
 
-    if (existingCategory) {
-      return HttpResponse.json({ code: 409, message: '分类已存在' }, { status: 409 })
+    if (existingGroup) {
+      return HttpResponse.json({ code: 409, message: '分组已存在' }, { status: 409 })
     }
 
-    const maxId = Math.max(...data.tags.map(cat => cat.id))
-    const newCategory: TagCategory = {
+    const maxId = Math.max(...data.tags.map(group => group.id))
+    const newGroup: TagGroup = {
       id: maxId + 1,
       name,
       code: name.toLowerCase().replace(/\s+/g, '-'),
@@ -215,15 +215,15 @@ export const handlers = [
 
     return HttpResponse.json({
       code: 200,
-      message: '创建分类成功',
-      data: newCategory,
+      message: '创建分组成功',
+      data: newGroup,
     })
   }),
 
-  http.delete<{ code: string }>('/api/tags/category/:code', async () => {
+  http.delete<{ code: string }>('/api/tags/group/:code', async () => {
     return HttpResponse.json({
       code: 200,
-      message: '删除分类成功',
+      message: '删除分组成功',
       data: { success: true },
     })
   }),

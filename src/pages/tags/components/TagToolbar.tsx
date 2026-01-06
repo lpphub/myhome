@@ -4,29 +4,29 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 interface TagToolbarProps {
-  onAddCategory: (categoryName: string) => void
+  onAddGroup: (groupName: string) => void
   onSearch?: (keyword: string) => void
 }
 
-export const TagToolbar = ({ onAddCategory, onSearch }: TagToolbarProps) => {
+export const TagToolbar = ({ onAddGroup, onSearch }: TagToolbarProps) => {
   const [isAdding, setIsAdding] = useState(false)
-  const [categoryName, setCategoryName] = useState('')
+  const [groupName, setGroupName] = useState('')
   const [searchValue, setSearchValue] = useState('')
 
-  const handleAddCategory = () => {
-    const name = categoryName.trim()
+  const handleAddGroup = () => {
+    const name = groupName.trim()
     if (!name) {
       setIsAdding(false)
-      setCategoryName('')
+      setGroupName('')
       return
     }
-    onAddCategory(name)
-    setCategoryName('')
+    onAddGroup(name)
+    setGroupName('')
     setIsAdding(false)
   }
 
   const handleCancel = () => {
-    setCategoryName('')
+    setGroupName('')
     setIsAdding(false)
   }
 
@@ -64,11 +64,11 @@ export const TagToolbar = ({ onAddCategory, onSearch }: TagToolbarProps) => {
             <Input
               autoFocus
               className='w-40 h-8 text-sm'
-              placeholder='请输入分类名称'
-              value={categoryName}
-              onChange={e => setCategoryName(e.target.value)}
+              placeholder='请输入分组名称'
+              value={groupName}
+              onChange={e => setGroupName(e.target.value)}
               onKeyDown={e => {
-                if (e.key === 'Enter') handleAddCategory()
+                if (e.key === 'Enter') handleAddGroup()
                 if (e.key === 'Escape') handleCancel()
               }}
             />
@@ -76,7 +76,7 @@ export const TagToolbar = ({ onAddCategory, onSearch }: TagToolbarProps) => {
               variant='ghost'
               size='icon'
               className='h-8 w-8 hover:bg-honey-200 hover:text-lemon-700'
-              onClick={handleAddCategory}
+              onClick={handleAddGroup}
             >
               <Check className='w-4 h-4' />
             </Button>
@@ -95,7 +95,7 @@ export const TagToolbar = ({ onAddCategory, onSearch }: TagToolbarProps) => {
             onClick={() => setIsAdding(true)}
           >
             <Plus className='w-4 h-4 mr-1' />
-            新建分类
+            新建分组
           </Button>
         )}
       </div>

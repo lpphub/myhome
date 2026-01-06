@@ -12,7 +12,7 @@ import {
 } from '@dnd-kit/core'
 import { AnimatePresence, motion } from 'motion/react'
 import { useCallback, useMemo, useState } from 'react'
-import type { ReorderParams, Tag, TagCategory } from '@/types/tags'
+import type { ReorderParams, Tag, TagGroup } from '@/types/tags'
 import { TagCard } from './TagCard'
 import { type TagActions, TagSection } from './TagSection'
 
@@ -26,44 +26,44 @@ const parseTagId = (id: string) => {
 }
 
 function reorderTags(
-  prev: TagCategory[],
-  fromCategory: string,
+  prev: TagGroup[],
+  fromGroup: string,
   fromIndex: number,
   fromTag: Tag,
-  toCategory: string,
+  toGroup: string,
   toIndex: number
-): TagCategory[] {
-  if (fromCategory === toCategory) {
-    return prev.map(cat => {
-      if (cat.code !== toCategory) return cat
-      const tags = [...cat.tags]
+): TagGroup[] {
+  if (fromGroup === toGroup) {
+    return prev.map(group => {
+      if (group.code !== toGroup) return group
+      const tags = [...group.tags]
       const [removed] = tags.splice(fromIndex, 1)
       tags.splice(toIndex, 0, removed)
-      return { ...cat, tags }
+      return { ...group, tags }
     })
   }
 
-  return prev.map(cat => {
-    if (cat.code === fromCategory) {
-      return { ...cat, tags: cat.tags.filter((_, i) => i !== fromIndex) }
+  return prev.map(group => {
+    if (group.code === fromGroup) {
+      return { ...group, tags: group.tags.filter((_, i) => i !== fromIndex) }
     }
-    if (cat.code === toCategory) {
-      const tags = [...cat.tags]
-      tags.splice(toIndex, 0, { ...fromTag, category: toCategory })
-      return { ...cat, tags }
+    if (group.code === toGroup) {
+      const tags = [...group.tags]
+      tags.splice(toIndex, 0, { ...fromTag, group: toGroup })
+      return { ...group, tags }
     }
-    return cat
+    return group
   })
 }
 
 /* ---------------- props ---------------- */
 
 interface TagWallProps {
-  tags: TagCategory[]
+  tags: TagGroup[]
   tagActions: TagActions
-  onAddTag: (category: string) => void
-  onReorder: (params: ReorderParams, next: TagCategory[]) => void
-  onDeleteCategory?: (code: string) => void
+  onAddTag: (group: string) => void
+  onReorder: (params: ReorderParams, next: TagGroup[]) => void
+  onDeleteGroup?: (code: string) => void
 }
 
 interface DragState {
@@ -73,17 +73,17 @@ interface DragState {
 
 /* ---------------- component ---------------- */
 
-export function TagWall({ tags, tagActions, onAddTag, onReorder, onDeleteCategory }: TagWallProps) {
+export function TagWall({ tags, tagActions, onAddTag, onReorder, onDeleteGroup }: TagWallProps) {
   const [dragState, setDragState] = useState<DragState>({
     activeTag: null,
     overId: null,
   })
 
   const tagLookup = useMemo(() => {
-    const map = new Map<number, { tag: Tag; category: TagCategory; index: number }>()
-    tags.forEach(cat => {
-      cat.tags.forEach((tag, index) => {
-        map.set(tag.id, { tag, category: cat, index })
+    const map = new Map<number, { tag: Tag; group: TagGroup; index: number }>()
+    tags.forEach(group => {
+      group.tags.forEach((tag, index) => {
+        map.set(tag.id, { tag, group, index })
       })
     })
     return map
@@ -126,32 +126,32 @@ export function TagWall({ tags, tagActions, onAddTag, onReorder, onDeleteCategor
       const moving = tagLookup.get(activeId)
       if (!moving) return
 
-      const { category: fromCat, index: fromIndex, tag } = moving
+      const { group: fromGroup, index: fromIndex, tag } = moving
 
-      let toCategory: string
+      let toGroup: string
       let toIndex: number
 
       const overTagId = parseTagId(over.id as string)
       if (overTagId !== -1) {
         const overFound = tagLookup.get(overTagId)
         if (!overFound) return
-        toCategory = overFound.category.code
+        toGroup = overFound.group.code
         toIndex = overFound.index
       } else {
-        const target = tags.find(c => c.code === over.id)
+        const target = tags.find(g => g.code === over.id)
         if (!target) return
-        toCategory = target.code
+        toGroup = target.code
         toIndex = target.tags.length
       }
 
-      if (fromCat.code === toCategory && fromIndex === toIndex) return
+      if (fromGroup.code === toGroup && fromIndex === toIndex) return
 
-      const next = reorderTags(tags, fromCat.code, fromIndex, tag, toCategory, toIndex)
+      const next = reorderTags(tags, fromGroup.code, fromIndex, tag, toGroup, toIndex)
 
       onReorder(
         {
           fromId: activeId,
-          toCategory,
+          toGroup,
           toIndex,
         },
         next
@@ -186,14 +186,14 @@ export function TagWall({ tags, tagActions, onAddTag, onReorder, onDeleteCategor
       </DragOverlay>
 
       <div className='flex flex-col gap-4'>
-        {tags.map(cat => (
+        {tags.map(group => (
           <TagSection
-            key={cat.code}
+            key={group.code}
             dragOverId={dragState.overId}
-            tagCategory={cat}
+            tagGroup={group}
             tagActions={tagActions}
             onAddTag={onAddTag}
-            onDeleteCategory={onDeleteCategory}
+            onDeleteGroup={onDeleteGroup}
           />
         ))}
       </div>

@@ -1,18 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { Archive, FileText, Image as ImageIcon, Ruler, Tag as TagIcon, X } from 'lucide-react'
+import { Archive, FileText, Image as ImageIcon, Ruler, X } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -97,12 +90,6 @@ export function AddSpaceDrawer({ onAddStorage }: AddSpaceDrawerProps) {
     storageForm.reset()
     setSelectedTags([])
     setImagePreview('')
-  }
-
-  const handleTagToggle = (tagName: string) => {
-    setSelectedTags(prev =>
-      prev.includes(tagName) ? prev.filter(t => t !== tagName) : [...prev, tagName]
-    )
   }
 
   const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -8,7 +8,7 @@
         {
           "id": 19,
           "name": "常用地址",
-          "category": "default",
+          "group": "default",
           "color": "cream",
           "itemCount": 6,
           "description": "记录常用的家庭地址",
@@ -19,7 +19,7 @@
         {
           "id": 20,
           "name": "保修信息",
-          "category": "default",
+          "group": "default",
           "color": "pink",
           "itemCount": 10,
           "description": "家电和产品的保修期记录",
@@ -30,7 +30,7 @@
         {
           "id": 27,
           "name": "其他杂项",
-          "category": "default",
+          "group": "default",
           "color": "cream",
           "itemCount": 5,
           "description": "其他临时记录和杂项",
@@ -48,7 +48,7 @@
         {
           "id": 3,
           "name": "书房",
-          "category": "storage",
+          "group": "storage",
           "color": "lavender",
           "itemCount": 18,
           "description": "书籍、文具和办公用品",
@@ -59,7 +59,7 @@
         {
           "id": 2,
           "name": "厨房",
-          "category": "storage",
+          "group": "storage",
           "color": "lemon",
           "itemCount": 42,
           "description": "厨具、餐具和食材",
@@ -70,7 +70,7 @@
         {
           "id": 1,
           "name": "卧室",
-          "category": "storage",
+          "group": "storage",
           "color": "honey",
           "itemCount": 25,
           "description": "主卧和次卧的物品",
@@ -81,7 +81,7 @@
         {
           "id": 4,
           "name": "客厅",
-          "category": "storage",
+          "group": "storage",
           "color": "coral",
           "itemCount": 35,
           "description": "客厅家具和装饰品",
@@ -92,7 +92,7 @@
         {
           "id": 5,
           "name": "卫生间",
-          "category": "storage",
+          "group": "storage",
           "color": "cream",
           "itemCount": 15,
           "description": "洗漱用品和毛巾",
@@ -103,7 +103,7 @@
         {
           "id": 6,
           "name": "阳台",
-          "category": "storage",
+          "group": "storage",
           "color": "mint",
           "itemCount": 8,
           "description": "植物和园艺用品",
@@ -114,7 +114,7 @@
         {
           "id": 23,
           "name": "衣柜",
-          "category": "storage",
+          "group": "storage",
           "color": "pink",
           "itemCount": 30,
           "description": "衣物和配饰收纳",
@@ -125,7 +125,7 @@
         {
           "id": 28,
           "name": "储物间",
-          "category": "storage",
+          "group": "storage",
           "color": "coral",
           "itemCount": 22,
           "description": "储物间和杂物收纳",
@@ -143,7 +143,7 @@
         {
           "id": 18,
           "name": "生日提醒",
-          "category": "reminder",
+          "group": "reminder",
           "color": "honey",
           "itemCount": 15,
           "description": "亲友的生日和纪念日",
@@ -154,7 +154,7 @@
         {
           "id": 17,
           "name": "备忘录",
-          "category": "reminder",
+          "group": "reminder",
           "color": "lavender",
           "itemCount": 8,
           "description": "记录重要的提醒信息",
@@ -165,7 +165,7 @@
         {
           "id": 21,
           "name": "考试",
-          "category": "reminder",
+          "group": "reminder",
           "color": "coral",
           "itemCount": 5,
           "description": "考试安排和复习计划",
@@ -176,7 +176,7 @@
         {
           "id": 22,
           "name": "截止日期",
-          "category": "reminder",
+          "group": "reminder",
           "color": "pink",
           "itemCount": 10,
           "description": "重要任务的截止时间",
@@ -187,7 +187,7 @@
         {
           "id": 29,
           "name": "会议",
-          "category": "reminder",
+          "group": "reminder",
           "color": "lemon",
           "itemCount": 12,
           "description": "会议安排和会议记录",
@@ -198,7 +198,7 @@
         {
           "id": 30,
           "name": "预约",
-          "category": "reminder",
+          "group": "reminder",
           "color": "mint",
           "itemCount": 8,
           "description": "预约和挂号信息",
@@ -216,7 +216,7 @@
         {
           "id": 15,
           "name": "待办事项",
-          "category": "daily",
+          "group": "daily",
           "color": "coral",
           "itemCount": 12,
           "description": "记录需要完成的任务",
@@ -227,7 +227,7 @@
         {
           "id": 16,
           "name": "购物清单",
-          "category": "daily",
+          "group": "daily",
           "color": "lemon",
           "itemCount": 28,
           "description": "需要购买的物品列表",
@@ -238,7 +238,7 @@
         {
           "id": 24,
           "name": "采购",
-          "category": "daily",
+          "group": "daily",
           "color": "mint",
           "itemCount": 18,
           "description": "采购计划和清单",
@@ -249,7 +249,7 @@
         {
           "id": 25,
           "name": "灵感",
-          "category": "daily",
+          "group": "daily",
           "color": "lavender",
           "itemCount": 20,
           "description": "创意和灵感记录",
@@ -260,7 +260,7 @@
         {
           "id": 26,
           "name": "笔记",
-          "category": "daily",
+          "group": "daily",
           "color": "cream",
           "itemCount": 35,
           "description": "日常笔记和记录",
@@ -271,7 +271,7 @@
         {
           "id": 11,
           "name": "文具",
-          "category": "daily",
+          "group": "daily",
           "color": "cream",
           "itemCount": 16,
           "description": "笔、本子和办公用品",
@@ -282,7 +282,7 @@
         {
           "id": 14,
           "name": "书籍",
-          "category": "daily",
+          "group": "daily",
           "color": "lavender",
           "itemCount": 45,
           "description": "各类书籍和杂志",
@@ -293,7 +293,7 @@
         {
           "id": 12,
           "name": "数码",
-          "category": "daily",
+          "group": "daily",
           "color": "pink",
           "itemCount": 8,
           "description": "电子产品和配件",
@@ -304,7 +304,7 @@
         {
           "id": 31,
           "name": "运动计划",
-          "category": "daily",
+          "group": "daily",
           "color": "honey",
           "itemCount": 10,
           "description": "运动健身计划和记录",
@@ -315,7 +315,7 @@
         {
           "id": 32,
           "name": "阅读清单",
-          "category": "daily",
+          "group": "daily",
           "color": "coral",
           "itemCount": 15,
           "description": "待阅读的书籍和文章",
