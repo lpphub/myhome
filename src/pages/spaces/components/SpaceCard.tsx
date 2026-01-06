@@ -1,5 +1,4 @@
 import { Clock } from 'lucide-react'
-import { motion } from 'motion/react'
 import { useNavigate } from 'react-router'
 import type { Space } from '@/types/space'
 
@@ -20,28 +19,25 @@ export function SpaceCard({ space }: SpaceCardProps) {
     return `${Math.floor(days / 30)}个月前`
   }
 
-  const handleClick = () => {
-    navigate(`/tags`)
-  }
-
   return (
-    <motion.div
-      whileHover={{ y: -4 }}
-      whileTap={{ scale: 0.98 }}
-      onClick={handleClick}
-      className='group relative bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-gray-300'
+    <div
+      role='button'
+      tabIndex={0}
+      onClick={() => navigate('/tags')}
+      onKeyDown={e => e.key === 'Enter' && navigate('/tags')}
+      className='group bg-white rounded-2xl shadow-sm border border-gray-200 p-6 text-center
+                 cursor-pointer transition-all duration-300 select-none
+                 hover:shadow-lg hover:-translate-y-1 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-coral-300 focus:ring-offset-2'
     >
-      <div className='p-6 flex flex-col items-center text-center'>
-        <div className='text-5xl mb-4'>{space.icon}</div>
-        <h3 className='font-semibold text-gray-800 text-lg mb-2'>{space.name}</h3>
-        <div className='flex items-center gap-1 text-sm text-gray-500 mb-3'>
-          <Clock className='w-3.5 h-3.5' />
-          <span>最近：{formatDate(space.updatedAt)}</span>
-        </div>
-        {space.noteCount !== undefined && (
-          <div className='text-sm text-gray-400'>{space.noteCount} 张便签</div>
-        )}
+      <span className='text-5xl mb-4 block'>{space.icon}</span>
+      <h3 className='font-semibold text-gray-800 text-lg mb-2'>{space.name}</h3>
+      <div className='flex items-center justify-center gap-1 text-sm text-gray-500'>
+        <Clock className='w-3.5 h-3.5' />
+        <span>最近：{formatDate(space.updatedAt)}</span>
       </div>
-    </motion.div>
+      {space.noteCount !== undefined && (
+        <p className='text-sm text-gray-400 mt-1'>{space.noteCount} 张便签</p>
+      )}
+    </div>
   )
 }

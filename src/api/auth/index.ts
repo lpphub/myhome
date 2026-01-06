@@ -1,5 +1,5 @@
-import httpClient from '@/utils/request'
 import type { AuthData, AuthForm } from '@/types/auth'
+import httpClient from '@/utils/request'
 
 enum AuthApi {
   SignIn = '/auth/signin',
