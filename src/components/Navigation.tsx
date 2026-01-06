@@ -27,7 +27,7 @@ const navItems: NavItem[] = [
     label: '首页',
     icon: Home,
     path: '/',
-    description: '家庭中心',
+    description: '首页',
   },
   {
     id: 'spaces',
@@ -35,13 +35,6 @@ const navItems: NavItem[] = [
     icon: Archive,
     path: '/spaces',
     description: '家庭空间管理',
-  },
-  {
-    id: 'items',
-    label: '收纳物品',
-    icon: Package,
-    path: '/items',
-    description: '收纳物品展示',
   },
   {
     id: 'tags',
