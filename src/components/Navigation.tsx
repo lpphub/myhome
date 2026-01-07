@@ -1,4 +1,4 @@
-import { Archive, Heart, Home, LogOut, Search, Settings, Sparkles, Tag, User } from 'lucide-react'
+import { Archive, Heart, Home, LogOut, Settings, Sparkles, Tag, User } from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 
@@ -40,8 +40,8 @@ const NavigationLogo = () => {
         </div>
       </div>
       <div className='hidden sm:block'>
-        <h1 className='text-lg font-bold text-warmGray-800'>AI收纳</h1>
-        <p className='text-xs text-warmGray-600'>温馨收纳小助手</p>
+        <h1 className='text-lg font-bold text-warmGray-800'>AI记录</h1>
+        <p className='text-xs text-warmGray-600'>温馨记录小助手</p>
       </div>
     </Link>
   )
@@ -135,14 +135,6 @@ const NavActions = ({ handleLogout }: { handleLogout: () => void }) => {
 
   return (
     <div className='flex items-center space-x-2'>
-      {/* 搜索按钮 */}
-      <button
-        type='button'
-        className='p-2.5 text-warmGray-500 hover:text-coral-500 hover:bg-honey-50 rounded-lg transition-colors'
-      >
-        <Search className='w-5 h-5' />
-      </button>
-
       {/* 设置按钮 */}
       <button
         type='button'

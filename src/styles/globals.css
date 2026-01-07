@@ -24,29 +24,37 @@
 ------------------------------ */
 @theme {
   /* 主色与辅助色 */
-  --color-primary: #f7c59f;
-  --color-mint-green: #a8e6cf;
-  --color-macaron-pink: #ffd1dc;
-  --color-coral: #ffaaa5;
+  --color-primary: #ff8c42; /* 橙色 */
+  --color-secondary: #ffe0c7; /* 暖米色 */
 
-  /* 背景与文本 */
-  --color-background: #f4f4f9;
-  --color-foreground: #666666;
-
-  /* 强调色 */
+  /* 功能色 */
   --color-danger: #ff6b6b;
-  --color-accent: #6c63ff;
+  --color-success: #48c78e;
+  --color-accent: #ffdd99;
 
-  --color-border: #e0e0e0;
-  --color-card: #ffffff;
-  --color-card-foreground: #666666;
-  --color-muted: #999999;
-  --color-muted-background: #f0f0f5;
+  /* 背景： */
+  --color-background: #faf7f4; /* 主背景 */
+  --color-background-alt: #fff3eb; /* 次背景 */
+  --color-card: #ffffff; /* 卡片 */
+  --color-border: #e6e0da;
+
+  /* 文字： */
+  --color-foreground: #2d3436;
+  --color-foreground-secondary: #636e72;
+  --color-muted: #b2bec3;
+  --color-muted-background: #f4f1ee;
 
   /* 全局圆角 */
-  --radius-sm: 0.75rem;
-  --radius-md: 1rem;
-  --radius-lg: 1.25rem;
+  --radius-sm: 0.5rem; /* 8px  - Tag / Chip */
+  --radius-md: 0.75rem; /* 12px - Button / Input */
+  --radius-lg: 1rem; /* 16px - Card / Modal */
+
+  /* 阴影： */
+  --shadow-color: 32 20 8;
+  --shadow-sm: 0 2px 4px rgba(var(--shadow-color) / 8%);
+  --shadow-md: 0 4px 12px rgba(var(--shadow-color) / 12%);
+  --shadow-lg: 0 8px 24px rgba(var(--shadow-color) / 16%);
+  --shadow-soft: 0 2px 8px rgba(247 233 195 / 35%);
 
   /* -----------------------------
      颜色系统
@@ -75,7 +83,7 @@
   --color-honey-800: #cc7a1a;
   --color-honey-900: #c26814;
 
-  /* Coral 系 - 珊瑚粉系 */
+  /* Coral 系 - 珊瑚红系 */
   --color-coral-50: #fff4f0;
   --color-coral-100: #ffe8e0;
   --color-coral-200: #ffd3c8;
@@ -134,16 +142,6 @@
   --color-macaron-pink-700: #d0325f;
   --color-macaron-pink-800: #b82850;
   --color-macaron-pink-900: #9c1e40;
-
-  /* -----------------------------
-     阴影变量
-  ----------------------------- */
-  --shadow-sm: 0 2px 4px rgba(194 104 20 / 8%);
-  --shadow-md: 0 4px 12px rgba(194 104 20 / 12%);
-  --shadow-lg: 0 8px 24px rgba(194 104 20 / 16%);
-  --shadow-card: 0 4px 16px rgba(232 193 120 / 15%);
-  --shadow-card-hover: 0 8px 32px rgba(232 193 120 / 25%);
-  --shadow-soft: 0 2px 8px rgba(247 233 195 / 40%);
 }
 
 /* -----------------------------
@@ -158,7 +156,7 @@
   }
 
   .card-hover:hover {
-    box-shadow: var(--shadow-warm-lg);
+    box-shadow: var(--shadow-card-hover);
     transform: translateY(-4px);
   }
 
@@ -167,6 +165,6 @@
   }
 
   .card-hover-no-transform:hover {
-    box-shadow: var(--shadow-warm-lg);
+    box-shadow: var(--shadow-lg);
   }
 }

@@ -91,7 +91,7 @@ export default function Login() {
             </div>
 
             {/* 标题 */}
-            <CardTitle className='text-2xl font-handwritten'>爱便签</CardTitle>
+            <CardTitle className='text-2xl font-handwritten'>ai记录</CardTitle>
 
             {/* 欢迎语 */}
             <CardDescription className='flex items-center justify-center gap-2 text-muted'>

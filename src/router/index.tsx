@@ -18,7 +18,6 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
-        path: 'spaces',
         index: true,
         element: <Spaces />,
       },
