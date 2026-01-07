@@ -53,6 +53,7 @@ export const TagFormDialog = ({
 
   const form = useForm<TagFormValues>({
     resolver: zodResolver(tagFormSchema),
+    mode: 'onChange',
     defaultValues: {
       name: '',
       group: 'storage',
@@ -124,7 +125,7 @@ export const TagFormDialog = ({
               className={
                 form.formState.errors.name
                   ? 'border-red-500 ring-1 ring-red-500'
-                  : 'border-border focus:border-honey-200'
+                  : 'border-border focus:border-honey-400'
               }
             />
             {form.formState.errors.name && (
@@ -175,7 +176,7 @@ export const TagFormDialog = ({
                   className={`h-12 rounded-lg border transition-all ${
                     form.watch('color') === color
                       ? 'border-honey-400 ring-1 ring-honey-200'
-                      : 'border-transparent hover:border-honey-200'
+                      : 'border-transparent hover:border-honey-300'
                   } ${TAG_COLOR_CLASSES[color].classes}`}
                 >
                   {form.watch('color') === color && (

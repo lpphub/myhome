@@ -21,7 +21,7 @@ export const getTags = (spaceId?: string) =>
 export const createTag = (data: TagFormData) =>
   httpClient.post<Tag>({
     url: TagsApi.CreateTag,
-    data,
+    data: { ...data },
   })
 
 export const updateTag = (data: Partial<TagFormData>) =>
@@ -41,10 +41,10 @@ export const reorderTags = (data: ReorderParams) =>
     data,
   })
 
-export const createGroup = (name: string) =>
+export const createGroup = (data: Omit<Group, 'id' | 'code'>) =>
   httpClient.post<Group>({
     url: TagsApi.CreateGroup,
-    data: { name },
+    data: { ...data },
   })
 
 export const deleteGroup = (code: string) =>

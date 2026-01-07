@@ -77,7 +77,7 @@ export default function TagsPage() {
 
   const handleAddGroup = useCallback(
     (groupName: string) => {
-      createGroup.mutate(groupName, {
+      createGroup.mutate({ name: groupName, spaceId: Number(spaceId) }, {
         onSuccess: group => {
           setLocalTags(prev => [...prev, { ...group, tags: [] }])
         },
@@ -88,30 +88,29 @@ export default function TagsPage() {
 
   const handleAddTag = useCallback(
     (data: TagFormData) => {
-      createTag.mutate(data, {
-        onSuccess: tag => {
-          setLocalTags(prev =>
-            prev.map(group =>
-              group.code === data.group
-                ? {
-                    ...group,
-                    tags: [...group.tags, { ...tag }],
-                  }
-                : group
+      createTag.mutate(
+        { ...data, spaceId: Number(spaceId) },
+        {
+          onSuccess: tag => {
+            setLocalTags(prev =>
+              prev.map(group =>
+                group.code === data.group
+                  ? {
+                      ...group,
+                      tags: [...group.tags, { ...tag }],
+                    }
+                  : group
+              )
             )
-          )
-        },
-      })
-
-      setDialogOpen(false)
+          },
+        }
+      )
     },
-    [createTag]
+    [createTag, spaceId]
   )
 
   const handleUpdateTag = useCallback(
     (data: TagFormData) => {
-      setDialogOpen(false)
-
       setLocalTags(prev =>
         prev.map(group =>
           group.code === data.group

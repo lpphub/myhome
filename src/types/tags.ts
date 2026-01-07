@@ -16,6 +16,7 @@ export interface Group {
   id: number
   code: string
   name: string
+  spaceId?: number
 }
 
 export interface TagGroup extends Group {
@@ -28,6 +29,7 @@ export interface TagFormData {
   group: string
   description?: string
   color: string
+  spaceId?: number
 }
 
 export interface ReorderParams {

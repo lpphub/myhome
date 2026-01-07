@@ -101,10 +101,20 @@ export const handlers = [
     const body = (await request.json()) as TagFormData
     const data = await loadTagsData()
 
-    const allTags = data.tags.flatMap(cat => cat.tags)
-    const maxId = allTags.length > 0 ? Math.max(...allTags.map(t => t.id)) : 0
+    if (!body.spaceId) {
+      return HttpResponse.json({ code: 400, message: '缺少 spaceId' }, { status: 400 })
+    }
+
+    const spaceIdNum = body.spaceId
+    const spaceGroups = data[spaceIdNum]
+
+    if (!spaceGroups) {
+      return HttpResponse.json({ code: 404, message: '空间不存在' }, { status: 404 })
+    }
+
+    const allTags = spaceGroups.flatMap(cat => cat.tags)
     const newTag: Tag = {
-      id: maxId + 1,
+      id: Date.now(),
       name: body.name || '',
       group: body.group || 'default',
       color: body.color || 'lemon',
@@ -113,11 +123,12 @@ export const handlers = [
       order: allTags.length,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      spaceId: body.spaceId,
     }
 
     return HttpResponse.json({
       code: 200,
-      message: '创建便签成功',
+      message: '创建标签成功',
       data: newTag,
     })
   }),
@@ -161,21 +172,32 @@ export const handlers = [
   }),
 
   http.post('/api/tags/category', async ({ request }) => {
-    const body = (await request.json()) as { name: string }
+    const body = (await request.json()) as { name: string; spaceId?: number }
     const name = body.name?.trim()
 
     if (!name) {
       return HttpResponse.json({ code: 400, message: '分类名称不能为空' }, { status: 400 })
     }
 
+    if (!body.spaceId) {
+      return HttpResponse.json({ code: 400, message: '缺少 spaceId' }, { status: 400 })
+    }
+
     const data = await loadTagsData()
-    const existingGroup = data.tags.find(group => group.name === name)
+    const spaceIdNum = body.spaceId
+    const spaceGroups = data[spaceIdNum]
+
+    if (!spaceGroups) {
+      return HttpResponse.json({ code: 404, message: '空间不存在' }, { status: 404 })
+    }
+
+    const existingGroup = spaceGroups.find(group => group.name === name)
 
     if (existingGroup) {
       return HttpResponse.json({ code: 409, message: '分组已存在' }, { status: 409 })
     }
 
-    const maxId = Math.max(...data.tags.map(group => group.id))
+    const maxId = Math.max(...spaceGroups.map(group => group.id))
     const newGroup: TagGroup = {
       id: maxId + 1,
       name,
