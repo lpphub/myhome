@@ -1,10 +1,12 @@
 import { X } from 'lucide-react'
 import { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
+import { createSpace } from '@/api/spaces'
 import { SPACE_ICONS, SPACE_COLOR_CLASSES, type SpaceForm } from '@/types/spaces'
 
 interface SpaceFormModalProps {
@@ -19,16 +21,20 @@ export function SpaceFormModal({ isOpen, onClose }: SpaceFormModalProps) {
     color: 'honey',
     description: '',
   })
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const queryClient = useQueryClient()
+
+  const mutation = useMutation({
+    mutationFn: createSpace,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['spaces'] })
+      onClose()
+      setForm({ name: '', icon: '🏠', color: 'honey', description: '' })
+    },
+  })
 
   const handleSubmit = async () => {
     if (!form.name.trim()) return
-    setIsSubmitting(true)
-    await new Promise(resolve => setTimeout(resolve, 500))
-    console.log('Creating space:', form)
-    setIsSubmitting(false)
-    onClose()
-    setForm({ name: '', icon: '🏠', color: 'honey', description: '' })
+    mutation.mutate(form)
   }
 
   if (!isOpen) return null
@@ -150,10 +156,10 @@ export function SpaceFormModal({ isOpen, onClose }: SpaceFormModalProps) {
             </Button>
             <Button
               onClick={handleSubmit}
-              disabled={!form.name.trim() || isSubmitting}
+              disabled={!form.name.trim() || mutation.isPending}
               className='flex-1 bg-linear-to-r from-coral-500 to-coral-600 text-white hover:from-coral-600 hover:to-coral-700 disabled:opacity-50'
             >
-              {isSubmitting ? '创建中...' : '创建空间'}
+              {mutation.isPending ? '创建中...' : '创建空间'}
             </Button>
           </div>
         </div>

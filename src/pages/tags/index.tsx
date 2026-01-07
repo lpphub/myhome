@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router'
 import { LoadingState } from '@/components/LoadingState'
-import { TagFormDialog } from '@/pages/tags/components/TagFormDialog'
+import { TagForm } from '@/pages/tags/components/TagForm'
 import { TagToolbar } from '@/pages/tags/components/TagToolbar'
 import { TagWall } from '@/pages/tags/components/TagWall'
 import {
@@ -190,7 +190,7 @@ export default function TagsPage() {
         onDeleteGroup={handleDeleteGroup}
       />
 
-      <TagFormDialog
+      <TagForm
         isOpen={isDialogOpen}
         onClose={() => setDialogOpen(false)}
         initialData={dialogTag}

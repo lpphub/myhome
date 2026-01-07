@@ -31,7 +31,7 @@ const tagFormSchema = z.object({
 
 type TagFormValues = z.infer<typeof tagFormSchema>
 
-interface TagFormDialogProps {
+interface TagFormProps {
   isOpen: boolean
   onClose: () => void
   initialData: TagFormData | null
@@ -42,13 +42,13 @@ interface TagFormDialogProps {
   }
 }
 
-export const TagFormDialog = ({
+export const TagForm = ({
   isOpen,
   onClose,
   initialData,
   groups,
   actions,
-}: TagFormDialogProps) => {
+}: TagFormProps) => {
   const isEditing = Boolean(initialData?.id && initialData.id > 0)
 
   const form = useForm<TagFormValues>({

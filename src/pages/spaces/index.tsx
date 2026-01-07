@@ -1,43 +1,11 @@
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { LoadingState } from '@/components/LoadingState'
+import { getSpaces } from '@/api/spaces'
 import type { Space } from '@/types/spaces'
 import { SpaceCard } from './components/SpaceCard'
 import { SpaceFormModal } from './components/SpaceFormModal'
-
-const useMockSpaces = () => {
-  const mockSpaces: Space[] = [
-    {
-      id: 1,
-      name: '工作空间',
-      icon: '🧑‍💻',
-      color: 'honey',
-      tagCount: 12,
-      createdAt: '2024-12-01T00:00:00Z',
-      updatedAt: '2025-01-05T00:00:00Z',
-    },
-    {
-      id: 2,
-      name: '生活空间',
-      icon: '🌸',
-      color: 'lavender',
-      tagCount: 8,
-      createdAt: '2024-12-05T00:00:00Z',
-      updatedAt: '2025-01-06T00:00:00Z',
-    },
-    {
-      id: 3,
-      name: '情绪角落',
-      icon: '🌙',
-      color: 'coral',
-      tagCount: 5,
-      createdAt: '2024-12-10T00:00:00Z',
-      updatedAt: '2025-01-04T00:00:00Z',
-    },
-  ]
-
-  return { data: mockSpaces, isLoading: false }
-}
 
 const getGreeting = (): { greeting: string; message: string } => {
   const hour = new Date().getHours()
@@ -134,7 +102,10 @@ function SpaceList({ spaces, onCreate }: SpaceListProps) {
 }
 
 export default function Spaces() {
-  const { data: spaces, isLoading } = useMockSpaces()
+  const { data: spaces = [], isLoading } = useQuery({
+    queryKey: ['spaces'],
+    queryFn: getSpaces,
+  })
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
   if (isLoading) {
