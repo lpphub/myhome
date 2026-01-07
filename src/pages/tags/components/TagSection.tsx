@@ -41,8 +41,8 @@ export const TagSection = memo(
             <Tag className='w-5 h-5 text-honey-600' />
           </div>
           <div>
-            <h2 className='text-lg font-bold text-warmGray-800'>{tagGroup.name}</h2>
-            <p className='text-sm text-warmGray-500'>
+            <h2 className='text-lg font-bold text-foreground'>{tagGroup.name}</h2>
+            <p className='text-sm text-foreground'>
               {tagGroup.tags.length} 个便签
               {tagGroup.tags.length === 0 && onDeleteGroup && (
                 <button
@@ -71,7 +71,7 @@ export const TagSection = memo(
               type='button'
               onClick={() => onAddTag(tagGroup.code)}
               className={cn(
-                'w-52 p-4 rounded-lg border-2 border-dashed border-warmGray-200',
+                'w-52 p-4 rounded-lg border-2 border-dashed border-border',
                 'hover:border-honey-300 hover:bg-honey-50 transition-all duration-300',
                 'group flex flex-col items-center justify-center',
                 'text-cream-900 hover:text-honey-600'

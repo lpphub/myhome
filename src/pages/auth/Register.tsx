@@ -88,12 +88,12 @@ export default function Register() {
       </div>
 
       {/* 注册卡片 */}
-      <Card className='w-96 z-10 shadow-2xl border-border/30 backdrop-blur-lg bg-white/60 rounded-2xl py-8'>
+      <Card className='w-96 z-10 shadow-lg border-border/30 backdrop-blur-lg bg-white/60 rounded-lg py-8'>
         <CardHeader>
           <div className='text-center space-y-2'>
             {/* Logo 图标 */}
             <div className='flex items-center justify-center mb-2'>
-              <div className='w-16 h-16 bg-linear-to-br from-primary to-macaron-pink rounded-2xl flex items-center justify-center shadow-lg'>
+              <div className='w-16 h-16 bg-linear-to-br from-primary to-macaron-pink rounded-lg flex items-center justify-center shadow-lg'>
                 <Home className='w-8 h-8 text-white' />
               </div>
             </div>

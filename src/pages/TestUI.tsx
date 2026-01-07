@@ -74,14 +74,12 @@ export default function TestUI() {
               whileHover={{
                 scale: 1.02,
                 y: -4,
-                boxShadow:
-                  '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
               }}
               whileTap={{ scale: 0.98 }}
               transition={{ type: 'spring', stiffness: 400, damping: 25 }}
               className='h-full'
             >
-              <Card variant='soft' className='h-full'>
+              <Card variant='soft' className='h-full shadow-lg'>
                 <CardHeader>
                   <CardTitle>衣物收纳</CardTitle>
                   <CardDescription>智能分类，节省空间</CardDescription>
@@ -104,8 +102,6 @@ export default function TestUI() {
               whileHover={{
                 scale: 1.02,
                 y: -4,
-                boxShadow:
-                  '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
               }}
               whileTap={{ scale: 0.98 }}
               transition={{ type: 'spring', stiffness: 400, damping: 25 }}
@@ -134,8 +130,6 @@ export default function TestUI() {
               whileHover={{
                 scale: 1.02,
                 y: -4,
-                boxShadow:
-                  '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
               }}
               whileTap={{ scale: 0.98 }}
               transition={{ type: 'spring', stiffness: 400, damping: 25 }}

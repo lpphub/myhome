@@ -1,6 +1,7 @@
 import { delay, HttpResponse, http } from 'msw'
 import type { AuthForm } from '@/types/auth'
 import type { Item, RecentActivity } from '@/types/items'
+import type { Space, SpaceForm } from '@/types/spaces'
 import type { ReorderParams, Tag, TagFormData, TagGroup } from '@/types/tags'
 
 async function loadTagsData(): Promise<{ groups: TagGroup[]; tags: TagGroup[] }> {
@@ -23,42 +24,9 @@ async function loadActivitiesData(): Promise<{ activities: RecentActivity[] }> {
   return { activities: data.activities }
 }
 
-async function loadDashboardData(): Promise<{
-  dashboard: {
-    overview: {
-      totalItems: number
-      totalSpaces: number
-      utilizationRate: number
-      expiredItems: number
-      borrowedItems: number
-      lowStockItems: number
-    }
-    recentActivities: Array<{
-      id: string
-      type: string
-      itemName: string
-      timestamp: string
-      [key: string]: unknown
-    }>
-    reminders: Array<{
-      id: string
-      type: string
-      itemName: string
-      dueDate: string | null
-      urgency: string
-      description: string
-    }>
-    quickActions?: Array<{
-      id: string
-      title: string
-      description: string
-      icon: string
-      action: string
-    }>
-  }
-}> {
-  const res = await fetch('/data/dashboard.json')
-  if (!res.ok) throw new Error('Failed to load dashboard.json')
+async function loadSpacesData(): Promise<{ spaces: Space[] }> {
+  const res = await fetch('/data/spaces.json')
+  if (!res.ok) throw new Error('Failed to load spaces.json')
   return res.json()
 }
 
@@ -248,13 +216,79 @@ export const handlers = [
     })
   }),
 
-  http.get('/api/dashboard', async () => {
+  http.get('/api/spaces', async () => {
     await delay(200)
-    const data = await loadDashboardData()
+    const data = await loadSpacesData()
     return HttpResponse.json({
       code: 200,
-      message: '获取仪表板数据成功',
-      data: data.dashboard,
+      message: '获取空间列表成功',
+      data: data.spaces,
+    })
+  }),
+
+  http.post('/api/spaces', async ({ request }) => {
+    const body = (await request.json()) as SpaceForm
+    const data = await loadSpacesData()
+
+    const maxId =
+      data.spaces.length > 0 ? Math.max(...data.spaces.map(s => Number.parseInt(s.id, 10))) : 0
+
+    const newSpace: Space = {
+      id: String(maxId + 1),
+      name: body.name,
+      icon: body.icon,
+      color: body.color,
+      description: body.description,
+      coverImage: body.coverImage,
+      noteCount: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: '创建空间成功',
+      data: newSpace,
+    })
+  }),
+
+  http.patch<{ id: string }>('/api/spaces/:id', async ({ params, request }) => {
+    const id = params.id
+    const body = (await request.json()) as Partial<SpaceForm>
+
+    const data = await loadSpacesData()
+    const space = data.spaces.find(s => s.id === id)
+
+    if (!space) {
+      return HttpResponse.json({ code: 404, message: '空间不存在' }, { status: 404 })
+    }
+
+    const updatedSpace: Space = {
+      ...space,
+      ...body,
+      updatedAt: new Date().toISOString(),
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: '更新空间成功',
+      data: updatedSpace,
+    })
+  }),
+
+  http.delete<{ id: string }>('/api/spaces/:id', async ({ params }) => {
+    const id = params.id
+    const data = await loadSpacesData()
+    const space = data.spaces.find(s => s.id === id)
+
+    if (!space) {
+      return HttpResponse.json({ code: 404, message: '空间不存在' }, { status: 404 })
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: '删除空间成功',
+      data: { success: true },
     })
   }),
 ]

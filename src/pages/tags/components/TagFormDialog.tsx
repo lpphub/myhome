@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Tag } from 'lucide-react'
 import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -103,9 +102,9 @@ export const TagFormDialog = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className='sm:max-w-md bg-white border-honey-200 rounded-2xl max-h-[90vh] overflow-y-auto'>
+      <DialogContent className='sm:max-w-md bg-white border-honey-200 rounded-lg max-h-[90vh] overflow-y-auto'>
         <DialogHeader>
-          <DialogTitle className='text-2xl font-bold text-warmGray-800'>
+          <DialogTitle className='text-2xl font-bold text-foreground'>
             {isEditing ? '编辑便签' : '添加新便签'}
           </DialogTitle>
           <DialogDescription>
@@ -116,7 +115,6 @@ export const TagFormDialog = ({
         <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-4 mt-4'>
           <div className='space-y-2'>
             <Label htmlFor='tag' className='flex items-center gap-2'>
-              <Tag className='w-4 h-4 text-warmGray-500' />
               便签名称 *
             </Label>
             <Input
@@ -126,7 +124,7 @@ export const TagFormDialog = ({
               className={
                 form.formState.errors.name
                   ? 'border-red-500 ring-1 ring-red-500'
-                  : 'border-warmGray-300 focus:border-honey-400'
+                  : 'border-border focus:border-honey-400'
               }
             />
             {form.formState.errors.name && (
@@ -136,7 +134,6 @@ export const TagFormDialog = ({
 
           <div className='space-y-2'>
             <Label htmlFor='group' className='flex items-center gap-2'>
-              <Tag className='w-4 h-4 text-warmGray-500' />
               分组 *
             </Label>
             <Select
@@ -149,12 +146,12 @@ export const TagFormDialog = ({
                 className={
                   form.formState.errors.group
                     ? 'border-red-500 ring-1 ring-red-500'
-                    : 'border-warmGray-300 focus:border-honey-400'
+                    : 'border-border focus:border-honey-200'
                 }
               >
                 <SelectValue placeholder='选择分组' />
               </SelectTrigger>
-              <SelectContent className='bg-white border-honey-200 shadow-warm-sm w-64'>
+              <SelectContent className='bg-white border-honey-200 shadow-sm w-64'>
                 {groups.map(group => (
                   <SelectItem key={group.code} value={group.code}>
                     {group.name}
@@ -168,10 +165,7 @@ export const TagFormDialog = ({
           </div>
 
           <div className='space-y-2'>
-            <Label className='flex items-center gap-2'>
-              <Tag className='w-4 h-4 text-warmGray-500' />
-              便签颜色
-            </Label>
+            <Label className='flex items-center gap-2'>便签颜色</Label>
             <div className='grid grid-cols-4 gap-2'>
               {Object.keys(TAG_COLOR_CLASSES).map(color => (
                 <button
@@ -207,7 +201,6 @@ export const TagFormDialog = ({
 
           <div className='space-y-2'>
             <Label htmlFor='description' className='flex items-center gap-2'>
-              <Tag className='w-4 h-4 text-warmGray-500' />
               描述
             </Label>
             <Textarea
@@ -218,7 +211,7 @@ export const TagFormDialog = ({
               className={
                 form.formState.errors.description
                   ? 'border-red-500 ring-1 ring-red-500'
-                  : 'border-warmGray-300 focus:border-honey-400 resize-none'
+                  : 'border-border focus:ring-honey-200 resize-none'
               }
             />
             {form.formState.errors.description && (
@@ -231,7 +224,7 @@ export const TagFormDialog = ({
               type='button'
               variant='outline'
               onClick={handleClose}
-              className='flex-1 border-honey-200 text-warmGray-700 hover:bg-honey-50'
+              className='flex-1 border-honey-200 text-foreground hover:bg-honey-50'
             >
               取消
             </Button>

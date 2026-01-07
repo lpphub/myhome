@@ -1,0 +1,44 @@
+{
+  "spaces": [
+    {
+      "id": "1",
+      "name": "工作空间",
+      "icon": "🧑‍💻",
+      "color": "honey",
+      "description": "办公和学习相关的物品",
+      "noteCount": 12,
+      "createdAt": "2024-12-01T00:00:00Z",
+      "updatedAt": "2025-01-05T00:00:00Z"
+    },
+    {
+      "id": "2",
+      "name": "生活空间",
+      "icon": "🌸",
+      "color": "lavender",
+      "description": "日常生活用品记录",
+      "noteCount": 8,
+      "createdAt": "2024-12-05T00:00:00Z",
+      "updatedAt": "2025-01-06T00:00:00Z"
+    },
+    {
+      "id": "3",
+      "name": "情绪角落",
+      "icon": "🌙",
+      "color": "coral",
+      "description": "心情和情绪记录",
+      "noteCount": 5,
+      "createdAt": "2024-12-10T00:00:00Z",
+      "updatedAt": "2025-01-04T00:00:00Z"
+    },
+    {
+      "id": "4",
+      "name": "学习笔记",
+      "icon": "📚",
+      "color": "lemon",
+      "description": "学习资料和笔记",
+      "noteCount": 25,
+      "createdAt": "2024-12-15T00:00:00Z",
+      "updatedAt": "2025-01-07T00:00:00Z"
+    }
+  ]
+}

@@ -1,8 +1,7 @@
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
 import { LoadingState } from '@/components/LoadingState'
-import { useAuthStore } from '@/stores/useAuthStore'
-import type { Space } from '@/types/space'
+import type { Space } from '@/types/spaces'
 import { SpaceCard } from './components/SpaceCard'
 import { SpaceFormModal } from './components/SpaceFormModal'
 
@@ -66,8 +65,8 @@ function SpacesTitle() {
 
   return (
     <div className='mb-8'>
-      <h1 className='text-3xl font-bold text-gray-800 mb-2'>👋 {greeting}</h1>
-      <p className='text-gray-500'>{message}</p>
+      <h1 className='text-3xl font-bold text-foreground mb-2'>👋 {greeting}</h1>
+      <p className='text-foreground'>{message}</p>
     </div>
   )
 }
@@ -83,19 +82,19 @@ function SpaceList({ spaces, onCreate }: SpaceListProps) {
       <button
         type='button'
         onClick={onCreate}
-        className='group w-full max-w-sm mx-auto bg-white rounded-2xl shadow-sm border border-gray-200 border-dashed
+        className='group w-full max-w-sm mx-auto bg-white rounded-lg shadow-sm border border-border border-dashed
                    overflow-hidden transition-all cursor-pointer
-                   hover:shadow-lg hover:border-gray-300 hover:border-solid
+                   hover:shadow-lg hover:border-border hover:border-solid
                    animate-in fade-in zoom-in-95 duration-300'
       >
         <div className='p-8 flex flex-col items-center justify-center text-center min-h-50'>
-          <div className='w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4 transition-colors group-hover:bg-gray-200'>
-            <Plus className='w-10 h-10 text-gray-400 transition-colors group-hover:text-gray-600' />
+          <div className='w-20 h-20 bg-muted-background rounded-full flex items-center justify-center mb-4 transition-colors group-hover:bg-border'>
+            <Plus className='w-10 h-10 text-foreground transition-colors group-hover:text-foreground' />
           </div>
-          <h3 className='font-semibold text-gray-600 transition-colors group-hover:text-gray-800 mb-2'>
+          <h3 className='font-semibold text-foreground transition-colors group-hover:text-foreground mb-2'>
             创建第一个空间
           </h3>
-          <p className='text-gray-500 text-sm'>开始记录你的美好生活</p>
+          <p className='text-foreground text-sm'>开始记录你的美好生活</p>
         </div>
       </button>
     )
@@ -115,17 +114,17 @@ function SpaceList({ spaces, onCreate }: SpaceListProps) {
       <button
         type='button'
         onClick={onCreate}
-        className='group w-full bg-white rounded-2xl shadow-sm border border-gray-200 border-dashed
+        className='group w-full bg-white rounded-lg shadow-sm border border-border border-dashed
                    overflow-hidden transition-all duration-300 cursor-pointer
-                   hover:shadow-lg hover:border-gray-300 hover:border-solid
+                   hover:shadow-lg hover:border-border hover:border-solid
                    animate-in fade-in zoom-in-95'
         style={{ animationDelay: `${spaces.length * 50}ms` }}
       >
         <div className='p-6 flex flex-col items-center justify-center text-center min-h-40'>
-          <div className='w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 transition-colors group-hover:bg-gray-200'>
-            <Plus className='w-8 h-8 text-gray-400 transition-colors group-hover:text-gray-600' />
+          <div className='w-16 h-16 bg-muted-background rounded-full flex items-center justify-center mb-4 transition-colors group-hover:bg-border'>
+            <Plus className='w-8 h-8 text-foreground transition-colors group-hover:text-foreground' />
           </div>
-          <h3 className='font-semibold text-gray-600 transition-colors group-hover:text-gray-800'>
+          <h3 className='font-semibold text-foreground transition-colors group-hover:text-foreground'>
             新建空间
           </h3>
         </div>

@@ -1,33 +1,29 @@
-import type { StorageForm, StorageItem, StorageSchema } from '@/types/spaces'
+import type { Space, SpaceForm } from '@/types/spaces'
 import httpClient from '@/utils/request'
 
 enum SpacesApi {
-  GetStorages = '/spaces/storages',
-  CreateStorage = '/spaces/storages',
-  UpdateStorage = '/storages/:id',
-  DeleteStorage = '/storages/:id',
-  AddItem = '/storages/:id/items',
+  GetSpaces = '/spaces',
+  CreateSpace = '/spaces',
+  UpdateSpace = '/spaces/:id',
+  DeleteSpace = '/spaces/:id',
 }
 
-export const getStorages = () =>
-  httpClient.get<StorageSchema[]>({
-    url: SpacesApi.GetStorages,
+export const getSpaces = () =>
+  httpClient.get<Space[]>({
+    url: SpacesApi.GetSpaces,
   })
 
-export const createStorage = (data: StorageForm) =>
-  httpClient.post<StorageSchema>({
-    url: SpacesApi.CreateStorage,
+export const createSpace = (data: SpaceForm) =>
+  httpClient.post<Space>({
+    url: SpacesApi.CreateSpace,
     data,
   })
 
-export const updateStorage = (id: string, data: Partial<StorageForm>) =>
-  httpClient.patch<StorageSchema>({
-    url: SpacesApi.UpdateStorage.replace(':id', id),
+export const updateSpace = (id: string, data: Partial<SpaceForm>) =>
+  httpClient.patch<Space>({
+    url: SpacesApi.UpdateSpace.replace(':id', id),
     data,
   })
 
-export const deleteStorage = (id: string) =>
-  httpClient.delete({ url: SpacesApi.DeleteStorage.replace(':id', id) })
-
-export const addItemToStorage = (id: string, data: StorageItem) =>
-  httpClient.post({ url: SpacesApi.AddItem.replace(':id', id), data })
+export const deleteSpace = (id: string) =>
+  httpClient.delete({ url: SpacesApi.DeleteSpace.replace(':id', id) })

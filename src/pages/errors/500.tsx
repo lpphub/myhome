@@ -35,7 +35,7 @@ export default function InternalServerError() {
           {/* 错误信息 */}
           <div className='space-y-3'>
             <h1 className='text-3xl font-bold text-honey-700'>服务器出了点问题</h1>
-            <p className='text-warmGray-600 text-lg leading-relaxed'>
+            <p className='text-foreground text-lg leading-relaxed'>
               抱歉！服务器遇到了一些技术问题。
               <br />
               我们正在努力修复，请稍后再试。
@@ -47,7 +47,7 @@ export default function InternalServerError() {
             <button
               type='button'
               onClick={handleGoHome}
-              className='inline-flex items-center space-x-3 bg-linear-to-r from-coral-400 to-coral-500 text-gray-50 px-8 py-3 rounded-xl hover:from-coral-500 hover:to-coral-600 transition-all duration-300 shadow-lg hover:shadow-xl group'
+              className='inline-flex items-center space-x-3 bg-linear-to-r from-coral-400 to-coral-500 text-gray-50 px-8 py-3 rounded-lg hover:from-coral-500 hover:to-coral-600 transition-all duration-300 shadow-lg hover:shadow-lg group'
             >
               <Home className='w-4 h-4 group-hover:scale-110 transition-transform' />
               <span className='font-medium'>返回首页</span>
@@ -55,7 +55,7 @@ export default function InternalServerError() {
             <button
               type='button'
               onClick={handleRefresh}
-              className='inline-flex items-center space-x-3 bg-linear-to-r from-honey-100 to-honey-200 text-honey-700 px-8 py-3 rounded-xl hover:from-honey-200 hover:to-honey-300 transition-all duration-300 shadow-warm-sm hover:shadow-warm-md border border-honey-300 group'
+              className='inline-flex items-center space-x-3 bg-linear-to-r from-honey-100 to-honey-200 text-honey-700 px-8 py-3 rounded-lg hover:from-honey-200 hover:to-honey-300 transition-all duration-300 shadow-sm hover:shadow-md border border-honey-300 group'
             >
               <RefreshCw className='w-4 h-4 group-hover:scale-110 transition-transform' />
               <span className='font-medium'>刷新页面</span>
@@ -63,7 +63,7 @@ export default function InternalServerError() {
           </div>
 
           {/* 提示文字 */}
-          <div className='text-sm text-warmGray-500 space-y-1'>
+          <div className='text-sm text-foreground space-y-1'>
             <p>如果问题持续存在，请联系我们</p>
             <div className='flex items-center justify-center gap-2 text-honey-600 hover:text-honey-700 transition-colors cursor-pointer'>
               <span>📧</span>

@@ -61,14 +61,14 @@ export const TAG_COLOR_CLASSES: Record<string, { bg: string; border: string; tex
     border: 'border-cream-200',
     text: 'text-cream-900',
   },
-  pink: {
-    bg: 'bg-pink-100',
-    border: 'border-pink-200',
-    text: 'text-pink-900',
+  'macaron-pink': {
+    bg: 'bg-macaron-pink-100',
+    border: 'border-macaron-pink-200',
+    text: 'text-macaron-pink-900',
   },
-  mint: {
-    bg: 'bg-teal-50',
-    border: 'border-teal-200',
-    text: 'text-teal-900',
+  'mint-green': {
+    bg: 'bg-mint-green-50',
+    border: 'border-mint-green-200',
+    text: 'text-mint-green-900',
   },
 }

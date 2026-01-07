@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-import { SPACE_COLORS, SPACE_ICONS, type SpaceForm } from '@/types/space'
+import { SPACE_COLORS, SPACE_ICONS, type SpaceForm } from '@/types/spaces'
 
 interface SpaceFormModalProps {
   isOpen: boolean
@@ -41,16 +41,16 @@ export function SpaceFormModal({ isOpen, onClose }: SpaceFormModalProps) {
       />
       <div
         className='fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md
-                   bg-white rounded-2xl shadow-2xl z-50
+                    bg-white rounded-lg shadow-lg z-50
                    animate-in zoom-in-95 fade-in duration-200'
       >
         <div className='p-6'>
           <div className='flex items-center justify-between mb-6'>
-            <h2 className='text-xl font-semibold text-warmGray-800'>新建空间</h2>
+            <h2 className='text-xl font-semibold text-foreground'>新建空间</h2>
             <button
               type='button'
               onClick={onClose}
-              className='p-2 rounded-lg hover:bg-warmGray-100 text-warmGray-400 hover:text-warmGray-600 transition-colors'
+              className='p-2 rounded-lg hover:bg-muted-background text-foreground hover:text-foreground transition-colors'
             >
               <X className='w-5 h-5' />
             </button>
@@ -60,7 +60,7 @@ export function SpaceFormModal({ isOpen, onClose }: SpaceFormModalProps) {
             <div>
               <label
                 htmlFor='space-name'
-                className='block text-sm font-medium text-warmGray-700 mb-2'
+                className='block text-sm font-medium text-foreground mb-2'
               >
                 空间名称
               </label>
@@ -86,7 +86,7 @@ export function SpaceFormModal({ isOpen, onClose }: SpaceFormModalProps) {
                       'w-9 h-9 rounded-lg text-xl flex items-center justify-center transition-all',
                       form.icon === icon
                         ? 'bg-coral-100 ring-2 ring-coral-300 scale-110'
-                        : 'hover:bg-warmGray-100'
+                        : 'hover:bg-muted-background'
                     )}
                   >
                     {icon}
@@ -118,7 +118,7 @@ export function SpaceFormModal({ isOpen, onClose }: SpaceFormModalProps) {
             <div>
               <label
                 htmlFor='space-description'
-                className='block text-sm font-medium text-warmGray-700 mb-2'
+                className='block text-sm font-medium text-foreground mb-2'
               >
                 描述（可选）
               </label>
@@ -128,7 +128,7 @@ export function SpaceFormModal({ isOpen, onClose }: SpaceFormModalProps) {
                 onChange={e => setForm({ ...form, description: e.target.value })}
                 placeholder='添加空间描述...'
                 rows={3}
-                className='w-full px-3 py-2 border border-warmGray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-coral-200 focus:border-coral-300'
+                className='w-full px-3 py-2 border border-border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-coral-200 focus:border-coral-300'
               />
             </div>
           </div>

@@ -32,7 +32,7 @@ const NavigationLogo = () => {
   return (
     <Link to='/' className='flex items-center space-x-3 hover:opacity-80 transition-opacity'>
       <div className='relative'>
-        <div className='w-10 h-10 bg-linear-to-br from-coral-400 to-coral-600 rounded-2xl flex items-center justify-center shadow-lg'>
+        <div className='w-10 h-10 bg-linear-to-br from-coral-400 to-coral-600 rounded-lg flex items-center justify-center shadow-lg'>
           <Home className='w-5 h-5 text-white' />
         </div>
         <div className='absolute -top-1 -right-1 w-4 h-4 bg-linear-to-br from-honey-400 to-honey-600 rounded-full flex items-center justify-center'>
@@ -40,8 +40,8 @@ const NavigationLogo = () => {
         </div>
       </div>
       <div className='hidden sm:block'>
-        <h1 className='text-lg font-bold text-warmGray-800'>AI记录</h1>
-        <p className='text-xs text-warmGray-600'>温馨记录小助手</p>
+        <h1 className='text-lg font-bold text-foreground'>AI记录</h1>
+        <p className='text-xs text-foreground'>温馨记录小助手</p>
       </div>
     </Link>
   )
@@ -60,7 +60,7 @@ const DesktopNav = ({ currentPage }: { currentPage: string }) => {
             className={`group flex items-center px-4 py-2 text-sm font-medium rounded-xl transition-colors relative ${
               isActive
                 ? 'bg-coral-100 text-coral-700'
-                : 'text-warmGray-600 hover:bg-honey-50 hover:text-honey-700'
+                : 'text-foreground hover:bg-honey-50 hover:text-honey-700'
             }`}
           >
             {/* 活跃状态的装饰点 */}
@@ -108,7 +108,7 @@ const MobileNav = ({ currentPage }: { currentPage: string }) => {
                 key={item.id}
                 to={item.path}
                 className={`flex flex-col items-center px-3 py-2 text-xs font-medium rounded-lg transition-colors relative ${
-                  isActive ? 'text-coral-700 bg-coral-50' : 'text-warmGray-600 hover:text-honey-600'
+                  isActive ? 'text-coral-700 bg-coral-50' : 'text-foreground hover:text-honey-600'
                 }`}
               >
                 {/* 活跃指示器 */}
@@ -138,7 +138,7 @@ const NavActions = ({ handleLogout }: { handleLogout: () => void }) => {
       {/* 设置按钮 */}
       <button
         type='button'
-        className='p-2.5 text-warmGray-500 hover:text-coral-500 hover:bg-honey-50 rounded-lg transition-colors'
+        className='p-2.5 text-foreground hover:text-coral-500 hover:bg-honey-50 rounded-lg transition-colors'
       >
         <Settings className='w-5 h-5' />
       </button>
@@ -147,7 +147,7 @@ const NavActions = ({ handleLogout }: { handleLogout: () => void }) => {
       <div className='relative group'>
         <button
           type='button'
-          className='flex items-center space-x-2 p-2.5 text-warmGray-700 hover:bg-honey-50 rounded-lg transition-colors'
+          className='flex items-center space-x-2 p-2.5 text-foreground hover:bg-honey-50 rounded-lg transition-colors'
         >
           <div className='w-8 h-8 bg-linear-to-br from-honey-400 to-coral-400 rounded-full flex items-center justify-center'>
             <User className='w-4 h-4 text-white' />

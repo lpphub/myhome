@@ -38,10 +38,10 @@ export const TagToolbar = ({ onAddGroup, onSearch }: TagToolbarProps) => {
   return (
     <div className='flex items-center justify-between rounded-xl px-4 min-h-18 mb-6'>
       <div className='flex items-center gap-3 flex-1 max-w-md'>
-        <Search className='w-4 h-4 text-gray-400 shrink-0' />
+        <Search className='w-4 h-4 text-foreground-secondary shrink-0' />
         <div className='relative flex-1'>
           <Input
-            className='focus-visible:ring-0 h-auto text-sm placeholder:text-gray-400'
+            className='focus-visible:ring-0 h-auto text-sm placeholder:text-foreground-secondary focus:border-macaron-pink-400'
             placeholder='搜索便签名称'
             value={searchValue}
             onChange={e => handleSearchChange(e.target.value)}
@@ -49,7 +49,7 @@ export const TagToolbar = ({ onAddGroup, onSearch }: TagToolbarProps) => {
           {searchValue && (
             <button
               type='button'
-              className='absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600'
+              className='absolute right-2 top-1/2 -translate-y-1/2 text-foreground hover:text-foreground'
               onClick={() => handleSearchChange('')}
             >
               <X className='w-4 h-4' />
