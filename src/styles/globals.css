@@ -26,9 +26,10 @@
   /* 主色与辅助色 */
   --color-primary: #ff8c42; /* 橙色 */
   --color-secondary: #ffe0c7; /* 暖米色 */
+  --color-ring: var(--color-primary); /* Focus ring 颜色 */
 
   /* 功能色 */
-  --color-danger: #ff6b6b;
+  --color-destructive: #ff6b6b;
   --color-success: #48c78e;
   --color-accent: #ffdd99;
 

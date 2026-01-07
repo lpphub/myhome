@@ -1,27 +1,12 @@
 import { delay, HttpResponse, http } from 'msw'
 import type { AuthForm } from '@/types/auth'
-import type { Item, RecentActivity } from '@/types/items'
 import type { Space, SpaceForm } from '@/types/spaces'
 import type { ReorderParams, Tag, TagFormData, TagGroup } from '@/types/tags'
 
-async function loadTagsData(): Promise<{ groups: TagGroup[]; tags: TagGroup[] }> {
+async function loadTagsData(): Promise<Record<string, TagGroup[]>> {
   const res = await fetch('/data/tags.json')
   if (!res.ok) throw new Error('Failed to load tags.json')
   return res.json()
-}
-
-async function loadItemsData(): Promise<{ items: Item[] }> {
-  const res = await fetch('/data/items.json')
-  if (!res.ok) throw new Error('Failed to load items.json')
-  const data = await res.json()
-  return { items: data.items }
-}
-
-async function loadActivitiesData(): Promise<{ activities: RecentActivity[] }> {
-  const res = await fetch('/data/items.json')
-  if (!res.ok) throw new Error('Failed to load items.json')
-  const data = await res.json()
-  return { activities: data.activities }
 }
 
 async function loadSpacesData(): Promise<{ spaces: Space[] }> {
@@ -86,12 +71,29 @@ export const handlers = [
     })
   }),
 
-  http.get('/api/tags', async () => {
+  http.get('/api/tags', async ({ request }) => {
+    const url = new URL(request.url)
+    const spaceId = url.searchParams.get('spaceId')
+
     const data = await loadTagsData()
+
+    // 如果指定了 spaceId，返回对应空间的数据
+    if (spaceId) {
+      const spaceIdNum = Number.parseInt(spaceId, 10)
+      if (data[spaceIdNum]) {
+        return HttpResponse.json({
+          code: 200,
+          message: '获取标签成功',
+          data: data[spaceIdNum],
+        })
+      }
+    }
+
+    // 如果没有指定 spaceId 或 spaceId 不存在，返回空数组
     return HttpResponse.json({
       code: 200,
       message: '获取标签成功',
-      data: data.tags,
+      data: [],
     })
   }),
 
@@ -196,26 +198,6 @@ export const handlers = [
     })
   }),
 
-  http.get('/api/items', async () => {
-    await delay(200)
-    const data = await loadItemsData()
-    return HttpResponse.json({
-      code: 200,
-      message: '获取物品成功',
-      data: data.items,
-    })
-  }),
-
-  http.get('/api/items/activities', async () => {
-    await delay(200)
-    const data = await loadActivitiesData()
-    return HttpResponse.json({
-      code: 200,
-      message: '获取活动记录成功',
-      data: data.activities,
-    })
-  }),
-
   http.get('/api/spaces', async () => {
     await delay(200)
     const data = await loadSpacesData()
@@ -230,17 +212,15 @@ export const handlers = [
     const body = (await request.json()) as SpaceForm
     const data = await loadSpacesData()
 
-    const maxId =
-      data.spaces.length > 0 ? Math.max(...data.spaces.map(s => Number.parseInt(s.id, 10))) : 0
+    const maxId = data.spaces.length > 0 ? Math.max(...data.spaces.map(s => Number(s.id))) : 0
 
     const newSpace: Space = {
-      id: String(maxId + 1),
+      id: maxId + 1,
       name: body.name,
       icon: body.icon,
       color: body.color,
       description: body.description,
-      coverImage: body.coverImage,
-      noteCount: 0,
+      tagCount: 0,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }
@@ -253,7 +233,7 @@ export const handlers = [
   }),
 
   http.patch<{ id: string }>('/api/spaces/:id', async ({ params, request }) => {
-    const id = params.id
+    const id = Number.parseInt(params.id, 10)
     const body = (await request.json()) as Partial<SpaceForm>
 
     const data = await loadSpacesData()
@@ -277,9 +257,89 @@ export const handlers = [
   }),
 
   http.delete<{ id: string }>('/api/spaces/:id', async ({ params }) => {
-    const id = params.id
+    const id = Number.parseInt(params.id, 10)
     const data = await loadSpacesData()
     const space = data.spaces.find(s => s.id === id)
+
+    if (!space) {
+      return HttpResponse.json({ code: 404, message: '空间不存在' }, { status: 404 })
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: '删除空间成功',
+      data: { success: true },
+    })
+  }),
+
+  http.patch<{ id: string }>('/api/spaces/:id', async ({ params, request }) => {
+    const id = Number.parseInt(params.id, 10)
+    const body = (await request.json()) as Partial<SpaceForm>
+
+    const data = await loadSpacesData()
+    const space = data.spaces.find(s => s.id === id)
+
+    if (!space) {
+      return HttpResponse.json({ code: 404, message: '空间不存在' }, { status: 404 })
+    }
+
+    const updatedSpace: Space = {
+      ...space,
+      ...body,
+      updatedAt: new Date().toISOString(),
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: '更新空间成功',
+      data: updatedSpace,
+    })
+  }),
+
+  http.delete<{ id: string }>('/api/spaces/:id', async ({ params }) => {
+    const id = Number.parseInt(params.id, 10)
+    const data = await loadSpacesData()
+    const space = data.spaces.find(s => s.id === id)
+
+    if (!space) {
+      return HttpResponse.json({ code: 404, message: '空间不存在' }, { status: 404 })
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: '删除空间成功',
+      data: { success: true },
+    })
+  }),
+
+  http.patch<{ id: string }>('/api/spaces/:id', async ({ params, request }) => {
+    const id = Number.parseInt(params.id, 10)
+    const body = (await request.json()) as Partial<SpaceForm>
+
+    const data = await loadSpacesData()
+    const space = data.spaces.find(s => Number(s.id) === id)
+
+    if (!space) {
+      return HttpResponse.json({ code: 404, message: '空间不存在' }, { status: 404 })
+    }
+
+    const updatedSpace: Space = {
+      ...space,
+      ...body,
+      updatedAt: new Date().toISOString(),
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: '更新空间成功',
+      data: updatedSpace,
+    })
+  }),
+
+  http.delete<{ id: string }>('/api/spaces/:id', async ({ params }) => {
+    const id = Number.parseInt(params.id, 10)
+    const data = await loadSpacesData()
+    const space = data.spaces.find(s => Number(s.id) === id)
 
     if (!space) {
       return HttpResponse.json({ code: 404, message: '空间不存在' }, { status: 404 })

@@ -1,5 +1,5 @@
 {
-  "tags": [
+  "1": [
     {
       "id": 1,
       "name": "默认",
@@ -14,7 +14,8 @@
           "description": "记录常用的家庭地址",
           "createdAt": "2024-12-08T00:00:00Z",
           "updatedAt": "2024-12-08T00:00:00Z",
-          "order": 0
+          "order": 0,
+          "spaceId": 1
         },
         {
           "id": 20,
@@ -25,7 +26,8 @@
           "description": "家电和产品的保修期记录",
           "createdAt": "2024-12-07T00:00:00Z",
           "updatedAt": "2024-12-07T00:00:00Z",
-          "order": 1
+          "order": 1,
+          "spaceId": 1
         },
         {
           "id": 27,
@@ -36,102 +38,8 @@
           "description": "其他临时记录和杂项",
           "createdAt": "2024-12-30T00:00:00Z",
           "updatedAt": "2024-12-30T00:00:00Z",
-          "order": 2
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "name": "收纳",
-      "code": "storage",
-      "tags": [
-        {
-          "id": 3,
-          "name": "书房",
-          "group": "storage",
-          "color": "lavender",
-          "itemCount": 18,
-          "description": "书籍、文具和办公用品",
-          "createdAt": "2024-12-18T00:00:00Z",
-          "updatedAt": "2024-12-18T00:00:00Z",
-          "order": 0
-        },
-        {
-          "id": 2,
-          "name": "厨房",
-          "group": "storage",
-          "color": "lemon",
-          "itemCount": 42,
-          "description": "厨具、餐具和食材",
-          "createdAt": "2024-12-19T00:00:00Z",
-          "updatedAt": "2024-12-19T00:00:00Z",
-          "order": 1
-        },
-        {
-          "id": 1,
-          "name": "卧室",
-          "group": "storage",
-          "color": "honey",
-          "itemCount": 25,
-          "description": "主卧和次卧的物品",
-          "createdAt": "2024-12-20T00:00:00Z",
-          "updatedAt": "2024-12-20T00:00:00Z",
-          "order": 2
-        },
-        {
-          "id": 4,
-          "name": "客厅",
-          "group": "storage",
-          "color": "coral",
-          "itemCount": 35,
-          "description": "客厅家具和装饰品",
-          "createdAt": "2024-12-17T00:00:00Z",
-          "updatedAt": "2024-12-17T00:00:00Z",
-          "order": 3
-        },
-        {
-          "id": 5,
-          "name": "卫生间",
-          "group": "storage",
-          "color": "cream",
-          "itemCount": 15,
-          "description": "洗漱用品和毛巾",
-          "createdAt": "2024-12-16T00:00:00Z",
-          "updatedAt": "2024-12-16T00:00:00Z",
-          "order": 4
-        },
-        {
-          "id": 6,
-          "name": "阳台",
-          "group": "storage",
-          "color": "mint-green",
-          "itemCount": 8,
-          "description": "植物和园艺用品",
-          "createdAt": "2024-12-15T00:00:00Z",
-          "updatedAt": "2024-12-15T00:00:00Z",
-          "order": 5
-        },
-        {
-          "id": 23,
-          "name": "衣柜",
-          "group": "storage",
-          "color": "macaron-pink",
-          "itemCount": 30,
-          "description": "衣物和配饰收纳",
-          "createdAt": "2024-12-30T00:00:00Z",
-          "updatedAt": "2024-12-30T00:00:00Z",
-          "order": 6
-        },
-        {
-          "id": 28,
-          "name": "储物间",
-          "group": "storage",
-          "color": "coral",
-          "itemCount": 22,
-          "description": "储物间和杂物收纳",
-          "createdAt": "2024-12-30T00:00:00Z",
-          "updatedAt": "2024-12-30T00:00:00Z",
-          "order": 7
+          "order": 2,
+          "spaceId": 1
         }
       ]
     },
@@ -149,7 +57,8 @@
           "description": "亲友的生日和纪念日",
           "createdAt": "2024-12-09T00:00:00Z",
           "updatedAt": "2024-12-09T00:00:00Z",
-          "order": 0
+          "order": 0,
+          "spaceId": 1
         },
         {
           "id": 17,
@@ -160,7 +69,8 @@
           "description": "记录重要的提醒信息",
           "createdAt": "2024-12-10T00:00:00Z",
           "updatedAt": "2024-12-10T00:00:00Z",
-          "order": 1
+          "order": 1,
+          "spaceId": 1
         },
         {
           "id": 21,
@@ -171,7 +81,8 @@
           "description": "考试安排和复习计划",
           "createdAt": "2024-12-30T00:00:00Z",
           "updatedAt": "2024-12-30T00:00:00Z",
-          "order": 2
+          "order": 2,
+          "spaceId": 1
         },
         {
           "id": 22,
@@ -182,7 +93,8 @@
           "description": "重要任务的截止时间",
           "createdAt": "2024-12-30T00:00:00Z",
           "updatedAt": "2024-12-30T00:00:00Z",
-          "order": 3
+          "order": 3,
+          "spaceId": 1
         },
         {
           "id": 29,
@@ -193,7 +105,8 @@
           "description": "会议安排和会议记录",
           "createdAt": "2024-12-30T00:00:00Z",
           "updatedAt": "2024-12-30T00:00:00Z",
-          "order": 4
+          "order": 4,
+          "spaceId": 1
         },
         {
           "id": 30,
@@ -204,7 +117,113 @@
           "description": "预约和挂号信息",
           "createdAt": "2024-12-30T00:00:00Z",
           "updatedAt": "2024-12-30T00:00:00Z",
-          "order": 5
+          "order": 5,
+          "spaceId": 1
+        }
+      ]
+    }
+  ],
+  "2": [
+    {
+      "id": 2,
+      "name": "收纳",
+      "code": "storage",
+      "tags": [
+        {
+          "id": 3,
+          "name": "书房",
+          "group": "storage",
+          "color": "lavender",
+          "itemCount": 18,
+          "description": "书籍、文具和办公用品",
+          "createdAt": "2024-12-18T00:00:00Z",
+          "updatedAt": "2024-12-18T00:00:00Z",
+          "order": 0,
+          "spaceId": 2
+        },
+        {
+          "id": 2,
+          "name": "厨房",
+          "group": "storage",
+          "color": "lemon",
+          "itemCount": 42,
+          "description": "厨具、餐具和食材",
+          "createdAt": "2024-12-19T00:00:00Z",
+          "updatedAt": "2024-12-19T00:00:00Z",
+          "order": 1,
+          "spaceId": 2
+        },
+        {
+          "id": 1,
+          "name": "卧室",
+          "group": "storage",
+          "color": "honey",
+          "itemCount": 25,
+          "description": "主卧和次卧的物品",
+          "createdAt": "2024-12-20T00:00:00Z",
+          "updatedAt": "2024-12-20T00:00:00Z",
+          "order": 2,
+          "spaceId": 2
+        },
+        {
+          "id": 4,
+          "name": "客厅",
+          "group": "storage",
+          "color": "coral",
+          "itemCount": 35,
+          "description": "客厅家具和装饰品",
+          "createdAt": "2024-12-17T00:00:00Z",
+          "updatedAt": "2024-12-17T00:00:00Z",
+          "order": 3,
+          "spaceId": 2
+        },
+        {
+          "id": 5,
+          "name": "卫生间",
+          "group": "storage",
+          "color": "cream",
+          "itemCount": 15,
+          "description": "洗漱用品和毛巾",
+          "createdAt": "2024-12-16T00:00:00Z",
+          "updatedAt": "2024-12-16T00:00:00Z",
+          "order": 4,
+          "spaceId": 2
+        },
+        {
+          "id": 6,
+          "name": "阳台",
+          "group": "storage",
+          "color": "mint-green",
+          "itemCount": 8,
+          "description": "植物和园艺用品",
+          "createdAt": "2024-12-15T00:00:00Z",
+          "updatedAt": "2024-12-15T00:00:00Z",
+          "order": 5,
+          "spaceId": 2
+        },
+        {
+          "id": 23,
+          "name": "衣柜",
+          "group": "storage",
+          "color": "macaron-pink",
+          "itemCount": 30,
+          "description": "衣物和配饰收纳",
+          "createdAt": "2024-12-30T00:00:00Z",
+          "updatedAt": "2024-12-30T00:00:00Z",
+          "order": 6,
+          "spaceId": 2
+        },
+        {
+          "id": 28,
+          "name": "储物间",
+          "group": "storage",
+          "color": "coral",
+          "itemCount": 22,
+          "description": "储物间和杂物收纳",
+          "createdAt": "2024-12-30T00:00:00Z",
+          "updatedAt": "2024-12-30T00:00:00Z",
+          "order": 7,
+          "spaceId": 2
         }
       ]
     },
@@ -222,7 +241,8 @@
           "description": "记录需要完成的任务",
           "createdAt": "2024-12-12T00:00:00Z",
           "updatedAt": "2024-12-12T00:00:00Z",
-          "order": 0
+          "order": 0,
+          "spaceId": 2
         },
         {
           "id": 16,
@@ -233,7 +253,8 @@
           "description": "需要购买的物品列表",
           "createdAt": "2024-12-11T00:00:00Z",
           "updatedAt": "2024-12-11T00:00:00Z",
-          "order": 1
+          "order": 1,
+          "spaceId": 2
         },
         {
           "id": 24,
@@ -244,7 +265,8 @@
           "description": "采购计划和清单",
           "createdAt": "2024-12-30T00:00:00Z",
           "updatedAt": "2024-12-30T00:00:00Z",
-          "order": 2
+          "order": 2,
+          "spaceId": 2
         },
         {
           "id": 25,
@@ -255,7 +277,8 @@
           "description": "创意和灵感记录",
           "createdAt": "2024-12-30T00:00:00Z",
           "updatedAt": "2024-12-30T00:00:00Z",
-          "order": 3
+          "order": 3,
+          "spaceId": 2
         },
         {
           "id": 26,
@@ -266,7 +289,8 @@
           "description": "日常笔记和记录",
           "createdAt": "2024-12-30T00:00:00Z",
           "updatedAt": "2024-12-30T00:00:00Z",
-          "order": 4
+          "order": 4,
+          "spaceId": 2
         },
         {
           "id": 11,
@@ -277,7 +301,8 @@
           "description": "笔、本子和办公用品",
           "createdAt": "2024-12-16T00:00:00Z",
           "updatedAt": "2024-12-16T00:00:00Z",
-          "order": 5
+          "order": 5,
+          "spaceId": 2
         },
         {
           "id": 14,
@@ -288,7 +313,8 @@
           "description": "各类书籍和杂志",
           "createdAt": "2024-12-13T00:00:00Z",
           "updatedAt": "2024-12-13T00:00:00Z",
-          "order": 6
+          "order": 6,
+          "spaceId": 2
         },
         {
           "id": 12,
@@ -299,7 +325,8 @@
           "description": "电子产品和配件",
           "createdAt": "2024-12-15T00:00:00Z",
           "updatedAt": "2024-12-15T00:00:00Z",
-          "order": 7
+          "order": 7,
+          "spaceId": 2
         },
         {
           "id": 31,
@@ -310,7 +337,8 @@
           "description": "运动健身计划和记录",
           "createdAt": "2024-12-30T00:00:00Z",
           "updatedAt": "2024-12-30T00:00:00Z",
-          "order": 8
+          "order": 8,
+          "spaceId": 2
         },
         {
           "id": 32,
@@ -321,7 +349,192 @@
           "description": "待阅读的书籍和文章",
           "createdAt": "2024-12-30T00:00:00Z",
           "updatedAt": "2024-12-30T00:00:00Z",
-          "order": 9
+          "order": 9,
+          "spaceId": 2
+        }
+      ]
+    }
+  ],
+  "3": [
+    {
+      "id": 5,
+      "name": "心情",
+      "code": "mood",
+      "tags": [
+        {
+          "id": 33,
+          "name": "开心",
+          "group": "mood",
+          "color": "coral",
+          "itemCount": 5,
+          "description": "记录开心的事情",
+          "createdAt": "2024-12-31T00:00:00Z",
+          "updatedAt": "2024-12-31T00:00:00Z",
+          "order": 0,
+          "spaceId": 3
+        },
+        {
+          "id": 34,
+          "name": "平静",
+          "group": "mood",
+          "color": "honey",
+          "itemCount": 4,
+          "description": "心态平和时刻",
+          "createdAt": "2024-12-31T00:00:00Z",
+          "updatedAt": "2024-12-31T00:00:00Z",
+          "order": 1,
+          "spaceId": 3
+        },
+        {
+          "id": 35,
+          "name": "焦虑",
+          "group": "mood",
+          "color": "lavender",
+          "itemCount": 3,
+          "description": "焦虑的事情记录",
+          "createdAt": "2024-12-31T00:00:00Z",
+          "updatedAt": "2024-12-31T00:00:00Z",
+          "order": 2,
+          "spaceId": 3
+        },
+        {
+          "id": 36,
+          "name": "感恩",
+          "group": "mood",
+          "color": "lemon",
+          "itemCount": 8,
+          "description": "感恩的人或事",
+          "createdAt": "2024-12-31T00:00:00Z",
+          "updatedAt": "2024-12-31T00:00:00Z",
+          "order": 3,
+          "spaceId": 3
+        },
+        {
+          "id": 37,
+          "name": "激动",
+          "group": "mood",
+          "color": "coral",
+          "itemCount": 6,
+          "description": "激动或兴奋",
+          "createdAt": "2024-12-31T00:00:00Z",
+          "updatedAt": "2024-12-31T00:00:00Z",
+          "order": 4,
+          "spaceId": 3
+        },
+        {
+          "id": 38,
+          "name": "疲惫",
+          "group": "mood",
+          "color": "cream",
+          "itemCount": 7,
+          "description": "累了想休息",
+          "createdAt": "2024-12-31T00:00:00Z",
+          "updatedAt": "2024-12-31T00:00:00Z",
+          "order": 5,
+          "spaceId": 3
+        },
+        {
+          "id": 39,
+          "name": "思考",
+          "group": "mood",
+          "color": "lavender",
+          "itemCount": 4,
+          "description": "思考中的状态",
+          "createdAt": "2024-12-31T00:00:00Z",
+          "updatedAt": "2024-12-31T00:00:00Z",
+          "order": 6,
+          "spaceId": 3
+        },
+        {
+          "id": 40,
+          "name": "感动",
+          "group": "mood",
+          "color": "macaron-pink",
+          "itemCount": 5,
+          "description": "感动或想哭",
+          "createdAt": "2024-12-31T00:00:00Z",
+          "updatedAt": "2024-12-31T00:00:00Z",
+          "order": 7,
+          "spaceId": 3
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "日记",
+      "code": "journal",
+      "tags": [
+        {
+          "id": 41,
+          "name": "今日反思",
+          "group": "journal",
+          "color": "honey",
+          "itemCount": 12,
+          "description": "每日自我反思",
+          "createdAt": "2024-12-31T00:00:00Z",
+          "updatedAt": "2024-12-31T00:00:00Z",
+          "order": 0,
+          "spaceId": 3
+        },
+        {
+          "id": 42,
+          "name": "成长记录",
+          "group": "journal",
+          "color": "lemon",
+          "itemCount": 15,
+          "description": "个人成长记录",
+          "createdAt": "2024-12-31T00:00:00Z",
+          "updatedAt": "2024-12-31T00:00:00Z",
+          "order": 1,
+          "spaceId": 3
+        },
+        {
+          "id": 43,
+          "name": "目标设定",
+          "group": "journal",
+          "color": "coral",
+          "itemCount": 8,
+          "description": "短期和长期目标",
+          "createdAt": "2024-12-31T00:00:00Z",
+          "updatedAt": "2024-12-31T00:00:00Z",
+          "order": 2,
+          "spaceId": 3
+        },
+        {
+          "id": 44,
+          "name": "重要时刻",
+          "group": "journal",
+          "color": "macaron-pink",
+          "itemCount": 6,
+          "description": "重要的里程碑",
+          "createdAt": "2024-12-31T00:00:00Z",
+          "updatedAt": "2024-12-31T00:00:00Z",
+          "order": 3,
+          "spaceId": 3
+        },
+        {
+          "id": 45,
+          "name": "学习心得",
+          "group": "journal",
+          "color": "lavender",
+          "itemCount": 10,
+          "description": "学到的新知识",
+          "createdAt": "2024-12-31T00:00:00Z",
+          "updatedAt": "2024-12-31T00:00:00Z",
+          "order": 4,
+          "spaceId": 3
+        },
+        {
+          "id": 46,
+          "name": "生活感悟",
+          "group": "journal",
+          "color": "cream",
+          "itemCount": 20,
+          "description": "对生活的感悟",
+          "createdAt": "2024-12-31T00:00:00Z",
+          "updatedAt": "2024-12-31T00:00:00Z",
+          "order": 5,
+          "spaceId": 3
         }
       ]
     }

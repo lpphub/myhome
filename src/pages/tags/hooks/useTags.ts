@@ -14,11 +14,12 @@ import type { TagGroup } from '@/types/tags'
 
 const QUERY_KEY = ['tags']
 
-export function useTags() {
+export function useTags(spaceId?: string) {
   return useQuery({
-    queryKey: QUERY_KEY,
-    queryFn: getTags,
+    queryKey: spaceId ? ['tags', spaceId] : QUERY_KEY,
+    queryFn: () => getTags(spaceId),
     staleTime: 1000 * 60 * 5,
+    enabled: !!spaceId,
   })
 }
 

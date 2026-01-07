@@ -2,8 +2,10 @@ import { X } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
-import { SPACE_COLORS, SPACE_ICONS, type SpaceForm } from '@/types/spaces'
+import { SPACE_ICONS, SPACE_COLOR_CLASSES, type SpaceForm } from '@/types/spaces'
 
 interface SpaceFormModalProps {
   isOpen: boolean
@@ -58,12 +60,12 @@ export function SpaceFormModal({ isOpen, onClose }: SpaceFormModalProps) {
 
           <div className='space-y-5'>
             <div>
-              <label
+              <Label
                 htmlFor='space-name'
                 className='block text-sm font-medium text-foreground mb-2'
               >
                 空间名称
-              </label>
+              </Label>
               <Input
                 id='space-name'
                 autoFocus
@@ -75,7 +77,12 @@ export function SpaceFormModal({ isOpen, onClose }: SpaceFormModalProps) {
             </div>
 
             <div>
-              <span className='block text-sm font-medium text-warmGray-700 mb-2'>选择图标</span>
+              <Label
+                htmlFor='space-icon'
+                className='block text-sm font-medium text-foreground mb-2'
+              >
+                选择图标
+              </Label>
               <div className='grid grid-cols-10 gap-2'>
                 {SPACE_ICONS.map(icon => (
                   <button
@@ -85,7 +92,7 @@ export function SpaceFormModal({ isOpen, onClose }: SpaceFormModalProps) {
                     className={cn(
                       'w-9 h-9 rounded-lg text-xl flex items-center justify-center transition-all',
                       form.icon === icon
-                        ? 'bg-coral-100 ring-2 ring-coral-300 scale-110'
+                        ? 'bg-coral-100 ring-1 ring-coral-300 scale-110'
                         : 'hover:bg-muted-background'
                     )}
                   >
@@ -96,39 +103,43 @@ export function SpaceFormModal({ isOpen, onClose }: SpaceFormModalProps) {
             </div>
 
             <div>
-              <span className='block text-sm font-medium text-warmGray-700 mb-2'>选择颜色</span>
+              <Label
+                htmlFor='space-color'
+                className='block text-sm font-medium text-foreground mb-2'
+              >
+                选择颜色
+              </Label>
               <div className='flex gap-2'>
-                {SPACE_COLORS.map(color => (
+                {Object.entries(SPACE_COLOR_CLASSES).map(([value, config]) => (
                   <button
-                    key={color.value}
+                    key={value}
                     type='button'
-                    onClick={() => setForm({ ...form, color: color.value })}
+                    onClick={() => setForm({ ...form, color: value })}
                     className={cn(
                       'w-8 h-8 rounded-full transition-all',
-                      color.class,
-                      form.color === color.value &&
-                        'ring-2 ring-offset-2 ring-warmGray-400 scale-110'
+                      config.classes,
+                      form.color === value && 'ring-1 ring-offset-1 ring-primary scale-110'
                     )}
-                    title={color.name}
+                    title={config.name}
                   />
                 ))}
               </div>
             </div>
 
             <div>
-              <label
+              <Label
                 htmlFor='space-description'
                 className='block text-sm font-medium text-foreground mb-2'
               >
                 描述（可选）
-              </label>
-              <textarea
+              </Label>
+              <Textarea
                 id='space-description'
                 value={form.description}
                 onChange={e => setForm({ ...form, description: e.target.value })}
                 placeholder='添加空间描述...'
                 rows={3}
-                className='w-full px-3 py-2 border border-border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-coral-200 focus:border-coral-300'
+                className='w-full px-3 py-2 border border-border rounded-md resize-none focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary'
               />
             </div>
           </div>

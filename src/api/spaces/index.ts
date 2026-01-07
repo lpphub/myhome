@@ -19,11 +19,11 @@ export const createSpace = (data: SpaceForm) =>
     data,
   })
 
-export const updateSpace = (id: string, data: Partial<SpaceForm>) =>
+export const updateSpace = (id: number, data: Partial<SpaceForm>) =>
   httpClient.patch<Space>({
-    url: SpacesApi.UpdateSpace.replace(':id', id),
+    url: SpacesApi.UpdateSpace.replace(':id', String(id)),
     data,
   })
 
-export const deleteSpace = (id: string) =>
-  httpClient.delete({ url: SpacesApi.DeleteSpace.replace(':id', id) })
+export const deleteSpace = (id: number) =>
+  httpClient.delete({ url: SpacesApi.DeleteSpace.replace(':id', String(id)) })

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useParams } from 'react-router'
 import { LoadingState } from '@/components/LoadingState'
 import { TagFormDialog } from '@/pages/tags/components/TagFormDialog'
 import { TagToolbar } from '@/pages/tags/components/TagToolbar'
@@ -15,7 +16,8 @@ import {
 import type { Group, ReorderParams, TagFormData, TagGroup } from '@/types/tags'
 
 export default function TagsPage() {
-  const { data: tagsData, isLoading } = useTags()
+  const { spaceId } = useParams<{ spaceId: string }>()
+  const { data: tagsData, isLoading } = useTags(spaceId)
   /* ---------------- mutations ---------------- */
   const createTag = useCreateTag()
   const updateTag = useUpdateTag()

@@ -8,29 +8,29 @@ import { SpaceFormModal } from './components/SpaceFormModal'
 const useMockSpaces = () => {
   const mockSpaces: Space[] = [
     {
-      id: '1',
+      id: 1,
       name: '工作空间',
       icon: '🧑‍💻',
       color: 'honey',
-      noteCount: 12,
+      tagCount: 12,
       createdAt: '2024-12-01T00:00:00Z',
       updatedAt: '2025-01-05T00:00:00Z',
     },
     {
-      id: '2',
+      id: 2,
       name: '生活空间',
       icon: '🌸',
       color: 'lavender',
-      noteCount: 8,
+      tagCount: 8,
       createdAt: '2024-12-05T00:00:00Z',
       updatedAt: '2025-01-06T00:00:00Z',
     },
     {
-      id: '3',
+      id: 3,
       name: '情绪角落',
       icon: '🌙',
       color: 'coral',
-      noteCount: 5,
+      tagCount: 5,
       createdAt: '2024-12-10T00:00:00Z',
       updatedAt: '2025-01-04T00:00:00Z',
     },
@@ -66,7 +66,7 @@ function SpacesTitle() {
   return (
     <div className='mb-8'>
       <h1 className='text-3xl font-bold text-foreground mb-2'>👋 {greeting}</h1>
-      <p className='text-foreground'>{message}</p>
+      <p className='text-foreground-secondary'>{message}</p>
     </div>
   )
 }

@@ -83,8 +83,7 @@ export const TagCard = memo(({ tag, onEdit, onDelete }: TagCardProps) => {
         'border text-left overflow-hidden',
         'cursor-grab active:cursor-grabbing',
         'w-full sm:w-52 shrink-0 box-border',
-        colorClasses.bg,
-        colorClasses.border,
+        colorClasses.classes,
         rotationClass
       )}
     >
@@ -117,9 +116,9 @@ export const TagCard = memo(({ tag, onEdit, onDelete }: TagCardProps) => {
       </div>
 
       <div className='mt-5'>
-        <h3 className={cn('font-bold text-sm mb-1', colorClasses.text)}>{tag.name}</h3>
+        <h3 className={cn('font-bold text-sm mb-1', colorClasses.classes)}>{tag.name}</h3>
         {tag.description && (
-          <p className={cn('text-xs mb-1.5 line-clamp-2 opacity-80', colorClasses.text)}>
+          <p className={cn('text-xs mb-1.5 line-clamp-2 opacity-80', colorClasses.classes)}>
             {tag.description}
           </p>
         )}
@@ -127,7 +126,7 @@ export const TagCard = memo(({ tag, onEdit, onDelete }: TagCardProps) => {
           className={cn(
             'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium',
             'bg-white/60 shadow-sm',
-            colorClasses.text
+            colorClasses.classes
           )}
         >
           <span className='w-1.5 h-1.5 rounded-full bg-current opacity-60' />

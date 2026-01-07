@@ -1,6 +1,7 @@
 // types/tags.ts
 export interface Tag {
   id: number
+  spaceId?: number
   name: string
   group: string
   order: number
@@ -35,40 +36,37 @@ export interface ReorderParams {
   toIndex: number
 }
 
-export const TAG_COLOR_CLASSES: Record<string, { bg: string; border: string; text: string }> = {
+export const TAG_COLOR_CLASSES: Record<string, { classes: string; name: string }> = {
   lemon: {
-    bg: 'bg-lemon-100',
-    border: 'border-lemon-200',
-    text: 'text-lemon-900',
+    name: '柠檬',
+    classes: 'bg-lemon-100 border-lemon-200 text-lemon-900',
   },
   coral: {
-    bg: 'bg-coral-100',
-    border: 'border-coral-200',
-    text: 'text-coral-900',
+    name: '珊瑚',
+    classes: 'bg-coral-100 border-coral-200 text-coral-900',
   },
   lavender: {
-    bg: 'bg-lavender-100',
-    border: 'border-lavender-200',
-    text: 'text-lavender-900',
+    name: '薰衣草',
+    classes: 'bg-lavender-100 border-lavender-200 text-lavender-900',
   },
   honey: {
-    bg: 'bg-honey-100',
-    border: 'border-honey-200',
-    text: 'text-honey-900',
+    name: '蜂蜜',
+    classes: 'bg-honey-100 border-honey-200 text-honey-900',
   },
   cream: {
-    bg: 'bg-cream-100',
-    border: 'border-cream-200',
-    text: 'text-cream-900',
+    name: '奶油',
+    classes: 'bg-cream-100 border-cream-200 text-cream-900',
   },
   'macaron-pink': {
-    bg: 'bg-macaron-pink-100',
-    border: 'border-macaron-pink-200',
-    text: 'text-macaron-pink-900',
+    name: '马卡龙粉',
+    classes: 'bg-macaron-pink-100 border-macaron-pink-200 text-macaron-pink-900',
   },
   'mint-green': {
-    bg: 'bg-mint-green-50',
-    border: 'border-mint-green-200',
-    text: 'text-mint-green-900',
+    name: '薄荷绿',
+    classes: 'bg-mint-green-50 border-mint-green-200 text-mint-green-900',
   },
+}
+
+export const getTagBgColorClass = (color: string): string => {
+  return `bg-${color}-100`
 }

@@ -18,13 +18,13 @@ const navItems: NavItem[] = [
     path: '/',
     description: '空间管理',
   },
-  {
-    id: 'tags',
-    label: '便签墙',
-    icon: Tag,
-    path: '/tags',
-    description: '便签管理',
-  },
+  // {
+  //   id: 'tags',
+  //   label: '便签墙',
+  //   icon: Tag,
+  //   path: '/tags',
+  //   description: '便签管理',
+  // },
 ]
 
 // NavigationLogo 组件

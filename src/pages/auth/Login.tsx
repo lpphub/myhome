@@ -106,7 +106,7 @@ export default function Login() {
           <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
             {/* 通用错误信息 */}
             {errors.root && (
-              <div className='bg-danger/10 border border-danger/30 text-danger px-4 py-3 rounded-xl text-sm'>
+              <div className='bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 rounded-xl text-sm'>
                 {errors.root.message}
               </div>
             )}
@@ -120,11 +120,13 @@ export default function Login() {
                 id='email'
                 type='email'
                 placeholder='your@email.com'
-                className={`rounded-xl ${errors.email ? 'border-danger' : 'border-border'}`}
+                className={`rounded-xl ${errors.email ? 'border-destructive' : 'border-border'}`}
                 disabled={isPending}
                 {...register('email')}
               />
-              {errors.email && <p className='text-danger text-sm mt-1'>{errors.email.message}</p>}
+              {errors.email && (
+                <p className='text-destructive text-sm mt-1'>{errors.email.message}</p>
+              )}
             </div>
 
             {/* 密码输入 */}
@@ -137,7 +139,7 @@ export default function Login() {
                   id='password'
                   type={showPassword ? 'text' : 'password'}
                   placeholder='请输入密码'
-                  className={`rounded-xl pr-10 ${errors.password ? 'border-danger' : 'border-border'}`}
+                  className={`rounded-xl pr-10 ${errors.password ? 'border-destructive' : 'border-border'}`}
                   disabled={isPending}
                   {...register('password')}
                 />
@@ -151,7 +153,7 @@ export default function Login() {
                 </button>
               </div>
               {errors.password && (
-                <p className='text-danger text-sm mt-1'>{errors.password.message}</p>
+                <p className='text-destructive text-sm mt-1'>{errors.password.message}</p>
               )}
             </div>
 

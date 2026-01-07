@@ -25,7 +25,7 @@ import { type Group, TAG_COLOR_CLASSES, type TagFormData } from '@/types/tags'
 const tagFormSchema = z.object({
   name: z.string().min(1, '请输入便签名称').max(20, '便签名称最多20个字符'),
   group: z.string().min(1, '请选择分组'),
-  color: z.enum(['lemon', 'coral', 'lavender', 'honey', 'cream', 'pink', 'mint']),
+  color: z.enum(['lemon', 'coral', 'lavender', 'honey', 'cream', 'macaron-pink', 'mint-green']),
   description: z.string().optional(),
 })
 
@@ -124,7 +124,7 @@ export const TagFormDialog = ({
               className={
                 form.formState.errors.name
                   ? 'border-red-500 ring-1 ring-red-500'
-                  : 'border-border focus:border-honey-400'
+                  : 'border-border focus:border-honey-200'
               }
             />
             {form.formState.errors.name && (
@@ -175,8 +175,8 @@ export const TagFormDialog = ({
                   className={`h-12 rounded-lg border transition-all ${
                     form.watch('color') === color
                       ? 'border-honey-400 ring-1 ring-honey-200'
-                      : 'border-transparent hover:border-honey-300'
-                  } ${TAG_COLOR_CLASSES[color].bg}`}
+                      : 'border-transparent hover:border-honey-200'
+                  } ${TAG_COLOR_CLASSES[color].classes}`}
                 >
                   {form.watch('color') === color && (
                     <svg
