@@ -190,14 +190,10 @@ export default function TagsPage() {
       <TagWall
         tags={filteredTags}
         tagActions={{
-          onEdit: tag => {
-            handleOpenDialog(tag)
-          },
+          onEdit: tag => handleOpenDialog(tag),
           onDelete: handleDeleteTag,
         }}
-        onAddTag={group => {
-          handleOpenDialog({ group, name: '', color: 'lemon' })
-        }}
+        onAddTag={group => handleOpenDialog({ group, name: '', color: 'lemon' })}
         onDragReorder={handleDragReorder}
         onDeleteGroup={handleDeleteGroup}
       />

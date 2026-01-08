@@ -76,12 +76,7 @@ export default function Spaces() {
     [createMutation, updateMutation]
   )
 
-  const handleCreate = useCallback(() => {
-    setEditingSpace(undefined)
-    setOpenDialog(true)
-  }, [])
-
-  const handleEdit = useCallback((space: Space) => {
+  const handleOpenDialog = useCallback((space?: Space) => {
     setEditingSpace(space)
     setOpenDialog(true)
   }, [])
@@ -100,8 +95,9 @@ export default function Spaces() {
           <p className='text-foreground-secondary'>{message}</p>
         </div>
 
-        <SpaceList spaces={spaceList} onAdd={handleCreate} onEdit={handleEdit} />
+        <SpaceList spaces={spaceList} onAdd={handleOpenDialog} onEdit={s => handleOpenDialog(s)} />
       </main>
+
       <SpaceFormDialog
         open={openDialog}
         onClose={() => setOpenDialog(false)}
