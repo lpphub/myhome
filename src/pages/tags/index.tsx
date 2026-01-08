@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router'
 import { LoadingState } from '@/components/LoadingState'
-import { TagForm } from '@/pages/tags/components/TagForm'
+import { TagFormDialog } from '@/pages/tags/components/TagFormDialog'
 import { TagToolbar } from '@/pages/tags/components/TagToolbar'
 import { TagWall } from '@/pages/tags/components/TagWall'
 import {
@@ -33,8 +33,8 @@ export default function TagsPage() {
   const [searchKeyword, setSearchKeyword] = useState('')
 
   // dialog
-  const [isDialogOpen, setDialogOpen] = useState(false)
-  const [dialogTag, setDialogTag] = useState<TagFormData | null>(null)
+  const [openDialog, setOpenDialog] = useState(false)
+  const [editingTag, setEditingTag] = useState<TagFormData | undefined>()
 
   /* ---------------- 初始化 / 同步 ---------------- */
 
@@ -75,56 +75,49 @@ export default function TagsPage() {
 
   /* ---------------- handlers ---------------- */
 
-  const handleAddGroup = useCallback(
-    (groupName: string) => {
-      createGroup.mutate({ name: groupName, spaceId: Number(spaceId) }, {
-        onSuccess: group => {
-          setLocalTags(prev => [...prev, { ...group, tags: [] }])
-        },
-      })
-    },
-    [createGroup]
-  )
-
-  const handleAddTag = useCallback(
+  const handleSubmitTag = useCallback(
     (data: TagFormData) => {
-      createTag.mutate(
-        { ...data, spaceId: Number(spaceId) },
-        {
-          onSuccess: tag => {
-            setLocalTags(prev =>
-              prev.map(group =>
-                group.code === data.group
-                  ? {
-                      ...group,
-                      tags: [...group.tags, { ...tag }],
-                    }
-                  : group
-              )
-            )
-          },
-        }
-      )
-    },
-    [createTag, spaceId]
-  )
+      if (data.id) {
+        // 编辑
+        // updateTag.mutate(data)
 
-  const handleUpdateTag = useCallback(
-    (data: TagFormData) => {
-      setLocalTags(prev =>
-        prev.map(group =>
-          group.code === data.group
-            ? {
-                ...group,
-                tags: group.tags.map(tag => (tag.id === data.id ? { ...tag, ...data } : tag)),
-              }
-            : group
+        setLocalTags(prev =>
+          prev.map(group =>
+            group.code === data.group
+              ? {
+                  ...group,
+                  tags: group.tags.map(tag => (tag.id === data.id ? { ...tag, ...data } : tag)),
+                }
+              : group
+          )
         )
-      )
 
-      updateTag.mutate(data)
+        updateTag.mutate(data)
+      } else {
+        // 新增
+        console.log('add tag', data)
+        // addTag.mutate(data)
+
+        createTag.mutate(
+          { ...data, spaceId: Number(spaceId) },
+          {
+            onSuccess: tag => {
+              setLocalTags(prev =>
+                prev.map(group =>
+                  group.code === data.group
+                    ? {
+                        ...group,
+                        tags: [...group.tags, { ...tag }],
+                      }
+                    : group
+                )
+              )
+            },
+          }
+        )
+      }
     },
-    [updateTag]
+    [createTag, updateTag, spaceId]
   )
 
   const handleDeleteTag = useCallback(
@@ -141,6 +134,20 @@ export default function TagsPage() {
       })
     },
     [deleteTag]
+  )
+
+  const handleAddGroup = useCallback(
+    (groupName: string) => {
+      createGroup.mutate(
+        { name: groupName, spaceId: Number(spaceId) },
+        {
+          onSuccess: group => {
+            setLocalTags(prev => [...prev, { ...group, tags: [] }])
+          },
+        }
+      )
+    },
+    [createGroup, spaceId]
   )
 
   const handleDeleteGroup = useCallback(
@@ -171,34 +178,34 @@ export default function TagsPage() {
 
   return (
     <div className='max-w-7xl mx-auto px-4 py-6'>
+      {/* 操作栏 */}
       <TagToolbar onAddGroup={handleAddGroup} onSearch={setSearchKeyword} />
 
+      {/* 标签墙 */}
       <TagWall
         tags={filteredTags}
         tagActions={{
           onEdit: tag => {
-            setDialogTag({ ...tag })
-            setDialogOpen(true)
+            setEditingTag(tag)
+            setOpenDialog(true)
           },
           onDelete: handleDeleteTag,
         }}
-        onAddTag={group => {
-          setDialogTag({ name: '', group, color: 'lemon' })
-          setDialogOpen(true)
+        onAddTag={() => {
+          setEditingTag(undefined)
+          setOpenDialog(true)
         }}
         onReorder={handleReorder}
         onDeleteGroup={handleDeleteGroup}
       />
 
-      <TagForm
-        isOpen={isDialogOpen}
-        onClose={() => setDialogOpen(false)}
-        initialData={dialogTag}
+      {/* Dialog */}
+      <TagFormDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        editData={editingTag}
         groups={groupsSelected}
-        actions={{
-          addTag: handleAddTag,
-          updateTag: handleUpdateTag,
-        }}
+        onSubmit={handleSubmitTag}
       />
     </div>
   )

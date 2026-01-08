@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import {
@@ -22,88 +22,83 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { type Group, TAG_COLOR_CLASSES, type TagFormData } from '@/types/tags'
 
-const tagFormSchema = z.object({
-  name: z.string().min(1, '请输入便签名称').max(20, '便签名称最多20个字符'),
+export const tagSchema = z.object({
+  name: z.string().min(1, '请输入便签名称').max(20),
   group: z.string().min(1, '请选择分组'),
   color: z.enum(['lemon', 'coral', 'lavender', 'honey', 'cream', 'macaron-pink', 'mint-green']),
   description: z.string().optional(),
 })
 
-type TagFormValues = z.infer<typeof tagFormSchema>
+export type TagFormValues = z.infer<typeof tagSchema>
 
 interface TagFormProps {
-  isOpen: boolean
+  open: boolean
   onClose: () => void
-  initialData: TagFormData | null
+  editData?: TagFormData
   groups: Group[]
-  actions: {
-    addTag: (tag: TagFormData) => void
-    updateTag?: (tag: TagFormData) => void
-  }
+  onSubmit: (data: TagFormData) => void
 }
 
-export const TagForm = ({
-  isOpen,
-  onClose,
-  initialData,
-  groups,
-  actions,
-}: TagFormProps) => {
-  const isEditing = Boolean(initialData?.id && initialData.id > 0)
+export const TagFormDialog = ({ open, onClose, editData, groups, onSubmit }: TagFormProps) => {
+  const defaultValues: TagFormValues = {
+    name: '',
+    group: 'default',
+    color: 'lemon',
+    description: '',
+  }
 
   const form = useForm<TagFormValues>({
-    resolver: zodResolver(tagFormSchema),
-    mode: 'onChange',
-    defaultValues: {
-      name: '',
-      group: 'storage',
-      color: 'lemon',
-      description: '',
-    },
+    resolver: zodResolver(tagSchema),
+    defaultValues,
   })
 
-  useEffect(() => {
-    if (!isOpen) return
-    if (initialData) {
-      form.reset({
-        name: initialData.name,
-        group: initialData.group,
-        color: (initialData.color as TagFormValues['color']) || 'lemon',
-        description: initialData.description || '',
-      })
-    } else {
-      form.reset()
-    }
-  }, [isOpen, initialData, form])
+  /* ---------- 编辑态注入默认值 ---------- */
+  const isEditing = Boolean(editData?.id)
 
-  const handleClose = useCallback(() => {
+  useEffect(() => {
+    if (!open) return
+
+    form.reset(
+      editData
+        ? {
+            name: editData.name,
+            group: editData.group,
+            color: editData.color as TagFormValues['color'],
+            description: editData.description ?? '',
+          }
+        : defaultValues
+    )
+  }, [open, editData, form])
+
+  /* ---------- submit ---------- */
+  const handleSubmit = (values: TagFormValues) => {
+    onSubmit({
+      id: editData?.id,
+      name: values.name.trim(),
+      group: values.group,
+      color: values.color,
+      description: values.description?.trim(),
+    })
+
+    handleClose()
+  }
+
+  const handleClose = () => {
     form.reset()
     onClose()
-  }, [onClose, form])
-
-  const handleSubmit = useCallback(
-    (data: TagFormValues) => {
-      const payload: TagFormData = {
-        id: initialData?.id,
-        name: data.name.trim(),
-        group: data.group,
-        color: data.color,
-        description: data.description?.trim(),
-      }
-
-      if (isEditing && actions.updateTag) {
-        actions.updateTag(payload)
-      } else {
-        actions.addTag(payload)
-      }
-      handleClose()
-    },
-    [initialData?.id, isEditing, actions.updateTag, actions.addTag, handleClose]
-  )
+  }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className='sm:max-w-md bg-white border-honey-200 rounded-lg max-h-[90vh] overflow-y-auto'>
+    <Dialog
+      open={open}
+      onOpenChange={open => {
+        if (!open) handleClose()
+      }}
+    >
+      <DialogContent
+        onOpenAutoFocus={e => e.preventDefault()}
+        className='sm:max-w-md bg-white border-honey-200 rounded-lg max-h-[90vh] overflow-y-auto'
+      >
         <DialogHeader>
           <DialogTitle className='text-2xl font-bold text-foreground'>
             {isEditing ? '编辑便签' : '添加新便签'}
@@ -166,38 +161,44 @@ export const TagForm = ({
           </div>
 
           <div className='space-y-2'>
-            <Label className='flex items-center gap-2'>便签颜色</Label>
-            <div className='grid grid-cols-4 gap-2'>
-              {Object.keys(TAG_COLOR_CLASSES).map(color => (
-                <button
-                  key={color}
-                  type='button'
-                  onClick={() => form.setValue('color', color as TagFormValues['color'])}
-                  className={`h-12 rounded-lg border transition-all ${
-                    form.watch('color') === color
-                      ? 'border-honey-400 ring-1 ring-honey-200'
-                      : 'border-transparent hover:border-honey-300'
-                  } ${TAG_COLOR_CLASSES[color].classes}`}
-                >
-                  {form.watch('color') === color && (
-                    <svg
-                      className='w-6 h-6 mx-auto text-current opacity-60'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
+            <Label>便签颜色</Label>
+            <Controller
+              name='color'
+              control={form.control}
+              render={({ field }) => (
+                <div className='grid grid-cols-4 gap-2'>
+                  {Object.entries(TAG_COLOR_CLASSES).map(([color]) => (
+                    <button
+                      key={color}
+                      type='button'
+                      onClick={() => field.onChange(color)} // ✅ 正确触发 onChange
+                      className={`h-12 rounded-lg border transition-all ${
+                        field.value === color
+                          ? 'border-honey-400 ring-1 ring-honey-200' // ✅ 选中状态
+                          : 'border-transparent hover:border-honey-300'
+                      } ${TAG_COLOR_CLASSES[color].classes}`}
                     >
-                      <title>已选择</title>
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth={2}
-                        d='M5 13l4 4L19 7'
-                      />
-                    </svg>
-                  )}
-                </button>
-              ))}
-            </div>
+                      {field.value === color && (
+                        <svg
+                          className='w-6 h-6 mx-auto text-current opacity-60'
+                          fill='none'
+                          stroke='currentColor'
+                          viewBox='0 0 24 24'
+                          aria-hidden='true'
+                        >
+                          <path
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
+                            strokeWidth={2}
+                            d='M5 13l4 4L19 7'
+                          />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            />
           </div>
 
           <div className='space-y-2'>
@@ -231,7 +232,7 @@ export const TagForm = ({
             </Button>
             <Button
               type='submit'
-              disabled={!form.formState.isValid}
+              disabled={form.formState.isSubmitting}
               className='flex-1 bg-linear-to-r from-honey-400 to-honey-500 hover:from-honey-500 hover:to-honey-600 text-white'
             >
               {isEditing ? '保存修改' : '添加便签'}
