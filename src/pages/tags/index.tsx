@@ -38,7 +38,6 @@ export default function TagsPage() {
   const [editingTag, setEditingTag] = useState<TagFormData | undefined>()
 
   /* ---------------- 初始化 / 同步 ---------------- */
-
   useEffect(() => {
     if (tagsData) {
       setLocalTags(tagsData)
@@ -46,7 +45,6 @@ export default function TagsPage() {
   }, [tagsData])
 
   /* ---------------- 派生数据 ---------------- */
-
   const filteredTags = useMemo(() => {
     if (!searchKeyword.trim()) return localTags
 
@@ -75,7 +73,6 @@ export default function TagsPage() {
   )
 
   /* ---------------- handlers ---------------- */
-
   const handleSubmitTag = useCallback(
     (data: TagFormData) => {
       if (data.id) {
@@ -139,6 +136,18 @@ export default function TagsPage() {
     [deleteTag]
   )
 
+  /* 拖拽排序 */
+  const handleDragReorder = useCallback(
+    (params: ReorderParams, nextTags: TagGroup[]) => {
+      // 1️⃣ UI 立即变
+      setLocalTags(nextTags)
+
+      // 2️⃣ 后台同步
+      reorderTags.mutate(params)
+    },
+    [reorderTags]
+  )
+
   const handleAddGroup = useCallback(
     (groupName: string) => {
       createGroup.mutate(
@@ -164,17 +173,10 @@ export default function TagsPage() {
     [deleteGroup]
   )
 
-  /* ===== 拖拽排序 ===== */
-  const handleReorder = useCallback(
-    (params: ReorderParams, nextTags: TagGroup[]) => {
-      // 1️⃣ UI 立即变
-      setLocalTags(nextTags)
-
-      // 2️⃣ 后台同步
-      reorderTags.mutate(params)
-    },
-    [reorderTags]
-  )
+  const handleOpenDialog = useCallback((tag?: TagFormData) => {
+    setEditingTag(tag)
+    setOpenDialog(true)
+  }, [])
 
   if (isLoading) return <LoadingState type='loading' />
   if (!tagsData) return <LoadingState type='error' />
@@ -189,16 +191,14 @@ export default function TagsPage() {
         tags={filteredTags}
         tagActions={{
           onEdit: tag => {
-            setEditingTag(tag)
-            setOpenDialog(true)
+            handleOpenDialog(tag)
           },
           onDelete: handleDeleteTag,
         }}
         onAddTag={group => {
-          setEditingTag({ group, name: '', color: 'lemon' })
-          setOpenDialog(true)
+          handleOpenDialog({ group, name: '', color: 'lemon' })
         }}
-        onReorder={handleReorder}
+        onDragReorder={handleDragReorder}
         onDeleteGroup={handleDeleteGroup}
       />
 

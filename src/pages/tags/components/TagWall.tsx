@@ -62,7 +62,7 @@ interface TagWallProps {
   tags: TagGroup[]
   tagActions: TagActions
   onAddTag: (group: string) => void
-  onReorder: (params: ReorderParams, next: TagGroup[]) => void
+  onDragReorder: (params: ReorderParams, next: TagGroup[]) => void
   onDeleteGroup?: (code: string) => void
 }
 
@@ -73,7 +73,13 @@ interface DragState {
 
 /* ---------------- component ---------------- */
 
-export function TagWall({ tags, tagActions, onAddTag, onReorder, onDeleteGroup }: TagWallProps) {
+export function TagWall({
+  tags,
+  tagActions,
+  onAddTag,
+  onDragReorder,
+  onDeleteGroup,
+}: TagWallProps) {
   const [dragState, setDragState] = useState<DragState>({
     activeTag: null,
     overId: null,
@@ -148,7 +154,7 @@ export function TagWall({ tags, tagActions, onAddTag, onReorder, onDeleteGroup }
 
       const next = reorderTags(tags, fromGroup.code, fromIndex, tag, toGroup, toIndex)
 
-      onReorder(
+      onDragReorder(
         {
           fromId: activeId,
           toGroup,
@@ -157,7 +163,7 @@ export function TagWall({ tags, tagActions, onAddTag, onReorder, onDeleteGroup }
         next
       )
     },
-    [tags, tagLookup, onReorder]
+    [tags, tagLookup, onDragReorder]
   )
 
   /* ---------------- render ---------------- */
