@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
@@ -34,12 +34,12 @@ export type TagFormValues = z.infer<typeof tagSchema>
 interface TagFormProps {
   open: boolean
   onClose: () => void
-  editData?: TagFormData
-  groups: Group[]
   onSubmit: (data: TagFormData) => void
+  initialData?: TagFormData
+  groups: Group[]
 }
 
-export const TagFormDialog = ({ open, onClose, editData, groups, onSubmit }: TagFormProps) => {
+export const TagFormDialog = ({ open, onClose, initialData, groups, onSubmit }: TagFormProps) => {
   const defaultValues: TagFormValues = {
     name: '',
     group: 'default',
@@ -53,27 +53,27 @@ export const TagFormDialog = ({ open, onClose, editData, groups, onSubmit }: Tag
   })
 
   /* ---------- 编辑态注入默认值 ---------- */
-  const isEditing = Boolean(editData?.id)
+  const isEditing = Boolean(initialData?.id)
 
   useEffect(() => {
     if (!open) return
 
     form.reset(
-      editData
+      initialData
         ? {
-            name: editData.name,
-            group: editData.group,
-            color: editData.color as TagFormValues['color'],
-            description: editData.description ?? '',
+            name: initialData.name,
+            group: initialData.group,
+            color: initialData.color as TagFormValues['color'],
+            description: initialData.description ?? '',
           }
         : defaultValues
     )
-  }, [open, editData, form])
+  }, [open, initialData, form])
 
   /* ---------- submit ---------- */
   const handleSubmit = (values: TagFormValues) => {
     onSubmit({
-      id: editData?.id,
+      id: initialData?.id,
       name: values.name.trim(),
       group: values.group,
       color: values.color,
@@ -115,6 +115,7 @@ export const TagFormDialog = ({ open, onClose, editData, groups, onSubmit }: Tag
             </Label>
             <Input
               id='tag'
+              autoFocus
               placeholder='例如：卧室、零食等'
               {...form.register('name')}
               className={
@@ -132,29 +133,24 @@ export const TagFormDialog = ({ open, onClose, editData, groups, onSubmit }: Tag
             <Label htmlFor='group' className='flex items-center gap-2'>
               分组 *
             </Label>
-            <Select
-              value={form.watch('group')}
-              onValueChange={value => form.setValue('group', value)}
-              disabled={isEditing}
-            >
-              <SelectTrigger
-                id='group'
-                className={
-                  form.formState.errors.group
-                    ? 'border-red-500 ring-1 ring-red-500'
-                    : 'border-border focus:border-honey-200'
-                }
-              >
-                <SelectValue placeholder='选择分组' />
-              </SelectTrigger>
-              <SelectContent className='bg-white border-honey-200 shadow-sm w-64'>
-                {groups.map(group => (
-                  <SelectItem key={group.code} value={group.code}>
-                    {group.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Controller
+              name='group'
+              control={form.control}
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange} disabled={isEditing}>
+                  <SelectTrigger>
+                    <SelectValue placeholder='选择分组' />
+                  </SelectTrigger>
+                  <SelectContent className='bg-white border-honey-200 shadow-sm w-64'>
+                    {groups.map(g => (
+                      <SelectItem key={g.code} value={g.code}>
+                        {g.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
             {form.formState.errors.group && (
               <p className='text-sm text-coral-500'>{form.formState.errors.group.message}</p>
             )}

@@ -191,8 +191,8 @@ export default function TagsPage() {
           },
           onDelete: handleDeleteTag,
         }}
-        onAddTag={() => {
-          setEditingTag(undefined)
+        onAddTag={group => {
+          setEditingTag({ group, name: '', color: 'lemon' })
           setOpenDialog(true)
         }}
         onReorder={handleReorder}
@@ -203,7 +203,7 @@ export default function TagsPage() {
       <TagFormDialog
         open={openDialog}
         onClose={() => setOpenDialog(false)}
-        editData={editingTag}
+        initialData={editingTag}
         groups={groupsSelected}
         onSubmit={handleSubmitTag}
       />
