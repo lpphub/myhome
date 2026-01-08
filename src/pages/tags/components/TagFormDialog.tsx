@@ -25,7 +25,7 @@ import { type Group, TAG_COLOR_CLASSES, type TagFormData } from '@/types/tags'
 export const tagSchema = z.object({
   name: z.string().min(1, '请输入便签名称').max(20),
   group: z.string().min(1, '请选择分组'),
-  color: z.enum(['lemon', 'coral', 'lavender', 'honey', 'cream', 'macaron-pink', 'mint-green']),
+  color: z.enum(Object.keys(TAG_COLOR_CLASSES) as [keyof typeof TAG_COLOR_CLASSES, ...string[]]),
   description: z.string().optional(),
 })
 
@@ -67,20 +67,13 @@ export const TagFormDialog = ({ open, onClose, initialData, groups, onSubmit }: 
       color: values.color,
       description: values.description?.trim(),
     })
-
-    handleClose()
-  }
-
-  const handleClose = () => {
-    form.reset()
-    onClose()
   }
 
   return (
     <Dialog
       open={open}
       onOpenChange={open => {
-        if (!open) handleClose()
+        if (!open) onClose()
       }}
     >
       <DialogContent
@@ -209,7 +202,7 @@ export const TagFormDialog = ({ open, onClose, initialData, groups, onSubmit }: 
             <Button
               type='button'
               variant='outline'
-              onClick={handleClose}
+              onClick={onClose}
               className='flex-1 border-honey-200 text-foreground hover:bg-honey-50'
             >
               取消

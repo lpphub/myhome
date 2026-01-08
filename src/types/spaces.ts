@@ -10,6 +10,7 @@ export interface Space {
 }
 
 export interface SpaceForm {
+  id?: number
   name: string
   icon: string
   color: string

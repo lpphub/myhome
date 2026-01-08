@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router'
+import { set } from 'zod'
 import { LoadingState } from '@/components/LoadingState'
-import { TagFormDialog } from '@/pages/tags/components/TagFormDialog'
-import { TagToolbar } from '@/pages/tags/components/TagToolbar'
-import { TagWall } from '@/pages/tags/components/TagWall'
 import {
   useCreateGroup,
   useCreateTag,
@@ -14,6 +12,9 @@ import {
   useUpdateTag,
 } from '@/pages/tags/hooks/useTags'
 import type { Group, ReorderParams, TagFormData, TagGroup } from '@/types/tags'
+import { TagFormDialog } from './components/TagFormDialog'
+import { TagToolbar } from './components/TagToolbar'
+import { TagWall } from './components/TagWall'
 
 export default function TagsPage() {
   const { spaceId } = useParams<{ spaceId: string }>()
@@ -116,6 +117,8 @@ export default function TagsPage() {
           }
         )
       }
+
+      setOpenDialog(false)
     },
     [createTag, updateTag, spaceId]
   )

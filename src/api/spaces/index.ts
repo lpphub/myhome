@@ -19,9 +19,9 @@ export const createSpace = (data: SpaceForm) =>
     data,
   })
 
-export const updateSpace = (id: number, data: Partial<SpaceForm>) =>
+export const updateSpace = (data: SpaceForm) =>
   httpClient.patch<Space>({
-    url: SpacesApi.UpdateSpace.replace(':id', String(id)),
+    url: SpacesApi.UpdateSpace.replace(':id', String(data.id)),
     data,
   })
 
