@@ -1,7 +1,7 @@
 import { Clock, Edit2, FileText, Plus } from 'lucide-react'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
-import { SPACE_COLOR_CLASSES, type Space } from '@/types/spaces'
+import type { Space } from '@/types/spaces'
 
 interface SpaceCardProps {
   space: Space
@@ -10,7 +10,6 @@ interface SpaceCardProps {
 
 function SpaceCard({ space, onEdit }: SpaceCardProps) {
   const navigate = useNavigate()
-  const colorClass = SPACE_COLOR_CLASSES[space.color]
 
   const formatDate = (date: string) => {
     const diff = Date.now() - new Date(date).getTime()
@@ -30,83 +29,53 @@ function SpaceCard({ space, onEdit }: SpaceCardProps) {
     [onEdit, space]
   )
 
-  // 3D tilt effect on mouse move
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = e.currentTarget
-    const rect = card.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    const centerX = rect.width / 2
-    const centerY = rect.height / 2
-    const rotateX = (y - centerY) / 15 // Max ~5deg rotation
-    const rotateY = (centerX - x) / 15
-
-    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`
-  }
-
-  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.transform = ''
-  }
-
   return (
     <div
       role='button'
       tabIndex={0}
       onClick={() => navigate(`/tags/${space.id}`)}
       onKeyDown={e => e.key === 'Enter' && navigate(`/tags/${space.id}`)}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className={`group relative bg-white rounded-2xl p-6 cursor-pointer
-                 transition-all duration-200 ease-out select-none overflow-hidden
-                 shadow-[0_4px_12px_rgba(0,0,0,0.05)]
-                 border-2 ${colorClass?.classes.split(' ')[1]}
-                 hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)]
-                 hover:border-opacity-80
-                 will-change-transform`}
+      className='group relative bg-white rounded-2xl p-6 cursor-pointer
+                 transition-all duration-300 ease-out select-none overflow-hidden
+                 shadow-[0_2px_8px_rgba(0,0,0,0.06)]
+                 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)]
+                 min-h-50 flex flex-col justify-between'
     >
       {onEdit && (
         <button
           type='button'
           onClick={handleEditClick}
-          className='absolute top-4 right-4 p-1.5 rounded-full bg-gray-100 hover:bg-gray-200
-                     transition-colors duration-200 z-20'
+          className='absolute top-4 right-4 p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 z-20 opacity-0 group-hover:opacity-100'
           title='编辑'
         >
           <Edit2 className='w-4 h-4 text-gray-600' />
         </button>
       )}
 
-      {/* Icon container - colored background with white border effect */}
-      <div className='flex justify-center mb-4'>
-        <div
-          className={`w-12 h-12 rounded-xl flex items-center justify-center
-                        shadow-sm group-hover:shadow-md transition-all duration-200
-                        ${colorClass?.classes.split(' ')[0]}`}
-        >
-          <span className='text-2xl'>{space.icon}</span>
+      <div className='flex items-start gap-4'>
+        <div className='w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0'>
+          <span className='text-xl'>{space.icon}</span>
+        </div>
+
+        <div className='flex-1 min-w-0'>
+          <h3 className='font-semibold text-gray-900 text-base mb-2'>{space.name}</h3>
         </div>
       </div>
 
-      {/* Content - centered layout */}
-      <div className='flex flex-col h-full'>
-        <h3 className='font-semibold text-lg text-gray-800 text-center mb-2'>{space.name}</h3>
+      {space.description && (
+        <p className='text-sm text-gray-600 line-clamp-2 leading-relaxed'>{space.description}</p>
+      )}
 
-        {space.description && (
-          <p className='text-sm text-gray-600 text-center line-clamp-2 mb-4'>{space.description}</p>
-        )}
-
-        {/* Meta info row - spread like CTA, pushed to bottom */}
-        <div className='flex items-center justify-between text-sm mt-auto pt-2'>
-          {space.tagCount !== undefined && (
-            <div className='flex items-center gap-1.5 text-gray-600'>
-              <FileText className='w-4 h-4' />
-              <span>{space.tagCount}张</span>
-            </div>
-          )}
-          <div className='flex items-center gap-1.5 text-gray-600'>
-            <Clock className='w-4 h-4' />
-            <span>{formatDate(space.updatedAt)}</span>
+      <div className='flex items-center justify-between mt-4 pt-3 border-t border-gray-100'>
+        {space.tagCount !== undefined && (
+          <div className='flex items-center gap-1.5 text-sm font-medium text-gray-700'>
+            <FileText className='w-4 h-4' />
+            <span>{space.tagCount} 张</span>
           </div>
+        )}
+        <div className='flex items-center gap-1.5 text-sm text-gray-500'>
+          <Clock className='w-4 h-4' />
+          <span>{formatDate(space.updatedAt)}</span>
         </div>
       </div>
     </div>
@@ -121,7 +90,7 @@ interface SpaceListProps {
 
 export function SpaceList({ spaces, onAdd, onEdit }: SpaceListProps) {
   return (
-    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
+    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
       {spaces.map((space, index) => (
         <div
           key={space.id}
@@ -131,29 +100,25 @@ export function SpaceList({ spaces, onAdd, onEdit }: SpaceListProps) {
           <SpaceCard space={space} onEdit={onEdit} />
         </div>
       ))}
-      {/* Add Space button with matching style */}
       <button
         type='button'
         onClick={onAdd}
-        className='group w-full bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.05)]
-                   border-2 border-dashed border-gray-200 overflow-hidden
-                   transition-all duration-200 cursor-pointer
-                   hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)]
-                   hover:border-gray-300
-                   animate-in fade-in zoom-in-95'
+        className='group relative bg-white rounded-2xl p-6
+                   shadow-[0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden
+                   transition-all duration-300 ease-out cursor-pointer
+                   hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)]
+                   animate-in fade-in zoom-in-95 min-h-50 flex flex-col justify-center'
         style={{ animationDelay: `${spaces.length * 50}ms` }}
       >
-        <div className='p-6 flex flex-col items-center justify-center text-center min-h-46'>
+        <div className='flex flex-col items-center gap-3'>
           <div
-            className='w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mb-4
+            className='w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center
                           transition-colors group-hover:bg-gray-200'
           >
-            <Plus className='w-6 h-6 text-primary' />
+            <Plus className='w-5 h-5 text-primary' />
           </div>
-          <h3 className='font-semibold text-gray-800'>新建空间</h3>
-          {spaces.length === 0 && (
-            <p className='text-gray-600 text-sm mt-1'>开始记录你的美好生活</p>
-          )}
+          <h3 className='font-semibold text-gray-900 text-base'>新建空间</h3>
+          {spaces.length === 0 && <p className='text-sm text-gray-600'>开始记录你的美好生活</p>}
         </div>
       </button>
     </div>
