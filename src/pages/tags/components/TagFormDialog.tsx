@@ -40,16 +40,8 @@ interface TagFormProps {
 }
 
 export const TagFormDialog = ({ open, onClose, initialData, groups, onSubmit }: TagFormProps) => {
-  const defaultValues: TagFormValues = {
-    name: '',
-    group: 'default',
-    color: 'lemon',
-    description: '',
-  }
-
   const form = useForm<TagFormValues>({
     resolver: zodResolver(tagSchema),
-    defaultValues,
   })
 
   /* ---------- 编辑态注入默认值 ---------- */
@@ -58,16 +50,12 @@ export const TagFormDialog = ({ open, onClose, initialData, groups, onSubmit }: 
   useEffect(() => {
     if (!open) return
 
-    form.reset(
-      initialData
-        ? {
-            name: initialData.name,
-            group: initialData.group,
-            color: initialData.color as TagFormValues['color'],
-            description: initialData.description ?? '',
-          }
-        : defaultValues
-    )
+    form.reset({
+      name: initialData?.name ?? '',
+      group: initialData?.group ?? 'default',
+      color: (initialData?.color ?? 'lemon') as TagFormValues['color'],
+      description: initialData?.description ?? '',
+    })
   }, [open, initialData, form])
 
   /* ---------- submit ---------- */
@@ -167,10 +155,10 @@ export const TagFormDialog = ({ open, onClose, initialData, groups, onSubmit }: 
                     <button
                       key={color}
                       type='button'
-                      onClick={() => field.onChange(color)} // ✅ 正确触发 onChange
+                      onClick={() => field.onChange(color)}
                       className={`h-12 rounded-lg border transition-all ${
                         field.value === color
-                          ? 'border-honey-400 ring-1 ring-honey-200' // ✅ 选中状态
+                          ? 'border-honey-400 ring-1 ring-honey-200'
                           : 'border-transparent hover:border-honey-300'
                       } ${TAG_COLOR_CLASSES[color].classes}`}
                     >
