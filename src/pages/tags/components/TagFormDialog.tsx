@@ -203,14 +203,14 @@ export const TagFormDialog = ({ open, onClose, initialData, groups, onSubmit }: 
               type='button'
               variant='outline'
               onClick={onClose}
-              className='flex-1 border-honey-200 text-foreground hover:bg-honey-50'
+              className='flex-1 border-honey-300 text-foreground hover:bg-honey-100'
             >
               取消
             </Button>
             <Button
               type='submit'
               disabled={form.formState.isSubmitting}
-              className='flex-1 bg-linear-to-r from-honey-400 to-honey-500 hover:from-honey-500 hover:to-honey-600 text-white'
+              className='flex-1 bg-primary/80 hover:bg-primary text-white transition-all'
             >
               {isEditing ? '保存修改' : '添加便签'}
             </Button>

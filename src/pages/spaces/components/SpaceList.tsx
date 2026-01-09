@@ -58,7 +58,7 @@ const SpaceCard = memo(({ space, onEdit, navigateTo }: SpaceCardProps) => {
           <button
             type='button'
             onClick={handleEditClick}
-            className='p-1.5 rounded-full bg-gray-100 text-gray-400 opacity-0 group-hover:opacity-100 hover:bg-gray-200 transition-all'
+            className='p-1.5 rounded-full bg-gray-100 text-gray-400 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-gray-200 transition-all'
             title='编辑'
           >
             <Edit2 className='w-4 h-4 text-primary' />
@@ -70,7 +70,7 @@ const SpaceCard = memo(({ space, onEdit, navigateTo }: SpaceCardProps) => {
           className={`p-1.5 rounded-full transition-all ${
             isFavorite
               ? 'bg-yellow-100 text-primary'
-              : 'bg-gray-100 text-gray-400 opacity-0 group-hover:opacity-100 hover:bg-gray-200'
+              : 'bg-gray-100 text-gray-400 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-gray-200'
           }`}
           title={isFavorite ? '取消常用' : '设为常用'}
         >

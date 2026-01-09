@@ -91,7 +91,7 @@ export const TagToolbar = ({ onAddGroup, onSearch }: TagToolbarProps) => {
           </>
         ) : (
           <Button
-            className='bg-linear-to-r from-pale-coral-200 to-pale-coral-400 text-white hover:from-pale-coral-500 hover:to-pale-coral-700 shadow-sm'
+            className='bg-primary/70 hover:bg-primary text-white shadow-sm'
             onClick={() => setIsAdding(true)}
           >
             <Plus className='w-4 h-4 mr-1' />

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useState } from 'react'
-import { createSpace, getSpaces, updateSpace } from '@/api/spaces'
+import { createSpace, deleteSpace, getSpaces, updateSpace } from '@/api/spaces'
 import { LoadingState } from '@/components/LoadingState'
 import type { Space, SpaceForm } from '@/types/spaces'
 import { SpaceFormDialog } from './components/SpaceFormDialog'
@@ -49,11 +49,19 @@ const useSpaceHook = () => {
     },
   })
 
+  const deleteMutation = useMutation({
+    mutationFn: deleteSpace,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['spaces'] })
+    },
+  })
+
   return {
     spaceList,
     isLoading,
     createMutation,
     updateMutation,
+    deleteMutation,
   }
 }
 
@@ -61,7 +69,15 @@ export default function Spaces() {
   const [openDialog, setOpenDialog] = useState(false)
   const [editingSpace, setEditingSpace] = useState<Space | undefined>()
 
-  const { spaceList, isLoading, createMutation, updateMutation } = useSpaceHook()
+  const { spaceList, isLoading, createMutation, updateMutation, deleteMutation } = useSpaceHook()
+
+  const handleDelete = useCallback(
+    (id: number) => {
+      deleteMutation.mutate(id)
+      setOpenDialog(false)
+    },
+    [deleteMutation]
+  )
 
   const handleSubmit = useCallback(
     (values: SpaceForm) => {
@@ -90,10 +106,10 @@ export default function Spaces() {
   return (
     <div className='min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-500'>
       <main className='max-w-6xl mx-auto px-6 py-8'>
-        <div className='mb-8'>
+        <header className='mb-8'>
           <h1 className='text-3xl font-bold text-foreground mb-2'>👋 {greeting}</h1>
           <p className='text-foreground-secondary'>{message}</p>
-        </div>
+        </header>
 
         <SpaceList spaces={spaceList} onAdd={handleOpenDialog} onEdit={s => handleOpenDialog(s)} />
       </main>
@@ -103,6 +119,7 @@ export default function Spaces() {
         onClose={() => setOpenDialog(false)}
         onSubmit={handleSubmit}
         initialData={editingSpace}
+        onDelete={editingSpace?.id ? handleDelete : undefined}
       />
     </div>
   )

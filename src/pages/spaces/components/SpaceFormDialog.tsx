@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Trash2 } from 'lucide-react'
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -28,9 +29,16 @@ interface SpaceFormDialogProps {
   onClose: () => void
   onSubmit: (data: SpaceForm) => void
   initialData?: Space
+  onDelete?: (id: number) => void
 }
 
-export const SpaceFormDialog = ({ open, onClose, initialData, onSubmit }: SpaceFormDialogProps) => {
+export const SpaceFormDialog = ({
+  open,
+  onClose,
+  initialData,
+  onSubmit,
+  onDelete,
+}: SpaceFormDialogProps) => {
   const form = useForm<SpaceFormValues>({
     resolver: zodResolver(spaceSchema),
   })
@@ -147,18 +155,33 @@ export const SpaceFormDialog = ({ open, onClose, initialData, onSubmit }: SpaceF
           </div>
 
           <div className='flex gap-2 pt-2'>
+            {isEditing && onDelete && (
+              <Button
+                type='button'
+                variant='ghost'
+                onClick={() => {
+                  if (initialData?.id && confirm('确定要删除这个空间吗？')) {
+                    onDelete(initialData.id)
+                  }
+                }}
+                className='flex-1 text-red-500 hover:text-red-600 hover:bg-red-50'
+              >
+                <Trash2 className='w-4 h-4 mr-1.5' />
+                删除空间
+              </Button>
+            )}
             <Button
               type='button'
               variant='outline'
               onClick={onClose}
-              className='flex-1 border-honey-200 text-foreground hover:bg-honey-50'
+              className='flex-1 border-honey-300 text-foreground hover:bg-honey-100'
             >
               取消
             </Button>
             <Button
               type='submit'
               disabled={form.formState.isSubmitting}
-              className='flex-1 bg-linear-to-r from-coral-500 to-coral-600 hover:from-coral-600 hover:to-coral-700 text-white'
+              className='flex-1 bg-primary/80 hover:bg-primary text-white transition-all'
             >
               {isEditing ? '保存修改' : '创建空间'}
             </Button>
