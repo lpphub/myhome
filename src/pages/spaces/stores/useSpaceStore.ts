@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware'
 
 interface SpaceStore {
   spaceId?: number
-  setSpaceId: (id: number) => void
+  setSpaceId: (id?: number) => void
   reset: () => void
 }
 
@@ -12,7 +12,7 @@ export const useSpaceStore = create<SpaceStore>()(
     set => ({
       spaceId: undefined,
 
-      setSpaceId: (id: number) =>
+      setSpaceId: (id?: number) =>
         set({
           spaceId: id,
         }),

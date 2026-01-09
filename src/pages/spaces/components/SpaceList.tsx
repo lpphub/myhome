@@ -27,7 +27,7 @@ const SpaceCard = memo(({ space, onEdit, navigateTo }: SpaceCardProps) => {
   const handleToggleFavorite = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation()
-      if (!isFavorite) setSpaceId(space.id)
+      setSpaceId(isFavorite ? undefined : space.id)
     },
     [isFavorite, space.id, setSpaceId]
   )
