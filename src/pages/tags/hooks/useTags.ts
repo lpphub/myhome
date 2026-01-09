@@ -19,7 +19,6 @@ export function useTags(spaceId?: string) {
     queryKey: spaceId ? ['tags', spaceId] : QUERY_KEY,
     queryFn: () => getTags(spaceId),
     staleTime: 1000 * 60 * 5,
-    enabled: !!spaceId,
   })
 }
 

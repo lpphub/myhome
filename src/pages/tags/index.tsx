@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useParams } from 'react-router'
-import { set } from 'zod'
+import { useSearchParams } from 'react-router'
 import { LoadingState } from '@/components/LoadingState'
 import {
   useCreateGroup,
@@ -17,7 +16,8 @@ import { TagToolbar } from './components/TagToolbar'
 import { TagWall } from './components/TagWall'
 
 export default function TagsPage() {
-  const { spaceId } = useParams<{ spaceId: string }>()
+  const [searchParams] = useSearchParams()
+  const spaceId = searchParams.get('spaceId') || undefined
   const { data: tagsData, isLoading } = useTags(spaceId)
   /* ---------------- mutations ---------------- */
   const createTag = useCreateTag()

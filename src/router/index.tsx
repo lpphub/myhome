@@ -22,7 +22,7 @@ export const router = createBrowserRouter([
         element: <Spaces />,
       },
       {
-        path: 'tags/:spaceId',
+        path: '/tags',
         element: <Tags />,
       },
     ],

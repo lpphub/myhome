@@ -73,9 +73,13 @@ export const handlers = [
 
   http.get('/api/tags', async ({ request }) => {
     const url = new URL(request.url)
-    const spaceId = url.searchParams.get('spaceId')
+    let spaceId = url.searchParams.get('spaceId')
 
     const data = await loadTagsData()
+
+    if (!spaceId) {
+      spaceId = '1'
+    }
 
     // 如果指定了 spaceId，返回对应空间的数据
     if (spaceId) {
@@ -171,7 +175,7 @@ export const handlers = [
     })
   }),
 
-  http.post('/api/tags/category', async ({ request }) => {
+  http.post('/api/tags/group', async ({ request }) => {
     const body = (await request.json()) as { name: string; spaceId?: number }
     const name = body.name?.trim()
 

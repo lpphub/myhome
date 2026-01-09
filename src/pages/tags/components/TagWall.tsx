@@ -10,6 +10,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
+import { FolderOpen } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useCallback, useMemo, useState } from 'react'
 import type { ReorderParams, Tag, TagGroup } from '@/types/tags'
@@ -167,6 +168,18 @@ export function TagWall({
   )
 
   /* ---------------- render ---------------- */
+
+  if (tags.length === 0) {
+    return (
+      <div className='flex flex-col items-center justify-center py-20'>
+        <div className='w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center mb-4'>
+          <FolderOpen className='w-8 h-8 text-gray-400' />
+        </div>
+        <h3 className='text-lg font-semibold text-foreground mb-2'>暂无分组</h3>
+        <p className='text-sm text-foreground-secondary'>请先点击右上角的「新建分组」按钮</p>
+      </div>
+    )
+  }
 
   return (
     <DndContext

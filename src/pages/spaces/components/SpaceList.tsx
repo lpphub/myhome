@@ -1,26 +1,25 @@
 import { Clock, Edit2, Plus, Tag } from 'lucide-react'
-import { useCallback } from 'react'
+import { memo, useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import type { Space } from '@/types/spaces'
+
+const formatDate = (date: string) => {
+  const diff = Date.now() - new Date(date).getTime()
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+  if (days === 0) return '今天'
+  if (days === 1) return '昨天'
+  if (days < 7) return `${days}天前`
+  if (days < 30) return `${Math.floor(days / 7)}周前`
+  return `${Math.floor(days / 30)}个月前`
+}
 
 interface SpaceCardProps {
   space: Space
   onEdit?: (space: Space) => void
+  navigateTo: ReturnType<typeof useNavigate>
 }
 
-function SpaceCard({ space, onEdit }: SpaceCardProps) {
-  const navigate = useNavigate()
-
-  const formatDate = (date: string) => {
-    const diff = Date.now() - new Date(date).getTime()
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-    if (days === 0) return '今天'
-    if (days === 1) return '昨天'
-    if (days < 7) return `${days}天前`
-    if (days < 30) return `${Math.floor(days / 7)}周前`
-    return `${Math.floor(days / 30)}个月前`
-  }
-
+const SpaceCard = memo(({ space, onEdit, navigateTo }: SpaceCardProps) => {
   const handleEditClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation()
@@ -33,8 +32,8 @@ function SpaceCard({ space, onEdit }: SpaceCardProps) {
     <div
       role='button'
       tabIndex={0}
-      onClick={() => navigate(`/tags/${space.id}`)}
-      onKeyDown={e => e.key === 'Enter' && navigate(`/tags/${space.id}`)}
+      onClick={() => navigateTo(`/tags?spaceId=${space.id}`)}
+      onKeyDown={e => e.key === 'Enter' && navigateTo(`/tags?spaceId=${space.id}`)}
       className='group relative bg-white rounded-2xl p-6 cursor-pointer
                  transition-all duration-300 ease-out select-none
                  border-2 border-primary/20 hover:border-primary
@@ -49,7 +48,7 @@ function SpaceCard({ space, onEdit }: SpaceCardProps) {
           className='absolute top-4 right-4 p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 z-20 opacity-0 group-hover:opacity-100'
           title='编辑'
         >
-          <Edit2 className='w-4 h-4 text-gray-600' />
+          <Edit2 className='w-4 h-4 text-primary' />
         </button>
       )}
 
@@ -81,7 +80,7 @@ function SpaceCard({ space, onEdit }: SpaceCardProps) {
       </div>
     </div>
   )
-}
+})
 
 interface SpaceListProps {
   spaces: Space[]
@@ -90,17 +89,22 @@ interface SpaceListProps {
 }
 
 export function SpaceList({ spaces, onAdd, onEdit }: SpaceListProps) {
+  const navigate = useNavigate()
+
   return (
     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
-      {spaces.map((space, index) => (
-        <div
-          key={space.id}
-          className='animate-in fade-in zoom-in-95 duration-300'
-          style={{ animationDelay: `${index * 50}ms` }}
-        >
-          <SpaceCard space={space} onEdit={onEdit} />
-        </div>
-      ))}
+      {spaces.map((space, index) => {
+        const delay = Math.floor(index / 5) * 50
+        return (
+          <div
+            key={space.id}
+            className='animate-in fade-in zoom-in-95 duration-300'
+            style={{ animationDelay: `${delay}ms` }}
+          >
+            <SpaceCard space={space} onEdit={onEdit} navigateTo={navigate} />
+          </div>
+        )
+      })}
       <button
         type='button'
         onClick={onAdd}
@@ -110,7 +114,7 @@ export function SpaceList({ spaces, onAdd, onEdit }: SpaceListProps) {
                    hover:-translate-y-1 hover:shadow-[8px_8px_0_0_#ff8c4233,inset_0_-4px_0_0_#00000008]
                    overflow-hidden transition-all duration-300 ease-out cursor-pointer
                    animate-in fade-in zoom-in-95 min-h-50 flex flex-col justify-center'
-        style={{ animationDelay: `${spaces.length * 50}ms` }}
+        style={{ animationDelay: `${Math.floor(spaces.length / 5) * 50}ms` }}
       >
         <div className='flex flex-col items-center gap-3'>
           <div
