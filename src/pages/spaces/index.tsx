@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { createSpace, deleteSpace, getSpaces, updateSpace } from '@/api/spaces'
 import { LoadingState } from '@/components/LoadingState'
 import type { Space, SpaceForm } from '@/types/spaces'
@@ -97,7 +97,7 @@ export default function Spaces() {
     setOpenDialog(true)
   }, [])
 
-  const { greeting, message } = getGreeting()
+  const { greeting, message } = useMemo(() => getGreeting(), [])
 
   if (isLoading) {
     return <LoadingState type='loading' />
