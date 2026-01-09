@@ -1,4 +1,4 @@
-import { Clock, Edit2, Plus, Star, Tag } from 'lucide-react'
+import { Clock, Edit2, Pin, Plus, Tag } from 'lucide-react'
 import { memo, useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { useSpaceStore } from '@/pages/spaces/stores/useSpaceStore'
@@ -69,12 +69,12 @@ const SpaceCard = memo(({ space, onEdit, navigateTo }: SpaceCardProps) => {
           onClick={handleToggleFavorite}
           className={`p-1.5 rounded-full transition-all ${
             isFavorite
-              ? 'bg-yellow-100 text-primary'
+              ? 'bg-secondary text-primary'
               : 'bg-gray-100 text-gray-400 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-gray-200'
           }`}
           title={isFavorite ? '取消常用' : '设为常用'}
         >
-          <Star className={`w-4 h-4 ${isFavorite ? 'fill-current' : ''}`} />
+          <Pin className='w-4 h-4 transform rotate-45' />
         </button>
       </div>
 

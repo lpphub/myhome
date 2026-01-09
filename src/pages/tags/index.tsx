@@ -38,7 +38,7 @@ export default function TagsPage() {
     return (
       <LoadingState
         type='error'
-        message='请先选择一个常用空间'
+        message='请选择一个空间作为默认便签墙'
         action={{ label: '去选择', onClick: () => navigate('/') }}
       />
     )
