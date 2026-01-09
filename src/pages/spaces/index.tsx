@@ -1,10 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useMemo, useState } from 'react'
-import { createSpace, deleteSpace, getSpaces, updateSpace } from '@/api/spaces'
 import { LoadingState } from '@/components/LoadingState'
 import type { Space, SpaceForm } from '@/types/spaces'
 import { SpaceFormDialog } from './components/SpaceFormDialog'
 import { SpaceList } from './components/SpaceList'
+import { useCreateSpace, useDeleteSpace, useSpaces, useUpdateSpace } from './hooks/useSpaces'
 
 const getGreeting = (): { greeting: string; message: string } => {
   const hour = new Date().getHours()
@@ -27,77 +26,41 @@ const getGreeting = (): { greeting: string; message: string } => {
   return { greeting, message: randomMessage }
 }
 
-const useSpaceHook = () => {
-  const queryClient = useQueryClient()
-
-  const { data: spaceList = [], isLoading } = useQuery({
-    queryKey: ['spaces'],
-    queryFn: getSpaces,
-  })
-
-  const createMutation = useMutation({
-    mutationFn: createSpace,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['spaces'] })
-    },
-  })
-
-  const updateMutation = useMutation({
-    mutationFn: updateSpace,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['spaces'] })
-    },
-  })
-
-  const deleteMutation = useMutation({
-    mutationFn: deleteSpace,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['spaces'] })
-    },
-  })
-
-  return {
-    spaceList,
-    isLoading,
-    createMutation,
-    updateMutation,
-    deleteMutation,
-  }
-}
-
 export default function Spaces() {
   const [openDialog, setOpenDialog] = useState(false)
   const [editingSpace, setEditingSpace] = useState<Space | undefined>()
 
-  const { spaceList, isLoading, createMutation, updateMutation, deleteMutation } = useSpaceHook()
-
-  const handleDelete = useCallback(
-    (id: number) => {
-      deleteMutation.mutate(id)
-      setOpenDialog(false)
-    },
-    [deleteMutation]
-  )
+  const { data: spaceList = [], isLoading } = useSpaces()
+  const createSpace = useCreateSpace()
+  const updateSpace = useUpdateSpace()
+  const deleteSpace = useDeleteSpace()
 
   const handleSubmit = useCallback(
     (values: SpaceForm) => {
       if (values.id) {
-        updateMutation.mutate(values)
+        updateSpace.mutate(values)
       } else {
-        createMutation.mutate(values)
+        createSpace.mutate(values)
       }
-
       setOpenDialog(false)
     },
-    [createMutation, updateMutation]
+    [createSpace, updateSpace]
   )
+
+  const handleDelete = useCallback(
+    (id: number) => {
+      deleteSpace.mutate(id)
+      setOpenDialog(false)
+    },
+    [deleteSpace]
+  )
+
+  const { greeting, message } = useMemo(() => getGreeting(), [])
 
   const handleOpenDialog = useCallback((space?: Space) => {
     setEditingSpace(space)
     setOpenDialog(true)
   }, [])
-
-  const { greeting, message } = useMemo(() => getGreeting(), [])
 
   if (isLoading) {
     return <LoadingState type='loading' />
