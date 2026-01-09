@@ -78,7 +78,7 @@ export const TagCard = memo(({ tag, onEdit, onDelete }: TagCardProps) => {
       role='button'
       tabIndex={0}
       className={cn(
-        'relative group p-3 rounded-lg shadow-md transition-all duration-300',
+        'relative group p-3 rounded-md shadow-md transition-all duration-300',
         'hover:shadow-xl hover:-translate-y-1.5 hover:scale-105',
         'border text-left overflow-hidden',
         'cursor-grab active:cursor-grabbing',

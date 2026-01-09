@@ -74,7 +74,7 @@ export const TagSection = memo(
                 'w-52 p-4 rounded-lg border-2 border-dashed border-border',
                 'hover:border-honey-300 hover:bg-honey-50 transition-all duration-300',
                 'group flex flex-col items-center justify-center',
-                'text-cream-900 hover:text-honey-600'
+                'text-honey-500 hover:text-honey-700'
               )}
             >
               <div className='mt-5 mb-1.5'>

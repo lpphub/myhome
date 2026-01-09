@@ -13,13 +13,10 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { SPACE_COLOR_CLASSES, SPACE_ICONS, type Space, type SpaceForm } from '@/types/spaces'
+import { SPACE_ICONS, type Space, type SpaceForm } from '@/types/spaces'
 
 export const spaceSchema = z.object({
   name: z.string().min(1, '请输入空间名称').max(20),
-  color: z.enum(
-    Object.keys(SPACE_COLOR_CLASSES) as [keyof typeof SPACE_COLOR_CLASSES, ...string[]]
-  ),
   icon: z.string(),
   description: z.string().optional(),
 })
@@ -48,7 +45,6 @@ export const SpaceFormDialog = ({ open, onClose, initialData, onSubmit }: SpaceF
     form.reset({
       name: initialData?.name ?? '',
       icon: initialData?.icon ?? '🏠',
-      color: (initialData?.color ?? 'honey') as SpaceFormValues['color'],
       description: initialData?.description ?? '',
     })
   }, [open, initialData, form])
@@ -59,7 +55,6 @@ export const SpaceFormDialog = ({ open, onClose, initialData, onSubmit }: SpaceF
       id: initialData?.id,
       name: values.name.trim(),
       icon: values.icon,
-      color: values.color,
       description: values.description?.trim(),
     })
   }
@@ -125,29 +120,6 @@ export const SpaceFormDialog = ({ open, onClose, initialData, onSubmit }: SpaceF
                     >
                       {icon}
                     </button>
-                  ))}
-                </div>
-              )}
-            />
-          </div>
-
-          <div className='space-y-2'>
-            <Label>选择颜色 *</Label>
-            <Controller
-              name='color'
-              control={form.control}
-              render={({ field }) => (
-                <div className='flex gap-2'>
-                  {Object.entries(SPACE_COLOR_CLASSES).map(([value, config]) => (
-                    <button
-                      key={value}
-                      type='button'
-                      onClick={() => field.onChange(value)}
-                      className={`w-8 h-8 rounded-full transition-all ${config.classes} ${
-                        field.value === value ? 'ring-1 ring-offset-1 ring-primary scale-110' : ''
-                      }`}
-                      title={config.name}
-                    />
                   ))}
                 </div>
               )}

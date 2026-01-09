@@ -1,4 +1,5 @@
 import { Archive, Heart, Home, LogOut, Settings, Sparkles, Tag, User } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 
@@ -39,7 +40,7 @@ const NavigationLogo = () => {
           <Heart className='w-2 h-2 text-white' />
         </div>
       </div>
-      <div className='hidden sm:block'>
+      <div className='sm:block'>
         <h1 className='text-lg font-bold text-foreground'>AI记录</h1>
         <p className='text-xs text-foreground'>温馨记录小助手</p>
       </div>
@@ -132,6 +133,22 @@ const MobileNav = ({ currentPage }: { currentPage: string }) => {
 // NavActions 组件
 const NavActions = ({ handleLogout }: { handleLogout: () => void }) => {
   const { user } = useAuth()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  // 点击外部关闭菜单
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false)
+      }
+    }
+
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isMenuOpen])
 
   return (
     <div className='flex items-center space-x-2'>
@@ -143,10 +160,11 @@ const NavActions = ({ handleLogout }: { handleLogout: () => void }) => {
         <Settings className='w-5 h-5' />
       </button>
 
-      {/* 用户信息下拉菜单 */}
-      <div className='relative group'>
+      {/* 用户信息下拉菜单 兼容移动端 */}
+      <div className='relative group' ref={menuRef}>
         <button
           type='button'
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
           className='flex items-center space-x-2 p-2.5 text-foreground hover:bg-honey-50 rounded-lg transition-colors'
         >
           <div className='w-8 h-8 bg-linear-to-br from-honey-400 to-coral-400 rounded-full flex items-center justify-center'>
@@ -158,11 +176,20 @@ const NavActions = ({ handleLogout }: { handleLogout: () => void }) => {
         </button>
 
         {/* 下拉菜单 */}
-        <div className='absolute left-0 mt-2 w-32 bg-white rounded-lg shadow-lg border border-honey-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200'>
+        <div
+          className={`absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg border border-honey-200 transition-all duration-200 ${
+            isMenuOpen
+              ? 'opacity-100 visible'
+              : 'opacity-0 invisible group-hover:opacity-100 group-hover:visible'
+          }`}
+        >
           <div className='p-2'>
             <button
               type='button'
-              onClick={handleLogout}
+              onClick={() => {
+                handleLogout()
+                setIsMenuOpen(false)
+              }}
               className='w-full flex items-center space-x-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition-colors cursor-pointer'
             >
               <LogOut className='w-4 h-4' />

@@ -240,7 +240,6 @@ export const handlers = [
       id: maxId + 1,
       name: body.name,
       icon: body.icon,
-      color: body.color,
       description: body.description,
       tagCount: 0,
       createdAt: new Date().toISOString(),

@@ -1,4 +1,4 @@
-import { Clock, Edit2, FileText, Plus } from 'lucide-react'
+import { Clock, Edit2, Plus, Tag } from 'lucide-react'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import type { Space } from '@/types/spaces'
@@ -36,10 +36,11 @@ function SpaceCard({ space, onEdit }: SpaceCardProps) {
       onClick={() => navigate(`/tags/${space.id}`)}
       onKeyDown={e => e.key === 'Enter' && navigate(`/tags/${space.id}`)}
       className='group relative bg-white rounded-2xl p-6 cursor-pointer
-                 transition-all duration-300 ease-out select-none overflow-hidden
-                 shadow-[0_2px_8px_rgba(0,0,0,0.06)]
-                 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)]
-                 min-h-50 flex flex-col justify-between'
+                 transition-all duration-300 ease-out select-none
+                 border-2 border-primary/20 hover:border-primary
+                 shadow-[6px_6px_0_0_#ff8c4233,inset_0_-4px_0_0_#00000008]
+                 hover:-translate-y-1 hover:shadow-[8px_8px_0_0_#ff8c4233,inset_0_-4px_0_0_#00000008]
+                 min-h-60 flex flex-col justify-between'
     >
       {onEdit && (
         <button
@@ -53,12 +54,12 @@ function SpaceCard({ space, onEdit }: SpaceCardProps) {
       )}
 
       <div className='flex items-start gap-4'>
-        <div className='w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0'>
-          <span className='text-xl'>{space.icon}</span>
+        <div className='w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center shrink-0'>
+          <span className='text-3xl'>{space.icon}</span>
         </div>
 
         <div className='flex-1 min-w-0'>
-          <h3 className='font-semibold text-gray-900 text-base mb-2'>{space.name}</h3>
+          <h3 className='font-semibold text-gray-900 text-lg mb-2'>{space.name}</h3>
         </div>
       </div>
 
@@ -69,13 +70,13 @@ function SpaceCard({ space, onEdit }: SpaceCardProps) {
       <div className='flex items-center justify-between mt-4 pt-3 border-t border-gray-100'>
         {space.tagCount !== undefined && (
           <div className='flex items-center gap-1.5 text-sm font-medium text-gray-700'>
-            <FileText className='w-4 h-4' />
-            <span>{space.tagCount} 张</span>
+            <Tag className='w-4 h-4 text-primary' />
+            <span className='text-primary'>{space.tagCount}</span>
           </div>
         )}
         <div className='flex items-center gap-1.5 text-sm text-gray-500'>
-          <Clock className='w-4 h-4' />
-          <span>{formatDate(space.updatedAt)}</span>
+          <Clock className='w-4 h-4 text-primary' />
+          <span className='text-primary'>{formatDate(space.updatedAt)}</span>
         </div>
       </div>
     </div>
@@ -104,9 +105,10 @@ export function SpaceList({ spaces, onAdd, onEdit }: SpaceListProps) {
         type='button'
         onClick={onAdd}
         className='group relative bg-white rounded-2xl p-6
-                   shadow-[0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden
-                   transition-all duration-300 ease-out cursor-pointer
-                   hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)]
+                   border-2 border-primary/20 hover:border-primary
+                   shadow-[6px_6px_0_0_#ff8c4233,inset_0_-4px_0_0_#00000008]
+                   hover:-translate-y-1 hover:shadow-[8px_8px_0_0_#ff8c4233,inset_0_-4px_0_0_#00000008]
+                   overflow-hidden transition-all duration-300 ease-out cursor-pointer
                    animate-in fade-in zoom-in-95 min-h-50 flex flex-col justify-center'
         style={{ animationDelay: `${spaces.length * 50}ms` }}
       >
