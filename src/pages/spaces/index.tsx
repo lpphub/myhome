@@ -111,7 +111,7 @@ export default function Spaces() {
           <p className='text-foreground-secondary'>{message}</p>
         </header>
 
-        <SpaceList spaces={spaceList} onAdd={handleOpenDialog} onEdit={s => handleOpenDialog(s)} />
+        <SpaceList spaces={spaceList} onAdd={handleOpenDialog} onEdit={handleOpenDialog} />
       </main>
 
       <SpaceFormDialog

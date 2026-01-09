@@ -24,8 +24,7 @@ const DEFAULT_QUERY_CONFIG = {
 
 const DEFAULT_MUTATION_CONFIG = {
   networkMode: 'online' as const,
-  retry: 1,
-  retryDelay: (attemptIndex: number) => Math.min(1000 * 2 ** attemptIndex, 10000),
+  retry: 0,
 }
 
 // 创建 QueryClient 实例

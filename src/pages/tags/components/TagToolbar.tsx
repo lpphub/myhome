@@ -75,7 +75,7 @@ export const TagToolbar = ({ onAddGroup, onSearch }: TagToolbarProps) => {
             <Button
               variant='ghost'
               size='icon'
-              className='h-8 w-8 hover:bg-honey-200 hover:text-lemon-700'
+              className='h-8 w-8 hover:bg-lemon-100 hover:text-lemon-600'
               onClick={handleAddGroup}
             >
               <Check className='w-4 h-4' />
