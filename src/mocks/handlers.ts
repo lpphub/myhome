@@ -3,6 +3,14 @@ import type { AuthForm } from '@/types/auth'
 import type { Space, SpaceForm } from '@/types/spaces'
 import type { ReorderParams, Tag, TagFormData, TagGroup } from '@/types/tags'
 
+let deleteCallCount = 0
+let updateCallCount = 0
+
+export function resetTagCounters() {
+  deleteCallCount = 0
+  updateCallCount = 0
+}
+
 async function loadTagsData(): Promise<Record<string, TagGroup[]>> {
   const res = await fetch('/data/tags.json')
   if (!res.ok) throw new Error('Failed to load tags.json')
@@ -138,8 +146,14 @@ export const handlers = [
   }),
 
   http.patch<{ id: string }>('/api/tags/:id', async ({ params, request }) => {
+    updateCallCount++
+
     const id = Number.parseInt(params.id, 10)
     const body = (await request.json()) as Partial<TagFormData>
+
+    if (updateCallCount % 2 === 0) {
+      return HttpResponse.json({ code: 500, message: '更新失败，请重试' }, { status: 500 })
+    }
 
     const updatedTag: Tag = {
       id,
@@ -153,15 +167,21 @@ export const handlers = [
 
     return HttpResponse.json({
       code: 200,
-      message: '更新便签成功',
+      message: '更新标签成功',
       data: updatedTag,
     })
   }),
 
   http.delete<{ id: string }>('/api/tags/:id', async () => {
+    deleteCallCount++
+
+    if (deleteCallCount % 2 === 0) {
+      return HttpResponse.json({ code: 500, message: '删除失败，请重试' }, { status: 500 })
+    }
+
     return HttpResponse.json({
       code: 200,
-      message: '删除便签成功',
+      message: '删除标签成功',
       data: { success: true },
     })
   }),
@@ -285,86 +305,6 @@ export const handlers = [
     const id = Number.parseInt(params.id, 10)
     const data = await loadSpacesData()
     const space = data.spaces.find(s => s.id === id)
-
-    if (!space) {
-      return HttpResponse.json({ code: 404, message: '空间不存在' }, { status: 404 })
-    }
-
-    return HttpResponse.json({
-      code: 200,
-      message: '删除空间成功',
-      data: { success: true },
-    })
-  }),
-
-  http.patch<{ id: string }>('/api/spaces/:id', async ({ params, request }) => {
-    const id = Number.parseInt(params.id, 10)
-    const body = (await request.json()) as Partial<SpaceForm>
-
-    const data = await loadSpacesData()
-    const space = data.spaces.find(s => s.id === id)
-
-    if (!space) {
-      return HttpResponse.json({ code: 404, message: '空间不存在' }, { status: 404 })
-    }
-
-    const updatedSpace: Space = {
-      ...space,
-      ...body,
-      updatedAt: new Date().toISOString(),
-    }
-
-    return HttpResponse.json({
-      code: 200,
-      message: '更新空间成功',
-      data: updatedSpace,
-    })
-  }),
-
-  http.delete<{ id: string }>('/api/spaces/:id', async ({ params }) => {
-    const id = Number.parseInt(params.id, 10)
-    const data = await loadSpacesData()
-    const space = data.spaces.find(s => s.id === id)
-
-    if (!space) {
-      return HttpResponse.json({ code: 404, message: '空间不存在' }, { status: 404 })
-    }
-
-    return HttpResponse.json({
-      code: 200,
-      message: '删除空间成功',
-      data: { success: true },
-    })
-  }),
-
-  http.patch<{ id: string }>('/api/spaces/:id', async ({ params, request }) => {
-    const id = Number.parseInt(params.id, 10)
-    const body = (await request.json()) as Partial<SpaceForm>
-
-    const data = await loadSpacesData()
-    const space = data.spaces.find(s => Number(s.id) === id)
-
-    if (!space) {
-      return HttpResponse.json({ code: 404, message: '空间不存在' }, { status: 404 })
-    }
-
-    const updatedSpace: Space = {
-      ...space,
-      ...body,
-      updatedAt: new Date().toISOString(),
-    }
-
-    return HttpResponse.json({
-      code: 200,
-      message: '更新空间成功',
-      data: updatedSpace,
-    })
-  }),
-
-  http.delete<{ id: string }>('/api/spaces/:id', async ({ params }) => {
-    const id = Number.parseInt(params.id, 10)
-    const data = await loadSpacesData()
-    const space = data.spaces.find(s => Number(s.id) === id)
 
     if (!space) {
       return HttpResponse.json({ code: 404, message: '空间不存在' }, { status: 404 })
