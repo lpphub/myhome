@@ -1,6 +1,7 @@
-import { Clock, Edit2, Plus, Tag } from 'lucide-react'
+import { Clock, Edit2, Plus, Star, Tag } from 'lucide-react'
 import { memo, useCallback } from 'react'
 import { useNavigate } from 'react-router'
+import { useSpaceStore } from '@/pages/spaces/stores/useSpaceStore'
 import type { Space } from '@/types/spaces'
 
 const formatDate = (date: string) => {
@@ -20,6 +21,17 @@ interface SpaceCardProps {
 }
 
 const SpaceCard = memo(({ space, onEdit, navigateTo }: SpaceCardProps) => {
+  const { spaceId, setSpaceId } = useSpaceStore()
+  const isFavorite = spaceId === space.id
+
+  const handleToggleFavorite = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation()
+      if (!isFavorite) setSpaceId(space.id)
+    },
+    [isFavorite, space.id, setSpaceId]
+  )
+
   const handleEditClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation()
@@ -41,16 +53,30 @@ const SpaceCard = memo(({ space, onEdit, navigateTo }: SpaceCardProps) => {
                  hover:-translate-y-1 hover:shadow-[8px_8px_0_0_#ff8c4233,inset_0_-4px_0_0_#00000008]
                  min-h-60 flex flex-col justify-between'
     >
-      {onEdit && (
+      <div className='absolute top-4 right-4 flex gap-2 z-20'>
+        {onEdit && (
+          <button
+            type='button'
+            onClick={handleEditClick}
+            className='p-1.5 rounded-full bg-gray-100 text-gray-400 opacity-0 group-hover:opacity-100 hover:bg-gray-200 transition-all'
+            title='编辑'
+          >
+            <Edit2 className='w-4 h-4 text-primary' />
+          </button>
+        )}
         <button
           type='button'
-          onClick={handleEditClick}
-          className='absolute top-4 right-4 p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 z-20 opacity-0 group-hover:opacity-100'
-          title='编辑'
+          onClick={handleToggleFavorite}
+          className={`p-1.5 rounded-full transition-all ${
+            isFavorite
+              ? 'bg-yellow-100 text-primary'
+              : 'bg-gray-100 text-gray-400 opacity-0 group-hover:opacity-100 hover:bg-gray-200'
+          }`}
+          title={isFavorite ? '取消常用' : '设为常用'}
         >
-          <Edit2 className='w-4 h-4 text-primary' />
+          <Star className={`w-4 h-4 ${isFavorite ? 'fill-current' : ''}`} />
         </button>
-      )}
+      </div>
 
       <div className='flex items-start gap-4'>
         <div className='w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center shrink-0'>

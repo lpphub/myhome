@@ -12,7 +12,7 @@ enum TagsApi {
   DeleteGroup = '/tags/group/:code',
 }
 
-export const getTags = (spaceId?: string) =>
+export const getTags = (spaceId?: number) =>
   httpClient.get<TagGroup[]>({
     url: TagsApi.GetTags,
     params: spaceId ? { spaceId } : undefined,

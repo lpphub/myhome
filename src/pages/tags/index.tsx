@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router'
 import { LoadingState } from '@/components/LoadingState'
+import { useSpaceStore } from '@/pages/spaces/stores/useSpaceStore'
+import type { Group, ReorderParams, TagFormData, TagGroup } from '@/types/tags'
+import { TagFormDialog } from './components/TagFormDialog'
+import { TagToolbar } from './components/TagToolbar'
+import { TagWall } from './components/TagWall'
 import {
   useCreateGroup,
   useCreateTag,
@@ -9,17 +14,56 @@ import {
   useReorderTags,
   useTags,
   useUpdateTag,
-} from '@/pages/tags/hooks/useTags'
-import type { Group, ReorderParams, TagFormData, TagGroup } from '@/types/tags'
-import { TagFormDialog } from './components/TagFormDialog'
-import { TagToolbar } from './components/TagToolbar'
-import { TagWall } from './components/TagWall'
+} from './hooks/useTags'
+import { useTagsStore } from './stores/useTagsStore'
 
+/* =======================================================
+ * 外层：只做 spaceId 判断（无业务 hooks）
+ * ======================================================= */
 export default function TagsPage() {
+  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const spaceId = searchParams.get('spaceId') || undefined
-  const { data: tagsData, isLoading } = useTags(spaceId)
-  /* ---------------- mutations ---------------- */
+  const favoriteSpaceId = useSpaceStore(s => s.spaceId)
+
+  const spaceId = useMemo<number | undefined>(() => {
+    const fromQuery = searchParams.get('spaceId')
+    if (fromQuery) {
+      const parsed = Number(fromQuery)
+      return Number.isNaN(parsed) ? undefined : parsed
+    }
+    return favoriteSpaceId
+  }, [searchParams, favoriteSpaceId])
+
+  if (!spaceId) {
+    return (
+      <LoadingState
+        type='error'
+        message='请先选择一个常用空间'
+        action={{ label: '去选择', onClick: () => navigate('/') }}
+      />
+    )
+  }
+
+  return <TagsPageInner spaceId={spaceId} />
+}
+
+/* =======================================================
+ * 内层：完整页面逻辑（所有 hooks 都在这里）
+ * ======================================================= */
+function TagsPageInner({ spaceId }: { spaceId: number }) {
+  const {
+    tags,
+    initTags,
+    addTag,
+    updateTag: updateTagLocal,
+    deleteTag: deleteTagLocal,
+    reorder,
+    addGroup,
+    deleteGroup: deleteGroupLocal,
+  } = useTagsStore()
+
+  /* ---------------- apis ---------------- */
+  const { data, isLoading } = useTags(spaceId)
   const createTag = useCreateTag()
   const updateTag = useUpdateTag()
   const deleteTag = useDeleteTag()
@@ -27,150 +71,106 @@ export default function TagsPage() {
   const createGroup = useCreateGroup()
   const deleteGroup = useDeleteGroup()
 
-  /* ---------------- 页面 UI 状态 ---------------- */
-
-  // ⭐ 页面展示用的唯一数据源
-  const [localTags, setLocalTags] = useState<TagGroup[]>([])
+  /* ---------------- ui ---------------- */
   const [searchKeyword, setSearchKeyword] = useState('')
-
-  // dialog
   const [openDialog, setOpenDialog] = useState(false)
   const [editingTag, setEditingTag] = useState<TagFormData | undefined>()
 
-  /* ---------------- 初始化 / 同步 ---------------- */
+  /* ---------------- server → store ---------------- */
   useEffect(() => {
-    if (tagsData) {
-      setLocalTags(tagsData)
+    if (!data) return
+
+    if (spaceId !== useTagsStore.getState().spaceId) {
+      initTags(spaceId, data)
     }
-  }, [tagsData])
+  }, [data, spaceId, initTags])
 
-  /* ---------------- 派生数据 ---------------- */
+  /* ---------------- derived ---------------- */
   const filteredTags = useMemo(() => {
-    if (!searchKeyword.trim()) return localTags
-
+    if (!searchKeyword.trim()) return tags
     const keyword = searchKeyword.toLowerCase()
 
-    return localTags
-      .map(cat => ({
-        ...cat,
-        tags: cat.tags.filter(
+    return tags
+      .map(group => ({
+        ...group,
+        tags: group.tags.filter(
           tag =>
             tag.name.toLowerCase().includes(keyword) ||
             tag.description?.toLowerCase().includes(keyword)
         ),
       }))
-      .filter(cat => cat.tags.length > 0)
-  }, [localTags, searchKeyword])
+      .filter(group => group.tags.length > 0)
+  }, [tags, searchKeyword])
 
   const groupsSelected = useMemo<Group[]>(
-    () =>
-      localTags.map(group => ({
-        id: group.id,
-        code: group.code,
-        name: group.name,
-      })),
-    [localTags]
+    () => tags.map(({ id, code, name }) => ({ id, code, name })),
+    [tags]
   )
 
   /* ---------------- handlers ---------------- */
   const handleSubmitTag = useCallback(
     (data: TagFormData) => {
       if (data.id) {
-        // 编辑
-        // updateTag.mutate(data)
+        const snapshot = structuredClone(useTagsStore.getState().tags)
 
-        setLocalTags(prev =>
-          prev.map(group =>
-            group.code === data.group
-              ? {
-                  ...group,
-                  tags: group.tags.map(tag => (tag.id === data.id ? { ...tag, ...data } : tag)),
-                }
-              : group
-          )
-        )
+        updateTagLocal(data)
 
-        updateTag.mutate(data)
+        updateTag.mutate(data, {
+          onError: () => useTagsStore.getState().restore(snapshot), // 失败时回滚到快照
+        })
       } else {
         // 新增
-        console.log('add tag', data)
-        // addTag.mutate(data)
-
-        createTag.mutate(
-          { ...data, spaceId: Number(spaceId) },
-          {
-            onSuccess: tag => {
-              setLocalTags(prev =>
-                prev.map(group =>
-                  group.code === data.group
-                    ? {
-                        ...group,
-                        tags: [...group.tags, { ...tag }],
-                      }
-                    : group
-                )
-              )
-            },
-          }
-        )
+        createTag.mutate({ ...data, spaceId }, { onSuccess: tag => addTag(tag) })
       }
-
       setOpenDialog(false)
     },
-    [createTag, updateTag, spaceId]
+    [addTag, updateTagLocal, createTag, updateTag, spaceId]
   )
 
   const handleDeleteTag = useCallback(
     (id: number) => {
+      const snapshot = structuredClone(useTagsStore.getState().tags)
+
+      deleteTagLocal(id)
       deleteTag.mutate(id, {
-        onSuccess: () => {
-          setLocalTags(prev =>
-            prev.map(cat => ({
-              ...cat,
-              tags: cat.tags.filter(tag => tag.id !== id),
-            }))
-          )
-        },
+        onError: () => useTagsStore.getState().restore(snapshot),
       })
     },
-    [deleteTag]
+    [deleteTagLocal, deleteTag]
   )
 
   /* 拖拽排序 */
   const handleDragReorder = useCallback(
-    (params: ReorderParams, nextTags: TagGroup[]) => {
-      // 1️⃣ UI 立即变
-      setLocalTags(nextTags)
+    (params: ReorderParams, next: TagGroup[]) => {
+      const snapshot = structuredClone(useTagsStore.getState().tags)
 
-      // 2️⃣ 后台同步
-      reorderTags.mutate(params)
+      reorder(next)
+
+      reorderTags.mutate(params, {
+        onError: () => useTagsStore.getState().restore(snapshot),
+      })
     },
-    [reorderTags]
+    [reorder, reorderTags]
   )
 
   const handleAddGroup = useCallback(
-    (groupName: string) => {
-      createGroup.mutate(
-        { name: groupName, spaceId: Number(spaceId) },
-        {
-          onSuccess: group => {
-            setLocalTags(prev => [...prev, { ...group, tags: [] }])
-          },
-        }
-      )
+    (name: string) => {
+      createGroup.mutate({ name, spaceId }, { onSuccess: group => addGroup(group) })
     },
-    [createGroup, spaceId]
+    [createGroup, addGroup, spaceId]
   )
 
   const handleDeleteGroup = useCallback(
-    (groupCode: string) => {
-      deleteGroup.mutate(groupCode, {
-        onSuccess: () => {
-          setLocalTags(prev => prev.filter(group => group.code !== groupCode))
-        },
+    (code: string) => {
+      const snapshot = structuredClone(useTagsStore.getState().tags)
+
+      deleteGroupLocal(code)
+
+      deleteGroup.mutate(code, {
+        onError: () => useTagsStore.getState().restore(snapshot),
       })
     },
-    [deleteGroup]
+    [deleteGroupLocal, deleteGroup]
   )
 
   const handleOpenDialog = useCallback((tag?: TagFormData) => {
@@ -178,8 +178,9 @@ export default function TagsPage() {
     setOpenDialog(true)
   }, [])
 
-  if (isLoading) return <LoadingState type='loading' />
-  if (!tagsData) return <LoadingState type='error' />
+  if (isLoading) {
+    return <LoadingState type='loading' />
+  }
 
   return (
     <div className='max-w-7xl mx-auto px-4 py-6'>

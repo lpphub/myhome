@@ -1,7 +1,7 @@
 import { Archive, Heart, Home, LogOut, Settings, Sparkles, Tag, User } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from '@/hooks'
 
 interface NavItem {
   id: string

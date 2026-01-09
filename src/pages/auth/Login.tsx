@@ -17,7 +17,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from '@/hooks'
 import type { AuthForm } from '@/types/auth'
 
 const loginSchema = z.object({

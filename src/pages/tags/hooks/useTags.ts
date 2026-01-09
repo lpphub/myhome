@@ -1,5 +1,5 @@
 // hooks/useTags.ts
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import {
   createGroup,
@@ -10,78 +10,52 @@ import {
   reorderTags,
   updateTag,
 } from '@/api/tags'
-import type { TagGroup } from '@/types/tags'
 
-const QUERY_KEY = ['tags']
-
-export function useTags(spaceId?: string) {
+export function useTags(spaceId: number) {
   return useQuery({
-    queryKey: spaceId ? ['tags', spaceId] : QUERY_KEY,
+    queryKey: ['tags', spaceId],
     queryFn: () => getTags(spaceId),
-    staleTime: 1000 * 60 * 5,
+    staleTime: 0,
+    gcTime: 0,
+    refetchOnMount: 'always',
+    enabled: !!spaceId,
   })
 }
 
 export function useCreateTag() {
   return useMutation({
     mutationFn: createTag,
-    onSuccess: () => {
-      // queryClient.invalidateQueries({ queryKey: QUERY_KEY })
-    },
+    onSuccess: () => toast.success('添加成功'),
     onError: () => toast.error('添加失败'),
   })
 }
 
 export function useUpdateTag() {
-  const queryClient = useQueryClient()
-
   return useMutation({
     mutationFn: updateTag,
-    onSuccess: () => {
-      // queryClient.invalidateQueries({ queryKey: QUERY_KEY })
-    },
-    onError: () => {
-      toast.error('操作失败')
-      const prev = queryClient.getQueryData<TagGroup[]>(QUERY_KEY)
-      if (prev) {
-        queryClient.setQueryData(QUERY_KEY, prev)
-      }
-    },
+    onSuccess: () => toast.success('更新成功'),
+    onError: () => toast.error('更新失败'),
   })
 }
 
 export function useDeleteTag() {
   return useMutation({
     mutationFn: deleteTag,
-    onSuccess: () => {
-      // queryClient.invalidateQueries({ queryKey: QUERY_KEY })
-    },
     onError: () => toast.error('删除失败'),
   })
 }
 
 export function useReorderTags() {
-  const queryClient = useQueryClient()
-
   return useMutation({
     mutationFn: reorderTags,
-    onSuccess: () => {
-      // 操作成功后刷新缓存（确保数据一致性）
-      // queryClient.invalidateQueries({ queryKey: QUERY_KEY })
-    },
-    onError: () => {
-      toast.error('操作失败')
-      const prev = queryClient.getQueryData<TagGroup[]>(QUERY_KEY)
-      if (prev) {
-        queryClient.setQueryData(QUERY_KEY, prev)
-      }
-    },
+    onError: () => toast.error('操作失败'),
   })
 }
 
 export function useCreateGroup() {
   return useMutation({
     mutationFn: createGroup,
+    onSuccess: () => toast.success('添加成功'),
     onError: () => toast.error('添加失败'),
   })
 }

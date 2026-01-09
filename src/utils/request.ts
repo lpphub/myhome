@@ -5,7 +5,7 @@ import axios, {
   type AxiosResponse,
   type InternalAxiosRequestConfig,
 } from 'axios'
-import { useAuthStore } from '@/stores/useAuthStore'
+import { useAuthStore } from '@/stores'
 import { env } from './env'
 
 export interface ApiResponse<T = unknown> {
