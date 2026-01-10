@@ -15,13 +15,13 @@ export const getSpaces = () =>
   })
 
 export const createSpace = (data: SpaceForm) =>
-  httpClient.post<Space>({
+  httpClient.post<number>({
     url: SpacesApi.CreateSpace,
     data,
   })
 
 export const updateSpace = (data: SpaceForm) =>
-  httpClient.patch<Space>({
+  httpClient.patch<void>({
     url: SpacesApi.UpdateSpace.replace(':id', String(data.id)),
     data,
   })
@@ -30,6 +30,6 @@ export const deleteSpace = (id: number) =>
   httpClient.delete({ url: SpacesApi.DeleteSpace.replace(':id', String(id)) })
 
 export const togglePinSpace = (id: number) =>
-  httpClient.patch<Space>({
+  httpClient.patch<void>({
     url: SpacesApi.TogglePinSpace.replace(':id', String(id)),
   })

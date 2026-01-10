@@ -21,11 +21,11 @@ export const getTags = (spaceId?: number) =>
 export const createTag = (data: TagFormData) =>
   httpClient.post<Tag>({
     url: TagsApi.CreateTag,
-    data: { ...data },
+    data,
   })
 
 export const updateTag = (data: Partial<TagFormData>) =>
-  httpClient.patch<Tag>({
+  httpClient.patch<void>({
     url: TagsApi.UpdateTag.replace(':id', String(data.id)),
     data,
   })
