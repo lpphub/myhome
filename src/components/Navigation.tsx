@@ -2,6 +2,7 @@ import { Archive, Heart, Home, LogOut, Settings, Sparkles, Tag, User } from 'luc
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { useAuth } from '@/hooks'
+import { env } from '@/utils/env'
 
 interface NavItem {
   id: string
@@ -12,6 +13,13 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
+  {
+    id: 'home',
+    label: '首页',
+    icon: Home,
+    path: '/landing',
+    description: '首页',
+  },
   {
     id: 'spaces',
     label: '我的空间',
@@ -41,8 +49,8 @@ const NavigationLogo = () => {
         </div>
       </div>
       <div className='sm:block'>
-        <h1 className='text-lg font-bold text-foreground'>AI记录</h1>
-        <p className='text-xs text-foreground'>温馨记录小助手</p>
+        <h1 className='text-lg font-bold text-foreground'>{env.APP_NAME}</h1>
+        <p className='text-xs text-foreground'>{env.APP_TITLE || '温馨记录小助手'}</p>
       </div>
     </Link>
   )
@@ -61,7 +69,7 @@ const DesktopNav = ({ currentPage }: { currentPage: string }) => {
             className={`group flex items-center px-4 py-2 text-sm font-medium rounded-xl transition-colors relative ${
               isActive
                 ? 'bg-coral-100 text-coral-700'
-                : 'text-foreground hover:bg-honey-50 hover:text-honey-700'
+                : 'text-foreground hover:bg-honey-50 hover:text-coral-400'
             }`}
           >
             {/* 活跃状态的装饰点 */}

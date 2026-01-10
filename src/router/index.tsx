@@ -3,6 +3,7 @@ import Layout from '@/components/Layout'
 import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
 import NotFound from '@/pages/errors/NotFound'
+import Landing from '@/pages/Landing'
 import Spaces from '@/pages/spaces'
 import TestComponents from '@/pages/TestUI'
 import Tags from '@/pages/tags'
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
         element: <Tags />,
       },
     ],
+  },
+  {
+    path: '/landing',
+    element: <Landing />,
   },
   {
     path: '/login',
