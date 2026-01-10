@@ -53,11 +53,11 @@ export const TAG_COLOR_CLASSES: Record<string, { classes: string; name: string }
   },
   honey: {
     name: '蜂蜜',
-    classes: 'bg-honey-100 border-honey-200 text-honey-900',
+    classes: 'bg-honey-200 border-honey-200 text-honey-900',
   },
   cream: {
     name: '奶油',
-    classes: 'bg-cream-100 border-cream-200 text-cream-900',
+    classes: 'bg-cream-200 border-cream-200 text-cream-900',
   },
   'macaron-pink': {
     name: '马卡龙粉',

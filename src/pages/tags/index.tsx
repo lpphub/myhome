@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { LoadingState } from '@/components/LoadingState'
 import { usePinnedSpaceId } from '@/pages/spaces/hooks/useSpaces'
-import type { Group, ReorderParams, TagFormData, TagGroup } from '@/types/tags'
+import type { ReorderParams, TagFormData, TagGroup } from '@/types/tags'
 import { TagFormDialog } from './components/TagFormDialog'
 import { TagToolbar } from './components/TagToolbar'
 import { TagWall } from './components/TagWall'
@@ -106,11 +106,6 @@ function TagsPageInner({ spaceId }: { spaceId: number }) {
       .filter(group => group.tags.length > 0)
   }, [tags, searchKeyword])
 
-  const groupsSelected = useMemo<Group[]>(
-    () => tags.map(({ id, code, name }) => ({ id, code, name })),
-    [tags]
-  )
-
   /* ---------------- handlers ---------------- */
   const handleSubmitTag = useCallback(
     (data: TagFormData) => {
@@ -208,7 +203,6 @@ function TagsPageInner({ spaceId }: { spaceId: number }) {
         open={openDialog}
         onClose={() => setOpenDialog(false)}
         initialData={editingTag}
-        groups={groupsSelected}
         onSubmit={handleSubmitTag}
       />
     </div>
