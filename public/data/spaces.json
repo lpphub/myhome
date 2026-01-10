@@ -6,7 +6,9 @@
       "icon": "🧑‍💻",
       "description": "办公和学习相关的物品",
       "tagCount": 12,
+      "memberCount": 2,
       "pin": false,
+      "owner": 1,
       "createdAt": "2024-12-01T00:00:00Z",
       "updatedAt": "2025-01-05T00:00:00Z"
     },
@@ -16,7 +18,9 @@
       "icon": "🌸",
       "description": "日常生活用品记录",
       "tagCount": 8,
+      "memberCount": 1,
       "pin": true,
+      "owner": 1,
       "createdAt": "2024-12-05T00:00:00Z",
       "updatedAt": "2025-01-06T00:00:00Z"
     },
@@ -26,7 +30,9 @@
       "icon": "🌙",
       "description": "心情和情绪记录",
       "tagCount": 5,
+      "memberCount": 1,
       "pin": false,
+      "owner": 1,
       "createdAt": "2024-12-10T00:00:00Z",
       "updatedAt": "2025-01-04T00:00:00Z"
     },
@@ -36,7 +42,9 @@
       "icon": "📚",
       "description": "学习资料和笔记",
       "tagCount": 25,
+      "memberCount": 3,
       "pin": false,
+      "owner": 2,
       "createdAt": "2024-12-15T00:00:00Z",
       "updatedAt": "2025-01-07T00:00:00Z"
     }

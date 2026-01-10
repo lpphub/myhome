@@ -1,10 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { toast } from 'sonner'
-import { createSpace, deleteSpace, getSpaces, togglePinSpace, updateSpace } from '@/api/spaces'
+import {
+  createSpace,
+  deleteSpace,
+  getSpaceMembers,
+  getSpaces,
+  inviteSpaceMember,
+  removeSpaceMember,
+  togglePinSpace,
+  updateSpace,
+} from '@/api/spaces'
 import type { Space } from '@/types/spaces'
 
 const SPACES_QUERY_KEY = ['spaces'] as const
+const MEMBERS_QUERY_KEY = (spaceId: number) => ['spaces', spaceId, 'members'] as const
 
 export function useSpaces() {
   return useQuery({
@@ -121,6 +131,48 @@ export function useTogglePinSpace() {
         queryClient.setQueryData(SPACES_QUERY_KEY, context.previous)
       }
       toast.error('设置失败')
+    },
+  })
+}
+
+export function useSpaceMembers(spaceId: number) {
+  return useQuery({
+    queryKey: MEMBERS_QUERY_KEY(spaceId),
+    queryFn: () => getSpaceMembers(spaceId),
+    staleTime: 1 * 60 * 1000,
+    gcTime: 2 * 60 * 1000,
+    enabled: !!spaceId,
+  })
+}
+
+export function useInviteSpaceMember() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ spaceId, email }: { spaceId: number; email: string }) =>
+      inviteSpaceMember(spaceId, email),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['spaces'] })
+      toast.success('邀请已发送')
+    },
+    onError: () => {
+      toast.error('邀请失败')
+    },
+  })
+}
+
+export function useRemoveSpaceMember() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ spaceId, userId }: { spaceId: number; userId: number }) =>
+      removeSpaceMember(spaceId, userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['spaces'] })
+      toast.success('已移除成员')
+    },
+    onError: () => {
+      toast.error('移除失败')
     },
   })
 }

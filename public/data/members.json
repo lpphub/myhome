@@ -1,0 +1,74 @@
+{
+  "members": [
+    {
+      "id": 1,
+      "userId": 1,
+      "spaceId": 1,
+      "name": "张三",
+      "email": "zhangsan@example.com",
+      "avatar": null,
+      "isOwner": true,
+      "joinedAt": "2024-12-01T00:00:00Z"
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "spaceId": 1,
+      "name": "李四",
+      "email": "lisi@example.com",
+      "avatar": null,
+      "isOwner": false,
+      "joinedAt": "2024-12-05T00:00:00Z"
+    },
+    {
+      "id": 3,
+      "userId": 1,
+      "spaceId": 2,
+      "name": "张三",
+      "email": "zhangsan@example.com",
+      "avatar": null,
+      "isOwner": true,
+      "joinedAt": "2024-12-05T00:00:00Z"
+    },
+    {
+      "id": 4,
+      "userId": 1,
+      "spaceId": 3,
+      "name": "张三",
+      "email": "zhangsan@example.com",
+      "avatar": null,
+      "isOwner": true,
+      "joinedAt": "2024-12-10T00:00:00Z"
+    },
+    {
+      "id": 5,
+      "userId": 2,
+      "spaceId": 4,
+      "name": "李四",
+      "email": "lisi@example.com",
+      "avatar": null,
+      "isOwner": true,
+      "joinedAt": "2024-12-15T00:00:00Z"
+    },
+    {
+      "id": 6,
+      "userId": 1,
+      "spaceId": 4,
+      "name": "张三",
+      "email": "zhangsan@example.com",
+      "avatar": null,
+      "isOwner": false,
+      "joinedAt": "2024-12-20T00:00:00Z"
+    },
+    {
+      "id": 7,
+      "userId": 3,
+      "spaceId": 4,
+      "name": "王五",
+      "email": "wangwu@example.com",
+      "avatar": null,
+      "isOwner": false,
+      "joinedAt": "2024-12-25T00:00:00Z"
+    }
+  ]
+}

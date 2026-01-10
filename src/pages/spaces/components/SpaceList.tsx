@@ -1,4 +1,4 @@
-import { Clock, Edit2, Pin, Plus, Tag } from 'lucide-react'
+import { Clock, Crown, Edit2, Handshake, Pin, Plus, Tag, Users } from 'lucide-react'
 import { memo, useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { useTogglePinSpace } from '@/pages/spaces/hooks/useSpaces'
@@ -19,102 +19,144 @@ interface SpaceCardProps {
   onEdit?: (space: Space) => void
   navigateTo: ReturnType<typeof useNavigate>
   togglePin: (id: number) => void
+  onOpenMemberDialog?: (space: Space) => void
+  currentUserId: number
 }
 
-const SpaceCard = memo(({ space, onEdit, navigateTo, togglePin }: SpaceCardProps) => {
-  const isPinned = space.pin
+const SpaceCard = memo(
+  ({ space, onEdit, navigateTo, togglePin, onOpenMemberDialog, currentUserId }: SpaceCardProps) => {
+    const isPinned = space.pin
+    const isOwner = space.owner === currentUserId
 
-  const handleTogglePin = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.stopPropagation()
-      togglePin(space.id)
-    },
-    [space.id, togglePin]
-  )
+    const handleShowCollaborators = useCallback(
+      (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation()
+        onOpenMemberDialog?.(space)
+      },
+      [onOpenMemberDialog, space]
+    )
 
-  const handleEditClick = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.stopPropagation()
-      onEdit?.(space)
-    },
-    [onEdit, space]
-  )
+    const handleTogglePin = useCallback(
+      (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation()
+        togglePin(space.id)
+      },
+      [space.id, togglePin]
+    )
 
-  return (
-    <div
-      role='button'
-      tabIndex={0}
-      onClick={() => navigateTo(`/tags?spaceId=${space.id}`)}
-      onKeyDown={e => e.key === 'Enter' && navigateTo(`/tags?spaceId=${space.id}`)}
-      className='group relative bg-white rounded-2xl p-6 cursor-pointer
-                 transition-all duration-300 ease-out select-none
-                 border-2 border-primary/20 hover:border-primary
-                 shadow-[6px_6px_0_0_#ff8c4233,inset_0_-4px_0_0_#00000008]
-                 hover:-translate-y-1 hover:shadow-[8px_8px_0_0_#ff8c4233,inset_0_-4px_0_0_#00000008]
-                 min-h-60 flex flex-col justify-between'
-    >
-      <div className='absolute top-4 right-4 flex gap-2 z-20'>
-        {onEdit && (
+    const handleEditClick = useCallback(
+      (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation()
+        onEdit?.(space)
+      },
+      [onEdit, space]
+    )
+
+    return (
+      <div
+        role='button'
+        tabIndex={0}
+        onClick={() => navigateTo(`/tags?spaceId=${space.id}`)}
+        onKeyDown={e => e.key === 'Enter' && navigateTo(`/tags?spaceId=${space.id}`)}
+        className='group relative bg-white rounded-2xl p-6
+                  transition-all duration-300 ease-out select-none
+                  border-2 border-primary/20 hover:border-primary
+                  shadow-[6px_6px_0_0_#ff8c4233,inset_0_-4px_0_0_#00000008]
+                  hover:-translate-y-1 hover:shadow-[8px_8px_0_0_#ff8c4233,inset_0_-4px_0_0_#00000008]
+                  min-h-60 flex flex-col justify-between'
+      >
+        <div className='absolute top-4 right-4 flex gap-2 z-20'>
+          {onEdit && (
+            <button
+              type='button'
+              onClick={handleEditClick}
+              className='p-1.5 rounded-full bg-gray-100 text-gray-400 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-gray-200 transition-all'
+              title='编辑'
+            >
+              <Edit2 className='w-4 h-4 text-primary' />
+            </button>
+          )}
           <button
             type='button'
-            onClick={handleEditClick}
-            className='p-1.5 rounded-full bg-gray-100 text-gray-400 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-gray-200 transition-all'
-            title='编辑'
+            onClick={handleTogglePin}
+            className={`p-1.5 rounded-full transition-all ${
+              isPinned
+                ? 'bg-secondary text-primary'
+                : 'bg-gray-100 text-gray-400 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-gray-200'
+            }`}
+            title={isPinned ? '取消便签墙' : '设为便签墙'}
           >
-            <Edit2 className='w-4 h-4 text-primary' />
+            <Pin className='w-4 h-4 transform rotate-45' />
           </button>
-        )}
-        <button
-          type='button'
-          onClick={handleTogglePin}
-          className={`p-1.5 rounded-full transition-all ${
-            isPinned
-              ? 'bg-secondary text-primary'
-              : 'bg-gray-100 text-gray-400 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-gray-200'
-          }`}
-          title={isPinned ? '取消便签墙' : '设为便签墙'}
-        >
-          <Pin className='w-4 h-4 transform rotate-45' />
-        </button>
-      </div>
-
-      <div className='flex items-start gap-4'>
-        <div className='w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center shrink-0'>
-          <span className='text-3xl'>{space.icon}</span>
         </div>
 
-        <div className='flex-1 min-w-0'>
-          <h3 className='font-semibold text-gray-900 text-lg mb-2'>{space.name}</h3>
+        <div className='absolute top-4 left-4 z-20'>
+          {isOwner ? (
+            <Crown className='w-5 h-5 text-yellow-500 bg-white rounded-full p-0.5 shadow-sm' />
+          ) : (
+            <Handshake className='w-5 h-5 text-primary bg-white rounded-full p-0.5 shadow-sm' />
+          )}
         </div>
-      </div>
 
-      {space.description && (
-        <p className='text-sm text-gray-600 line-clamp-2 leading-relaxed'>{space.description}</p>
-      )}
-
-      <div className='flex items-center justify-between mt-4 pt-3 border-t border-gray-100'>
-        {space.tagCount !== undefined && (
-          <div className='flex items-center gap-1.5 text-sm font-medium text-gray-700'>
-            <Tag className='w-4 h-4 text-primary' />
-            <span className='text-primary'>{space.tagCount}</span>
+        <div className='flex items-start gap-4'>
+          <div className='w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center shrink-0'>
+            <span className='text-3xl'>{space.icon}</span>
           </div>
+
+          <div className='flex-1 min-w-0'>
+            <h3 className='font-semibold text-gray-900 text-lg mb-2'>{space.name}</h3>
+          </div>
+        </div>
+
+        {space.description && (
+          <p className='text-sm text-gray-600 line-clamp-2 leading-relaxed'>{space.description}</p>
         )}
-        <div className='flex items-center gap-1.5 text-sm text-gray-500'>
-          <Clock className='w-4 h-4 text-primary' />
-          <span className='text-primary'>{formatDate(space.updatedAt)}</span>
+
+        <div className='flex items-center justify-between mt-4 pt-3 border-t border-gray-100'>
+          <div className='flex items-center gap-3'>
+            {space.tagCount !== undefined && (
+              <div className='flex items-center gap-1.5 text-sm font-medium text-gray-700'>
+                <Tag className='w-4 h-4 text-primary' />
+                <span className='text-primary'>{space.tagCount}</span>
+              </div>
+            )}
+            <div className='flex items-center gap-1.5 text-sm text-gray-500'>
+              <Clock className='w-4 h-4 text-primary' />
+              <span className='text-primary'>{formatDate(space.updatedAt)}</span>
+            </div>
+          </div>
+          {space.memberCount !== undefined && (
+            <button
+              type='button'
+              onClick={handleShowCollaborators}
+              className='flex items-center gap-1.5 text-sm font-medium cursor-pointer'
+              title='协作成员'
+            >
+              <Users className='w-4 h-4 text-primary' />
+              <span className='text-primary'>{space.memberCount}</span>
+            </button>
+          )}
         </div>
       </div>
-    </div>
-  )
-})
+    )
+  }
+)
 
 interface SpaceListProps {
   spaces: Space[]
   onAdd: () => void
   onEdit?: (space: Space) => void
+  onOpenMemberDialog?: (space: Space) => void
+  currentUserId: number
 }
 
-export function SpaceList({ spaces, onAdd, onEdit }: SpaceListProps) {
+export function SpaceList({
+  spaces,
+  onAdd,
+  onEdit,
+  onOpenMemberDialog,
+  currentUserId,
+}: SpaceListProps) {
   const navigate = useNavigate()
   const togglePin = useTogglePinSpace()
 
@@ -133,6 +175,8 @@ export function SpaceList({ spaces, onAdd, onEdit }: SpaceListProps) {
               onEdit={onEdit}
               navigateTo={navigate}
               togglePin={togglePin.mutate}
+              onOpenMemberDialog={onOpenMemberDialog}
+              currentUserId={currentUserId}
             />
           </div>
         )

@@ -30,6 +30,23 @@ async function loadUsersData(): Promise<Array<{ email: string; password: string;
   return data.users
 }
 
+async function loadMembersData(): Promise<{
+  members: Array<{
+    id: number
+    userId: number
+    spaceId: number
+    name: string
+    email: string
+    avatar?: string
+    isOwner: boolean
+    joinedAt: string
+  }>
+}> {
+  const res = await fetch('/data/members.json')
+  if (!res.ok) throw new Error('Failed to load members.json')
+  return res.json()
+}
+
 function generateTokens(): { accessToken: string; refreshToken: string } {
   return {
     accessToken: `mock_access_token_${Date.now()}`,
@@ -266,6 +283,8 @@ export const handlers = [
       icon: body.icon,
       description: body.description,
       tagCount: 0,
+      memberCount: 1,
+      owner: 1,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }
@@ -324,4 +343,66 @@ export const handlers = [
       data: { success: true },
     })
   }),
+
+  http.get<{ id: string }>('/api/spaces/:id/members', async ({ params }) => {
+    const spaceId = Number.parseInt(params.id, 10)
+    const membersData = await loadMembersData()
+    const members = membersData.members.filter(m => m.spaceId === spaceId)
+
+    return HttpResponse.json({
+      code: 200,
+      message: '获取协作者列表成功',
+      data: members,
+    })
+  }),
+
+  http.post<{ id: string }>('/api/spaces/:id/members/invite', async ({ params, request }) => {
+    const spaceId = Number.parseInt(params.id, 10)
+    const body = (await request.json()) as { email: string }
+    const spacesData = await loadSpacesData()
+    const space = spacesData.spaces.find(s => s.id === spaceId)
+
+    if (!space) {
+      return HttpResponse.json({ code: 404, message: '空间不存在' }, { status: 404 })
+    }
+
+    const membersData = await loadMembersData()
+    const existingMember = membersData.members.find(
+      m => m.spaceId === spaceId && m.email === body.email
+    )
+
+    if (existingMember) {
+      return HttpResponse.json({ code: 400, message: '该用户已是协作者' }, { status: 400 })
+    }
+
+    return HttpResponse.json({
+      code: 200,
+      message: '邀请已发送',
+      data: { success: true },
+    })
+  }),
+
+  http.delete<{ id: string; userId: string }>(
+    '/api/spaces/:id/members/:userId',
+    async ({ params }) => {
+      const spaceId = Number.parseInt(params.id, 10)
+      const userId = Number.parseInt(params.userId, 10)
+      const membersData = await loadMembersData()
+      const member = membersData.members.find(m => m.spaceId === spaceId && m.userId === userId)
+
+      if (!member) {
+        return HttpResponse.json({ code: 404, message: '成员不存在' }, { status: 404 })
+      }
+
+      if (member.isOwner) {
+        return HttpResponse.json({ code: 400, message: '不能移除空间拥有者' }, { status: 400 })
+      }
+
+      return HttpResponse.json({
+        code: 200,
+        message: '移除成员成功',
+        data: { success: true },
+      })
+    }
+  ),
 ]

@@ -1,8 +1,10 @@
 import { useCallback, useMemo, useState } from 'react'
 import { LoadingState } from '@/components/LoadingState'
+import { useAuthStore } from '@/stores/useAuthStore'
 import type { Space, SpaceForm } from '@/types/spaces'
 import { SpaceFormDialog } from './components/SpaceFormDialog'
 import { SpaceList } from './components/SpaceList'
+import { SpaceMemberDialog } from './components/SpaceMemberDialog'
 import { useCreateSpace, useDeleteSpace, useSpaces, useUpdateSpace } from './hooks/useSpaces'
 
 const getGreeting = (): { greeting: string; message: string } => {
@@ -26,9 +28,22 @@ const getGreeting = (): { greeting: string; message: string } => {
   return { greeting, message: randomMessage }
 }
 
+interface DialogState {
+  open: boolean
+  initialData?: Space
+}
+
 export default function Spaces() {
-  const [openDialog, setOpenDialog] = useState(false)
-  const [editingSpace, setEditingSpace] = useState<Space | undefined>()
+  const [spaceDialog, setSpaceDialog] = useState<DialogState>({
+    open: false,
+    initialData: undefined,
+  })
+  const [memberDialog, setMemberDialog] = useState<DialogState>({
+    open: false,
+    initialData: undefined,
+  })
+
+  const user = useAuthStore(state => state.user)
 
   const { data: spaceList = [], isLoading } = useSpaces()
   const createSpace = useCreateSpace()
@@ -39,7 +54,7 @@ export default function Spaces() {
     (values: SpaceForm) => {
       values.id ? updateSpace.mutate(values) : createSpace.mutate(values)
 
-      setOpenDialog(false)
+      setSpaceDialog({ open: false, initialData: undefined })
     },
     [createSpace, updateSpace]
   )
@@ -48,7 +63,7 @@ export default function Spaces() {
     (id: number) => {
       deleteSpace.mutate(id)
 
-      setOpenDialog(false)
+      setSpaceDialog({ open: false, initialData: undefined })
     },
     [deleteSpace]
   )
@@ -56,8 +71,11 @@ export default function Spaces() {
   const { greeting, message } = useMemo(() => getGreeting(), [])
 
   const handleOpenDialog = useCallback((space?: Space) => {
-    setEditingSpace(space)
-    setOpenDialog(true)
+    setSpaceDialog({ open: true, initialData: space })
+  }, [])
+
+  const handleOpenMemberDialog = useCallback((space: Space) => {
+    setMemberDialog({ open: true, initialData: space })
   }, [])
 
   if (isLoading) {
@@ -72,15 +90,28 @@ export default function Spaces() {
           <p className='text-foreground-secondary'>{message}</p>
         </header>
 
-        <SpaceList spaces={spaceList} onAdd={handleOpenDialog} onEdit={handleOpenDialog} />
+        <SpaceList
+          spaces={spaceList}
+          onAdd={handleOpenDialog}
+          onEdit={handleOpenDialog}
+          onOpenMemberDialog={handleOpenMemberDialog}
+          currentUserId={user?.id ?? 0}
+        />
       </main>
 
+      <SpaceMemberDialog
+        open={memberDialog.open}
+        onClose={() => setMemberDialog({ open: false, initialData: undefined })}
+        space={memberDialog.initialData}
+        isOwner={user?.id === memberDialog.initialData?.owner}
+      />
+
       <SpaceFormDialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
+        open={spaceDialog.open}
+        onClose={() => setSpaceDialog({ open: false, initialData: undefined })}
         onSubmit={handleSubmit}
-        initialData={editingSpace}
-        onDelete={editingSpace?.id ? handleDelete : undefined}
+        initialData={spaceDialog.initialData}
+        onDelete={spaceDialog.initialData?.id ? handleDelete : undefined}
       />
     </div>
   )
