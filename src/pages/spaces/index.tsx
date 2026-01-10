@@ -37,11 +37,8 @@ export default function Spaces() {
 
   const handleSubmit = useCallback(
     (values: SpaceForm) => {
-      if (values.id) {
-        updateSpace.mutate(values)
-      } else {
-        createSpace.mutate(values)
-      }
+      values.id ? updateSpace.mutate(values) : createSpace.mutate(values)
+
       setOpenDialog(false)
     },
     [createSpace, updateSpace]
@@ -50,6 +47,7 @@ export default function Spaces() {
   const handleDelete = useCallback(
     (id: number) => {
       deleteSpace.mutate(id)
+
       setOpenDialog(false)
     },
     [deleteSpace]

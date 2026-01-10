@@ -316,4 +316,12 @@ export const handlers = [
       data: { success: true },
     })
   }),
+
+  http.patch('/api/spaces/:id/pin', async () => {
+    return HttpResponse.json({
+      code: 200,
+      message: '切换置顶成功',
+      data: { success: true },
+    })
+  }),
 ]

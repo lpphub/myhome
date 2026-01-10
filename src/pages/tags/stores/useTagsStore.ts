@@ -7,8 +7,8 @@ interface LocalTagsState {
   tags: TagGroup[]
 
   /* ===== context actions ===== */
-  reset: () => void
   restore: (tags: TagGroup[]) => void
+  reset: () => void
 
   /* ===== data actions ===== */
   initTags: (spaceId: number, tags: TagGroup[]) => void
@@ -26,8 +26,8 @@ export const useTagsStore = create<LocalTagsState>(set => ({
   tags: [],
 
   /* ---------------- context ---------------- */
-  reset: () => set({ tags: [], spaceId: null }),
   restore: (tags: TagGroup[]) => set({ tags }),
+  reset: () => set({ tags: [], spaceId: null }),
 
   /* ---------------- data ---------------- */
   initTags: (spaceId: number, tags: TagGroup[]) =>

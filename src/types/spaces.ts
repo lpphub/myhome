@@ -4,6 +4,7 @@ export interface Space {
   icon: string
   description?: string
   tagCount?: number
+  pin?: boolean
   createdAt: string
   updatedAt: string
 }

@@ -1,7 +1,7 @@
 import { Clock, Edit2, Pin, Plus, Tag } from 'lucide-react'
 import { memo, useCallback } from 'react'
 import { useNavigate } from 'react-router'
-import { useSpaceStore } from '@/pages/spaces/stores/useSpaceStore'
+import { useTogglePinSpace } from '@/pages/spaces/hooks/useSpaces'
 import type { Space } from '@/types/spaces'
 
 const formatDate = (date: string) => {
@@ -18,18 +18,18 @@ interface SpaceCardProps {
   space: Space
   onEdit?: (space: Space) => void
   navigateTo: ReturnType<typeof useNavigate>
+  togglePin: (id: number) => void
 }
 
-const SpaceCard = memo(({ space, onEdit, navigateTo }: SpaceCardProps) => {
-  const { spaceId, setSpaceId } = useSpaceStore()
-  const isFavorite = spaceId === space.id
+const SpaceCard = memo(({ space, onEdit, navigateTo, togglePin }: SpaceCardProps) => {
+  const isPinned = space.pin
 
-  const handleToggleFavorite = useCallback(
+  const handleTogglePin = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation()
-      setSpaceId(isFavorite ? undefined : space.id)
+      togglePin(space.id)
     },
-    [isFavorite, space.id, setSpaceId]
+    [space.id, togglePin]
   )
 
   const handleEditClick = useCallback(
@@ -66,13 +66,13 @@ const SpaceCard = memo(({ space, onEdit, navigateTo }: SpaceCardProps) => {
         )}
         <button
           type='button'
-          onClick={handleToggleFavorite}
+          onClick={handleTogglePin}
           className={`p-1.5 rounded-full transition-all ${
-            isFavorite
+            isPinned
               ? 'bg-secondary text-primary'
               : 'bg-gray-100 text-gray-400 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-gray-200'
           }`}
-          title={isFavorite ? '取消常用' : '设为常用'}
+          title={isPinned ? '取消常用' : '设为常用'}
         >
           <Pin className='w-4 h-4 transform rotate-45' />
         </button>
@@ -116,6 +116,7 @@ interface SpaceListProps {
 
 export function SpaceList({ spaces, onAdd, onEdit }: SpaceListProps) {
   const navigate = useNavigate()
+  const togglePin = useTogglePinSpace()
 
   return (
     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
@@ -127,7 +128,12 @@ export function SpaceList({ spaces, onAdd, onEdit }: SpaceListProps) {
             className='animate-in fade-in zoom-in-95 duration-300'
             style={{ animationDelay: `${delay}ms` }}
           >
-            <SpaceCard space={space} onEdit={onEdit} navigateTo={navigate} />
+            <SpaceCard
+              space={space}
+              onEdit={onEdit}
+              navigateTo={navigate}
+              togglePin={togglePin.mutate}
+            />
           </div>
         )
       })}

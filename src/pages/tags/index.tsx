@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { LoadingState } from '@/components/LoadingState'
-import { useSpaceStore } from '@/pages/spaces/stores/useSpaceStore'
+import { usePinnedSpaceId } from '@/pages/spaces/hooks/useSpaces'
 import type { Group, ReorderParams, TagFormData, TagGroup } from '@/types/tags'
 import { TagFormDialog } from './components/TagFormDialog'
 import { TagToolbar } from './components/TagToolbar'
@@ -23,7 +23,7 @@ import { useTagsStore } from './stores/useTagsStore'
 export default function TagsPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const favoriteSpaceId = useSpaceStore(s => s.spaceId)
+  const pinnedSpaceId = usePinnedSpaceId()
 
   const spaceId = useMemo<number | undefined>(() => {
     const fromQuery = searchParams.get('spaceId')
@@ -31,8 +31,8 @@ export default function TagsPage() {
       const parsed = Number(fromQuery)
       return Number.isNaN(parsed) ? undefined : parsed
     }
-    return favoriteSpaceId
-  }, [searchParams, favoriteSpaceId])
+    return pinnedSpaceId
+  }, [searchParams, pinnedSpaceId])
 
   if (!spaceId) {
     return (
@@ -111,12 +111,12 @@ function TagsPageInner({ spaceId }: { spaceId: number }) {
   const handleSubmitTag = useCallback(
     (data: TagFormData) => {
       if (data.id) {
-        const snapshot = structuredClone(useTagsStore.getState().tags)
+        const previous = structuredClone(useTagsStore.getState().tags)
 
         updateTagLocal(data)
 
         updateTag.mutate(data, {
-          onError: () => useTagsStore.getState().restore(snapshot), // 失败时回滚到快照
+          onError: () => useTagsStore.getState().restore(previous), // 失败时回滚到快照
         })
       } else {
         // 新增
@@ -129,11 +129,11 @@ function TagsPageInner({ spaceId }: { spaceId: number }) {
 
   const handleDeleteTag = useCallback(
     (id: number) => {
-      const snapshot = structuredClone(useTagsStore.getState().tags)
+      const previous = structuredClone(useTagsStore.getState().tags)
 
       deleteTagLocal(id)
       deleteTag.mutate(id, {
-        onError: () => useTagsStore.getState().restore(snapshot),
+        onError: () => useTagsStore.getState().restore(previous),
       })
     },
     [deleteTagLocal, deleteTag]
@@ -142,12 +142,12 @@ function TagsPageInner({ spaceId }: { spaceId: number }) {
   /* 拖拽排序 */
   const handleDragReorder = useCallback(
     (params: ReorderParams, next: TagGroup[]) => {
-      const snapshot = structuredClone(useTagsStore.getState().tags)
+      const previous = structuredClone(useTagsStore.getState().tags)
 
       reorder(next)
 
       reorderTags.mutate(params, {
-        onError: () => useTagsStore.getState().restore(snapshot),
+        onError: () => useTagsStore.getState().restore(previous),
       })
     },
     [reorder, reorderTags]
@@ -162,12 +162,12 @@ function TagsPageInner({ spaceId }: { spaceId: number }) {
 
   const handleDeleteGroup = useCallback(
     (code: string) => {
-      const snapshot = structuredClone(useTagsStore.getState().tags)
+      const previous = structuredClone(useTagsStore.getState().tags)
 
       deleteGroupLocal(code)
 
       deleteGroup.mutate(code, {
-        onError: () => useTagsStore.getState().restore(snapshot),
+        onError: () => useTagsStore.getState().restore(previous),
       })
     },
     [deleteGroupLocal, deleteGroup]
