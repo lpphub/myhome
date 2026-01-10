@@ -23,7 +23,7 @@ import { useTagsStore } from './stores/useTagsStore'
 export default function TagsPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const pinnedSpaceId = usePinnedSpaceId()
+  const { pinnedId, isLoading } = usePinnedSpaceId()
 
   const spaceId = useMemo<number | undefined>(() => {
     const fromQuery = searchParams.get('spaceId')
@@ -31,8 +31,12 @@ export default function TagsPage() {
       const parsed = Number(fromQuery)
       return Number.isNaN(parsed) ? undefined : parsed
     }
-    return pinnedSpaceId
-  }, [searchParams, pinnedSpaceId])
+    return pinnedId
+  }, [searchParams, pinnedId])
+
+  if (isLoading) {
+    return <LoadingState type='loading' />
+  }
 
   if (!spaceId) {
     return (
@@ -191,7 +195,7 @@ function TagsPageInner({ spaceId }: { spaceId: number }) {
       <TagWall
         tags={filteredTags}
         tagActions={{
-          onEdit: tag => handleOpenDialog(tag),
+          onEdit: handleOpenDialog,
           onDelete: handleDeleteTag,
         }}
         onAddTag={group => handleOpenDialog({ group, name: '', color: 'lemon' })}

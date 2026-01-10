@@ -16,9 +16,11 @@ export function useSpaces() {
 }
 
 export function usePinnedSpaceId() {
-  const { data: spaces = [] } = useSpaces()
+  const { data: spaces, isLoading } = useSpaces()
 
-  return useMemo(() => spaces.find(s => s.pin)?.id, [spaces])
+  const pinnedId = useMemo(() => spaces?.find(s => s.pin)?.id, [spaces])
+
+  return { pinnedId, isLoading }
 }
 
 export function useCreateSpace() {

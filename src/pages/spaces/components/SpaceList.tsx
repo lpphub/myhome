@@ -72,7 +72,7 @@ const SpaceCard = memo(({ space, onEdit, navigateTo, togglePin }: SpaceCardProps
               ? 'bg-secondary text-primary'
               : 'bg-gray-100 text-gray-400 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-gray-200'
           }`}
-          title={isPinned ? '取消常用' : '设为常用'}
+          title={isPinned ? '取消便签墙' : '设为便签墙'}
         >
           <Pin className='w-4 h-4 transform rotate-45' />
         </button>
