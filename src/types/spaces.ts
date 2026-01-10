@@ -29,10 +29,6 @@ export interface SpaceMember {
   joinedAt: string
 }
 
-export interface InviteMemberForm {
-  email: string
-}
-
 export const SPACE_ICONS = [
   '🏠',
   '🛋️',

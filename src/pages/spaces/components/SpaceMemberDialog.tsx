@@ -26,11 +26,11 @@ import { Label } from '@/components/ui/label'
 import type { Space, SpaceMember } from '@/types/spaces'
 import { useInviteSpaceMember, useRemoveSpaceMember, useSpaceMembers } from '../hooks/useSpaces'
 
-export const inviteMemberSchema = z.object({
-  email: z.string().min(1, '请输入邮箱地址').email('请输入有效的邮箱地址'),
+const inviteMemberSchema = z.object({
+  email: z.email('请输入有效的邮箱地址').min(1, '请输入邮箱地址'),
 })
 
-export type InviteMemberFormValues = z.infer<typeof inviteMemberSchema>
+type InviteMemberFormValues = z.infer<typeof inviteMemberSchema>
 
 interface SpaceMemberDialogProps {
   open: boolean
@@ -40,7 +40,7 @@ interface SpaceMemberDialogProps {
 }
 
 export const SpaceMemberDialog = ({ open, onClose, space, isOwner }: SpaceMemberDialogProps) => {
-  const [showRemoveAlert, setShowRemoveAlert] = useState(false)
+  const [openRemoveAlert, setOpenRemoveAlert] = useState(false)
   const [removingMember, setRemovingMember] = useState<SpaceMember | null>(null)
 
   const { data: members = [], isLoading: isLoadingMembers } = useSpaceMembers(space?.id ?? 0)
@@ -54,7 +54,7 @@ export const SpaceMemberDialog = ({ open, onClose, space, isOwner }: SpaceMember
   useEffect(() => {
     if (!open) {
       form.reset()
-      setShowRemoveAlert(false)
+      setOpenRemoveAlert(false)
       setRemovingMember(null)
     }
   }, [open, form])
@@ -77,7 +77,7 @@ export const SpaceMemberDialog = ({ open, onClose, space, isOwner }: SpaceMember
         { spaceId: space.id, userId: removingMember.userId },
         {
           onSuccess: () => {
-            setShowRemoveAlert(false)
+            setOpenRemoveAlert(false)
             setRemovingMember(null)
           },
         }
@@ -87,7 +87,7 @@ export const SpaceMemberDialog = ({ open, onClose, space, isOwner }: SpaceMember
 
   const handleRemoveClick = (member: SpaceMember) => {
     setRemovingMember(member)
-    setShowRemoveAlert(true)
+    setOpenRemoveAlert(true)
   }
 
   return (
@@ -107,7 +107,7 @@ export const SpaceMemberDialog = ({ open, onClose, space, isOwner }: SpaceMember
 
           <div className='space-y-4 mt-4'>
             {isLoadingMembers ? (
-              <div className='flex items-center justify-center py-8 text-gray-500'>加载中...</div>
+              <div className='flex items-center justify-center py-8 text-primary'>加载中...</div>
             ) : members.length === 0 ? (
               <div className='flex flex-col items-center justify-center py-8 text-gray-500'>
                 <Users className='w-12 h-12 mb-2 text-gray-300' />
@@ -138,7 +138,6 @@ export const SpaceMemberDialog = ({ open, onClose, space, isOwner }: SpaceMember
                           {member.isOwner && (
                             <span className='flex items-center gap-1 px-2 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-700 rounded-full'>
                               <Crown className='w-3 h-3' />
-                              拥有者
                             </span>
                           )}
                         </div>
@@ -199,7 +198,7 @@ export const SpaceMemberDialog = ({ open, onClose, space, isOwner }: SpaceMember
         </DialogContent>
       </Dialog>
 
-      <AlertDialog open={showRemoveAlert} onOpenChange={setShowRemoveAlert}>
+      <AlertDialog open={openRemoveAlert} onOpenChange={setOpenRemoveAlert}>
         <AlertDialogContent className='max-w-md'>
           <AlertDialogHeader>
             <div className='flex items-center gap-3'>

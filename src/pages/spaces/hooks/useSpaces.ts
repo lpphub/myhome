@@ -151,8 +151,8 @@ export function useInviteSpaceMember() {
   return useMutation({
     mutationFn: ({ spaceId, email }: { spaceId: number; email: string }) =>
       inviteSpaceMember(spaceId, email),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['spaces'] })
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: MEMBERS_QUERY_KEY(variables.spaceId) })
       toast.success('邀请已发送')
     },
     onError: () => {
@@ -167,9 +167,8 @@ export function useRemoveSpaceMember() {
   return useMutation({
     mutationFn: ({ spaceId, userId }: { spaceId: number; userId: number }) =>
       removeSpaceMember(spaceId, userId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['spaces'] })
-      toast.success('已移除成员')
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: MEMBERS_QUERY_KEY(variables.spaceId) })
     },
     onError: () => {
       toast.error('移除失败')
