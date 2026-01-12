@@ -139,7 +139,13 @@ const MobileNav = ({ currentPage }: { currentPage: string }) => {
 }
 
 // NavActions 组件
-const NavActions = ({ handleLogout }: { handleLogout: () => void }) => {
+const NavActions = ({
+  handleLogout,
+  navigateToProfile,
+}: {
+  handleLogout: () => void
+  navigateToProfile: () => void
+}) => {
   const { user } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -163,7 +169,8 @@ const NavActions = ({ handleLogout }: { handleLogout: () => void }) => {
       {/* 设置按钮 */}
       <button
         type='button'
-        className='p-2.5 text-foreground hover:text-coral-500 hover:bg-honey-50 rounded-lg transition-colors'
+        onClick={navigateToProfile}
+        className='p-2.5 text-foreground hover:text-coral-500 hover:bg-honey-50 rounded-lg transition-colors cursor-pointer'
       >
         <Settings className='w-5 h-5' />
       </button>
@@ -228,6 +235,10 @@ function Navigation() {
     navigate('/login')
   }
 
+  const navigateToProfile = () => {
+    navigate('/profile')
+  }
+
   return (
     <>
       {/* 顶部导航栏 */}
@@ -241,7 +252,7 @@ function Navigation() {
             <DesktopNav currentPage={currentPage} />
 
             {/* 右侧操作区 */}
-            <NavActions handleLogout={handleLogout} />
+            <NavActions handleLogout={handleLogout} navigateToProfile={navigateToProfile} />
           </div>
         </div>
       </nav>

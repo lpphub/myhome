@@ -4,6 +4,7 @@ import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
 import NotFound from '@/pages/errors/NotFound'
 import Landing from '@/pages/Landing'
+import Profile from '@/pages/profile'
 import Spaces from '@/pages/spaces'
 import TestComponents from '@/pages/TestUI'
 import Tags from '@/pages/tags'
@@ -25,6 +26,10 @@ export const router = createBrowserRouter([
       {
         path: '/tags',
         element: <Tags />,
+      },
+      {
+        path: '/profile',
+        element: <Profile />,
       },
     ],
   },
