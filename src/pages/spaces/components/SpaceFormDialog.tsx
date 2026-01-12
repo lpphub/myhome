@@ -167,7 +167,7 @@ export const SpaceFormDialog = ({
                 className={
                   form.formState.errors.description
                     ? 'border-red-500 ring-1 ring-red-500 scrollbar-hide'
-                    : 'border-border focus:border-coral-400 resize-none !field-sizing-fixed scrollbar-hide'
+                    : 'border-border focus:border-coral-400 resize-none field-sizing-fixed! scrollbar-hide'
                 }
               />
               {form.formState.errors.description && (
