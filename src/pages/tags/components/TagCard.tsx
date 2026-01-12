@@ -1,6 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Edit2, Pin, Trash2 } from 'lucide-react'
+import { Pin, Trash2 } from 'lucide-react'
 import { memo, useCallback, useMemo } from 'react'
 import { cn } from '@/lib/utils'
 import { TAG_COLOR_CLASSES, type Tag, type TagFormData } from '@/types/tags'
@@ -42,19 +42,11 @@ export const TagCard = memo(({ tag, onEdit, onDelete }: TagCardProps) => {
     [onDelete, tag.id]
   )
 
-  const handleEditClick = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.stopPropagation()
-      onEdit?.(tag)
-    },
-    [onEdit, tag]
-  )
-
   const handleClick = useCallback(() => {
     if (!isDragging && onEdit) {
-      // onEdit(tag)
+      onEdit?.(tag)
     }
-  }, [isDragging, onEdit])
+  }, [isDragging, onEdit, tag])
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -93,14 +85,6 @@ export const TagCard = memo(({ tag, onEdit, onDelete }: TagCardProps) => {
           'opacity-100 sm:opacity-0 sm:group-hover:opacity-100'
         )}
       >
-        <button
-          type='button'
-          onClick={handleEditClick}
-          className='p-1 rounded-full bg-white/50 hover:bg-white hover:scale-110 shadow-sm transition-all duration-200'
-          title='编辑'
-        >
-          <Edit2 className='w-3 h-3 text-foreground' />
-        </button>
         <button
           type='button'
           onClick={handleDeleteClick}

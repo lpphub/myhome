@@ -1,5 +1,6 @@
 import { Check } from 'lucide-react'
-import { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { TextEditor, type TextEditorHandle, type TextState } from '@/components/TextEditor'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -11,34 +12,32 @@ import {
 import { cn } from '@/lib/utils'
 import { TAG_COLOR_CLASSES, type TagFormData } from '@/types/tags'
 
-/* =======================================================
- * ColorSelect Component
- * ======================================================= */
+/* ============ ColorSelect ============ */
 interface ColorSelectProps {
   value: string
   onChange: (color: string) => void
 }
 
-const ColorSelect = memo(({ value, onChange }: ColorSelectProps) => {
+export const ColorSelect = memo(({ value, onChange }: ColorSelectProps) => {
   return (
     <div className='flex items-center gap-2'>
-      {Object.entries(TAG_COLOR_CLASSES).map(([colorKey, colorData]) => {
-        const isSelected = value === colorKey
+      {Object.entries(TAG_COLOR_CLASSES).map(([key, color]) => {
+        const selected = value === key
         return (
           <button
-            key={colorKey}
+            key={key}
             type='button'
-            onClick={() => onChange(colorKey)}
+            title={color.name}
+            onClick={() => onChange(key)}
             className={cn(
-              'relative w-6 h-6 rounded-full transition-all duration-200',
+              'relative w-6 h-6 rounded-full transition-all',
               'hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-honey-400',
-              colorData.classes,
-              isSelected && 'ring-2 ring-offset-1 ring-honey-400 scale-110'
+              color.classes,
+              selected && 'ring-2 ring-offset-1 ring-honey-400 scale-110'
             )}
-            title={colorData.name}
           >
-            {isSelected && (
-              <Check className='w-3.5 h-3.5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-current opacity-70' />
+            {selected && (
+              <Check className='absolute inset-1/2 w-3.5 h-3.5 -translate-x-1/2 -translate-y-1/2 opacity-70' />
             )}
           </button>
         )
@@ -47,9 +46,7 @@ const ColorSelect = memo(({ value, onChange }: ColorSelectProps) => {
   )
 })
 
-/* =======================================================
- * TagFormDialog Component
- * ======================================================= */
+/* =========== TagFormDialog ============ */
 export interface TagFormDialogProps {
   open: boolean
   onClose: () => void
@@ -58,80 +55,63 @@ export interface TagFormDialogProps {
 }
 
 export const TagFormDialog = ({ open, onClose, onSubmit, initialData }: TagFormDialogProps) => {
-  const [content, setContent] = useState('')
-  const [color, setColor] = useState('lemon')
+  const [text, setText] = useState<TextState>({ title: '', description: '' })
+  const [color, setColor] = useState<string>('lemon')
+  const editorRef = useRef<TextEditorHandle>(null)
 
   const isEditing = Boolean(initialData?.id)
 
-  // Reset form when dialog opens
+  /* ---------- 初始化 ---------- */
   useEffect(() => {
     if (!open) return
-
     if (initialData) {
-      const desc = initialData.description || ''
-      setContent(`${initialData.name}${desc ? `\n${desc}` : ''}`)
-      setColor(initialData.color || 'lemon')
+      setText({ title: initialData.name ?? '', description: initialData.description ?? '' })
+      setColor(initialData.color ?? 'lemon')
     } else {
-      setContent('')
+      setText({ title: '', description: '' })
       setColor('lemon')
     }
+
+    // focus 标题，光标在末尾
+    requestAnimationFrame(() => {
+      const input = document.querySelector<HTMLInputElement>('input[placeholder="标题"]')
+      if (input) {
+        const len = input.value.length
+        input.setSelectionRange(len, len)
+        input.focus()
+      }
+    })
   }, [open, initialData])
 
-  // Parse content into title and description
-  const parseContent = useCallback((text: string) => {
-    const lines = text.split('\n')
-    const title = lines[0]?.trim() || ''
-    const description = lines.slice(1).join('\n').trim() || undefined
-    return { title, description }
-  }, [])
-
+  /* ---------- 提交 ---------- */
   const handleSubmit = useCallback(() => {
-    const { title, description } = parseContent(content)
-
-    if (!title) {
-      return
-    }
+    if (!editorRef.current?.validate()) return
 
     onSubmit({
       id: initialData?.id,
-      name: title,
-      description,
+      name: text.title.trim(),
+      description: text.description.trim() || undefined,
       color,
       group: initialData?.group || 'default',
     })
-  }, [content, color, initialData, parseContent, onSubmit])
+  }, [text, color, initialData, onSubmit])
 
   return (
-    <Dialog open={open} onOpenChange={open => !open && onClose()}>
-      <DialogContent
-        className='sm:max-w-lg bg-white border-honey-200 rounded-lg p-0 overflow-hidden'
-        // onOpenAutoFocus={e => e.preventDefault()}
-      >
+    <Dialog open={open} onOpenChange={o => !o && onClose()}>
+      <DialogContent className='sm:max-w-lg p-0 overflow-hidden'>
         <DialogHeader className='px-4 pt-4 pb-1 pr-12'>
-          <DialogTitle className='text-xl font-bold text-foreground'>
+          <DialogTitle className='text-xl font-bold'>
             {isEditing ? '编辑便签' : '新建便签'}
           </DialogTitle>
-          <DialogDescription className='text-sm text-muted-foreground'>
-            第一行是标题，下面是描述内容
-          </DialogDescription>
+          <DialogDescription>请输入便签标题和描述</DialogDescription>
         </DialogHeader>
 
-        <div className='px-4 pb-4'>
-          <textarea
-            value={content}
-            onChange={e => setContent(e.target.value)}
-            placeholder='标题...'
-            className={cn(
-              'w-full min-h-50 max-h-100 p-4 rounded-md',
-              'border border-border hover:border-honey-300',
-              'focus:border-honey-400 focus:ring-1 focus:ring-honey-200',
-              'bg-transparent resize-none focus:outline-none',
-              'text-sm leading-relaxed transition-all duration-200'
-            )}
-            style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
-          />
+        <div className='px-4 pb-4 space-y-4'>
+          {/* 文本编辑区 */}
+          <TextEditor ref={editorRef} text={text} onChange={setText} required />
 
-          <div className='mt-4 flex items-center justify-between'>
+          {/* 颜色选择 */}
+          <div className='flex items-center justify-between'>
             <div className='flex items-center gap-3'>
               <span className='text-sm text-muted-foreground'>颜色</span>
               <ColorSelect value={color} onChange={setColor} />
