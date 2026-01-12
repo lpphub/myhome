@@ -20,6 +20,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -99,6 +100,7 @@ export const SpaceFormDialog = ({
           onOpenAutoFocus={e => e.preventDefault()}
           className='sm:max-w-md bg-white border-honey-200 rounded-lg max-h-[90vh] overflow-y-auto'
         >
+          <DialogTrigger onClick={e => e.currentTarget.blur()} />
           <DialogHeader>
             <DialogTitle className='text-2xl font-bold text-foreground'>
               {isEditing ? '编辑空间' : '新建空间'}

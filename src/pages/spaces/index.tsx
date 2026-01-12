@@ -2,10 +2,18 @@ import { useCallback, useMemo, useState } from 'react'
 import { LoadingState } from '@/components/LoadingState'
 import { useAuthStore } from '@/stores/useAuthStore'
 import type { Space, SpaceForm } from '@/types/spaces'
+import { InviteListDialog } from './components/InviteListDialog'
+import { InviteReminder } from './components/InviteReminder'
 import { SpaceFormDialog } from './components/SpaceFormDialog'
 import { SpaceList } from './components/SpaceList'
 import { SpaceMemberDialog } from './components/SpaceMemberDialog'
-import { useCreateSpace, useDeleteSpace, useSpaces, useUpdateSpace } from './hooks/useSpaces'
+import {
+  useCreateSpace,
+  useDeleteSpace,
+  usePendingInvites,
+  useSpaces,
+  useUpdateSpace,
+} from './hooks/useSpaces'
 
 const getGreeting = (): { greeting: string; message: string } => {
   const hour = new Date().getHours()
@@ -42,8 +50,10 @@ export default function Spaces() {
     open: false,
     initialData: undefined,
   })
+  const [inviteDialog, setInviteDialog] = useState(false)
 
   const user = useAuthStore(state => state.user)
+  const { data: invites = [] } = usePendingInvites()
 
   const { data: spaceList = [], isLoading } = useSpaces()
   const createSpace = useCreateSpace()
@@ -78,6 +88,10 @@ export default function Spaces() {
     setMemberDialog({ open: true, initialData: space })
   }, [])
 
+  const handleOpenInviteDialog = useCallback(() => {
+    setInviteDialog(true)
+  }, [])
+
   if (isLoading) {
     return <LoadingState type='loading' />
   }
@@ -89,6 +103,8 @@ export default function Spaces() {
           <h1 className='text-3xl font-bold text-foreground mb-2'>👋 {greeting}</h1>
           <p className='text-foreground-secondary'>{message}</p>
         </header>
+
+        <InviteReminder count={invites.length} onClick={handleOpenInviteDialog} />
 
         <SpaceList
           spaces={spaceList}
@@ -105,6 +121,8 @@ export default function Spaces() {
         space={memberDialog.initialData}
         isOwner={user?.id === memberDialog.initialData?.owner}
       />
+
+      <InviteListDialog open={inviteDialog} onClose={() => setInviteDialog(false)} />
 
       <SpaceFormDialog
         open={spaceDialog.open}

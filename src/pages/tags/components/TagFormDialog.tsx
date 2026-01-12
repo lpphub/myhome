@@ -8,6 +8,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 import { TAG_COLOR_CLASSES, type TagFormData } from '@/types/tags'
@@ -99,6 +100,7 @@ export const TagFormDialog = ({ open, onClose, onSubmit, initialData }: TagFormD
   return (
     <Dialog open={open} onOpenChange={o => !o && onClose()}>
       <DialogContent className='sm:max-w-lg p-0 overflow-hidden'>
+        <DialogTrigger onClick={e => e.currentTarget.blur()} />
         <DialogHeader className='px-4 pt-4 pb-1 pr-12'>
           <DialogTitle className='text-xl font-bold'>
             {isEditing ? '编辑便签' : '新建便签'}

@@ -1,4 +1,4 @@
-import type { Space, SpaceForm, SpaceMember } from '@/types/spaces'
+import type { Space, SpaceForm, SpaceInvite, SpaceMember } from '@/types/spaces'
 import httpClient from '@/utils/request'
 
 enum SpacesApi {
@@ -10,6 +10,8 @@ enum SpacesApi {
   GetSpaceMembers = '/spaces/:id/members',
   InviteSpaceMember = '/spaces/:id/members/invite',
   RemoveSpaceMember = '/spaces/:id/members/:userId',
+  GetPendingInvites = '/invites/pending',
+  RespondInvite = '/invites/:id/respond',
 }
 
 export const getSpaces = () =>
@@ -54,4 +56,15 @@ export const removeSpaceMember = (spaceId: number, userId: number) =>
       ':userId',
       String(userId)
     ),
+  })
+
+export const getPendingInvites = () =>
+  httpClient.get<SpaceInvite[]>({
+    url: SpacesApi.GetPendingInvites,
+  })
+
+export const respondInvite = (inviteId: number, action: 'accept' | 'reject') =>
+  httpClient.patch({
+    url: SpacesApi.RespondInvite.replace(':id', String(inviteId)),
+    data: { action },
   })

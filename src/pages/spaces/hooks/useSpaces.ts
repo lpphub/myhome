@@ -4,10 +4,12 @@ import { toast } from 'sonner'
 import {
   createSpace,
   deleteSpace,
+  getPendingInvites,
   getSpaceMembers,
   getSpaces,
   inviteSpaceMember,
   removeSpaceMember,
+  respondInvite,
   togglePinSpace,
   updateSpace,
 } from '@/api/spaces'
@@ -15,6 +17,7 @@ import type { Space } from '@/types/spaces'
 
 const SPACES_QUERY_KEY = ['spaces'] as const
 const MEMBERS_QUERY_KEY = (spaceId: number) => ['spaces', spaceId, 'members'] as const
+const INVITES_QUERY_KEY = ['invites', 'pending'] as const
 
 export function useSpaces() {
   return useQuery({
@@ -172,6 +175,33 @@ export function useRemoveSpaceMember() {
     },
     onError: () => {
       toast.error('移除失败')
+    },
+  })
+}
+
+export function usePendingInvites() {
+  return useQuery({
+    queryKey: INVITES_QUERY_KEY,
+    queryFn: getPendingInvites,
+    staleTime: 30 * 1000,
+    gcTime: 1 * 60 * 1000,
+  })
+}
+
+export function useRespondInvite() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ inviteId, action }: { inviteId: number; action: 'accept' | 'reject' }) =>
+      respondInvite(inviteId, action),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: INVITES_QUERY_KEY })
+      queryClient.invalidateQueries({ queryKey: SPACES_QUERY_KEY })
+      const message = variables.action === 'accept' ? '已加入空间' : '已拒绝邀请'
+      toast.success(message)
+    },
+    onError: () => {
+      toast.error('操作失败')
     },
   })
 }

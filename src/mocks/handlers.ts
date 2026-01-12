@@ -1,10 +1,46 @@
 import { delay, HttpResponse, http } from 'msw'
 import type { AuthForm } from '@/types/auth'
-import type { Space, SpaceForm } from '@/types/spaces'
+import type { Space, SpaceForm, SpaceInvite } from '@/types/spaces'
 import type { ReorderParams, Tag, TagFormData, TagGroup } from '@/types/tags'
 
 let deleteCallCount = 0
 let updateCallCount = 0
+
+const mockInvites: SpaceInvite[] = [
+  {
+    id: 1,
+    spaceId: 100,
+    spaceName: '我的花园',
+    spaceIcon: '🌸',
+    inviterId: 2,
+    inviterName: '张三',
+    inviterEmail: 'zhangsan@example.com',
+    status: 'pending',
+    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 2,
+    spaceId: 101,
+    spaceName: '读书笔记',
+    spaceIcon: '📚',
+    inviterId: 3,
+    inviterName: '李四',
+    inviterEmail: 'lisi@example.com',
+    status: 'pending',
+    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 3,
+    spaceId: 102,
+    spaceName: '美食日记',
+    spaceIcon: '🍳',
+    inviterId: 4,
+    inviterName: '王五',
+    inviterEmail: 'wangwu@example.com',
+    status: 'pending',
+    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+]
 
 export function resetTagCounters() {
   deleteCallCount = 0
@@ -405,4 +441,34 @@ export const handlers = [
       })
     }
   ),
+
+  http.get('/api/invites/pending', async () => {
+    await delay(300)
+    const pendingInvites = mockInvites.filter(invite => invite.status === 'pending')
+    return HttpResponse.json({
+      code: 200,
+      message: '获取邀请列表成功',
+      data: pendingInvites,
+    })
+  }),
+
+  http.patch<{ id: string }>('/api/invites/:id/respond', async ({ params, request }) => {
+    await delay(300)
+    const id = Number.parseInt(params.id, 10)
+    const body = (await request.json()) as { action: 'accept' | 'reject' }
+
+    const inviteIndex = mockInvites.findIndex(invite => invite.id === id)
+
+    if (inviteIndex === -1) {
+      return HttpResponse.json({ code: 404, message: '邀请不存在' }, { status: 404 })
+    }
+
+    mockInvites[inviteIndex].status = body.action === 'accept' ? 'accepted' : 'rejected'
+
+    return HttpResponse.json({
+      code: 200,
+      message: body.action === 'accept' ? '已加入空间' : '已拒绝邀请',
+      data: { success: true },
+    })
+  }),
 ]

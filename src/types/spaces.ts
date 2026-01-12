@@ -29,6 +29,19 @@ export interface SpaceMember {
   joinedAt: string
 }
 
+export interface SpaceInvite {
+  id: number
+  spaceId: number
+  spaceName: string
+  spaceIcon: string
+  inviterId: number
+  inviterName: string
+  inviterEmail: string
+  inviterAvatar?: string
+  status: 'pending' | 'accepted' | 'rejected'
+  createdAt: string
+}
+
 export const SPACE_ICONS = [
   '🏠',
   '🛋️',

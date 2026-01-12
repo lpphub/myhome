@@ -20,6 +20,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -94,6 +95,7 @@ export const SpaceMemberDialog = ({ open, onClose, space, isOwner }: SpaceMember
     <>
       <Dialog open={open} onOpenChange={open => !open && onClose()}>
         <DialogContent className='sm:max-w-md bg-white border-honey-200 rounded-lg max-h-[80vh] overflow-y-auto'>
+          <DialogTrigger onClick={e => e.currentTarget.blur()} />
           <DialogHeader>
             <DialogTitle className='text-2xl font-bold text-foreground flex items-center gap-2'>
               <Users className='w-6 h-6 text-primary' />
