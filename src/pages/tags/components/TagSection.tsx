@@ -7,6 +7,7 @@ import type { TagFormData, TagGroup } from '@/types/tags'
 import { TagCard } from './TagCard'
 
 export interface TagActions {
+  onAdd: (group: string) => void
   onDelete: (tagId: number) => void
   onEdit: (tag: TagFormData) => void
 }
@@ -15,12 +16,11 @@ interface TagSectionProps {
   dragOverId?: string | null
   tagGroup: TagGroup
   tagActions?: TagActions
-  onAddTag?: (group: string) => void
   onDeleteGroup?: (code: string) => void
 }
 
 export const TagSection = memo(
-  ({ dragOverId, tagGroup, tagActions, onAddTag, onDeleteGroup }: TagSectionProps) => {
+  ({ dragOverId, tagGroup, tagActions, onDeleteGroup }: TagSectionProps) => {
     const { setNodeRef, isOver } = useDroppable({
       id: tagGroup.code,
     })
@@ -66,10 +66,10 @@ export const TagSection = memo(
             ))}
           </SortableContext>
 
-          {onAddTag && (
+          {tagActions?.onAdd && (
             <button
               type='button'
-              onClick={() => onAddTag(tagGroup.code)}
+              onClick={() => tagActions.onAdd(tagGroup.code)}
               className={cn(
                 'w-52 p-4 rounded-lg border-2 border-dashed border-border',
                 'hover:border-honey-300 hover:bg-honey-50 transition-all duration-300',
