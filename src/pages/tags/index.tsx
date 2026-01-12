@@ -190,7 +190,7 @@ function TagsPageInner({ spaceId }: { spaceId: number }) {
       <TagWall
         tags={filteredTags}
         tagActions={{
-          onAdd: group => handleOpenDialog({ group, name: '', color: 'lemon' }),
+          onAdd: group => handleOpenDialog({ group }),
           onEdit: handleOpenDialog,
           onDelete: handleDeleteTag,
         }}

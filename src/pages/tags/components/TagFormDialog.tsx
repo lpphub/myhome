@@ -66,7 +66,7 @@ export const TagFormDialog = ({ open, onClose, onSubmit, initialData }: TagFormD
     if (!open) return
     if (initialData) {
       setText({ title: initialData.name ?? '', description: initialData.description ?? '' })
-      setColor(initialData.color ?? 'lemon')
+      setColor(initialData.color || 'lemon')
     } else {
       setText({ title: '', description: '' })
       setColor('lemon')

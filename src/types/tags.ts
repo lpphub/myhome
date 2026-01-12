@@ -25,10 +25,10 @@ export interface TagGroup extends Group {
 
 export interface TagFormData {
   id?: number
-  name: string
-  group: string
+  name?: string
+  group?: string
   description?: string
-  color: string
+  color?: string
   spaceId?: number
 }
 
