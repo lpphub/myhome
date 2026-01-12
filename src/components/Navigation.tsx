@@ -185,9 +185,7 @@ const NavActions = ({
           <div className='w-8 h-8 bg-linear-to-br from-honey-400 to-coral-400 rounded-full flex items-center justify-center'>
             <User className='w-4 h-4 text-white' />
           </div>
-          <span className='hidden sm:block text-sm font-medium'>
-            {user?.name?.split('@')[0] || '用户'}
-          </span>
+          <span className='hidden sm:block text-sm font-medium'>{user?.name || '用户'}</span>
         </button>
 
         {/* 下拉菜单 */}

@@ -1,19 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { changePassword, getUserProfile, updateUserProfile } from '@/api/user'
+import { changePassword, updateUserProfile } from '@/api/user'
 import { useAuth } from '@/hooks'
 import type { ChangePasswordRequest, UpdateProfileRequest } from '@/types/auth'
-
-export function useProfile() {
-  const { user } = useAuth()
-
-  return useQuery({
-    queryKey: ['profile'],
-    queryFn: getUserProfile,
-    staleTime: 5 * 60 * 1000,
-    enabled: !!user,
-  })
-}
 
 export function useUpdateProfile() {
   const queryClient = useQueryClient()

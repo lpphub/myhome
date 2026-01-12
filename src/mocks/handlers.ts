@@ -110,7 +110,8 @@ export const handlers = [
         ...tokens,
         user: {
           id: user.id,
-          name: user.email,
+          name: user.email?.split('@')[0] || '',
+          email: user.email,
         },
       },
     })
