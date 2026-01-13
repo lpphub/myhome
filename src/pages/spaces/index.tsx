@@ -119,9 +119,9 @@ export default function Spaces() {
               >
                 <Plus className='w-5 h-5 text-primary' />
               </div>
-              <h3 className='font-semibold text-gray-900 text-base'>新建空间</h3>
+              <h3 className='font-semibold text-foreground-secondary text-base'>新建空间</h3>
               {spaceList.length === 0 && (
-                <p className='text-sm text-gray-600'>开始记录你的美好生活</p>
+                <p className='text-sm text-gray-500'>开始记录你的美好生活</p>
               )}
             </div>
           </button>
