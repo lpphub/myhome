@@ -14,7 +14,7 @@ export function getUserProfile() {
 }
 
 export function updateUserProfile(data: UpdateProfileForm) {
-  return httpClient.put<User, UpdateProfileForm>({
+  return httpClient.put<void, UpdateProfileForm>({
     url: UserApi.UpdateProfile,
     data,
   })

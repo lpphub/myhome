@@ -13,7 +13,7 @@ interface AuthState {
   logout: () => void
   refreshTokens: () => Promise<string | null>
 
-  updateUser: (user: User) => void
+  updateUserPartial: (data: Partial<User>) => void
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -48,7 +48,11 @@ export const useAuthStore = create<AuthState>()(
             return null
           }
         },
-        updateUser: user => set({ user }),
+
+        updateUserPartial: data =>
+          set(state => ({
+            user: state.user ? { ...state.user, ...data } : null,
+          })),
       }),
       {
         name: 'auth-store',

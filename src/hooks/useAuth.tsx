@@ -6,7 +6,7 @@ export function useAuth() {
   const login = useAuthStore(s => s.login)
   const logout = useAuthStore(s => s.logout)
   const refresh = useAuthStore(s => s.refreshTokens)
-  const updateUser = useAuthStore(s => s.updateUser)
+  const updateUserPartial = useAuthStore(s => s.updateUserPartial)
 
   return {
     user,
@@ -14,6 +14,6 @@ export function useAuth() {
     login,
     logout,
     refresh,
-    updateUser,
+    updateUserPartial,
   }
 }

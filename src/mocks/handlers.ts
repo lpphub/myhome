@@ -133,6 +133,14 @@ export const handlers = [
     })
   }),
 
+  http.put('/api/user/profile', async () => {
+    return HttpResponse.json({
+      code: 200,
+      message: '更新成功',
+      data: { success: true },
+    })
+  }),
+
   http.get('/api/tags', async ({ request }) => {
     const url = new URL(request.url)
     let spaceId = url.searchParams.get('spaceId')

@@ -41,7 +41,7 @@ function AvatarSelector({
             onClose()
           }}
           className={cn(
-            'w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-200',
+            'w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200',
             selectedAvatar === key
               ? 'bg-coral-100 ring-2 ring-coral-300 scale-110 shadow-sm'
               : 'bg-honey-50 hover:bg-honey-100 hover:scale-105'
@@ -57,7 +57,7 @@ function AvatarSelector({
 export function SetupProfile() {
   const { user } = useAuth()
   const { mutate: updateProfile, isPending } = useUpdateProfile()
-  const [isSelectingAvatar, setIsSelectingAvatar] = useState(false)
+  const [showAvatarSelector, setShowAvatarSelector] = useState(false)
 
   const form = useForm<FormValues>({
     resolver: zodResolver(profileSchema),
@@ -68,7 +68,7 @@ export function SetupProfile() {
   })
 
   const handleAvatarClick = () => {
-    setIsSelectingAvatar(prev => !prev)
+    setShowAvatarSelector(prev => !prev)
   }
 
   const handleAvatarSelect = (avatar: AvatarKey) => {
@@ -76,12 +76,12 @@ export function SetupProfile() {
   }
 
   const onSubmit = (data: FormValues) => {
-    updateProfile(data)
-    setIsSelectingAvatar(false) // 提交后关闭选择器（可选体验优化）
+    updateProfile({ name: data.name, avatar: data.avatar })
+    setShowAvatarSelector(false) // 提交后关闭选择器（可选体验优化）
   }
 
   return (
-    <Card variant='warm' className='card-hover'>
+    <Card variant='warm'>
       <CardHeader>
         <div className='flex items-center gap-3'>
           <div className='w-8 h-8 bg-linear-to-br from-coral-100 to-honey-100 rounded-lg flex items-center justify-center'>
@@ -102,18 +102,18 @@ export function SetupProfile() {
                 <button
                   type='button'
                   onClick={handleAvatarClick}
-                  className='relative w-16 h-16 bg-linear-to-br from-honey-50 to-coral-50 rounded-xl flex items-center justify-center shadow-md ring-2 ring-white cursor-pointer hover:scale-105 transition-transform duration-300'
+                  className='relative w-14 h-14 bg-linear-to-br from-honey-50 to-coral-50 rounded-xl flex items-center justify-center shadow-md ring-2 ring-white cursor-pointer hover:scale-105 transition-transform duration-300'
                 >
                   {AVATAR_SVGS[field.value]}
                 </button>
                 <p className='mt-2 text-xs text-muted/70'>点击头像更换</p>
 
                 {/* 条件渲染头像选择器 */}
-                {isSelectingAvatar && (
+                {showAvatarSelector && (
                   <AvatarSelector
                     selectedAvatar={field.value}
                     onSelect={handleAvatarSelect}
-                    onClose={() => setIsSelectingAvatar(false)}
+                    onClose={() => setShowAvatarSelector(false)}
                   />
                 )}
               </div>
