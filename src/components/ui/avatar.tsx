@@ -22,69 +22,159 @@ const avatarVariants = cva(
 
 const AVATAR_SVGS: Record<string, ReactElement> = {
   'avatar-1': (
-    <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' className='w-full h-full'>
-      <title>卡通头像1</title>
-      <circle cx='50' cy='50' r='50' fill='#FFE4C4' />
-      <circle cx='50' cy='40' r='20' fill='#FFDAB9' />
-      <circle cx='43' cy='37' r='3' fill='#333' />
-      <circle cx='57' cy='37' r='3' fill='#333' />
-      <path d='M 43 48 Q 50 55 57 48' stroke='#333' strokeWidth='2' fill='none' />
-      <ellipse cx='50' cy='70' rx='25' ry='15' fill='#FFB6C1' />
+    <svg
+      viewBox='0 0 100 100'
+      xmlns='http://www.w3.org/2000/svg'
+      className='w-full h-full'
+      role='img'
+      aria-label='头像1'
+    >
+      <defs>
+        <linearGradient id='grad1-1' x1='0%' y1='0%' x2='100%' y2='100%'>
+          <stop offset='0%' stopColor='#A8E6CF' />
+          <stop offset='100%' stopColor='#88D8B0' />
+        </linearGradient>
+      </defs>
+      <circle cx='50' cy='50' r='50' fill='url(#grad1-1)' />
+      <circle cx='50' cy='44' r='18' fill='#FFFFFF' />
+      <circle cx='44' cy='42' r='3' fill='#2D3436' />
+      <circle cx='56' cy='42' r='3' fill='#2D3436' />
+      <path
+        d='M 44 52 Q 50 58 56 52'
+        stroke='#2D3436'
+        strokeWidth='2.5'
+        strokeLinecap='round'
+        fill='none'
+      />
+      <ellipse cx='50' cy='76' rx='14' ry='9' fill='#FFFFFF' opacity='0.6' />
     </svg>
   ),
   'avatar-2': (
-    <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' className='w-full h-full'>
-      <title>卡通头像2</title>
-      <circle cx='50' cy='50' r='50' fill='#E6E6FA' />
-      <circle cx='50' cy='40' r='20' fill='#FFF8DC' />
-      <circle cx='43' cy='37' r='3' fill='#333' />
-      <circle cx='57' cy='37' r='3' fill='#333' />
-      <circle cx='50' cy='47' r='2' fill='#FFB6C1' />
-      <path d='M 35 65 Q 50 75 65 65' stroke='#8B4513' strokeWidth='3' fill='none' />
-      <circle cx='30' cy='40' r='12' fill='#8B4513' opacity='0.9' />
-      <circle cx='70' cy='40' r='12' fill='#8B4513' opacity='0.9' />
-    </svg>
-  ),
-  'avatar-3': (
-    <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' className='w-full h-full'>
-      <title>卡通头像3</title>
-      <circle cx='50' cy='50' r='50' fill='#98FB98' />
-      <circle cx='50' cy='40' r='20' fill='#FFFACD' />
-      <circle cx='43' cy='37' r='3' fill='#333' />
-      <circle cx='57' cy='37' r='3' fill='#333' />
-      <path d='M 43 48 Q 50 52 57 48' stroke='#333' strokeWidth='2' fill='none' />
+    <svg
+      viewBox='0 0 100 100'
+      xmlns='http://www.w3.org/2000/svg'
+      className='w-full h-full'
+      role='img'
+      aria-label='头像2'
+    >
+      <defs>
+        <linearGradient id='grad2-1' x1='0%' y1='0%' x2='100%' y2='100%'>
+          <stop offset='0%' stopColor='#FFEAA7' />
+          <stop offset='100%' stopColor='#FDCB6E' />
+        </linearGradient>
+      </defs>
+      <circle cx='50' cy='50' r='50' fill='url(#grad2-1)' />
+      <circle cx='50' cy='44' r='20' fill='#FFFFFF' />
+      <circle cx='43' cy='42' r='3' fill='#2D3436' />
+      <circle cx='57' cy='42' r='3' fill='#2D3436' />
+      <circle cx='50' cy='50' r='5' fill='#FF7675' />
       <path
-        d='M 30 35 L 25 25 M 35 30 L 32 20 M 70 35 L 75 25 M 65 30 L 68 20'
-        stroke='#32CD32'
-        strokeWidth='3'
+        d='M 43 56 Q 50 62 57 56'
+        stroke='#2D3436'
+        strokeWidth='2.5'
+        strokeLinecap='round'
         fill='none'
       />
     </svg>
   ),
+  'avatar-3': (
+    <svg
+      viewBox='0 0 100 100'
+      xmlns='http://www.w3.org/2000/svg'
+      className='w-full h-full'
+      role='img'
+      aria-label='头像3'
+    >
+      <defs>
+        <linearGradient id='grad3-1' x1='0%' y1='0%' x2='100%' y2='100%'>
+          <stop offset='0%' stopColor='#A29BFE' />
+          <stop offset='100%' stopColor='#6C5CE7' />
+        </linearGradient>
+      </defs>
+      <circle cx='50' cy='50' r='50' fill='url(#grad3-1)' />
+      <circle cx='50' cy='46' r='19' fill='#FFFFFF' />
+      <ellipse cx='43' cy='44' rx='5' ry='6' fill='#2D3436' />
+      <ellipse cx='57' cy='44' rx='5' ry='6' fill='#2D3436' />
+      <path
+        d='M 44 54 Q 50 60 56 54'
+        stroke='#FFFFFF'
+        strokeWidth='2.5'
+        strokeLinecap='round'
+        fill='none'
+      />
+      <circle cx='35' cy='30' r='6' fill='#FFFFFF' opacity='0.4' />
+      <circle cx='65' cy='28' r='4' fill='#FFFFFF' opacity='0.3' />
+    </svg>
+  ),
   'avatar-4': (
-    <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' className='w-full h-full'>
-      <title>卡通头像4</title>
-      <circle cx='50' cy='50' r='50' fill='#FFA07A' />
-      <circle cx='50' cy='40' r='20' fill='#FFEFD5' />
-      <circle cx='43' cy='37' r='3' fill='#333' />
-      <circle cx='57' cy='37' r='3' fill='#333' />
-      <circle cx='44' cy='46' r='2' fill='#FF69B4' />
-      <circle cx='56' cy='46' r='2' fill='#FF69B4' />
-      <path d='M 40 55 Q 50 62 60 55' stroke='#333' strokeWidth='2' fill='none' />
-      <rect x='35' y='20' width='30' height='20' rx='5' fill='#FF6347' />
+    <svg
+      viewBox='0 0 100 100'
+      xmlns='http://www.w3.org/2000/svg'
+      className='w-full h-full'
+      role='img'
+      aria-label='头像4'
+    >
+      <defs>
+        <linearGradient id='grad4-1' x1='0%' y1='0%' x2='100%' y2='100%'>
+          <stop offset='0%' stopColor='#FAB1A0' />
+          <stop offset='100%' stopColor='#FF7675' />
+        </linearGradient>
+      </defs>
+      <circle cx='50' cy='50' r='50' fill='url(#grad4-1)' />
+      <circle cx='50' cy='44' r='18' fill='#FFFFFF' />
+      <circle cx='44' cy='42' r='2.5' fill='#2D3436' />
+      <circle cx='56' cy='42' r='2.5' fill='#2D3436' />
+      <path
+        d='M 44 51 Q 50 57 56 51'
+        stroke='#2D3436'
+        strokeWidth='2'
+        strokeLinecap='round'
+        fill='none'
+      />
+      <path
+        d='M 38 64 Q 42 68 46 64'
+        stroke='#FFFFFF'
+        strokeWidth='2'
+        strokeLinecap='round'
+        fill='none'
+      />
+      <path
+        d='M 54 64 Q 58 68 62 64'
+        stroke='#FFFFFF'
+        strokeWidth='2'
+        strokeLinecap='round'
+        fill='none'
+      />
     </svg>
   ),
   'avatar-5': (
-    <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' className='w-full h-full'>
-      <title>卡通头像5</title>
-      <circle cx='50' cy='50' r='50' fill='#DDA0DD' />
-      <circle cx='50' cy='40' r='20' fill='#F0E68C' />
-      <circle cx='43' cy='37' r='3' fill='#333' />
-      <circle cx='57' cy='37' r='3' fill='#333' />
-      <path d='M 43 48 Q 50 53 57 48' stroke='#333' strokeWidth='2' fill='none' />
-      <circle cx='38' cy='45' r='3' fill='#FFB6C1' opacity='0.5' />
-      <circle cx='62' cy='45' r='3' fill='#FFB6C1' opacity='0.5' />
-      <path d='M 28 70 Q 50 85 72 70' stroke='#9370DB' strokeWidth='4' fill='none' />
+    <svg
+      viewBox='0 0 100 100'
+      xmlns='http://www.w3.org/2000/svg'
+      className='w-full h-full'
+      role='img'
+      aria-label='头像5'
+    >
+      <defs>
+        <linearGradient id='grad5-1' x1='0%' y1='0%' x2='100%' y2='100%'>
+          <stop offset='0%' stopColor='#81ECEC' />
+          <stop offset='100%' stopColor='#00CEC9' />
+        </linearGradient>
+      </defs>
+      <circle cx='50' cy='50' r='50' fill='url(#grad5-1)' />
+      <circle cx='50' cy='46' r='17' fill='#FFFFFF' />
+      <circle cx='45' cy='44' r='2' fill='#2D3436' />
+      <circle cx='55' cy='44' r='2' fill='#2D3436' />
+      <path
+        d='M 45 52 Q 50 56 55 52'
+        stroke='#2D3436'
+        strokeWidth='2'
+        strokeLinecap='round'
+        fill='none'
+      />
+      <circle cx='30' cy='60' r='5' fill='#FFFFFF' opacity='0.5' />
+      <circle cx='70' cy='58' r='3' fill='#FFFFFF' opacity='0.4' />
+      <circle cx='60' cy='25' r='4' fill='#FFFFFF' opacity='0.3' />
     </svg>
   ),
 }
