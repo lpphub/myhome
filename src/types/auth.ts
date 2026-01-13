@@ -17,16 +17,12 @@ export interface AuthData {
   refreshToken: string
 }
 
-export interface UpdateProfileRequest {
+export interface UpdateProfileForm {
   name: string
   avatar?: string
 }
 
-export interface ChangePasswordRequest {
+export interface ChangePasswordForm {
   oldPassword: string
   newPassword: string
-}
-
-export interface ProfileData {
-  user: User
 }

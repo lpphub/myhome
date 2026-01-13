@@ -9,8 +9,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { usePendingInvitesQuery, useRespondInvite } from '@/pages/spaces/hooks/useSpaces'
 import type { SpaceInvite } from '@/types/spaces'
-import { usePendingInvites, useRespondInvite } from '../hooks/useSpaces'
 
 interface InviteListDialogProps {
   open: boolean
@@ -31,7 +31,7 @@ export const InviteListDialog = ({ open, onClose }: InviteListDialogProps) => {
     inviteId: number
     action: 'accept' | 'reject'
   } | null>(null)
-  const { data: invites = [], isLoading } = usePendingInvites()
+  const { data: invites = [], isLoading } = usePendingInvitesQuery()
   const respondInvite = useRespondInvite()
 
   useEffect(() => {

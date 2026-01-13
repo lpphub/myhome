@@ -24,8 +24,12 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  useInviteSpaceMember,
+  useRemoveSpaceMember,
+  useSpaceMembersQuery,
+} from '@/pages/spaces/hooks/useSpaces'
 import type { Space, SpaceMember } from '@/types/spaces'
-import { useInviteSpaceMember, useRemoveSpaceMember, useSpaceMembers } from '../hooks/useSpaces'
 
 const inviteMemberSchema = z.object({
   email: z.email('请输入有效的邮箱地址').min(1, '请输入邮箱地址'),
@@ -44,7 +48,7 @@ export const SpaceMemberDialog = ({ open, onClose, space, isOwner }: SpaceMember
   const [openRemoveAlert, setOpenRemoveAlert] = useState(false)
   const [removingMember, setRemovingMember] = useState<SpaceMember | null>(null)
 
-  const { data: members = [], isLoading: isLoadingMembers } = useSpaceMembers(space?.id ?? 0)
+  const { data: members = [], isLoading: isLoadingMembers } = useSpaceMembersQuery(space?.id ?? 0)
   const inviteMember = useInviteSpaceMember()
   const removeMember = useRemoveSpaceMember()
 

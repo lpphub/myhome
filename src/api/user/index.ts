@@ -1,4 +1,4 @@
-import type { ChangePasswordRequest, ProfileData, UpdateProfileRequest } from '@/types/auth'
+import type { ChangePasswordForm, UpdateProfileForm, User } from '@/types/auth'
 import httpClient from '@/utils/request'
 
 enum UserApi {
@@ -8,20 +8,20 @@ enum UserApi {
 }
 
 export function getUserProfile() {
-  return httpClient.get<ProfileData>({
+  return httpClient.get<User>({
     url: UserApi.GetProfile,
   })
 }
 
-export function updateUserProfile(data: UpdateProfileRequest) {
-  return httpClient.put<ProfileData, UpdateProfileRequest>({
+export function updateUserProfile(data: UpdateProfileForm) {
+  return httpClient.put<User, UpdateProfileForm>({
     url: UserApi.UpdateProfile,
     data,
   })
 }
 
-export function changePassword(data: ChangePasswordRequest) {
-  return httpClient.put<void, ChangePasswordRequest>({
+export function changePassword(data: ChangePasswordForm) {
+  return httpClient.put<void, ChangePasswordForm>({
     url: UserApi.ChangePassword,
     data,
   })

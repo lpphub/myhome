@@ -1,36 +1,7 @@
-import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
-import { useAuth } from '@/hooks'
 import { ChangePassword } from './components/ChangePassword'
 import { SetProfile } from './components/SetProfile'
-import { useUpdateProfile } from './hooks/useProfile'
 
 export default function Profile() {
-  const { user } = useAuth()
-  const { mutate: updateProfileMutation } = useUpdateProfile()
-
-  const [selectedAvatar, setSelectedAvatar] = useState('')
-
-  useEffect(() => {
-    if (user) {
-      setSelectedAvatar(user.avatar || 'avatar-1')
-    }
-  }, [user])
-
-  const handleSaveAvatar = (avatar: string) => {
-    updateProfileMutation(
-      {
-        name: user?.name || '',
-        avatar,
-      },
-      {
-        onSuccess: () => {
-          toast.success('头像保存成功 ✨')
-        },
-      }
-    )
-  }
-
   return (
     <div className='min-h-screen relative'>
       <div className='max-w-2xl mx-auto px-4 py-6'>
@@ -40,11 +11,7 @@ export default function Profile() {
         </header>
 
         <div className='space-y-4'>
-          <SetProfile
-            selectedAvatar={selectedAvatar}
-            onAvatarSelect={handleSaveAvatar}
-          />
-
+          <SetProfile />
           <ChangePassword />
         </div>
       </div>

@@ -5,14 +5,13 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/hooks'
 import { cn } from '@/lib/utils'
-import { useUpdateProfile } from '../hooks/useProfile'
+import { useUpdateProfile } from '@/pages/profile/hooks/useProfile'
 
-// ============ Avatar Configuration ============
 const AVATAR_SVGS: Record<string, ReactElement> = {
   'avatar-1': (
     <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' className='w-full h-full'>
@@ -85,7 +84,6 @@ const AVATAR_SVGS: Record<string, ReactElement> = {
 const AVATAR_KEYS = ['avatar-1', 'avatar-2', 'avatar-3', 'avatar-4', 'avatar-5'] as const
 type AvatarKey = (typeof AVATAR_KEYS)[number]
 
-// ============ Schema ============
 const profileSchema = z.object({
   name: z.string().min(1, '请输入显示名称').max(20, '名称最多20个字符'),
   email: z.string().email('请输入有效的邮箱地址'),
@@ -93,7 +91,6 @@ const profileSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileSchema>
 
-// ============ AvatarItem Component ============
 interface AvatarItemProps {
   avatar: AvatarKey
   isSelected: boolean
@@ -117,19 +114,17 @@ function AvatarItem({ avatar, isSelected, onClick }: AvatarItemProps) {
   )
 }
 
-// ============ AvatarSection Component ============
-interface AvatarSectionProps {
-  currentAvatar: string
-  selectedAvatar: string
-  onAvatarSelect: (avatar: string) => void
-}
-
-function AvatarSection({ currentAvatar, selectedAvatar, onAvatarSelect }: AvatarSectionProps) {
+function AvatarManager() {
+  const { user } = useAuth()
+  const { mutate: updateProfile } = useUpdateProfile()
   const [showAvatarSelector, setShowAvatarSelector] = useState(false)
+  const [selectedAvatar, setSelectedAvatar] = useState(user?.avatar || 'avatar-1')
 
-  const handleAvatarClick = (avatar: string) => {
-    onAvatarSelect(avatar)
+  const handleAvatarClick = (avatar: AvatarKey) => {
+    setSelectedAvatar(avatar)
     setShowAvatarSelector(false)
+
+    updateProfile({ name: user?.name || '', avatar })
   }
 
   return (
@@ -137,9 +132,9 @@ function AvatarSection({ currentAvatar, selectedAvatar, onAvatarSelect }: Avatar
       <button
         type='button'
         onClick={() => setShowAvatarSelector(!showAvatarSelector)}
-        className='relative w-16 h-16 bg-gradient-to-br from-honey-50 to-coral-50 rounded-xl flex items-center justify-center shadow-md ring-2 ring-white cursor-pointer hover:scale-105 transition-transform duration-300'
+        className='relative w-16 h-16 bg-linear-to-br from-honey-50 to-coral-50 rounded-xl flex items-center justify-center shadow-md ring-2 ring-white cursor-pointer hover:scale-105 transition-transform duration-300'
       >
-        {AVATAR_SVGS[selectedAvatar || currentAvatar] || AVATAR_SVGS['avatar-1']}
+        {AVATAR_SVGS[selectedAvatar] || AVATAR_SVGS['avatar-1']}
       </button>
       <p className='mt-2 text-xs text-muted/70'>点击头像更换</p>
 
@@ -161,19 +156,13 @@ function AvatarSection({ currentAvatar, selectedAvatar, onAvatarSelect }: Avatar
   )
 }
 
-// ============ SetProfile Component ============
-interface SetProfileProps {
-  selectedAvatar: string
-  onAvatarSelect: (avatar: string) => void
+interface BasicInfoFormProps {
+  userName: string
+  userEmail: string
 }
 
-export function SetProfile({ selectedAvatar, onAvatarSelect }: SetProfileProps) {
-  const { user } = useAuth()
-  const { mutate: updateProfileMutation, isPending } = useUpdateProfile()
-
-  const currentAvatar = user?.avatar || 'avatar-1'
-  const userName = user?.name || ''
-  const userEmail = user?.email || ''
+function BasicInfoForm({ userName, userEmail }: BasicInfoFormProps) {
+  const { mutate: updateProfile, isPending } = useUpdateProfile()
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -195,75 +184,72 @@ export function SetProfile({ selectedAvatar, onAvatarSelect }: SetProfileProps) 
     if (!result) return
 
     const nameValue = form.getValues('name')
-    updateProfileMutation({ name: nameValue })
+    updateProfile({ name: nameValue })
   }
 
   return (
-    <Card variant='warm' className='card-hover'>
-      <form
-        onSubmit={e => {
-          e.preventDefault()
-          handleSubmit()
-        }}
-      >
-        <CardHeader>
-          <div className='flex items-center gap-3'>
-            <div className='w-8 h-8 bg-linear-to-br from-coral-100 to-honey-100 rounded-lg flex items-center justify-center'>
-              <span className='text-sm'>📝</span>
-            </div>
-            <CardTitle>基本信息</CardTitle>
-          </div>
-        </CardHeader>
+    <div className='space-y-5'>
+      <div className='space-y-2.5'>
+        <Label htmlFor='name'>显示名称</Label>
+        <Input
+          id='name'
+          placeholder='输入您的显示名称'
+          className={cn(form.formState.errors.name && 'border-destructive ring-1 ring-destructive')}
+          {...form.register('name')}
+        />
+        {form.formState.errors.name && (
+          <p className='text-sm text-destructive'>{form.formState.errors.name.message}</p>
+        )}
+      </div>
 
-        <CardContent className='space-y-6'>
-          <AvatarSection
-            currentAvatar={currentAvatar}
-            selectedAvatar={selectedAvatar}
-            onAvatarSelect={onAvatarSelect}
+      <div className='space-y-2.5'>
+        <Label htmlFor='email'>邮箱地址</Label>
+        <div className='relative'>
+          <Input
+            id='email'
+            type='email'
+            disabled
+            className='bg-muted-background/50 border-honey-100/50 text-foreground cursor-not-allowed pr-10'
+            {...form.register('email')}
           />
+          <Lock className='absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted/40' />
+        </div>
+      </div>
 
-          <div className='space-y-5'>
-            <div className='space-y-2.5'>
-              <Label htmlFor='name'>显示名称</Label>
-              <Input
-                id='name'
-                placeholder='输入您的显示名称'
-                className={cn(
-                  form.formState.errors.name && 'border-destructive ring-1 ring-destructive'
-                )}
-                {...form.register('name')}
-              />
-              {form.formState.errors.name && (
-                <p className='text-sm text-destructive'>{form.formState.errors.name.message}</p>
-              )}
-            </div>
+      <div className='flex justify-end pt-2'>
+        <Button
+          type='button'
+          onClick={() => handleSubmit()}
+          disabled={isPending}
+          className='bg-primary/80 hover:bg-primary text-white transition-all'
+        >
+          {isPending ? '保存中' : '保存'}
+        </Button>
+      </div>
+    </div>
+  )
+}
 
-            <div className='space-y-2.5'>
-              <Label htmlFor='email'>邮箱地址</Label>
-              <div className='relative'>
-                <Input
-                  id='email'
-                  type='email'
-                  disabled
-                  className='bg-muted-background/50 border-honey-100/50 text-foreground cursor-not-allowed pr-10'
-                  {...form.register('email')}
-                />
-                <Lock className='absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted/40' />
-              </div>
-            </div>
+export function SetProfile() {
+  const { user } = useAuth()
+  const userName = user?.name || ''
+  const userEmail = user?.email || ''
+
+  return (
+    <Card variant='warm' className='card-hover'>
+      <CardHeader>
+        <div className='flex items-center gap-3'>
+          <div className='w-8 h-8 bg-linear-to-br from-coral-100 to-honey-100 rounded-lg flex items-center justify-center'>
+            <span className='text-sm'>📝</span>
           </div>
-        </CardContent>
+          <CardTitle>基本信息</CardTitle>
+        </div>
+      </CardHeader>
 
-        <CardFooter className='justify-end mt-3'>
-          <Button
-            type='submit'
-            disabled={isPending}
-            className='bg-primary/80 hover:bg-primary text-white transition-all'
-          >
-            {isPending ? '保存中' : '保存'}
-          </Button>
-        </CardFooter>
-      </form>
+      <CardContent className='space-y-6'>
+        <AvatarManager />
+        <BasicInfoForm userName={userName} userEmail={userEmail} />
+      </CardContent>
     </Card>
   )
 }

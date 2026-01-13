@@ -10,10 +10,10 @@ interface AuthState {
   isAuthenticated: boolean
 
   login: (data: { user: User; accessToken: string; refreshToken: string }) => void
-
   logout: () => void
+  refreshTokens: () => Promise<string | null>
 
-  refreshAccessToken: () => Promise<string | null>
+  updateUser: (user: User) => void
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -29,8 +29,7 @@ export const useAuthStore = create<AuthState>()(
           set({ user, accessToken, refreshToken, isAuthenticated: true }),
         logout: () =>
           set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false }),
-
-        refreshAccessToken: async () => {
+        refreshTokens: async () => {
           const refreshToken = get().refreshToken
           if (!refreshToken) return null
 
@@ -49,6 +48,7 @@ export const useAuthStore = create<AuthState>()(
             return null
           }
         },
+        updateUser: user => set({ user }),
       }),
       {
         name: 'auth-store',

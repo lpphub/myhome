@@ -9,7 +9,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
-import { useChangePassword } from '../hooks/useProfile'
+import { useChangePassword } from '@/pages/profile/hooks/useProfile'
 
 /* ==================== Schema ==================== */
 

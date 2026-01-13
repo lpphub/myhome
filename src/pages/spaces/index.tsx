@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { LoadingState } from '@/components/LoadingState'
-import { useAuthStore } from '@/stores/useAuthStore'
+import { useAuth } from '@/hooks'
 import type { Space, SpaceForm } from '@/types/spaces'
 import { InviteListDialog } from './components/InviteListDialog'
 import { InviteReminder } from './components/InviteReminder'
@@ -10,8 +10,8 @@ import { SpaceMemberDialog } from './components/SpaceMemberDialog'
 import {
   useCreateSpace,
   useDeleteSpace,
-  usePendingInvites,
-  useSpaces,
+  usePendingInvitesQuery,
+  useSpaceQuery,
   useUpdateSpace,
 } from './hooks/useSpaces'
 
@@ -52,10 +52,10 @@ export default function Spaces() {
   })
   const [inviteDialog, setInviteDialog] = useState(false)
 
-  const user = useAuthStore(state => state.user)
-  const { data: invites = [] } = usePendingInvites()
+  const { user } = useAuth()
+  const { data: invites = [] } = usePendingInvitesQuery()
 
-  const { data: spaceList = [], isLoading } = useSpaces()
+  const { data: spaceList = [], isLoading } = useSpaceQuery()
   const createSpace = useCreateSpace()
   const updateSpace = useUpdateSpace()
   const deleteSpace = useDeleteSpace()

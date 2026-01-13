@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useMemo } from 'react'
 import { toast } from 'sonner'
 import {
   createSpace,
@@ -19,21 +18,13 @@ const SPACES_QUERY_KEY = ['spaces'] as const
 const MEMBERS_QUERY_KEY = (spaceId: number) => ['spaces', spaceId, 'members'] as const
 const INVITES_QUERY_KEY = ['invites', 'pending'] as const
 
-export function useSpaces() {
+export function useSpaceQuery() {
   return useQuery({
     queryKey: SPACES_QUERY_KEY,
     queryFn: getSpaces,
     staleTime: 3 * 60 * 1000,
     gcTime: 5 * 60 * 1000,
   })
-}
-
-export function usePinnedSpaceId() {
-  const { data: spaces, isLoading } = useSpaces()
-
-  const pinnedId = useMemo(() => spaces?.find(s => s.pin)?.id, [spaces])
-
-  return { pinnedId, isLoading }
 }
 
 export function useCreateSpace() {
@@ -138,7 +129,7 @@ export function useTogglePinSpace() {
   })
 }
 
-export function useSpaceMembers(spaceId: number) {
+export function useSpaceMembersQuery(spaceId: number) {
   return useQuery({
     queryKey: MEMBERS_QUERY_KEY(spaceId),
     queryFn: () => getSpaceMembers(spaceId),
@@ -179,7 +170,7 @@ export function useRemoveSpaceMember() {
   })
 }
 
-export function usePendingInvites() {
+export function usePendingInvitesQuery() {
   return useQuery({
     queryKey: INVITES_QUERY_KEY,
     queryFn: getPendingInvites,

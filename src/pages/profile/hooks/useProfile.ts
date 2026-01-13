@@ -1,25 +1,18 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { changePassword, updateUserProfile } from '@/api/user'
 import { useAuth } from '@/hooks'
-import type { ChangePasswordRequest, UpdateProfileRequest } from '@/types/auth'
+import type { ChangePasswordForm, UpdateProfileForm } from '@/types/auth'
 
 export function useUpdateProfile() {
-  const queryClient = useQueryClient()
-  const { login } = useAuth()
+  const { updateUser } = useAuth()
 
   return useMutation({
-    mutationFn: (data: UpdateProfileRequest) => updateUserProfile(data),
+    mutationFn: (data: UpdateProfileForm) => updateUserProfile(data),
     onSuccess: res => {
-      queryClient.invalidateQueries({ queryKey: ['profile'] })
-      if (res.user) {
-        login({
-          user: res.user,
-          accessToken: '',
-          refreshToken: '',
-        })
+      if (res) {
+        updateUser(res)
       }
-      toast.success('保存成功 ✨')
     },
     onError: () => {
       toast.error('保存失败，请重试')
@@ -29,7 +22,7 @@ export function useUpdateProfile() {
 
 export function useChangePassword() {
   return useMutation({
-    mutationFn: (data: ChangePasswordRequest) => changePassword(data),
+    mutationFn: (data: ChangePasswordForm) => changePassword(data),
     onSuccess: () => {
       toast.success('密码修改成功 ✨')
     },
