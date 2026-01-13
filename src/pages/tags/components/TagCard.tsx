@@ -1,9 +1,10 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Pin, Trash2 } from 'lucide-react'
+import { Clock, Pin, Trash2 } from 'lucide-react'
 import { memo, useCallback, useMemo } from 'react'
 import { cn } from '@/lib/utils'
 import { TAG_COLOR_CLASSES, type Tag, type TagFormData } from '@/types/tags'
+import { formatRelativeTime } from '@/utils/date'
 
 const ROTATIONS = ['-rotate-1', 'rotate-1', 'rotate-2', '-rotate-2', 'rotate-0']
 
@@ -70,55 +71,61 @@ export const TagCard = memo(({ tag, onEdit, onDelete }: TagCardProps) => {
       role='button'
       tabIndex={0}
       className={cn(
-        'relative group p-3 rounded-sm shadow-md transition-all duration-300',
-        'hover:shadow-xl hover:-translate-y-1.5 hover:scale-105',
-        'border text-left overflow-hidden',
+        'relative p-4 rounded-xl shadow-sm transition-all duration-300',
+        'hover:shadow-xl hover:-translate-y-1.5 hover:scale-[1.02]',
+        'border-2 text-left overflow-hidden',
         'cursor-grab active:cursor-grabbing',
-        'w-full sm:w-52 shrink-0 box-border',
+        'w-full sm:w-56 shrink-0 box-border',
+        'group',
         colorClasses.classes,
-        rotationClass
+        rotationClass,
+        isDragging && 'shadow-2xl'
       )}
     >
-      <div
-        className={cn(
-          'absolute top-2 right-2 flex gap-1 transition-opacity z-20',
-          'opacity-100 sm:opacity-0 sm:group-hover:opacity-100'
-        )}
-      >
+      <div className='absolute top-2.5 left-2.5 z-10'>
+        <Pin className='w-4 h-4 text-red-500 opacity-80 transform rotate-45' />
+      </div>
+
+      <div className='absolute top-2.5 right-2.5 flex gap-1.5 z-20 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity'>
         <button
           type='button'
           onClick={handleDeleteClick}
-          className='p-1 rounded-full bg-white/50 hover:bg-white hover:scale-110 shadow-sm transition-all duration-200'
+          className={cn(
+            'p-1.5 rounded-full transition-all duration-200',
+            'bg-white/60 hover:bg-white hover:scale-110',
+            'backdrop-blur-sm shadow-sm'
+          )}
           title='删除'
         >
-          <Trash2 className='w-3 h-3 text-red-500' />
+          <Trash2 className='w-3.5 h-3.5 text-red-500' />
         </button>
       </div>
 
-      <div className='absolute top-2 left-2'>
-        <Pin className='w-3 h-3 text-red-400 transform rotate-45' />
-      </div>
-
-      <div className='mt-5'>
-        <h3 className={cn('font-bold text-sm mb-1', colorClasses.classes)}>{tag.name}</h3>
+      <div className='pt-5 pr-8'>
+        <h3 className={cn('font-bold text-base mb-1.5 leading-snug', colorClasses.classes)}>
+          {tag.name}
+        </h3>
         {tag.description && (
-          <p className={cn('text-xs mb-1.5 line-clamp-2 opacity-80', colorClasses.classes)}>
+          <p
+            className={cn('text-xs line-clamp-2 leading-relaxed opacity-75', colorClasses.classes)}
+          >
             {tag.description}
           </p>
         )}
-        <div
-          className={cn(
-            'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium',
-            'bg-white/60 shadow-sm',
-            colorClasses.classes
-          )}
-        >
-          <span className='w-1.5 h-1.5 rounded-full bg-current opacity-60' />
-          <span>{tag.itemCount ?? 0} 个物品</span>
-        </div>
       </div>
 
-      <div className='absolute bottom-0 left-0 right-0 h-0.5 bg-linear-to-r from-transparent via-white/30 to-transparent' />
+      <div className='absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-current/20 to-transparent' />
+
+      <div
+        className={cn(
+          'flex items-center gap-1.5 mt-3 pt-2 border-t border-current/10',
+          'text-[11px] font-medium opacity-60',
+          colorClasses.classes
+        )}
+      >
+        <Clock className='w-3.5 h-3.5' />
+        <span>{formatRelativeTime(tag.updatedAt) || formatRelativeTime(tag.createdAt)}</span>
+      </div>
     </div>
   )
 })

@@ -11,19 +11,11 @@ import {
 } from '@/components/ui/dialog'
 import { usePendingInvitesQuery, useRespondInvite } from '@/pages/spaces/hooks/useSpaces'
 import type { SpaceInvite } from '@/types/spaces'
+import { formatRelativeTime } from '@/utils/date'
 
 interface InviteListDialogProps {
   open: boolean
   onClose: () => void
-}
-
-const formatDate = (date: string) => {
-  const diff = Date.now() - new Date(date).getTime()
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-  if (days === 0) return '今天'
-  if (days === 1) return '昨天'
-  if (days < 7) return `${days}天前`
-  return `${Math.floor(days / 7)}周前`
 }
 
 export const InviteListDialog = ({ open, onClose }: InviteListDialogProps) => {
@@ -118,7 +110,7 @@ export const InviteListDialog = ({ open, onClose }: InviteListDialogProps) => {
                   <div className='flex items-center justify-between pt-3 border-t border-gray-200'>
                     <div className='flex items-center gap-1.5 text-sm text-gray-500'>
                       <Clock className='w-3.5 h-3.5' />
-                      <span>{formatDate(invite.createdAt)}</span>
+                      <span>{formatRelativeTime(invite.createdAt)}</span>
                     </div>
                     <div className='flex items-center gap-2'>
                       <Button

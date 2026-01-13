@@ -195,7 +195,7 @@ class HttpClient {
     this.isRefreshing = true
 
     try {
-      const newToken = await useAuthStore.getState().refreshAccessToken()
+      const newToken = await useAuthStore.getState().refreshTokens()
       if (!newToken) {
         throw new Error('Token refresh failed')
       }

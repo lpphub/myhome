@@ -2,16 +2,7 @@ import { Clock, Crown, Edit2, Handshake, Pin, Tag, Users } from 'lucide-react'
 import { useCallback } from 'react'
 import type { useNavigate } from 'react-router'
 import type { Space } from '@/types/spaces'
-
-const formatDate = (date: string) => {
-  const diff = Date.now() - new Date(date).getTime()
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-  if (days === 0) return '今天'
-  if (days === 1) return '昨天'
-  if (days < 7) return `${days}天前`
-  if (days < 30) return `${Math.floor(days / 7)}周前`
-  return `${Math.floor(days / 30)}个月前`
-}
+import { formatRelativeTime } from '@/utils/date'
 
 interface SpaceCardProps {
   space: Space
@@ -128,7 +119,7 @@ export function SpaceCard({
           )}
           <div className='flex items-center gap-1.5 text-sm text-gray-500'>
             <Clock className='w-4 h-4 text-primary' />
-            <span className='text-primary'>{formatDate(space.updatedAt)}</span>
+            <span className='text-primary'>{formatRelativeTime(space.updatedAt)}</span>
           </div>
         </div>
         {space.memberCount !== undefined && (
