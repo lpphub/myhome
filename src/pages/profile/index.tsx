@@ -1,9 +1,12 @@
+import { useAuth } from '@/hooks'
 import { ChangePassword } from './components/ChangePassword'
 import { SetupProfile } from './components/SetupProfile'
-import { useChangePassword } from './hooks/useProfile'
+import { useChangePassword, useUpdateProfile } from './hooks/useProfile'
 
 export default function Profile() {
-  const { mutate: changePassword, isPending } = useChangePassword()
+  const { user } = useAuth()
+  const { mutate: changePassword, isPending: isChangingPassword } = useChangePassword()
+  const { mutate: updateProfile, isPending: isUpdatingProfile } = useUpdateProfile()
 
   return (
     <div className='min-h-screen relative'>
@@ -14,9 +17,9 @@ export default function Profile() {
         </header>
 
         <div className='space-y-4'>
-          <SetupProfile />
+          <SetupProfile user={user} onSubmit={updateProfile} isPending={isUpdatingProfile} />
 
-          <ChangePassword onSubmit={changePassword} isPending={isPending} />
+          <ChangePassword onSubmit={changePassword} isPending={isChangingPassword} />
         </div>
       </div>
     </div>

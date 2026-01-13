@@ -7,9 +7,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useAuth } from '@/hooks'
 import { cn } from '@/lib/utils'
-import { useUpdateProfile } from '@/pages/profile/hooks/useProfile'
+import type { User } from '@/types/auth'
 import { AVATAR_KEYS, AVATAR_SVGS, type AvatarKey } from './Avatars'
 
 // 表单校验规则
@@ -54,9 +53,13 @@ function AvatarSelector({
   )
 }
 
-export function SetupProfile() {
-  const { user } = useAuth()
-  const { mutate: updateProfile, isPending } = useUpdateProfile()
+interface SetupProfileProps {
+  user?: User | null
+  onSubmit: (data: { name: string; avatar: AvatarKey }) => void | Promise<void>
+  isPending?: boolean
+}
+
+export function SetupProfile({ user, onSubmit, isPending = false }: SetupProfileProps) {
   const [showAvatarSelector, setShowAvatarSelector] = useState(false)
 
   const form = useForm<FormValues>({
@@ -75,11 +78,6 @@ export function SetupProfile() {
     form.setValue('avatar', avatar, { shouldValidate: true })
   }
 
-  const onSubmit = (data: FormValues) => {
-    updateProfile({ name: data.name, avatar: data.avatar })
-    setShowAvatarSelector(false) // 提交后关闭选择器（可选体验优化）
-  }
-
   return (
     <Card variant='warm'>
       <CardHeader>
@@ -92,7 +90,10 @@ export function SetupProfile() {
       </CardHeader>
 
       <CardContent className='space-y-6'>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+        <form
+          onSubmit={form.handleSubmit(data => onSubmit({ name: data.name, avatar: data.avatar }))}
+          className='space-y-6'
+        >
           {/* 头像区域 */}
           <Controller
             name='avatar'

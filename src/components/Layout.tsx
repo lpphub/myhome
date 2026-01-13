@@ -8,7 +8,7 @@ export default function Layout() {
       <Navigation />
 
       {/* 主内容区域 */}
-      <main className='pt-16 pb-20'>
+      <main className='pt-16 pb-20 h-[calc(100vh-5rem)] overflow-y-auto'>
         <Outlet />
       </main>
     </>

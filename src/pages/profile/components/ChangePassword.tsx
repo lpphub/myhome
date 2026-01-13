@@ -32,7 +32,7 @@ interface PasswordInputProps<T extends FieldValues> {
   label: string
   placeholder: string
   showPassword: boolean
-  onToggleVisibility: () => void
+  onToggleShow: () => void
   register: UseFormRegister<T>
   error?: string
 }
@@ -42,7 +42,7 @@ function PasswordInput<T extends FieldValues>({
   label,
   placeholder,
   showPassword,
-  onToggleVisibility,
+  onToggleShow,
   register,
   error,
 }: PasswordInputProps<T>) {
@@ -61,7 +61,7 @@ function PasswordInput<T extends FieldValues>({
 
         <button
           type='button'
-          onClick={onToggleVisibility}
+          onClick={onToggleShow}
           className='absolute right-3 top-1/2 -translate-y-1/2 text-muted/50 hover:text-muted transition-colors'
         >
           {showPassword ? <EyeOff className='w-4 h-4' /> : <Eye className='w-4 h-4' />}
@@ -123,7 +123,7 @@ export function ChangePassword({ onSubmit, isPending = false }: ChangePasswordPr
             label='旧密码'
             placeholder='输入旧密码'
             showPassword={showPasswords.oldPassword}
-            onToggleVisibility={() =>
+            onToggleShow={() =>
               setShowPasswords(prev => ({ ...prev, oldPassword: !prev.oldPassword }))
             }
             register={form.register}
@@ -135,7 +135,7 @@ export function ChangePassword({ onSubmit, isPending = false }: ChangePasswordPr
             label='新密码'
             placeholder='输入新密码'
             showPassword={showPasswords.newPassword}
-            onToggleVisibility={() =>
+            onToggleShow={() =>
               setShowPasswords(prev => ({ ...prev, newPassword: !prev.newPassword }))
             }
             register={form.register}
@@ -147,7 +147,7 @@ export function ChangePassword({ onSubmit, isPending = false }: ChangePasswordPr
             label='确认新密码'
             placeholder='再次输入新密码'
             showPassword={showPasswords.confirmPassword}
-            onToggleVisibility={() =>
+            onToggleShow={() =>
               setShowPasswords(prev => ({ ...prev, confirmPassword: !prev.confirmPassword }))
             }
             register={form.register}

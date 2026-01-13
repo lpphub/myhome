@@ -1,17 +1,20 @@
-import { useCallback, useMemo, useState } from 'react'
+import { Plus } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router'
 import { LoadingState } from '@/components/LoadingState'
 import { useAuth } from '@/hooks'
 import type { Space, SpaceForm } from '@/types/spaces'
 import { InviteListDialog } from './components/InviteListDialog'
 import { InviteReminder } from './components/InviteReminder'
+import { SpaceCard } from './components/SpaceCard'
 import { SpaceFormDialog } from './components/SpaceFormDialog'
-import { SpaceList } from './components/SpaceList'
 import { SpaceMemberDialog } from './components/SpaceMemberDialog'
 import {
   useCreateSpace,
   useDeleteSpace,
   usePendingInvitesQuery,
   useSpaceQuery,
+  useTogglePinSpace,
   useUpdateSpace,
 } from './hooks/useSpaces'
 
@@ -32,7 +35,6 @@ const getGreeting = (): { greeting: string; message: string } => {
     '记录生活，留住美好 ✨',
   ]
   const randomMessage = messages[Math.floor(Math.random() * messages.length)]
-
   return { greeting, message: randomMessage }
 }
 
@@ -42,59 +44,34 @@ interface DialogState {
 }
 
 export default function Spaces() {
-  const [spaceDialog, setSpaceDialog] = useState<DialogState>({
-    open: false,
-    initialData: undefined,
-  })
-  const [memberDialog, setMemberDialog] = useState<DialogState>({
-    open: false,
-    initialData: undefined,
-  })
-  const [inviteDialog, setInviteDialog] = useState(false)
-
+  const navigate = useNavigate()
   const { user } = useAuth()
-  const { data: invites = [] } = usePendingInvitesQuery()
-
   const { data: spaceList = [], isLoading } = useSpaceQuery()
+  const { data: invites = [] } = usePendingInvitesQuery()
+  const { greeting, message } = useMemo(() => getGreeting(), [])
+
   const createSpace = useCreateSpace()
   const updateSpace = useUpdateSpace()
   const deleteSpace = useDeleteSpace()
+  const togglePinSpace = useTogglePinSpace()
 
-  const handleSubmit = useCallback(
-    (values: SpaceForm) => {
-      values.id ? updateSpace.mutate(values) : createSpace.mutate(values)
+  const [spaceDialog, setSpaceDialog] = useState<DialogState>({ open: false })
+  const [memberDialog, setMemberDialog] = useState<DialogState>({ open: false })
+  const [inviteDialog, setInviteDialog] = useState(false)
 
-      setSpaceDialog({ open: false, initialData: undefined })
-    },
-    [createSpace, updateSpace]
-  )
+  const handleAdd = () => setSpaceDialog({ open: true })
+  const handleEdit = (space: Space) => setSpaceDialog({ open: true, initialData: space })
 
-  const handleDelete = useCallback(
-    (id: number) => {
-      deleteSpace.mutate(id)
-
-      setSpaceDialog({ open: false, initialData: undefined })
-    },
-    [deleteSpace]
-  )
-
-  const { greeting, message } = useMemo(() => getGreeting(), [])
-
-  const handleOpenDialog = useCallback((space?: Space) => {
-    setSpaceDialog({ open: true, initialData: space })
-  }, [])
-
-  const handleOpenMemberDialog = useCallback((space: Space) => {
-    setMemberDialog({ open: true, initialData: space })
-  }, [])
-
-  const handleOpenInviteDialog = useCallback(() => {
-    setInviteDialog(true)
-  }, [])
-
-  if (isLoading) {
-    return <LoadingState type='loading' />
+  const handleSubmit = (values: SpaceForm) => {
+    values.id ? updateSpace.mutate(values) : createSpace.mutate(values)
+    setSpaceDialog({ open: false })
   }
+  const handleDelete = (id: number) => {
+    deleteSpace.mutate(id)
+    setSpaceDialog({ open: false })
+  }
+
+  if (isLoading) return <LoadingState type='loading' />
 
   return (
     <div className='min-h-screen animate-in fade-in slide-in-from-bottom-4 duration-500'>
@@ -104,33 +81,70 @@ export default function Spaces() {
           <p className='text-foreground-secondary'>{message}</p>
         </header>
 
-        <InviteReminder count={invites.length} onClick={handleOpenInviteDialog} />
+        <InviteReminder count={invites.length} onClick={() => setInviteDialog(true)} />
 
-        <SpaceList
-          spaces={spaceList}
-          onAdd={handleOpenDialog}
-          onEdit={handleOpenDialog}
-          onOpenMemberDialog={handleOpenMemberDialog}
-          currentUserId={user?.id ?? 0}
-        />
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+          {spaceList.map((space, index) => (
+            <div
+              key={space.id}
+              className='animate-in fade-in zoom-in-95 duration-300'
+              style={{ animationDelay: `${Math.floor(index / 5) * 50}ms` }}
+            >
+              <SpaceCard
+                space={space}
+                currentUserId={user?.id ?? 0}
+                onEdit={handleEdit}
+                onTogglePin={togglePinSpace.mutate}
+                onOpenMemberDialog={space => setMemberDialog({ open: true, initialData: space })}
+                navigateTo={navigate}
+              />
+            </div>
+          ))}
+
+          {/* 新建空间按钮 */}
+          <button
+            type='button'
+            onClick={handleAdd}
+            className='group relative bg-white rounded-2xl p-6
+                       border-2 border-primary/20 hover:border-primary
+                       shadow-[6px_6px_0_0_#ff8c4233,inset_0_-4px_0_0_#00000008]
+                       hover:-translate-y-1 hover:shadow-[8px_8px_0_0_#ff8c4233,inset_0_-4px_0_0_#00000008]
+                       overflow-hidden transition-all duration-300 ease-out cursor-pointer
+                       animate-in fade-in zoom-in-95 min-h-50 flex flex-col justify-center'
+          >
+            <div className='flex flex-col items-center gap-3'>
+              <div
+                className='w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center
+                              transition-colors group-hover:bg-gray-200'
+              >
+                <Plus className='w-5 h-5 text-primary' />
+              </div>
+              <h3 className='font-semibold text-gray-900 text-base'>新建空间</h3>
+              {spaceList.length === 0 && (
+                <p className='text-sm text-gray-600'>开始记录你的美好生活</p>
+              )}
+            </div>
+          </button>
+        </div>
       </main>
 
-      <SpaceMemberDialog
-        open={memberDialog.open}
-        onClose={() => setMemberDialog({ open: false, initialData: undefined })}
-        space={memberDialog.initialData}
-        isOwner={user?.id === memberDialog.initialData?.owner}
-      />
-
-      <InviteListDialog open={inviteDialog} onClose={() => setInviteDialog(false)} />
-
+      {/* 弹窗 */}
       <SpaceFormDialog
         open={spaceDialog.open}
-        onClose={() => setSpaceDialog({ open: false, initialData: undefined })}
+        onClose={() => setSpaceDialog({ open: false })}
         onSubmit={handleSubmit}
         initialData={spaceDialog.initialData}
         onDelete={spaceDialog.initialData?.id ? handleDelete : undefined}
       />
+
+      <SpaceMemberDialog
+        open={memberDialog.open}
+        onClose={() => setMemberDialog({ open: false })}
+        space={memberDialog.initialData}
+        isOwner={memberDialog.initialData?.owner === user?.id}
+      />
+
+      <InviteListDialog open={inviteDialog} onClose={() => setInviteDialog(false)} />
     </div>
   )
 }

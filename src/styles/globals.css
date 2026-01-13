@@ -13,8 +13,8 @@
     @apply bg-background text-foreground;
   }
 
-  /* 防止抽屉/模态框打开时 fixed 元素跳动 */
-  body:has([data-radix-scroll-lock]) {
+  /* 防止模态框打开时 fixed 元素跳动 */
+  body[data-dialog-open="true"] {
     padding-right: var(--scrollbar-width, 0px);
   }
 }
