@@ -119,7 +119,7 @@ export const InviteListDialog = ({ open, onClose }: InviteListDialogProps) => {
                         size='sm'
                         onClick={() => handleRespond(invite, 'reject')}
                         disabled={respondInvite.isPending && selectedInvite?.inviteId === invite.id}
-                        className='border-gray-300 hover:border-red-300 hover:text-red-500'
+                        className='border-gray-300 text-muted hover:border-red-300 hover:text-red-500'
                       >
                         {respondInvite.isPending &&
                         selectedInvite?.inviteId === invite.id &&
@@ -129,6 +129,7 @@ export const InviteListDialog = ({ open, onClose }: InviteListDialogProps) => {
                       </Button>
                       <Button
                         type='button'
+                        size='sm'
                         onClick={() => handleRespond(invite, 'accept')}
                         disabled={respondInvite.isPending && selectedInvite?.inviteId === invite.id}
                         className='bg-primary/80 hover:bg-primary text-white'
