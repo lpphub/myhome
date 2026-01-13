@@ -81,25 +81,20 @@ export function useDeleteGroupMutation() {
  * 业务复合 Hooks（Command Hooks）
  * -------------------------------- */
 export function useTags() {
-  const { spaceId } = useSpace()
+  const { data, isLoading } = useTagQuery()
 
   const tags = useTagsStore(s => s.tags)
   const currentSpaceId = useTagsStore(s => s.spaceId)
-  const initTags = useTagsStore(s => s.initTags)
-  const query = useTagQuery()
+  const { spaceId } = useSpace()
 
   useEffect(() => {
-    if (!query.data) return
+    if (!data) return
     if (spaceId && spaceId !== currentSpaceId) {
-      initTags(spaceId, query.data)
+      useTagsStore.getState().initTags(spaceId, data)
     }
-  }, [spaceId, currentSpaceId, query.data, initTags])
+  }, [spaceId, currentSpaceId, data])
 
-  return {
-    tags,
-    isLoading: query.isLoading,
-    error: query.error,
-  }
+  return { tags, isLoading }
 }
 
 export function useTagActions() {
