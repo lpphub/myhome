@@ -1,7 +1,10 @@
 import { ChangePassword } from './components/ChangePassword'
-import { SetProfile } from './components/SetProfile'
+import { SetupProfile } from './components/SetupProfile'
+import { useChangePassword } from './hooks/useProfile'
 
 export default function Profile() {
+  const { mutate: changePassword, isPending } = useChangePassword()
+
   return (
     <div className='min-h-screen relative'>
       <div className='max-w-2xl mx-auto px-4 py-6'>
@@ -11,8 +14,9 @@ export default function Profile() {
         </header>
 
         <div className='space-y-4'>
-          <SetProfile />
-          <ChangePassword />
+          <SetupProfile />
+
+          <ChangePassword onSubmit={changePassword} isPending={isPending} />
         </div>
       </div>
     </div>

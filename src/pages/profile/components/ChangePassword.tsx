@@ -9,7 +9,6 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
-import { useChangePassword } from '@/pages/profile/hooks/useProfile'
 
 /* ==================== Schema ==================== */
 
@@ -76,8 +75,12 @@ function PasswordInput<T extends FieldValues>({
 
 /* ==================== ChangePassword ==================== */
 
-export function ChangePassword() {
-  const { mutate: changePassword, isPending } = useChangePassword()
+interface ChangePasswordProps {
+  onSubmit: (data: { oldPassword: string; newPassword: string }) => void | Promise<void>
+  isPending?: boolean
+}
+
+export function ChangePassword({ onSubmit, isPending = false }: ChangePasswordProps) {
   const [showPasswords, setShowPasswords] = useState({
     oldPassword: false,
     newPassword: false,
@@ -96,21 +99,14 @@ export function ChangePassword() {
   })
 
   const handleSubmit = (values: PasswordFormValues) => {
-    changePassword(
-      {
-        oldPassword: values.oldPassword,
-        newPassword: values.newPassword,
-      },
-      {
-        onSuccess: () => {
-          form.reset()
-        },
-      }
-    )
+    onSubmit({
+      oldPassword: values.oldPassword,
+      newPassword: values.newPassword,
+    })
   }
 
   return (
-    <Card variant='warm' className='card-hover'>
+    <Card variant='warm'>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <CardHeader>
           <div className='flex items-center gap-3'>
