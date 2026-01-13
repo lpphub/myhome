@@ -3,13 +3,13 @@ import { Lock } from 'lucide-react'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { AVATAR_KEYS, Avatar, type AvatarKey } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 import type { User } from '@/types/auth'
-import { AVATAR_KEYS, AVATAR_SVGS, type AvatarKey } from './Avatars'
 
 // 表单校验规则
 const profileSchema = z.object({
@@ -46,7 +46,7 @@ function AvatarSelector({
               : 'bg-honey-50 hover:bg-honey-100 hover:scale-105'
           )}
         >
-          {AVATAR_SVGS[key]}
+          <Avatar src={key} size='md' />
         </button>
       ))}
     </div>
@@ -69,10 +69,6 @@ export function SetupProfile({ user, onSubmit, isPending = false }: SetupProfile
       avatar: (user?.avatar as AvatarKey) || 'avatar-1',
     },
   })
-
-  const handleAvatarClick = () => {
-    setShowAvatarSelector(prev => !prev)
-  }
 
   const handleAvatarSelect = (avatar: AvatarKey) => {
     form.setValue('avatar', avatar, { shouldValidate: true })
@@ -102,10 +98,10 @@ export function SetupProfile({ user, onSubmit, isPending = false }: SetupProfile
               <div className='flex flex-col items-center'>
                 <button
                   type='button'
-                  onClick={handleAvatarClick}
-                  className='relative w-14 h-14 bg-linear-to-br from-honey-50 to-coral-50 rounded-xl flex items-center justify-center shadow-md ring-2 ring-white cursor-pointer hover:scale-105 transition-transform duration-300'
+                  onClick={() => setShowAvatarSelector(prev => !prev)}
+                  className='relative w-14 h-14 rounded-xl flex items-center justify-center shadow-md ring-2 ring-white cursor-pointer hover:scale-105 transition-transform duration-300'
                 >
-                  {AVATAR_SVGS[field.value]}
+                  <Avatar src={field.value} size='lg' />
                 </button>
                 <p className='mt-2 text-xs text-muted/70'>点击头像更换</p>
 

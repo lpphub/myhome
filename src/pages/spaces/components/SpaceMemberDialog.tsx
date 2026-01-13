@@ -13,6 +13,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import { Avatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -127,17 +128,7 @@ export const SpaceMemberDialog = ({ open, onClose, space, isOwner }: SpaceMember
                     className='flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors'
                   >
                     <div className='flex items-center gap-3'>
-                      <div className='w-10 h-10 rounded-full bg-linear-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-lg font-semibold text-primary'>
-                        {member.avatar ? (
-                          <img
-                            src={member.avatar}
-                            alt={member.name}
-                            className='w-full h-full rounded-full object-cover'
-                          />
-                        ) : (
-                          member.name.charAt(0).toUpperCase()
-                        )}
-                      </div>
+                      <Avatar src={member.avatar} name={member.name} size='md' />
                       <div>
                         <div className='flex items-center gap-2'>
                           <span className='font-medium text-foreground'>{member.name}</span>

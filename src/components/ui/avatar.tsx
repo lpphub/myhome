@@ -1,8 +1,26 @@
-// src/components/avatars.tsx
+import { cva, type VariantProps } from 'class-variance-authority'
+import { User } from 'lucide-react'
 import type { ReactElement } from 'react'
+import * as React from 'react'
+import { cn } from '@/lib/utils'
 
-// 卡通头像 SVG
-export const AVATAR_SVGS: Record<string, ReactElement> = {
+const avatarVariants = cva(
+  'relative shrink-0 overflow-hidden rounded-full flex items-center justify-center bg-linear-to-br from-honey-400 to-coral-400',
+  {
+    variants: {
+      size: {
+        sm: 'w-8 h-8 text-xs',
+        md: 'w-10 h-10 text-sm',
+        lg: 'w-12 h-12 text-base',
+      },
+    },
+    defaultVariants: {
+      size: 'md',
+    },
+  }
+)
+
+const AVATAR_SVGS: Record<string, ReactElement> = {
   'avatar-1': (
     <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' className='w-full h-full'>
       <title>卡通头像1</title>
@@ -71,8 +89,40 @@ export const AVATAR_SVGS: Record<string, ReactElement> = {
   ),
 }
 
-// 所有头像 key
-export const AVATAR_KEYS = Object.keys(AVATAR_SVGS) as Array<keyof typeof AVATAR_SVGS>
+export type AvatarKey = 'avatar-1' | 'avatar-2' | 'avatar-3' | 'avatar-4' | 'avatar-5'
 
-// 类型
-export type AvatarKey = (typeof AVATAR_KEYS)[number]
+export interface AvatarProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof avatarVariants> {
+  src?: string
+  name?: string
+}
+
+const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
+  ({ className, size, src, name, ...props }, ref) => {
+    const isBuiltInAvatar = src && src in AVATAR_SVGS
+    const isExternalUrl = src && !isBuiltInAvatar
+
+    return (
+      <div ref={ref} className={cn(avatarVariants({ size, className }))} {...props}>
+        {isExternalUrl ? (
+          <img src={src} alt={name} className='w-full h-full object-cover' />
+        ) : isBuiltInAvatar ? (
+          <div className='w-full h-full flex items-center justify-center'>
+            {AVATAR_SVGS[src as AvatarKey]}
+          </div>
+        ) : name ? (
+          <span className='text-white font-medium'>{name.charAt(0).toUpperCase()}</span>
+        ) : (
+          <User className='w-1/2 h-1/2 text-white' />
+        )}
+      </div>
+    )
+  }
+)
+
+Avatar.displayName = 'Avatar'
+
+const AVATAR_KEYS = Object.keys(AVATAR_SVGS) as AvatarKey[]
+
+export { Avatar, avatarVariants, AVATAR_SVGS, AVATAR_KEYS }

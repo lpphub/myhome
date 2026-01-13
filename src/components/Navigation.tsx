@@ -1,8 +1,8 @@
-import { Archive, Heart, Home, LogOut, Settings, Sparkles, Tag, User } from 'lucide-react'
+import { Archive, Heart, Home, LogOut, Settings, Sparkles, Tag } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
+import { Avatar } from '@/components/ui/avatar'
 import { useAuth } from '@/hooks'
-import { AVATAR_SVGS } from '@/pages/profile/components/Avatars'
 import { env } from '@/utils/env'
 
 interface NavItem {
@@ -137,18 +137,10 @@ const NavActions = ({ onLogout, onProfile }: { onLogout: () => void; onProfile: 
         onClick={() => setOpen(v => !v)}
         className='flex items-center gap-2 p-2.5 rounded-lg hover:bg-honey-50 transition-colors'
       >
-        <div className='w-8 h-8 rounded-full flex items-center justify-center overflow-hidden bg-linear-to-br from-honey-400 to-coral-400'>
-          {user?.avatar ? (
-            <div className='w-full h-full flex items-center justify-center'>
-              {AVATAR_SVGS[user.avatar]}
-            </div>
-          ) : (
-            <User className='w-4 h-4 text-white' />
-          )}
-        </div>
+        <Avatar src={user?.avatar} name={user?.name} size='sm' />
 
         <span className='hidden sm:block text-sm font-medium max-w-24 truncate'>
-          {user?.name || '用户'}
+          {user?.name || 'user'}
         </span>
       </button>
 
