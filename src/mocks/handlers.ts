@@ -133,7 +133,7 @@ export const handlers = [
     })
   }),
 
-  http.put('/api/user/profile', async () => {
+  http.put('/api/person/profile', async () => {
     return HttpResponse.json({
       code: 200,
       message: '更新成功',

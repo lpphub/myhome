@@ -77,7 +77,7 @@ export const InviteListDialog = ({ open, onClose }: InviteListDialogProps) => {
               {invites.map(invite => (
                 <div
                   key={invite.id}
-                  className='p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors'
+                  className='p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors overflow-hidden break-inside-avoid'
                 >
                   <div className='flex items-start mb-3'>
                     <div className='flex items-center gap-3 flex-1 min-w-0'>
@@ -88,7 +88,7 @@ export const InviteListDialog = ({ open, onClose }: InviteListDialogProps) => {
                         <h4 className='font-semibold text-foreground text-base mb-1 truncate'>
                           {invite.spaceName}
                         </h4>
-                        <div className='flex items-center gap-2 text-sm text-gray-600'>
+                        <div className='flex items-center gap-2 text-sm text-gray-600 min-w-0'>
                           <div className='w-6 h-6 rounded-full bg-honey-200 flex items-center justify-center text-xs font-medium text-honey-700 shrink-0'>
                             {invite.inviterAvatar ? (
                               <img
@@ -100,14 +100,18 @@ export const InviteListDialog = ({ open, onClose }: InviteListDialogProps) => {
                               invite.inviterName.charAt(0).toUpperCase()
                             )}
                           </div>
-                          <span className='truncate'>{invite.inviterName}</span>
-                          <span className='text-gray-400 truncate'>{invite.inviterEmail}</span>
+                          <span className='truncate max-w-15 sm:max-w-none'>
+                            {invite.inviterName}
+                          </span>
+                          <span className='text-gray-400 truncate hidden sm:block'>
+                            {invite.inviterEmail}
+                          </span>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className='flex items-center justify-between pt-3 border-t border-gray-200'>
+                  <div className='flex items-center justify-between pt-3 border-t border-gray-200 gap-2'>
                     <div className='flex items-center gap-1.5 text-sm text-gray-500'>
                       <Clock className='w-3.5 h-3.5' />
                       <span>{formatRelativeTime(invite.createdAt)}</span>
