@@ -19,6 +19,9 @@ import {
 import { Input } from '@/components/ui/input'
 import { useAuth } from '@/hooks'
 import type { AuthForm } from '@/types/auth'
+import { env } from '@/utils/env'
+
+const appName = env.APP_NAME || '拾序'
 
 const loginSchema = z.object({
   email: z.email('请输入有效的邮箱地址').min(1, '请输入邮箱地址'),
@@ -85,13 +88,13 @@ export default function Login() {
           <div className='text-center space-y-2'>
             {/* Logo 图标 */}
             <div className='flex items-center justify-center mb-2'>
-              <div className='w-16 h-16 bg-linear-to-br from-primary to-macaron-pink rounded-lg flex items-center justify-center shadow-lg'>
+              <div className='w-16 h-16 bg-linear-to-br from-primary to-macaron-pink-300 rounded-lg flex items-center justify-center shadow-lg'>
                 <Home className='w-8 h-8 text-white' />
               </div>
             </div>
 
             {/* 标题 */}
-            <CardTitle className='text-2xl font-handwritten'>ai记录</CardTitle>
+            <CardTitle className='text-2xl'>{appName}</CardTitle>
 
             {/* 欢迎语 */}
             <CardDescription className='flex items-center justify-center gap-2 text-muted'>
@@ -181,7 +184,7 @@ export default function Login() {
           </div>
         </CardContent>
         <CardFooter className='flex justify-center px-4'>
-          <div className='text-muted/60 text-xs font-handwritten'>✨ 让记录变得简单</div>
+          <div className='text-muted/60 text-xs'>✨ 让记录变得简单</div>
         </CardFooter>
       </Card>
     </div>
