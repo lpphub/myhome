@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router'
 import Navigation from './Navigation'
 
-export default function Layout() {
+export default function MainLayout() {
   return (
     <>
       {/* 顶部导航 */}

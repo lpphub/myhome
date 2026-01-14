@@ -37,9 +37,9 @@ export function signUp(data: AuthForm) {
  * @param refreshToken Refresh token
  */
 export function refreshToken(refreshToken: string) {
-  return httpClient.put<AuthData, { refresh_token: string }>({
+  return httpClient.put<Pick<AuthData, 'accessToken' | 'refreshToken'>, { refreshToken: string }>({
     url: AuthApi.Refresh,
-    data: { refresh_token: refreshToken },
+    data: { refreshToken },
   })
 }
 

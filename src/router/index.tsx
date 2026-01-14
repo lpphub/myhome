@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router'
-import Layout from '@/components/Layout'
+import MainLayout from '@/components/MainLayout'
 import Login from '@/pages/auth/Login'
 import Register from '@/pages/auth/Register'
 import NotFound from '@/pages/errors/NotFound'
@@ -15,7 +15,7 @@ export const router = createBrowserRouter([
     path: '/',
     element: (
       <AuthGuard>
-        <Layout />
+        <MainLayout />
       </AuthGuard>
     ),
     children: [

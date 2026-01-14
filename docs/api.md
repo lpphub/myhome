@@ -11,635 +11,699 @@
 
 ## 认证接口 (Auth)
 
-### 基础信息
+基础路径: `/auth` | 文件位置: `src/api/auth/index.ts`
+
+### 1. 登录
 
 | 属性 | 值 |
 |------|-----|
-| 基础路径 | `/auth` |
-| 文件位置 | `src/api/auth/index.ts` |
+| Method | `POST` |
+| Path | `/auth/signin` |
 
-### 接口列表
+**请求参数 (JSON)**
 
-#### 1. 登录
-
-| 属性 | 值 |
-|------|-----|
-| 方法 | `POST` |
-| 路径 | `/auth/signin` |
-
-**参数**
-
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| email | `string` | 是 | 用户邮箱 |
-| password | `string` | 是 | 用户密码 |
-
-**返回值**
-
-```typescript
+```json
 {
-  user: User;
-  accessToken: string;
-  refreshToken: string;
+  "email": "user@example.com",
+  "password": "password123"
 }
 ```
 
-| 字段 | 类型 | 描述 |
-|------|------|------|
-| user | `User` | 用户信息 |
-| accessToken | `string` | 访问令牌 |
-| refreshToken | `string` | 刷新令牌 |
+**返回值 (JSON)**
 
----
-
-#### 2. 注册
-
-| 属性 | 值 |
-|------|-----|
-| 方法 | `POST` |
-| 路径 | `/auth/signup` |
-
-**参数**
-
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| email | `string` | 是 | 用户邮箱 |
-| password | `string` | 是 | 用户密码 |
-
-**返回值**
-
-```typescript
+```json
 {
-  user: User;
-  accessToken: string;
-  refreshToken: string;
+  "code": 0,
+  "message": "登录成功",
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "username",
+      "email": "user@example.com",
+      "avatar": "https://...",
+      "role": "user"
+    },
+    "accessToken": "eyJhbGciOiJIUzI1NiIs...",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIs..."
+  }
 }
 ```
 
 ---
 
-#### 3. 刷新令牌
+### 2. 注册
 
 | 属性 | 值 |
 |------|-----|
-| 方法 | `PUT` |
-| 路径 | `/auth/refresh` |
+| Method | `POST` |
+| Path | `/auth/signup` |
 
-**参数**
+**请求参数 (JSON)**
 
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| refresh_token | `string` | 是 | 刷新令牌 |
-
-**返回值**
-
-```typescript
+```json
 {
-  accessToken: string;
-  refreshToken: string;
+  "email": "user@example.com",
+  "password": "password123"
 }
 ```
 
-| 字段 | 类型 | 描述 |
-|------|------|------|
-| accessToken | `string` | 新的访问令牌 |
-| refreshToken | `string` | 新的刷新令牌 |
+**返回值 (JSON)**
+
+```json
+{
+  "code": 0,
+  "message": "注册成功",
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "username",
+      "email": "user@example.com",
+      "avatar": "https://...",
+      "role": "user"
+    },
+    "accessToken": "eyJhbGciOiJIUzI1NiIs...",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIs..."
+  }
+}
+```
 
 ---
 
-#### 4. 登出
+### 3. 刷新令牌
 
 | 属性 | 值 |
 |------|-----|
-| 方法 | `POST` |
-| 路径 | `/auth/logout` |
+| Method | `PUT` |
+| Path | `/auth/refresh` |
 
-**返回值**
+**请求参数 (JSON)**
 
-无（空实现）
+```json
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIs..."
+}
+```
+
+**返回值 (JSON)**
+
+```json
+{
+  "code": 0,
+  "message": "令牌刷新成功",
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIs...",
+    "refreshToken": "eyJhbGciOiJIUzI1NiIs..."
+  }
+}
+```
+
+---
+
+### 4. 登出
+
+| 属性 | 值 |
+|------|-----|
+| Method | `POST` |
+| Path | `/auth/logout` |
+
+**说明**: 将指定空间设为用户的默认空间
 
 ---
 
 ## 用户接口 (User)
 
-### 基础信息
+基础路径: `/user` | 文件位置: `src/api/user/index.ts`
+
+### 1. 获取用户资料
 
 | 属性 | 值 |
 |------|-----|
-| 基础路径 | `/user` |
-| 文件位置 | `src/api/user/index.ts` |
+| Method | `GET` |
+| Path | `/user/profile` |
 
-### 接口列表
+**返回值 (JSON)**
 
-#### 1. 获取用户资料
-
-| 属性 | 值 |
-|------|-----|
-| 方法 | `GET` |
-| 路径 | `/user/profile` |
-
-**参数**
-
-无
-
-**返回值**
-
-```typescript
-User
+```json
+{
+  "code": 0,
+  "message": "获取成功",
+  "data": {
+    "id": 1,
+    "name": "username",
+    "email": "user@example.com",
+    "avatar": "https://...",
+    "role": "user"
+  }
+}
 ```
 
-| 字段 | 类型 | 描述 |
-|------|------|------|
-| id | `number` | 用户ID |
-| name | `string` | 用户名 |
-| email | `string` | 用户邮箱 |
-| avatar | `string` | 用户头像（可选） |
-| role | `string` | 用户角色（可选） |
-
 ---
 
-#### 2. 更新用户资料
+### 2. 更新用户资料
 
 | 属性 | 值 |
 |------|-----|
-| 方法 | `PUT` |
-| 路径 | `/user/profile` |
+| Method | `PUT` |
+| Path | `/user/profile` |
 
-**参数**
+**请求参数 (JSON)**
 
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| name | `string` | 是 | 用户名 |
-| avatar | `string` | 否 | 用户头像 |
+```json
+{
+  "name": "newUsername",
+  "avatar": "https://..."
+}
+```
 
-**返回值**
+**返回值 (JSON)**
 
-无
+```json
+{
+  "code": 0,
+  "message": "更新用户资料成功",
+  "data": {}
+}
+```
 
 ---
 
-#### 3. 修改密码
+### 3. 修改密码
 
 | 属性 | 值 |
 |------|-----|
-| 方法 | `PUT` |
-| 路径 | `/user/password` |
+| Method | `PUT` |
+| Path | `/user/password` |
 
-**参数**
+**请求参数 (JSON)**
 
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| oldPassword | `string` | 是 | 旧密码 |
-| newPassword | `string` | 是 | 新密码 |
+```json
+{
+  "oldPassword": "oldPassword123",
+  "newPassword": "newPassword123"
+}
+```
 
-**返回值**
+**返回值 (JSON)**
 
-无
+```json
+{
+  "code": 0,
+  "message": "修改密码成功",
+  "data": {}
+}
+```
 
 ---
 
 ## 空间接口 (Spaces)
 
-### 基础信息
+基础路径: `/spaces` | 文件位置: `src/api/spaces/index.ts`
+
+### 1. 获取空间列表
 
 | 属性 | 值 |
 |------|-----|
-| 基础路径 | `/spaces` |
-| 文件位置 | `src/api/spaces/index.ts` |
+| Method | `GET` |
+| Path | `/spaces` |
 
-### 接口列表
+**返回值 (JSON)**
 
-#### 1. 获取空间列表
-
-| 属性 | 值 |
-|------|-----|
-| 方法 | `GET` |
-| 路径 | `/spaces` |
-
-**参数**
-
-无
-
-**返回值**
-
-```typescript
-Space[]
+```json
+{
+  "code": 0,
+  "message": "获取空间列表成功",
+  "data": [
+    {
+      "id": 1,
+      "name": "我的花园",
+      "icon": "🌸",
+      "description": "这是一个测试空间",
+      "tagCount": 10,
+      "memberCount": 3,
+      "pin": false,
+      "owner": 1,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}
 ```
 
-| 字段 | 类型 | 描述 |
-|------|------|------|
-| id | `number` | 空间ID |
-| name | `string` | 空间名称 |
-| icon | `string` | 空间图标 |
-| description | `string` | 空间描述（可选） |
-| tagCount | `number` | 标签数量（可选） |
-| memberCount | `number` | 成员数量（可选） |
-| pin | `boolean` | 是否置顶（可选） |
-| owner | `number` | 所有者ID |
-| createdAt | `string` | 创建时间 |
-| updatedAt | `string` | 更新时间 |
-
 ---
 
-#### 2. 创建空间
+### 2. 创建空间
 
 | 属性 | 值 |
 |------|-----|
-| 方法 | `POST` |
-| 路径 | `/spaces` |
+| Method | `POST` |
+| Path | `/spaces` |
 
-**参数**
+**请求参数 (JSON)**
 
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| name | `string` | 是 | 空间名称 |
-| icon | `string` | 是 | 空间图标 |
-| description | `string` | 否 | 空间描述 |
-
-**返回值**
-
-```typescript
-number
+```json
+{
+  "name": "新空间",
+  "icon": "🏠",
+  "description": "空间描述"
+}
 ```
 
-返回新创建的空间ID
+**返回值 (JSON)**
 
----
-
-#### 3. 更新空间
-
-| 属性 | 值 |
-|------|-----|
-| 方法 | `PATCH` |
-| 路径 | `/spaces/:id` |
-
-**参数**
-
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| id | `number` | 是 | 空间ID |
-| name | `string` | 是 | 空间名称 |
-| icon | `string` | 是 | 空间图标 |
-| description | `string` | 否 | 空间描述 |
-
-**返回值**
-
-无
-
----
-
-#### 4. 删除空间
-
-| 属性 | 值 |
-|------|-----|
-| 方法 | `DELETE` |
-| 路径 | `/spaces/:id` |
-
-**参数**
-
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| id | `number` | 是 | 空间ID |
-
-**返回值**
-
-无
-
----
-
-#### 5. 切换空间置顶状态
-
-| 属性 | 值 |
-|------|-----|
-| 方法 | `PATCH` |
-| 路径 | `/spaces/:id/pin` |
-
-**参数**
-
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| id | `number` | 是 | 空间ID |
-
-**返回值**
-
-无
-
----
-
-#### 6. 获取空间成员列表
-
-| 属性 | 值 |
-|------|-----|
-| 方法 | `GET` |
-| 路径 | `/spaces/:id/members` |
-
-**参数**
-
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| spaceId | `number` | 是 | 空间ID |
-
-**返回值**
-
-```typescript
-SpaceMember[]
+```json
+{
+  "code": 0,
+  "message": "创建空间成功",
+  "data": {
+    "id": 2
+  }
+}
 ```
 
-| 字段 | 类型 | 描述 |
-|------|------|------|
-| id | `number` | 记录ID |
-| spaceId | `number` | 空间ID |
-| userId | `number` | 用户ID |
-| name | `string` | 用户名 |
-| email | `string` | 用户邮箱 |
-| avatar | `string` | 用户头像（可选） |
-| isOwner | `boolean` | 是否为所有者 |
-| joinedAt | `string` | 加入时间 |
-
 ---
 
-#### 7. 邀请空间成员
+### 3. 更新空间
 
 | 属性 | 值 |
 |------|-----|
-| 方法 | `POST` |
-| 路径 | `/spaces/:id/members/invite` |
+| Method | `PATCH` |
+| Path | `/spaces/:id` |
 
-**参数**
+**请求参数 (JSON)**
 
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| spaceId | `number` | 是 | 空间ID |
-| email | `string` | 是 | 被邀请人邮箱 |
-
-**返回值**
-
-无
-
----
-
-#### 8. 移除空间成员
-
-| 属性 | 值 |
-|------|-----|
-| 方法 | `DELETE` |
-| 路径 | `/spaces/:id/members/:userId` |
-
-**参数**
-
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| spaceId | `number` | 是 | 空间ID |
-| userId | `number` | 是 | 用户ID |
-
-**返回值**
-
-无
-
----
-
-#### 9. 获取待处理邀请
-
-| 属性 | 值 |
-|------|-----|
-| 方法 | `GET` |
-| 路径 | `/invites/pending` |
-
-**参数**
-
-无
-
-**返回值**
-
-```typescript
-SpaceInvite[]
+```json
+{
+  "id": 1,
+  "name": "更新后的名称",
+  "icon": "📚",
+  "description": "更新后的描述"
+}
 ```
 
-| 字段 | 类型 | 描述 |
-|------|------|------|
-| id | `number` | 邀请ID |
-| spaceId | `number` | 空间ID |
-| spaceName | `string` | 空间名称 |
-| spaceIcon | `string` | 空间图标 |
-| inviterId | `number` | 邀请人ID |
-| inviterName | `string` | 邀请人名称 |
-| inviterEmail | `string` | 邀请人邮箱 |
-| inviterAvatar | `string` | 邀请人头像（可选） |
-| status | `'pending' \| 'accepted' \| 'rejected'` | 邀请状态 |
-| createdAt | `string` | 创建时间 |
+**返回值 (JSON)**
+
+```json
+{
+  "code": 0,
+  "message": "更新空间成功"
+}
+```
 
 ---
 
-#### 10. 响应邀请
+### 4. 删除空间
 
 | 属性 | 值 |
 |------|-----|
-| 方法 | `PATCH` |
-| 路径 | `/invites/:id/respond` |
+| Method | `DELETE` |
+| Path | `/spaces/:id` |
 
-**参数**
+**返回值 (JSON)**
 
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| inviteId | `number` | 是 | 邀请ID |
-| action | `'accept' \| 'reject'` | 是 | 响应操作 |
+```json
+{
+  "code": 0,
+  "message": "删除空间成功",
+  "data": {}
+}
+```
 
-**返回值**
+---
 
-无
+### 5. 固定默认空间
+
+| 属性 | 值 |
+|------|-----|
+| Method | `PATCH` |
+| Path | `/spaces/:id/pin` |
+
+**返回值 (JSON)**
+
+```json
+{
+  "code": 0,
+  "message": "设置默认空间成功",
+  "data": {}
+}
+```
+
+---
+
+### 6. 获取空间成员列表
+
+| 属性 | 值 |
+|------|-----|
+| Method | `GET` |
+| Path | `/spaces/:id/members` |
+
+**返回值 (JSON)**
+
+```json
+{
+  "code": 0,
+  "message": "获取协作者列表成功",
+  "data": [
+    {
+      "id": 1,
+      "spaceId": 1,
+      "userId": 1,
+      "name": "username",
+      "email": "user@example.com",
+      "avatar": "https://...",
+      "isOwner": true,
+      "joinedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+### 7. 邀请空间成员
+
+| 属性 | 值 |
+|------|-----|
+| Method | `POST` |
+| Path | `/spaces/:id/members/invite` |
+
+**请求参数 (JSON)**
+
+```json
+{
+  "email": "newmember@example.com"
+}
+```
+
+**返回值 (JSON)**
+
+```json
+{
+  "code": 0,
+  "message": "邀请已发送",
+  "data": {}
+}
+```
+
+---
+
+### 8. 移除空间成员
+
+| 属性 | 值 |
+|------|-----|
+| Method | `DELETE` |
+| Path | `/spaces/:id/members/:userId` |
+
+**返回值 (JSON)**
+
+```json
+{
+  "code": 0,
+  "message": "移除成员成功",
+  "data": {}
+}
+```
+
+---
+
+### 9. 获取待处理邀请
+
+| 属性 | 值 |
+|------|-----|
+| Method | `GET` |
+| Path | `/invites/pending` |
+
+**返回值 (JSON)**
+
+```json
+{
+  "code": 0,
+  "message": "获取邀请列表成功",
+  "data": [
+    {
+      "id": 1,
+      "spaceId": 100,
+      "spaceName": "我的花园",
+      "spaceIcon": "🌸",
+      "inviterId": 2,
+      "inviterName": "张三",
+      "inviterEmail": "zhangsan@example.com",
+      "inviterAvatar": "https://...",
+      "status": "pending",
+      "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+### 10. 响应邀请
+
+| 属性 | 值 |
+|------|-----|
+| Method | `PATCH` |
+| Path | `/invites/:id/respond` |
+
+**请求参数 (JSON)**
+
+```json
+{
+  "action": "accept"
+}
+```
+
+**返回值 (JSON)**
+
+```json
+{
+  "code": 0,
+  "message": "已加入空间",
+  "data": {}
+}
+```
 
 ---
 
 ## 标签接口 (Tags)
 
-### 基础信息
+基础路径: `/tags` | 文件位置: `src/api/tags/index.ts`
+
+### 1. 获取标签列表
 
 | 属性 | 值 |
 |------|-----|
-| 基础路径 | `/tags` |
-| 文件位置 | `src/api/tags/index.ts` |
+| Method | `GET` |
+| Path | `/tags` |
 
-### 接口列表
+**Query 参数**
 
-#### 1. 获取标签列表
-
-| 属性 | 值 |
-|------|-----|
-| 方法 | `GET` |
-| 路径 | `/tags` |
-
-**参数**
-
-| 字段 | 类型 | 必填 | 描述 |
+| 参数 | 类型 | 必填 | 描述 |
 |------|------|------|------|
-| spaceId | `number` | 否 | 空间ID（可选） |
+| spaceId | `number` | 否 | 空间ID |
 
-**返回值**
+**返回值 (JSON)**
 
-```typescript
-TagGroup[]
-```
-
-| 字段 | 类型 | 描述 |
-|------|------|------|
-| id | `number` | 分组ID |
-| code | `string` | 分组编码 |
-| name | `string` | 分组名称 |
-| spaceId | `number` | 空间ID（可选） |
-| tags | `Tag[]` | 标签列表 |
-
-**Tag 类型**
-
-| 字段 | 类型 | 描述 |
-|------|------|------|
-| id | `number` | 标签ID |
-| spaceId | `number` | 空间ID（可选） |
-| name | `string` | 标签名称 |
-| group | `string` | 分组编码 |
-| order | `number` | 排序 |
-| color | `string` | 颜色 |
-| description | `string` | 描述（可选） |
-| itemCount | `number` | 项目数量（可选） |
-| createdAt | `string` | 创建时间（可选） |
-| updatedAt | `string` | 更新时间（可选） |
-
----
-
-#### 2. 创建标签
-
-| 属性 | 值 |
-|------|-----|
-| 方法 | `POST` |
-| 路径 | `/tags` |
-
-**参数**
-
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| id | `number` | 否 | 标签ID（可选） |
-| name | `string` | 否 | 标签名称（可选） |
-| group | `string` | 否 | 分组编码（可选） |
-| description | `string` | 否 | 描述（可选） |
-| color | `string` | 否 | 颜色（可选） |
-| spaceId | `number` | 否 | 空间ID（可选） |
-
-**返回值**
-
-```typescript
-Tag
+```json
+{
+  "code": 0,
+  "message": "获取标签成功",
+  "data": [
+    {
+      "id": 1,
+      "code": "work",
+      "name": "工作",
+      "spaceId": 1,
+      "tags": [
+        {
+          "id": 1,
+          "spaceId": 1,
+          "name": "紧急",
+          "group": "work",
+          "order": 0,
+          "color": "coral",
+          "description": "紧急任务",
+          "itemCount": 5,
+          "createdAt": "2024-01-01T00:00:00.000Z",
+          "updatedAt": "2024-01-01T00:00:00.000Z"
+        }
+      ]
+    }
+  ]
+}
 ```
 
 ---
 
-#### 3. 更新标签
+### 2. 创建标签
 
 | 属性 | 值 |
 |------|-----|
-| 方法 | `PATCH` |
-| 路径 | `/tags/:id` |
+| Method | `POST` |
+| Path | `/tags` |
 
-**参数**
+**请求参数 (JSON)**
 
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| id | `number` | 是 | 标签ID |
-| name | `string` | 否 | 标签名称（可选） |
-| group | `string` | 否 | 分组编码（可选） |
-| description | `string` | 否 | 描述（可选） |
-| color | `string` | 否 | 颜色（可选） |
-| spaceId | `number` | 否 | 空间ID（可选） |
-
-**返回值**
-
-无
-
----
-
-#### 4. 删除标签
-
-| 属性 | 值 |
-|------|-----|
-| 方法 | `DELETE` |
-| 路径 | `/tags/:id` |
-
-**参数**
-
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| id | `number` | 是 | 标签ID |
-
-**返回值**
-
-无
-
----
-
-#### 5. 重新排序标签
-
-| 属性 | 值 |
-|------|-----|
-| 方法 | `POST` |
-| 路径 | `/tags/reorder` |
-
-**参数**
-
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| fromId | `number` | 是 | 源标签ID |
-| toGroup | `string` | 是 | 目标分组编码 |
-| toIndex | `number` | 是 | 目标位置索引 |
-
-**返回值**
-
-无
-
----
-
-#### 6. 创建分组
-
-| 属性 | 值 |
-|------|-----|
-| 方法 | `POST` |
-| 路径 | `/tags/group` |
-
-**参数**
-
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| name | `string` | 是 | 分组名称 |
-| spaceId | `number` | 否 | 空间ID（可选） |
-
-**返回值**
-
-```typescript
-Group
+```json
+{
+  "name": "新标签",
+  "group": "work",
+  "description": "标签描述",
+  "color": "coral",
+  "spaceId": 1
+}
 ```
 
-| 字段 | 类型 | 描述 |
-|------|------|------|
-| id | `number` | 分组ID |
-| code | `string` | 分组编码 |
-| name | `string` | 分组名称 |
-| spaceId | `number` | 空间ID（可选） |
+**返回值 (JSON)**
+
+```json
+{
+  "code": 0,
+  "message": "创建标签成功",
+  "data": {
+    "id": 2,
+    "spaceId": 1,
+    "name": "新标签",
+    "group": "work",
+    "order": 1,
+    "color": "coral",
+    "description": "标签描述",
+    "itemCount": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+}
+```
 
 ---
 
-#### 7. 删除分组
+### 3. 更新标签
 
 | 属性 | 值 |
 |------|-----|
-| 方法 | `DELETE` |
-| 路径 | `/tags/group/:code` |
+| Method | `PATCH` |
+| Path | `/tags/:id` |
 
-**参数**
+**请求参数 (JSON)**
 
-| 字段 | 类型 | 必填 | 描述 |
-|------|------|------|------|
-| code | `string` | 是 | 分组编码 |
+```json
+{
+  "id": 1,
+  "name": "更新后的名称",
+  "group": "life",
+  "description": "更新后的描述",
+  "color": "mint-green"
+}
+```
 
-**返回值**
+**返回值 (JSON)**
 
-无
+```json
+{
+  "code": 0,
+  "message": "更新标签成功",
+  "data": {}
+}
+```
+
+---
+
+### 4. 删除标签
+
+| 属性 | 值 |
+|------|-----|
+| Method | `DELETE` |
+| Path | `/tags/:id` |
+
+**返回值 (JSON)**
+
+```json
+{
+  "code": 0,
+  "message": "删除标签成功",
+  "data": {}
+}
+```
+
+---
+
+### 5. 重新排序标签
+
+| 属性 | 值 |
+|------|-----|
+| Method | `POST` |
+| Path | `/tags/reorder` |
+
+**请求参数 (JSON)**
+
+```json
+{
+  "fromId": 1,
+  "toGroup": "work",
+  "toIndex": 2
+}
+```
+
+**返回值 (JSON)**
+
+```json
+{
+  "code": 0,
+  "message": "重新排序成功",
+  "data": {}
+}
+```
+
+---
+
+### 6. 创建分组
+
+| 属性 | 值 |
+|------|-----|
+| Method | `POST` |
+| Path | `/tags/group` |
+
+**请求参数 (JSON)**
+
+```json
+{
+  "name": "新分组",
+  "spaceId": 1
+}
+```
+
+**返回值 (JSON)**
+
+```json
+{
+  "code": 0,
+  "message": "创建分组成功",
+  "data": {
+    "id": 3,
+    "code": "new-group",
+    "name": "新分组",
+    "spaceId": 1
+  }
+}
+```
+
+---
+
+### 7. 删除分组
+
+| 属性 | 值 |
+|------|-----|
+| Method | `DELETE` |
+| Path | `/tags/group/:code` |
+
+**返回值 (JSON)**
+
+```json
+{
+  "code": 0,
+  "message": "删除分组成功",
+  "data": {}
+}
+```
 
 ---
 
@@ -669,10 +733,16 @@ Group
 
 所有 API 响应遵循统一格式：
 
-```typescript
+```json
 {
-  code: number;      // 状态码
-  message: string;   // 状态消息
-  data?: T;          // 数据（可选）
+  "code": 0,
+  "message": "操作成功",
+  "data": { ... }
 }
 ```
+
+| 字段 | 类型 | 描述 |
+|------|------|------|
+| code | `number` | 状态码 (0 或 200=成功，非0/200=失败) |
+| message | `string` | 状态消息 |
+| data | `T` | 响应数据 (可选) |
