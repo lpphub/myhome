@@ -2,6 +2,7 @@ import { useDroppable } from '@dnd-kit/core'
 import { rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 import { Plus, Tag, Trash2 } from 'lucide-react'
 import { memo, useMemo } from 'react'
+import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type { TagFormData, TagGroup } from '@/types/tags'
 import { TagCard } from './TagCard'
@@ -37,25 +38,23 @@ export const TagSection = memo(
       >
         {/* 头部 */}
         <div className='flex items-center gap-2 px-4 py-2'>
-          <div className='w-10 h-10 rounded-xl bg-linear-to-br from-honey-100 to-honey-200 flex items-center justify-center'>
+          <div className='w-10 h-10 rounded-xl bg-linear-to-br from-honey-100 to-honey-200 flex items-center justify-center shrink-0'>
             <Tag className='w-5 h-5 text-honey-600' />
           </div>
-          <div>
-            <h2 className='text-lg font-bold text-foreground'>{tagGroup.name}</h2>
-            <p className='text-sm text-foreground'>
-              {tagGroup.tags.length} 个便签
-              {tagGroup.tags.length === 0 && onDeleteGroup && (
-                <button
-                  type='button'
-                  onClick={() => onDeleteGroup(tagGroup.code)}
-                  className='ml-2 p-0.5 rounded hover:bg-red-100 transition-all duration-200'
-                  title='删除分组'
-                >
-                  <Trash2 className='w-3.5 h-3.5 text-red-500' />
-                </button>
-              )}
-            </p>
-          </div>
+          <h2 className='text-lg font-bold text-foreground flex items-center gap-2'>
+            {tagGroup.name}
+            <Badge variant='outline'>{tagGroup.tags.length}</Badge>
+            {tagGroup.tags.length === 0 && onDeleteGroup && (
+              <button
+                type='button'
+                onClick={() => onDeleteGroup(tagGroup.code)}
+                className='ml-1 rounded hover:bg-red-100 transition-all duration-200'
+                title='删除分组'
+              >
+                <Trash2 className='w-3.5 h-3.5 text-red-500' />
+              </button>
+            )}
+          </h2>
         </div>
 
         {/* 卡片区域 */}

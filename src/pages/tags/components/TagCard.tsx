@@ -114,7 +114,7 @@ export const TagCard = memo(({ tag, onEdit, onDelete }: TagCardProps) => {
         )}
       </div>
 
-      <div className='absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-current/20 to-transparent' />
+      <div className='absolute bottom-0 left-0 right-0 h-1 bg-linear-to-r from-transparent via-current/20 to-transparent' />
 
       <div
         className={cn(
