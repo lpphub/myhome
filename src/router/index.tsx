@@ -6,7 +6,6 @@ import NotFound from '@/pages/errors/NotFound'
 import Landing from '@/pages/Landing'
 import Profile from '@/pages/profile'
 import Spaces from '@/pages/spaces'
-import TestComponents from '@/pages/TestUI'
 import Tags from '@/pages/tags'
 import { AuthGuard } from './guard'
 
@@ -56,9 +55,5 @@ export const router = createBrowserRouter([
   {
     path: '*',
     element: <NotFound />,
-  },
-  {
-    path: '/testui',
-    element: <TestComponents />,
   },
 ])
