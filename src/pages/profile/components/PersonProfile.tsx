@@ -53,13 +53,13 @@ function AvatarSelector({
   )
 }
 
-interface SetupProfileProps {
+interface PersonProfileProps {
   user?: User | null
   onSubmit: (data: { name: string; avatar: AvatarKey }) => void | Promise<void>
   isPending?: boolean
 }
 
-export function SetupProfile({ user, onSubmit, isPending = false }: SetupProfileProps) {
+export function PersonProfile({ user, onSubmit, isPending = false }: PersonProfileProps) {
   const [showAvatarSelector, setShowAvatarSelector] = useState(false)
 
   const form = useForm<FormValues>({

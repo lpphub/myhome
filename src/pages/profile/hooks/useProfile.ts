@@ -1,13 +1,13 @@
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { changePassword, updateUserProfile } from '@/api/user'
+import { changePassword, updatePersonProfile } from '@/api/person'
 import { useAuth } from '@/hooks'
 
 export function useUpdateProfile() {
   const { updateUserPartial } = useAuth()
 
   return useMutation({
-    mutationFn: updateUserProfile,
+    mutationFn: updatePersonProfile,
     onSuccess: (_, variables) => {
       updateUserPartial(variables)
       toast.success('保存成功 ✨')

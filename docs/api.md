@@ -130,16 +130,16 @@
 
 ---
 
-## 用户接口 (User)
+## 用户接口 (Person)
 
-基础路径: `/user` | 文件位置: `src/api/user/index.ts`
+基础路径: `/person` | 文件位置: `src/api/person/index.ts`
 
 ### 1. 获取用户资料
 
 | 属性 | 值 |
 |------|-----|
 | Method | `GET` |
-| Path | `/user/profile` |
+| Path | `/person/profile` |
 
 **返回值 (JSON)**
 
@@ -164,7 +164,7 @@
 | 属性 | 值 |
 |------|-----|
 | Method | `PUT` |
-| Path | `/user/profile` |
+| Path | `/person/profile` |
 
 **请求参数 (JSON)**
 
@@ -192,7 +192,7 @@
 | 属性 | 值 |
 |------|-----|
 | Method | `PUT` |
-| Path | `/user/password` |
+| Path | `/person/password` |
 
 **请求参数 (JSON)**
 

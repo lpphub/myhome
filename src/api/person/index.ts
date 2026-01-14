@@ -1,28 +1,28 @@
 import type { ChangePasswordForm, UpdateProfileForm, User } from '@/types/auth'
 import httpClient from '@/utils/request'
 
-enum UserApi {
-  GetProfile = '/user/profile',
-  UpdateProfile = '/user/profile',
-  ChangePassword = '/user/password',
+enum PersonApi {
+  GetProfile = '/person/profile',
+  UpdateProfile = '/person/profile',
+  ChangePassword = '/person/password',
 }
 
-export function getUserProfile() {
+export function getPersonProfile() {
   return httpClient.get<User>({
-    url: UserApi.GetProfile,
+    url: PersonApi.GetProfile,
   })
 }
 
-export function updateUserProfile(data: UpdateProfileForm) {
+export function updatePersonProfile(data: UpdateProfileForm) {
   return httpClient.put<void, UpdateProfileForm>({
-    url: UserApi.UpdateProfile,
+    url: PersonApi.UpdateProfile,
     data,
   })
 }
 
 export function changePassword(data: ChangePasswordForm) {
   return httpClient.put<void, ChangePasswordForm>({
-    url: UserApi.ChangePassword,
+    url: PersonApi.ChangePassword,
     data,
   })
 }

@@ -1,6 +1,6 @@
 import { useAuth } from '@/hooks'
 import { ChangePassword } from './components/ChangePassword'
-import { SetupProfile } from './components/SetupProfile'
+import { PersonProfile } from './components/PersonProfile'
 import { useChangePassword, useUpdateProfile } from './hooks/useProfile'
 
 export default function Profile() {
@@ -17,7 +17,7 @@ export default function Profile() {
         </header>
 
         <div className='space-y-4'>
-          <SetupProfile user={user} onSubmit={updateProfile} isPending={isUpdatingProfile} />
+          <PersonProfile user={user} onSubmit={updateProfile} isPending={isUpdatingProfile} />
 
           <ChangePassword onSubmit={changePassword} isPending={isChangingPassword} />
         </div>
