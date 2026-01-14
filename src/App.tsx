@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react'
 import { RouterProvider } from 'react-router'
 import { Toaster } from 'sonner'
 import { router } from '@/router'
@@ -7,6 +8,7 @@ export default function App() {
     <>
       <RouterProvider router={router} />
       <Toaster position='top-right' richColors />
+      <Analytics />
     </>
   )
 }
