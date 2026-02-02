@@ -1,0 +1,192 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import { Eye, EyeOff, Home } from 'lucide-react'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router'
+import { toast } from 'sonner'
+import { z } from 'zod'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { useAuth } from '@/hooks'
+import { signIn } from '@/services/auth'
+import type { AuthForm } from '@/types/auth'
+import { env } from '@/utils/env'
+
+const appName = env.APP_NAME || '拾序'
+
+const loginSchema = z.object({
+  email: z.email('请输入有效的邮箱地址').min(1, '请输入邮箱地址'),
+  password: z.string().min(1, '请输入密码').min(6, '密码长度至少为6位'),
+})
+
+export default function Login() {
+  const navigate = useNavigate()
+  const { login } = useAuth()
+  const [showPassword, setShowPassword] = useState(false)
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  })
+
+  const { isPending, mutate } = useMutation({
+    mutationFn: (credentials: AuthForm) => signIn(credentials),
+    onSuccess: res => {
+      login({ ...res })
+      toast.success('登录成功！✨')
+      navigate('/spaces')
+    },
+    onError: () => {
+      setError('root', { message: '邮箱或密码错误，请重试' })
+    },
+  })
+
+  const onSubmit = async (data: z.infer<typeof loginSchema>) => {
+    mutate({
+      email: data.email,
+      password: data.password,
+    })
+  }
+
+  return (
+    <div className='min-h-screen flex items-center justify-center p-4 relative overflow-hidden'>
+      {/* 背景装饰 */}
+      <div className='absolute inset-0 bg-linear-to-br from-soft-orange-50 via-macaron-pink-50 to-mint-green-50' />
+      <div className='absolute inset-0'>
+        {/* 浮动装饰元素 */}
+        <div className='absolute top-20 left-20 w-32 h-32 bg-primary rounded-full opacity-30 animate-pulse duration-4000' />
+        <div
+          className='absolute top-40 right-32 w-24 h-24 bg-macaron-pink-200 rounded-full opacity-25 animate-pulse duration-3500'
+          style={{ animationDelay: '1s' }}
+        />
+        <div
+          className='absolute bottom-32 left-32 w-40 h-40 bg-mint-green-200 rounded-full opacity-20 animate-pulse duration-5000'
+          style={{ animationDelay: '2s' }}
+        />
+      </div>
+
+      {/* 登录卡片 */}
+      <Card className='w-96 z-10 shadow-lg border-border/30 backdrop-blur-lg bg-white/60 rounded-lg py-8'>
+        <CardHeader>
+          <div className='text-center space-y-2'>
+            {/* Logo 图标 */}
+            <div className='flex items-center justify-center mb-2'>
+              <div className='w-16 h-16 bg-linear-to-br from-primary to-macaron-pink-300 rounded-lg flex items-center justify-center shadow-lg'>
+                <Home className='w-8 h-8 text-white' />
+              </div>
+            </div>
+
+            {/* 标题 */}
+            <CardTitle className='text-2xl'>{appName}</CardTitle>
+
+            {/* 欢迎语 */}
+            <CardDescription className='flex items-center justify-center gap-2 text-muted'>
+              <span>🌸</span>
+              <span>欢迎回来</span>
+              <span>🌸</span>
+            </CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent className='px-4'>
+          {/* 登录表单 */}
+          <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+            {/* 通用错误信息 */}
+            {errors.root && (
+              <div className='bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 rounded-xl text-sm'>
+                {errors.root.message}
+              </div>
+            )}
+
+            {/* 邮箱输入 */}
+            <div className='w-[95%] mx-auto'>
+              <label htmlFor='email' className='block text-sm font-medium text-foreground'>
+                邮箱地址
+              </label>
+              <Input
+                id='email'
+                type='email'
+                placeholder='your@email.com'
+                className={`rounded-xl ${errors.email ? 'border-destructive' : 'border-border'}`}
+                disabled={isPending}
+                {...register('email')}
+              />
+              {errors.email && (
+                <p className='text-destructive text-sm mt-1'>{errors.email.message}</p>
+              )}
+            </div>
+
+            {/* 密码输入 */}
+            <div className='w-[95%] mx-auto'>
+              <label htmlFor='password' className='block text-sm font-medium text-foreground'>
+                密码
+              </label>
+              <div className='relative'>
+                <Input
+                  id='password'
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder='请输入密码'
+                  className={`rounded-xl pr-10 ${errors.password ? 'border-destructive' : 'border-border'}`}
+                  disabled={isPending}
+                  {...register('password')}
+                />
+                <button
+                  type='button'
+                  onClick={() => setShowPassword(!showPassword)}
+                  className='absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-primary transition-colors'
+                  disabled={isPending}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              {errors.password && (
+                <p className='text-destructive text-sm mt-1'>{errors.password.message}</p>
+              )}
+            </div>
+
+            <div className='w-[95%] pt-4 mx-auto space-y-1.5'>
+              {/* 登录按钮 */}
+              <Button
+                type='submit'
+                className='w-full bg-linear-to-r from-primary to-macaron-pink hover:from-soft-orange-500 hover:to-macaron-pink-500 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 justify-center rounded-xl'
+                disabled={isPending}
+              >
+                {isPending ? '登录中...' : '登录'}
+              </Button>
+            </div>
+          </form>
+
+          {/* 注册链接 */}
+          <div className='mt-4 text-center text-sm text-muted'>
+            还没有账号？{' '}
+            <a
+              href='/register'
+              className='font-medium text-primary hover:text-soft-orange-600 transition-colors'
+            >
+              立即注册
+            </a>
+          </div>
+        </CardContent>
+        <CardFooter className='flex justify-center px-4'>
+          <div className='text-muted/60 text-xs'>✨ 让记录变得简单</div>
+        </CardFooter>
+      </Card>
+    </div>
+  )
+}

@@ -1,0 +1,159 @@
+/* globals.css */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "./editor.css";
+
+/* -----------------------------
+   Base 样式
+------------------------------ */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* 防止模态框打开时 fixed 元素跳动 */
+  body[data-dialog-open="true"] {
+    padding-right: var(--scrollbar-width, 0px);
+  }
+}
+
+/* -----------------------------
+  Tailwind v4 主题变量
+ ------------------------------ */
+@theme {
+  /* 主色与辅助色 */
+  --color-primary: #ff8c42; /* 橙色 */
+  --color-secondary: #ffe0c7; /* 暖米色 */
+  --color-ring: var(--color-primary); /* Focus ring 颜色 */
+
+  /* 功能色 */
+  --color-destructive: #ff6b6b;
+  --color-success: #48c78e;
+  --color-accent: #ffdd99;
+
+  /* 背景： */
+  --color-background: #faf7f4; /* 主背景 */
+  --color-card: #ffffff; /* 卡片 */
+  --color-border: #e6e0da;
+
+  /* 文字： */
+  --color-foreground: #2d3436;
+  --color-muted: #b2bec3;
+  --color-muted-foreground: #636e72;
+
+  /* 全局圆角 */
+  --radius-sm: 0.5rem; /* 8px  - Tag / Chip */
+  --radius-md: 0.75rem; /* 12px - Button / Input */
+  --radius-lg: 1rem; /* 16px - Card / Modal */
+
+  /* 阴影： */
+  --shadow-soft: 0 2px 8px rgba(247 233 195 / 35%);
+  --shadow-tag: 0 8px 18px rgba(0, 0, 0, 0.12);
+  --shadow-tag-hover: 0 12px 26px rgba(0, 0, 0, 0.18);
+  --shadow-tag-dragging: 0 12px 26px rgba(0, 0, 0, 0.22);
+
+  /* -----------------------------
+     颜色系统
+  ----------------------------- */
+  /* Cream 系 - 奶白色系 */
+  --color-cream-50: #fffefb;
+  --color-cream-100: #fffdf6;
+  --color-cream-200: #fffbef;
+  --color-cream-300: #fff8e6;
+  --color-cream-400: #fff3d8;
+  --color-cream-500: #ffeccc;
+  --color-cream-600: #f5e2be;
+  --color-cream-700: #ead6af;
+  --color-cream-800: #dcc79d;
+  --color-cream-900: #cbb487;
+
+  /* Honey 系 - 奶茶色系 */
+  --color-honey-50: #fefdf8;
+  --color-honey-100: #fdfaeb;
+  --color-honey-200: #fbf3d7;
+  --color-honey-300: #f7e9c3;
+  --color-honey-400: #f1d8a0;
+  --color-honey-500: #e8c178;
+  --color-honey-600: #dfaa50;
+  --color-honey-700: #d69235;
+  --color-honey-800: #cc7a1a;
+  --color-honey-900: #c26814;
+
+  /* Coral 系 - 珊瑚红系 */
+  --color-coral-50: #fff4f0;
+  --color-coral-100: #ffe8e0;
+  --color-coral-200: #ffd3c8;
+  --color-coral-300: #ffaaa5;
+  --color-coral-400: #ff8f8a;
+  --color-coral-500: #ff746f;
+  --color-coral-600: #f05f5a;
+  --color-coral-700: #d04a45;
+  --color-coral-800: #a83a35;
+  --color-coral-900: #802a25;
+
+  /* Lavender 系 - 薰衣草紫系 */
+  --color-lavender-50: #f8f7fd;
+  --color-lavender-100: #f1effb;
+  --color-lavender-200: #e3def7;
+  --color-lavender-300: #d0c8f0;
+  --color-lavender-400: #b9aeea;
+  --color-lavender-500: #a593e3;
+  --color-lavender-600: #8f76d6;
+  --color-lavender-700: #7458c4;
+  --color-lavender-800: #624aa8;
+  --color-lavender-900: #523d8c;
+
+  /* Lemon 系 - 柠檬绿系 */
+  --color-lemon-50: #f7fde8;
+  --color-lemon-100: #eefbd0;
+  --color-lemon-200: #dcf5a4;
+  --color-lemon-300: #c8ee75;
+  --color-lemon-400: #b5e84c;
+  --color-lemon-500: #a3e01f;
+  --color-lemon-600: #8cc918;
+  --color-lemon-700: #73a612;
+  --color-lemon-800: #5a8210;
+  --color-lemon-900: #44630e;
+
+  /* Mint Green - 薄荷绿 */
+  --color-mint-green-50: #e8fdf0;
+  --color-mint-green-100: #d0fbe4;
+  --color-mint-green-200: #a8e6cf;
+  --color-mint-green-300: #80d4b9;
+  --color-mint-green-400: #58c2a3;
+  --color-mint-green-500: #30b08d;
+  --color-mint-green-600: #209e77;
+  --color-mint-green-700: #188c61;
+  --color-mint-green-800: #127a4b;
+  --color-mint-green-900: #0e6835;
+
+  /* Macaron Pink - 马卡龙粉 */
+  --color-macaron-pink-50: #fff0f5;
+  --color-macaron-pink-100: #ffe4ec;
+  --color-macaron-pink-200: #ffd1dc;
+  --color-macaron-pink-300: #ffb3c6;
+  --color-macaron-pink-400: #ff8aae;
+  --color-macaron-pink-500: #ff6b95;
+  --color-macaron-pink-600: #e84d7a;
+  --color-macaron-pink-700: #d0325f;
+  --color-macaron-pink-800: #b82850;
+  --color-macaron-pink-900: #9c1e40;
+}
+
+/* -----------------------------
+  Utilities
+------------------------------ */
+@layer utilities {
+  /* 隐藏滚动条 */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE 10+ */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+}

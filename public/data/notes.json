@@ -1,0 +1,100 @@
+{
+  "notes": [
+    {
+      "id": 1,
+      "spaceId": 1,
+      "userId": 1,
+      "content": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"今天天气真不错！出来晒晒太阳 🌞\"}]}]}",
+      "createdAt": "2025-01-23T10:00:00Z",
+      "updatedAt": "2025-01-23T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "spaceId": 1,
+      "userId": 1,
+      "content": "{\"type\":\"doc\",\"content\":[{\"type\":\"heading\",\"attrs\":{\"level\":1},\"content\":[{\"type\":\"text\",\"text\":\"Markdown 支持\"}]},{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"检查是否支持 Markdown 格式\"}]}]}",
+      "createdAt": "2025-01-23T09:30:00Z",
+      "updatedAt": "2025-01-23T09:30:00Z"
+    },
+    {
+      "id": 3,
+      "spaceId": 1,
+      "userId": 1,
+      "content": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"测试笔记功能\"}]}]}",
+      "createdAt": "2025-01-22T15:00:00Z",
+      "updatedAt": "2025-01-22T15:00:00Z"
+    },
+    {
+      "id": 4,
+      "spaceId": 1,
+      "userId": 1,
+      "content": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\"},{\"type\":\"bulletList\",\"content\":[{\"type\":\"listItem\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"第一个项目\"}]}]},{\"type\":\"listItem\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"第二个项目\"}]}]},{\"type\":\"listItem\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"第三个项目\"}]}]}]}",
+      "createdAt": "2025-01-21T08:00:00Z",
+      "updatedAt": "2025-01-21T08:00:00Z"
+    },
+    {
+      "id": 5,
+      "spaceId": 1,
+      "userId": 1,
+      "content": "{\"type\":\"doc\",\"content\":[{\"type\":\"heading\",\"attrs\":{\"level\":2},\"content\":[{\"type\":\"text\",\"text\":\"会议记录\"}]},{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"2025年1月23日 团队会议\"}]},{\"type\":\"paragraph\"},{\"type\":\"orderedList\",\"content\":[{\"type\":\"listItem\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"讨论新功能开发计划\"}]}]},{\"type\":\"listItem\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"确定下季度目标\"}]}]},{\"type\":\"listItem\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"分配任务\"}]}]}]}",
+      "createdAt": "2025-01-20T14:30:00Z",
+      "updatedAt": "2025-01-20T14:30:00Z"
+    },
+    {
+      "id": 6,
+      "spaceId": 1,
+      "userId": 1,
+      "content": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"代码笔记示例：\"}]},{\"type\":\"codeBlock\",\"content\":[{\"type\":\"text\",\"text\":\"const hello = () => console.log('Hello World')\"}]}]}",
+      "createdAt": "2025-01-19T11:00:00Z",
+      "updatedAt": "2025-01-19T11:00:00Z"
+    },
+    {
+      "id": 7,
+      "spaceId": 1,
+      "userId": 1,
+      "content": "{\"type\":\"doc\",\"content\":[{\"type\":\"heading\",\"attrs\":{\"level\":1},\"content\":[{\"type\":\"text\",\"text\":\"读书笔记\"}]},{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"《原子习惯》- 读书笔记\"}]},{\"type\":\"bulletList\",\"content\":[{\"type\":\"listItem\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"每天进步 1%\"}]}]},{\"type\":\"listItem\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"习惯的复利效应\"}]}]},{\"type\":\"listItem\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"系统优于目标\"}]}]}]}",
+      "createdAt": "2025-01-18T16:00:00Z",
+      "updatedAt": "2025-01-18T16:00:00Z"
+    },
+    {
+      "id": 8,
+      "spaceId": 1,
+      "userId": 1,
+      "content": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"使用粗体、斜体和删除线进行文本格式化\"}]}]}",
+      "createdAt": "2025-01-17T09:00:00Z",
+      "updatedAt": "2025-01-17T09:00:00Z"
+    },
+    {
+      "id": 9,
+      "spaceId": 1,
+      "userId": 1,
+      "content": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"待办事项清单：\"}]},{\"type\":\"bulletList\",\"content\":[{\"type\":\"listItem\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"完成项目文档\"}]}]},{\"type\":\"listItem\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"代码审查\"}]}]},{\"type\":\"listItem\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"准备周会材料\"}]}]},{\"type\":\"listItem\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"学习新框架\"}]}]}]}",
+      "createdAt": "2025-01-16T13:30:00Z",
+      "updatedAt": "2025-01-16T13:30:00Z"
+    },
+    {
+      "id": 10,
+      "spaceId": 1,
+      "userId": 1,
+      "content": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"想法收集\"}]},{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"1. 简单设计优于复杂设计\"}]},{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"2. 用户体验优先\"}]},{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"3. 快速迭代，持续改进\"}]}]}",
+      "createdAt": "2025-01-15T10:00:00Z",
+      "updatedAt": "2025-01-15T10:00:00Z"
+    },
+    {
+      "id": 11,
+      "spaceId": 1,
+      "userId": 1,
+      "content": "{\"type\":\"doc\",\"content\":[{\"type\":\"heading\",\"attrs\":{\"level\":2},\"content\":[{\"type\":\"text\",\"text\":\"健康日记\"}]},{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"今天运动了 30 分钟\"}]},{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"饮水量：2000ml\"}]},{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"睡眠：7.5 小时\"}]}]}",
+      "createdAt": "2025-01-14T20:00:00Z",
+      "updatedAt": "2025-01-14T20:00:00Z"
+    },
+    {
+      "id": 12,
+      "spaceId": 1,
+      "userId": 1,
+      "content": "{\"type\":\"doc\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"学习笔记 - React Hooks\"}]},{\"type\":\"orderedList\",\"content\":[{\"type\":\"listItem\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"useState：状态管理\"}]}]},{\"type\":\"listItem\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"useEffect：副作用处理\"}]}]},{\"type\":\"listItem\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"useCallback：性能优化\"}]}]},{\"type\":\"listItem\",\"content\":[{\"type\":\"paragraph\",\"content\":[{\"type\":\"text\",\"text\":\"useMemo：计算缓存\"}]}]}]}",
+      "createdAt": "2025-01-13T14:00:00Z",
+      "updatedAt": "2025-01-13T14:00:00Z"
+    }
+  ]
+}

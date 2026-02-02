@@ -1,0 +1,14 @@
+node_modules
+dist
+.git
+.gitignore
+*.md
+.env.local
+.env.development
+.vscode
+coverage
+*.log
+.DS_Store
+.claude
+.kiro
+docs

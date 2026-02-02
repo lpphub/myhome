@@ -1,0 +1,79 @@
+import { create } from 'zustand'
+import { createJSONStorage, devtools, persist } from 'zustand/middleware'
+import { queryClient } from '@/lib/query-client'
+import { storage } from '@/lib/storage'
+import { refreshToken as fetchRefreshToken } from '@/services/auth'
+import type { User } from '@/types/auth'
+
+const PERSIST_KEY = 'tidys-auth'
+
+interface AuthState {
+  user: User | null
+  accessToken: string | null
+  refreshToken: string | null
+  isAuthenticated: boolean
+
+  login: (data: { user: User; accessToken: string; refreshToken: string }) => void
+  logout: () => void
+  refreshTokens: () => Promise<string | null>
+
+  updateUserPartial: (data: Partial<Pick<User, 'name' | 'avatar'>>) => void
+}
+
+export const useAuthStore = create<AuthState>()(
+  devtools(
+    persist(
+      (set, get) => ({
+        user: null,
+        accessToken: null,
+        refreshToken: null,
+        isAuthenticated: false,
+
+        login: ({ user, accessToken, refreshToken }) =>
+          set({ user, accessToken, refreshToken, isAuthenticated: true }),
+        logout: () => {
+          queryClient.clear()
+          set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false })
+          storage.removeItem(PERSIST_KEY)
+        },
+        refreshTokens: async () => {
+          const refreshToken = get().refreshToken
+          if (!refreshToken) return null
+
+          try {
+            const res = await fetchRefreshToken(refreshToken)
+
+            set({
+              accessToken: res.accessToken,
+              refreshToken: res.refreshToken ?? refreshToken,
+              isAuthenticated: true,
+            })
+
+            return res.accessToken
+          } catch (error) {
+            console.error('Failed to refresh token:', error)
+            return null
+          }
+        },
+
+        updateUserPartial: data =>
+          set(state => ({
+            user: state.user ? { ...state.user, ...data } : null,
+          })),
+      }),
+      {
+        name: PERSIST_KEY,
+        storage: createJSONStorage(() => storage),
+        partialize: state => ({
+          user: state.user,
+          accessToken: state.accessToken,
+          refreshToken: state.refreshToken,
+          isAuthenticated: state.isAuthenticated,
+        }),
+        version: 1,
+      }
+    )
+  )
+)
+
+export default useAuthStore

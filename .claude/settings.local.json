@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(tasklist:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(powershell:*)",
+      "Bash(openspec validate:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint:*)",
+      "mcp__context7__query-docs",
+      "Bash(python3:*)",
+      "Bash(tree:*)",
+      "Bash(pnpm type-check)",
+      "Bash(find:*)",
+      "Bash(npm install:*)",
+      "mcp__Context7__resolve-library-id"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "chrome-devtools"
+  ]
+}

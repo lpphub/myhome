@@ -1,0 +1,97 @@
+import { AlertTriangle, Home, RefreshCw } from 'lucide-react'
+import { isRouteErrorResponse, useRouteError } from 'react-router'
+import { Card } from '@/components/ui/card'
+import { env } from '@/utils/env'
+
+export default function InternalError() {
+  const error = useRouteError() as
+    | Error
+    | { status: number; statusText: string; data: string }
+    | null
+
+  const handleRefresh = () => {
+    window.location.reload()
+  }
+
+  return (
+    <div className='min-h-screen flex items-center justify-center p-4'>
+      <Card className='w-full max-w-lg p-8 md:p-12 relative'>
+        <div className='text-center space-y-6'>
+          {/* 500 数字动画 */}
+          <div className='relative h-32 flex items-center justify-center'>
+            <div className='absolute inset-0 flex items-center justify-center'>
+              <span className='text-9xl font-bold text-honey-200 select-none'>500</span>
+            </div>
+            <div className='absolute inset-0 flex items-center justify-center animate-bounce'>
+              <span className='text-9xl font-bold text-coral-600 select-none'>
+                {isRouteErrorResponse(error) ? String(error.status) : '500'}
+              </span>
+            </div>
+          </div>
+
+          {/* 错误图标 */}
+          <div className='w-20 h-20 mx-auto bg-red-100 rounded-full flex items-center justify-center'>
+            <AlertTriangle className='w-10 h-10 text-red-500' />
+          </div>
+
+          {/* 错误信息 */}
+          <div className='space-y-3'>
+            <h1 className='text-3xl font-bold text-honey-700'>
+              {isRouteErrorResponse(error) ? `HTTP ${error.status}` : '出了点问题'}
+            </h1>
+            <p className='text-foreground text-lg leading-relaxed'>抱歉，遇到了一些意外情况。</p>
+          </div>
+
+          {/* 开发环境：显示错误详情 */}
+          {env.IS_DEV && error && (
+            <div className='mt-4 p-4 bg-red-50 rounded-lg border border-red-200'>
+              <p className='text-sm font-semibold text-red-700 mb-2'>错误详情</p>
+              {isRouteErrorResponse(error) ? (
+                <div className='text-xs space-y-1'>
+                  <p>状态码: {error.status}</p>
+                  <p>状态文本: {error.statusText}</p>
+                  <p>数据: {String(error.data)}</p>
+                </div>
+              ) : error instanceof Error ? (
+                <pre className='text-xs text-red-600 overflow-auto max-h-32'>{error.stack}</pre>
+              ) : (
+                <p className='text-xs'>未知错误类型: {String(error)}</p>
+              )}
+            </div>
+          )}
+
+          {/* 操作按钮 */}
+          <div className='flex flex-col sm:flex-row gap-4 justify-center pt-4'>
+            <button
+              type='button'
+              onClick={() => {
+                window.location.href = '/'
+              }}
+              className='inline-flex items-center space-x-3 bg-linear-to-r from-coral-400 to-coral-500 text-gray-50 px-8 py-3 rounded-lg hover:from-coral-500 hover:to-coral-600 transition-all duration-300 shadow-lg hover:shadow-lg group'
+            >
+              <Home className='w-4 h-4 group-hover:scale-110 transition-transform' />
+              <span className='font-medium'>返回首页</span>
+            </button>
+            <button
+              type='button'
+              onClick={handleRefresh}
+              className='inline-flex items-center space-x-3 bg-linear-to-r from-honey-100 to-honey-200 text-honey-700 px-8 py-3 rounded-lg hover:from-honey-200 hover:to-honey-300 transition-all duration-300 shadow-sm hover:shadow-md border border-honey-300 group'
+            >
+              <RefreshCw className='w-4 h-4 group-hover:scale-110 transition-transform' />
+              <span className='font-medium'>刷新页面</span>
+            </button>
+          </div>
+
+          {/* 提示文字 */}
+          <div className='text-sm text-foreground space-y-1'>
+            <p>如果问题持续存在，请联系我们</p>
+            <div className='flex items-center justify-center gap-2 text-honey-600 hover:text-honey-700 transition-colors cursor-pointer'>
+              <span>📧</span>
+              <span>support@myhome.com</span>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </div>
+  )
+}

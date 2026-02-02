@@ -1,0 +1,34 @@
+services:
+  myhome:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: myapp/tidys:latest
+    container_name: tidys
+    ports:
+      - "8060:80"
+    restart: unless-stopped
+    networks:
+      - 1panel-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # 后端服务示例（取消注释并配置）
+  # backend:
+  #   image: your-backend-image:latest
+  #   container_name: myhome-backend
+  #   ports:
+  #     - "8080:8080"
+  #   restart: unless-stopped
+  #   networks:
+  #     - 1panel-network
+  #   environment:
+  #     - NODE_ENV=production
+
+networks:
+  1panel-network:
+    external: true
