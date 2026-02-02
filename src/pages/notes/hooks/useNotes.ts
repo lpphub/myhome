@@ -65,7 +65,7 @@ export function useNotesScrollQuery(limit = 10) {
 
 /* --------------------------------
  * Mutations（server effect）
- * - 不使用乐观更新，操作后重新查询
+ * - update 使用乐观更新，create/delete 仍使用重新查询
  * -------------------------------- */
 
 export function useCreateNoteMutation() {
@@ -93,6 +93,41 @@ export function useUpdateNoteMutation() {
     withToast(
       {
         mutationFn: updateNote,
+        onMutate: async updatedNote => {
+          // 取消正在进行的查询，避免覆盖我们的乐观更新
+          await queryClient.cancelQueries({ queryKey: queryKeys.notes(spaceId) })
+
+          // 保存当前数据用于回滚
+          const previous = queryClient.getQueryData(queryKeys.notes(spaceId))
+
+          // 乐观更新缓存
+          queryClient.setQueryData(
+            queryKeys.notes(spaceId),
+            (
+              old: { pages: CursorPageData<Note>[]; pageParams: (string | undefined)[] } | undefined
+            ) => {
+              if (!old) return old
+
+              return {
+                ...old,
+                pages: old.pages.map(page => ({
+                  ...page,
+                  list: page.list.map((note: Note) =>
+                    note.id === updatedNote.id ? { ...note, ...updatedNote } : note
+                  ),
+                })),
+              }
+            }
+          )
+
+          return { previous }
+        },
+        onError: (_err, _variables, context) => {
+          // 出错时回滚到之前的数据
+          if (context?.previous) {
+            queryClient.setQueryData(queryKeys.notes(spaceId), context.previous)
+          }
+        },
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: queryKeys.notes(spaceId) })
         },
