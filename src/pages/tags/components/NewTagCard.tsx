@@ -75,7 +75,7 @@ export function NewTagCard({ groupId, onSave, onCancel }: NewTagCardProps) {
         onChange={e => setName(e.target.value)}
         onKeyDown={handleKeyDown}
         onBlur={handleBlur}
-        placeholder='输入名称...'
+        placeholder='请输入...'
         maxLength={100}
         className='w-full bg-transparent border-none outline-none text-lg font-medium placeholder:text-current/50'
       />

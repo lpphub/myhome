@@ -79,7 +79,7 @@ export const TagCard = memo(({ tag, onClick }: TagCardProps) => {
       </button>
 
       <div className='px-1 pt-4 flex-1 overflow-hidden'>
-        <span className='text-lg font-medium line-clamp-3 break-words'>{tag.name}</span>
+        <span className='text-lg font-medium line-clamp-4 break-words'>{tag.name}</span>
       </div>
 
       <div className='flex items-center gap-1 mt-2 text-[11px] max-sm:text-[10px] font-medium opacity-60'>

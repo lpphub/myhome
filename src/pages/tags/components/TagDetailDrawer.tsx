@@ -73,7 +73,6 @@ export function TagDetailDrawer({ open, tag, onClose, onUpdate, onDelete }: TagD
 
         <SheetBody className='px-6 py-4 space-y-4'>
           <div className='space-y-2'>
-            <Label htmlFor='tag-name'>名称</Label>
             <Input
               id='tag-name'
               value={name}
