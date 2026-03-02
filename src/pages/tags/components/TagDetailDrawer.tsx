@@ -77,7 +77,7 @@ export function TagDetailDrawer({ open, tag, onClose, onUpdate, onDelete }: TagD
               id='tag-name'
               value={name}
               onChange={e => setName(e.target.value)}
-              placeholder='输入便签名称'
+              placeholder='请输入'
               maxLength={100}
             />
           </div>

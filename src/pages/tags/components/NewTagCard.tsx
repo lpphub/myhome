@@ -77,7 +77,7 @@ export function NewTagCard({ groupId, onSave, onCancel }: NewTagCardProps) {
         onBlur={handleBlur}
         placeholder='请输入...'
         maxLength={100}
-        className='w-full bg-transparent border-none outline-none text-lg font-medium placeholder:text-current/50'
+        className='w-full bg-transparent border-none outline-none text-base font-medium placeholder:text-current/50'
       />
     </div>
   )
