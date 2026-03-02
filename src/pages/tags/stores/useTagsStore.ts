@@ -6,9 +6,17 @@ interface LocalTagsState {
   spaceId: number | null
   tags: TagGroup[]
 
+  /* ===== drawer state ===== */
+  selectedTagId: number | null
+  isDrawerOpen: boolean
+
   /* ===== context actions ===== */
   restore: (tags: TagGroup[]) => void
   reset: () => void
+
+  /* ===== drawer actions ===== */
+  setSelectedTagId: (id: number | null) => void
+  setDrawerOpen: (open: boolean) => void
 
   /* ===== data actions ===== */
   initTags: (spaceId: number, tags: TagGroup[]) => void
@@ -25,9 +33,17 @@ export const useTagsStore = create<LocalTagsState>(set => ({
   spaceId: null,
   tags: [],
 
+  /* ===== drawer state ===== */
+  selectedTagId: null,
+  isDrawerOpen: false,
+
   /* ---------------- context ---------------- */
   restore: (tags: TagGroup[]) => set({ tags }),
-  reset: () => set({ tags: [], spaceId: null }),
+  reset: () => set({ tags: [], spaceId: null, selectedTagId: null, isDrawerOpen: false }),
+
+  /* ---------------- drawer ---------------- */
+  setSelectedTagId: (id: number | null) => set({ selectedTagId: id }),
+  setDrawerOpen: (open: boolean) => set({ isDrawerOpen: open }),
 
   /* ---------------- data ---------------- */
   initTags: (spaceId: number, tags: TagGroup[]) =>

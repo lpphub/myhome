@@ -1,19 +1,20 @@
 import { closestCenter, DndContext, DragOverlay } from '@dnd-kit/core'
 import { Tag } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
-import type { ReorderParams, TagGroup } from '@/types/tags'
+import type { ReorderParams, Tag as TagType, TagGroup } from '@/types/tags'
 import { useTagDragDrop } from '../hooks/useTagDragDrop'
 import { TagCard } from './TagCard'
-import { type TagActions, TagSection } from './TagSection'
+import { TagSection } from './TagSection'
 
 interface TagWallProps {
   tags: TagGroup[]
-  tagActions: TagActions
+  onAddTag: (groupId: number, data: { name: string; color: string }) => void
+  onClickTag: (tag: TagType) => void
   onDragReorder: (params: ReorderParams, next: TagGroup[]) => void
   onDeleteGroup?: (id: number) => void
 }
 
-export function TagWall({ tags, tagActions, onDragReorder, onDeleteGroup }: TagWallProps) {
+export function TagWall({ tags, onAddTag, onClickTag, onDragReorder, onDeleteGroup }: TagWallProps) {
   const { dragState, sensors, handleDragStart, handleDragOver, handleDragEnd } = useTagDragDrop({
     tags,
     onDragHandle: onDragReorder,
@@ -60,7 +61,8 @@ export function TagWall({ tags, tagActions, onDragReorder, onDeleteGroup }: TagW
             key={group.id}
             dragOverId={dragState.overId}
             tagGroup={group}
-            tagActions={tagActions}
+            onAddTag={onAddTag}
+            onClickTag={onClickTag}
             onDeleteGroup={onDeleteGroup}
           />
         ))}

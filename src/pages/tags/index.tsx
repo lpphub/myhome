@@ -1,12 +1,10 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { parseEditorContent } from '@/components/editor/utils'
 import { LoadingState } from '@/components/LoadingState'
-import { useDialogState } from '@/hooks'
 import { SpaceProvider } from '@/pages/spaces/contexts/SpaceContext'
 import { useSpaceId } from '@/pages/spaces/hooks/useSpaceLocal'
-import type { TagFormData } from '@/types/tags'
-import { TagFormDialog } from './components/TagFormDialog'
+import type { Tag, TagFormData } from '@/types/tags'
+import { TagDetailDrawer } from './components/TagDetailDrawer'
 import { TagToolbar } from './components/TagToolbar'
 import { TagWall } from './components/TagWall'
 import {
@@ -48,7 +46,8 @@ function TagsPageInner() {
   const { handleAddGroup, handleDeleteGroup } = useGroupActions()
 
   const [searchKeyword, setSearchKeyword] = useState('')
-  const tagDialog = useDialogState<TagFormData>()
+  const [selectedTag, setSelectedTag] = useState<Tag | null>(null)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   const filteredTags = useMemo(() => {
     if (!searchKeyword.trim()) return tags
@@ -58,30 +57,40 @@ function TagsPageInner() {
       .map(group => ({
         ...group,
         tags: group.tags.filter(tag => {
-          const { text } = parseEditorContent(tag.content)
-          return text.toLowerCase().includes(keyword)
+          const nameMatch = tag.name.toLowerCase().includes(keyword)
+          const descMatch = tag.description?.toLowerCase().includes(keyword) ?? false
+          return nameMatch || descMatch
         }),
       }))
       .filter(group => group.tags.length > 0)
   }, [tags, searchKeyword])
 
-  const handleSubmitTag = useCallback(
-    (data: TagFormData) => {
-      submitTag(data)
-      tagDialog.close()
+  const handleAddTag = useCallback(
+    (groupId: number, data: { name: string; color: string }) => {
+      submitTag({
+        name: data.name,
+        color: data.color,
+        groupId,
+      })
     },
-    [submitTag, tagDialog]
+    [submitTag]
   )
 
-  const handleOpenDialog = useCallback(
-    (tag?: TagFormData) => {
-      if (tag) {
-        tagDialog.openWithData(tag)
-      } else {
-        tagDialog.openWithData({ groupId: 0 })
-      }
+  const handleClickTag = useCallback((tag: Tag) => {
+    setSelectedTag(tag)
+    setIsDrawerOpen(true)
+  }, [])
+
+  const handleCloseDrawer = useCallback(() => {
+    setIsDrawerOpen(false)
+    setSelectedTag(null)
+  }, [])
+
+  const handleUpdateTag = useCallback(
+    (data: TagFormData) => {
+      submitTag(data)
     },
-    [tagDialog]
+    [submitTag]
   )
 
   if (isLoading) return <LoadingState type='loading' />
@@ -93,20 +102,18 @@ function TagsPageInner() {
 
       <TagWall
         tags={filteredTags}
-        tagActions={{
-          onAdd: groupId => handleOpenDialog({ groupId }),
-          onEdit: handleOpenDialog,
-          onDelete: handleDeleteTag,
-        }}
+        onAddTag={handleAddTag}
+        onClickTag={handleClickTag}
         onDragReorder={handleDragReorder}
         onDeleteGroup={handleDeleteGroup}
       />
 
-      <TagFormDialog
-        open={tagDialog.open}
-        onClose={tagDialog.close}
-        initialData={tagDialog.data}
-        onSubmit={handleSubmitTag}
+      <TagDetailDrawer
+        open={isDrawerOpen}
+        tag={selectedTag}
+        onClose={handleCloseDrawer}
+        onUpdate={handleUpdateTag}
+        onDelete={handleDeleteTag}
       />
     </div>
   )

@@ -1,42 +1,53 @@
 import { useDroppable } from '@dnd-kit/core'
 import { rectSortingStrategy, SortableContext } from '@dnd-kit/sortable'
 import { Plus, Tags, Trash2 } from 'lucide-react'
-import { memo, useMemo } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
-import type { TagFormData, TagGroup } from '@/types/tags'
+import type { Tag, TagGroup } from '@/types/tags'
+import { NewTagCard } from './NewTagCard'
 import { TagCard } from './TagCard'
-
-export interface TagActions {
-  onAdd: (groupId: number) => void
-  onDelete: (tagId: number) => void
-  onEdit: (tag: TagFormData) => void
-}
 
 interface TagSectionProps {
   dragOverId?: string | null
   tagGroup: TagGroup
-  tagActions?: TagActions
+  onAddTag: (groupId: number, data: { name: string; color: string }) => void
+  onClickTag: (tag: Tag) => void
   onDeleteGroup?: (id: number) => void
 }
 
 export const TagSection = memo(
-  ({ dragOverId, tagGroup, tagActions, onDeleteGroup }: TagSectionProps) => {
+  ({ dragOverId, tagGroup, onAddTag, onClickTag, onDeleteGroup }: TagSectionProps) => {
+    const [showNewCard, setShowNewCard] = useState(false)
+
     const { setNodeRef, isOver } = useDroppable({
       id: tagGroup.id,
     })
     const isDragOver = isOver || dragOverId?.startsWith(`${tagGroup.id}-`)
 
-    const tagItems = useMemo(() => tagGroup.tags.map(t => `${t.groupId}-${t.id}`), [tagGroup.tags])
+    const tagItems = tagGroup.tags.map(t => `${t.groupId}-${t.id}`)
+
+    const handleAddClick = useCallback(() => {
+      setShowNewCard(true)
+    }, [])
+
+    const handleNewCardSave = useCallback(
+      (data: { name: string; color: string; groupId: number }) => {
+        onAddTag(data.groupId, { name: data.name, color: data.color })
+        setShowNewCard(false)
+      },
+      [onAddTag]
+    )
+
+    const handleNewCardCancel = useCallback(() => {
+      setShowNewCard(false)
+    }, [])
+
     return (
       <div
         ref={setNodeRef}
-        className={cn(
-          'rounded-lg transition-transform duration-150',
-          isDragOver && 'scale-[1.01] bg-cream-200'
-        )}
+        className={cn('rounded-lg transition-transform duration-150', isDragOver && 'scale-[1.01] bg-cream-200')}
       >
-        {/* 头部 */}
         <div className='flex items-center gap-2 px-4 py-2'>
           <div className='w-10 h-10 rounded-xl bg-linear-to-br from-honey-100 to-honey-200 flex items-center justify-center shrink-0'>
             <Tags className='w-5 h-5 text-honey-600' />
@@ -57,18 +68,19 @@ export const TagSection = memo(
           </h2>
         </div>
 
-        {/* 卡片区域 */}
         <div className='flex flex-row gap-4 flex-wrap py-4 px-4'>
           <SortableContext items={tagItems} strategy={rectSortingStrategy}>
             {tagGroup.tags.map(tag => (
-              <TagCard key={tag.id} tag={tag} {...tagActions} />
+              <TagCard key={tag.id} tag={tag} onClick={onClickTag} />
             ))}
           </SortableContext>
 
-          {tagActions?.onAdd && (
+          {showNewCard && <NewTagCard groupId={tagGroup.id} onSave={handleNewCardSave} onCancel={handleNewCardCancel} />}
+
+          {!showNewCard && (
             <button
               type='button'
-              onClick={() => tagActions.onAdd(tagGroup.id)}
+              onClick={handleAddClick}
               className={cn(
                 'w-56 min-h-48 p-3 rounded-sm border-2 border-dashed border-honey-300',
                 'hover:border-honey-400 hover:bg-honey-100/50 transition-all duration-250',

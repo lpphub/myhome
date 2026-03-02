@@ -2,7 +2,8 @@
 export interface Tag {
   id: number
   spaceId?: number
-  content: string // Tiptap JSON content (replaces name and description)
+  name: string
+  description?: string
   groupId: number
   order: number
   color: string
@@ -23,7 +24,8 @@ export interface TagGroup extends Group {
 
 export interface TagFormData {
   id?: number
-  content?: string // Tiptap JSON content
+  name: string
+  description?: string
   groupId?: number
   color?: string
   spaceId?: number
